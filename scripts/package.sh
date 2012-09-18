@@ -6,12 +6,13 @@ MINECRAFT_VERSION=1.3.2
 MCP_DIR=~/bin/mcp72
 ADDITIONAL_PACKAGE_DIRS="watson"
 ADDITIONAL_RESOURCE_FILES="*.yml"
+JAR_DIR=~/.minecraft/older_versions
 
 #------------------------------------------------------------------------------
 # Hopefully no serviceable parts below here:
 
-MINECRAFT_JAR=~/.minecraft/older_versions/minecraft-$MINECRAFT_VERSION.jar
-OUTPUT_JAR=~/.minecraft/older_versions/minecraft-$MINECRAFT_VERSION-roundtrip.jar
+MINECRAFT_JAR=$JAR_DIR/minecraft-$MINECRAFT_VERSION.jar
+OUTPUT_JAR=$JAR_DIR/minecraft-$MINECRAFT_VERSION-roundtrip.jar
 OBFUSCATED_JAR=../temp/client_reobf.jar
 STAGING_DIR="$MCP_DIR/packaging"
 ECLIPSE_BIN_DIR="$MCP_DIR/eclipse/Client/bin"
@@ -27,7 +28,7 @@ fn_error()
 #------------------------------------------------------------------------------
 # Compile and reobfuscate.
 
-cd "$MCP_DIR" || fn_error "MPC directory doesn't exist."
+cd "$MCP_DIR" || fn_error "MCP directory doesn't exist."
 
 ./recompile.sh
 ./reobfuscate.sh
@@ -55,7 +56,7 @@ rm META-INF/*
 # "$ADDITIONAL_RESOURCE_FILES".
 
 for DIR in $ADDITIONAL_PACKAGE_DIRS; do
-  rsync -a "$ECLIPSE_BIN_DIR/$DIR" --exclude='*.class' --include="$ADDITIONAL_RESOURCE_FILES" .
+  rsync -a "$MCP_DIR/src/minecraft/$DIR" --exclude='*~' --exclude='*.java' --include="$ADDITIONAL_RESOURCE_FILES" .
 done
 
 #------------------------------------------------------------------------------
