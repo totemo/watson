@@ -1,0 +1,12 @@
+# A list of all chat category tags that will be excluded from chat (not printed)
+# by default.  A category can be turned off using the /tag command, e.g.:
+# /tag lb.coord off
+
+exclusions:
+    - lb.coord
+    - wg.build
+    - server.announce
+    - server.restart2
+    - server.saving30
+    - server.minus
+    

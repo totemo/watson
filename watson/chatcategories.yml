@@ -1,0 +1,339 @@
+# NOTE: In order for a ChatCategory instance to be indexed (by name) by
+# ChatClassifier, you specify the id property. The id differs from the tag in 
+# that the id is guaranteed to be unique, whereas the tag can and will be shared
+# by multiple distinct regexps, e.g. "server.obituary".
+#
+# NOTE: Also, ChatCategory patterns are matched against lines in the order that
+# they are defined.  Therefore, you should define a more specific pattern BEFORE
+# a more general pattern that would also match the line if you want single out
+# specific lines to for special treatment, e.g. filtering out server messages 
+# but letting the server's save messages get through the filter.
+
+categories:    
+    - tag: chat.global
+      fullRegex: "^<\\w+>.*"
+    - tag: chat.me
+      fullRegex: "\\* \\w+ .*"
+    - tag: chat.private
+      fullRegex: "^\\[\\w+ -> \\w+\\].*"
+    - tag: chat.mod
+      fullRegex: "^\\[Mod - \\w+\\].*"
+
+    - tag: server.help
+      fullRegex: "^Type /help for a list of commands.$"
+    - tag: server.tryhelp
+      fullRegex: "^Unknown command. Type \"help\" for help\\.$"  
+    - tag: server.reddit
+      fullRegex: "^We're also on reddit reddit\\.com/r/mcpublic\\.$" 
+    - tag: server.join
+      fullRegex: "^\\w+ joined the game\\." 
+    - tag: server.leave
+      fullRegex: "^\\w+ left the game\\." 
+    - tag: server.minus
+      fullRegex: "^-$"
+    - tag: server.restart
+      fullRegex: "^\\[Server\\] PLANNED RESTART IN 60 SECONDS\\.$" 
+    - tag: server.restart2
+      fullRegex: "^\\[Server\\] ALL PROGRESS WILL BE SAVED\\.\\.\\.\\.$" 
+    - tag: server.saving30
+      fullRegex: "^\\[Server\\] SAVING IN 30 SECONDS$" 
+    - tag: server.saving
+      fullRegex: "^\\[Server\\] MAP IS SAVING\\. PREPARE FOR A LITTLE LAG\\.$" 
+    - tag: server.announce
+      fullRegex: "^\\[Server\\] .*$" 
+    - tag: server.broadcast
+      fullRegex: "^\\[Broadcast\\] .*$" 
+    - tag: server.console
+      fullRegex: "^\\[Console\\] .*$" 
+    - tag: server.plugin
+      fullRegex: "^\\w+ checked the plugin list$" 
+    - tag: server.5k
+      fullRegex: "^\\[5K\\] .*$" 
+    - tag: server.welcome
+      fullRegex: "^Welcome, \\w+!$" 
+    - tag: server.visit
+      fullRegex: "^Visit nerd.nu for information on other servers.$" 
+    - tag: server.error
+      initialRegex: "^An internal error occurred.*$" 
+      fullRegex: "^An internal error occurred while attempting to perform this command$"  
+    - tag: server.error
+      fullRegex: "^Error, check server.log$"
+    - tag: server.permission
+      extensible: true
+      initialRegex: "^I'm sorry, but you do not have permission to perform this [A-Za-z. ]+$"
+      fullRegex: "^I'm sorry, but you do not have permission to perform this command. Please contact the server administrators if you believe that this is in error.$"
+
+    - tag: lwc.chestnotice
+      fullRegex: "^Notice: That \\w+ Chest is locked by \\w+\\.$"  
+    - tag: lwc.chestlocked
+      fullRegex: "^This Chest is locked with a magical spell$"  
+
+    - tag: mail.none
+      fullRegex: "^You have no new mail.$"
+    - tag: mail.cantsend
+      initialRegex: "^Error: Player \\w+ was never.*$"
+      fullRegex: "^Error: Player \\w+ was never on this server\\.$"
+    - tag: mail.sent  
+      fullRegex: "^Mail sent!$"
+    - tag: mail.cleared  
+      fullRegex: "^Mail cleared!$" 
+
+    - tag: req.open   
+      fullRegex: "^There are \\d+ open mod requests. Type /check to see them.$"  
+    - tag: req.none
+      fullRegex: "^There are currently no open mod requests.$"  
+    - tag: req.header
+      fullRegex: "^---- \\d+ Mod Requests ----$"  
+    - tag: req.page
+      fullRegex: "^---- Page \\d+ of \\d+ ----$"  
+    - tag: req.new
+      fullRegex: "^New request. Type /check for more$"  
+    - tag: req.claim
+      fullRegex: "^\\w+ is now handling request #\\d+$"  
+    - tag: req.unclaim
+      fullRegex: "^\\[ModReq\\] Request #\\d+ is no longer claimed\\.$"   
+    - tag: req.unclaim2
+      fullRegex: "^\\w+ is no longer handling request #\\d+$"   
+    - tag: req.tpid
+      fullRegex: "^\\[ModReq\\] Teleporting you to request \\d+$"   
+    - tag: "req.done"
+      fullRegex: "^Request #\\d+ has been completed by \\w+$"   
+    - tag: req.cancelled
+      fullRegex: "^Request #\\d+ no longer needs to be handled$"   
+    - tag: req.entry
+      fullRegex: "^#\\d+. \\[\\w+\\] \\w{3}.\\d+@\\d+.\\d+.\\d+ by \\w+ - .*$"   
+    - tag: req.status
+      fullRegex: "^Mod Request #\\d+ - OPEN$"   
+    - tag: req.status
+      fullRegex: "^Mod Request #\\d+ - CLAIMED by \\w+$"   
+    - tag: req.details
+      fullRegex: "^Filed by \\w+ at \\w{3}.\\d+@\\d+.\\d+.\\d+ at \\w+, -?\\d+, -?\\d+, -?\\d+$"   
+    - tag: req.closed
+      fullRegex: "^Close Message - .*$"   
+    - tag: req.filed
+      initialRegex: "^Request has been filed. Please be patient.*$"  
+      fullRegex: "^Request has been filed. Please be patient for a moderator to complete your request\\.$"   
+    - tag: req.completed
+      fullRegex: "^\\w+ completed your request - .*$"
+         
+    - tag: mod.entermodmode
+      fullRegex: "^You are now in ModMode!$"   
+    - tag: mod.leavemodmode
+      fullRegex: "^You are no longer in ModMode!$"   
+    - tag: mod.warp
+      fullRegex: "^Warping to \\w+\\.$"   
+    - tag: mod.compass
+      fullRegex: "^Whoosh!$"
+    - tag: mod.compassno
+      fullRegex: "^No free spot ahead of you found\\.$"   
+    - tag: mod.compassno
+      fullRegex: "^No block in sight!$"   
+    - tag: mod.vanish
+      fullRegex: "^Poof!$"
+    - tag: mod.reappear
+      fullRegex: "^You have reappeared!$"   
+    - tag: mod.vanished
+      fullRegex: "^You are already vanished!$"   
+    - tag: mod.kick
+      initialRegex: "^\\w+ has been kicked by \\w+\\. \\(.*$"   
+      fullRegex: "^\\w+ has been kicked by \\w+\\. \\(.*\\)$"   
+    - tag: mod.cantkick
+      fullRegex: "^\\w+ is not online$"   
+    - tag: mod.newban
+      initialRegex: "^User \\w+ has been banned by \\w+. \\(.*$"    
+      fullRegex: "^User \\w+ has been banned by \\w+. \\(.*\\)$"   
+    - tag: mod.ban
+      initialRegex: "^Ban #\\d+:\\d* (\\w|-|\\.)+ \\(\\w+\\) \\[.*$"
+      fullRegex: "^Ban #\\d+:\\d* (\\w|-|\\.)+ \\(\\w+\\) \\[.*\\]$"   
+    - tag: mod.note
+      initialRegex: "^Note #\\d+: (\\w|-|\\.)+ \\(\\w+\\) \\[.*$" 
+      fullRegex: "^Note #\\d+: (\\w|-|\\.)+ \\(\\w+\\) \\[.*\\]$"   
+    - tag: mod.counts
+      fullRegex: "^\\w+ has \\d+ bans?\\.?$"   
+    - tag: mod.counts
+      fullRegex: "^\\w+ has \\d+ bans? and \\d notes?\\.?$"   
+    - tag: mod.counts
+      fullRegex: "^\\w+ has \\d+ notes?\\.?"
+    - tag: mod.sp
+      fullRegex: "^Super pick axe (?:en|dis)abled\\.$"   
+    - tag: mod.spmode
+      fullRegex: "^Mode changed\\. Left click with a pickaxe\\. // to disable\\.$"   
+    - tag: mod.permission
+      fullRegex: "^You aren't allowed to do this\\.$"   
+
+    # Catch: §5§6§4§5 and: §4§5§3§4
+    - tag: mod.spam
+      fullRegex: "^$" 
+    - tag: mod.give
+      fullRegex: "^Giving \\d of (?:\\w| )+$"   
+    - tag: mod.teleport
+      fullRegex: "^Teleporting\\.\\.\\.$"   
+    - tag: list.header
+      fullRegex: "^There are \\d+ out of maximum \\d+ players online\\.$"   
+    - tag: list.default
+      initialRegex: "^Default: \\w+(?:, \\w+)*(?:,(?: )?)?$" 
+      fullRegex: "^Default: \\w+(?:, \\w+)*$"   
+    - tag: list.moderators
+      initialRegex: "^Moderators: \\w+(?:, \\w+)*(?:,(?: )?)?$" 
+      fullRegex: "^Moderators: \\w+(?:, \\w+)*$" 
+    - tag: list.modmode
+      fullRegex: "^ModMode: \\w+(?:, \\w+)*$"   
+    - tag: list.padmins
+      fullRegex: "^PAdmins: \\w+(?:, \\w+)*$"   
+    - tag: list.cadmins
+      fullRegex: "^CAdmins: \\w+(?:, \\w+)*$"   
+    - tag: list.headadmins
+      fullRegex: "^HeadAdmins: \\w+(?:, \\w+)*$"
+         
+    - tag: wg.permission
+      fullRegex: "^You don't have permission for this area\\.$"   
+    - tag: wg.build
+      fullRegex: "^Can you build\\? (Yes|No)$"   
+    - tag: wg.regions
+      id: wg.regions
+      initialRegex: "^Applicable regions: \\w+.*$" 
+      fullRegex: "^Applicable regions: (\\w+(?:, \\w+)*)$"   
+    - tag: wg.noregions
+      fullRegex: "^WorldGuard: No defined regions here!$"
+
+    - tag: wg.selregion
+      fullRegex: "^Region selected as a cuboid\\.$"   
+    - tag: wg.flagset
+      fullRegex: "^Region flag '(?:\\w|-)+' set\\.$"   
+    - tag: wg.expanded
+      fullRegex: "^Region (?:expanded|contracted) \\d+ blocks\\.$"   
+    - tag: wg.saved
+      fullRegex: "^Region saved as \\w+\\.$"   
+
+    - tag: wg.region
+      fullRegex: "^Region: \\w+ \\(type: \\w+\\)$"   
+    - tag: wg.updated
+      fullRegex: "^Region '\\w+' updated\\.$"   
+    - tag: wg.area
+      fullRegex: "^Region updated with new area\\.$"   
+    - tag: wg.notregion
+      fullRegex: "^A region with ID '\\w+' doesn't exist\\.$"   
+    - tag: wg.setparent
+      fullRegex: "^Parent of '\\w+' set to '\\w+'\\.$"   
+    - tag: wg.priority
+      fullRegex: "^Priority: \\d+$"   
+
+    # The line noise on the end of this regexp accounts for all of the places
+    # where ", flag-name: ALLOW" could be split.
+    - tag: wg.flags
+      fullRegex: "^Flags: (?:\\w|-)+: (?:ALLOW|DENY)(?:, (?:\\w|-)+: (?:ALLOW|DENY))*(?:,(?: (?:(?:\\w|-)+(?::(?: (?:\\w+)?)?)?)?)?)?$"   
+    - tag: wg.parent
+      fullRegex: "^Parent: (?:\\w+|\\(none\\))$"   
+    - tag: wg.owners
+      initialRegex: "^Owners: \\w+(?:, \\w+)*(?:,(?: )?)?$"
+      fullRegex: "^Owners: \\w+(?:, \\w+)*$"   
+    - tag: wg.members
+      initialRegex: "^Members: \\w+(?:, \\w+)*(?:,(?: )?)?$"
+      fullRegex: "^Members: \\w+(?:, \\w+)*$"   
+    - tag: wg.bounds
+      fullRegex: "^Bounds: \\(-?\\d+,\\d+,-?\\d+\\) \\(-?\\d+,\\d+,-?\\d+\\)$"   
+    - tag: wg.removed
+      fullRegex: "^Region '\\w+' removed\\.$"   
+         
+    - tag: we.first 
+      fullRegex: "^First position set to \\(-?\\d+\\.\\d+, -?\\d+\\.\\d+, -?\\d+\\.\\d+\\)(: \\(\\d+\\))?\\.$"   
+    - tag: we.second 
+      fullRegex: "^Second position set to \\(-?\\d+\\.\\d+, -?\\d+\\.\\d+, -?\\d+\\.\\d+\\)(: \\(\\d+\\))?\\.$"   
+    - tag: we.outset
+      fullRegex: "^Region outset\\.$"   
+    - tag: we.inset
+      fullRegex: "^Region inset\\.$"
+    - tag: we.seltype
+      fullRegex: "^s\\|cuboid$"
+    - tag: we.selpoint
+      fullRegex: "^p\\|\\d+\\|-?\\d+\\|-?\\d+\\|-?\\d+\\|\\d+$"   
+
+    - tag: lb.header
+      fullRegex: "^No results found\\.$"   
+    - tag: lb.header
+      fullRegex: "^\\d+ changes? found\\.$"   
+    - tag: lb.header
+      fullRegex: "^\\d+ blocks? found\\.$"
+    - tag: lb.header
+      fullRegex: "^Created - Destroyed - Block$"   
+    - tag: lb.header
+      fullRegex: "^Created - Destroyed - Player$"   
+    - tag: lb.tool
+      fullRegex: "^Tool (?:en|dis)abled\\.$"   
+    - tag: lb.material
+      fullRegex: "^No material matching: '.*'$"   
+    - tag: lb.page
+      id: lb.page
+      fullRegex: "^Page (\\d+)/(\\d+)$"
+    - tag: lb.nopage
+      fullRegex: "^There isn't a page '\\d+'$"   
+    - tag: lb.position
+      id: lb.position
+      fullRegex: "^Block changes at (-?\\d+):(-?\\d+):(-?\\d+) in \\w+:$"   
+    - tag: lb.edit
+      id: lb.edit
+      # Optional bit at the end deals with signs. :)
+      fullRegex: "^(\\d{2})-(\\d{2}) (\\d{2}):(\\d{2}):(\\d{2}) (\\w+) (created|destroyed) ((?: |\\w)+)( \\[.*\\] \\[.*\\] \\[.*\\] \\[.*\\])?$"
+    - tag: lb.editreplaced
+      id: lb.editreplaced
+      fullRegex: "^(\\d{2})-(\\d{2}) (\\d{2}):(\\d{2}):(\\d{2}) (\\w+) replaced ((?: |\\w)+) with ((?: |\\w)+)$"   
+    - tag: lb.unspecified
+      fullRegex: "^\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2} \\w+ did an unspecified action$"   
+    - tag: lb.queuesize
+      fullRegex: "^Current queue size: \\d+$"   
+    - tag: lb.queuesaved
+      fullRegex: "^Queue saved successfully$"   
+    - tag: lb.queuenotsaved
+      fullRegex: "^Unable to save queue$"   
+    - tag: lb.rollback
+      fullRegex: "^Rollback finished successfully \\(\\d+ ms, \\d+/\\d+ blocks\\)$"   
+    - tag: lb.redo
+      fullRegex: "^Redo finished successfully \\(\\d+ ms, \\d+/\\d+ blocks\\)$"   
+    - tag: lb.outofrange
+      fullRegex: "^'\\d+ is out of range$"   
+    - tag: lb.coord
+      id: lb.coord
+      initialRegex: "^\\(\\d+\\) \\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2} \\w+ (created|destroyed) .*" 
+      fullRegex: "^\\((\\d+)\\) (\\d{2})-(\\d{2}) (\\d{2}):(\\d{2}):(\\d{2}) (\\w+) (created|destroyed) ([a-zA-Z ]+) at (-?\\d+):(\\d+):(-?\\d+)$"   
+    - tag: lb.coordreplaced
+      id: lb.coordreplaced
+      initialRegex: "^\\(\\d+\\) \\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2} \\w+ replaced .*" 
+      fullRegex: "^\\((\\d+)\\) (\\d{2})-(\\d{2}) (\\d{2}):(\\d{2}):(\\d{2}) (\\w+) replaced ([a-zA-Z ]+) with ([a-zA-Z ]+) at (-?\\d+):(\\d+):(-?\\d+)$"   
+    - tag: lb.tp
+      id: lb.tp
+      fullRegex: "^Teleported to (-?\\d+):(\\d+):(-?\\d+)$"
+    - tag: lb.errorarg
+      fullRegex: "^Not a valid argument: '.*'$"   
+
+    # TODO: pretty sure even these lines get broken.
+    - tag: lb.sum
+      fullRegex: "^\\d+[ ]{6,}\\d+[ ]{6,}(?:\\w| )+$"   
+    - tag: lb.header 
+      initialRegex: "^Searching Block changes from player \\w+ in the .*$" 
+      fullRegex: "^Searching Block changes from player \\w+ in the last \\d+ minutes (?:within \\d+ blocks of you )?in \\w+:$"
+    - tag: lb.header 
+      initialRegex: "^(?: |\\w)+ (?:destructions|changes) from player \\w+ in the .*$" 
+      fullRegex: "^(?: |\\w)+ (?:destructions|changes) from player \\w+ (?:in the last \\d+ minutes )?(?:within \\d+ blocks of you )?in \\w+(?: summed up by (players|blocks))?:$"   
+    - tag: nc.any
+      initialRegex: "^NCP?: \\w+ failed .*$"
+      fullRegex: "^NCP?: \\w+ failed .*\\. VL \\d+"
+    - tag: server.pvp
+      fullRegex: "^\\w+ (killed|took down) \\w+ with a (?:\\w| )+$"   
+    - tag: server.obituary
+      fullRegex: "^\\w+ hit the ground too hard$"   
+    - tag: server.obituary
+      fullRegex: "^\\w+ blew up$"
+    - tag: server.obituary
+      fullRegex: "^\\w+ drowned$"
+    - tag: server.obituary
+      fullRegex: "^\\w+ tried to swim in lava$"
+    - tag: server.obituary
+      fullRegex: "^\\w+ went up in flames$"
+    - tag: server.obituary
+      fullRegex: "^\\w+ burned to death$"
+    - tag: server.obituary
+      fullRegex: "^\\w+ fell out of the world$"
+    - tag: server.obituary
+      fullRegex: "^\\w+ was shot by \\w+$"
+    - tag: server.obituary
+      fullRegex: "^\\w+ was slain by \\w+$"

@@ -1,0 +1,5 @@
+highlights:
+  - colourCode: red
+    pattern: g(a)+y|gh(e)+y|fag(got)?
+  - colourCode: red
+    pattern: ni[gq]+(a|er)
