@@ -467,7 +467,7 @@ blocks:
       rgba: [127, 127, 127]
       bounds: [0.0625, 0.0, 0.0625, 0.9375, 0.0625, 0.9375]
     - id: 71
-      names: [iron door]
+      names: [iron door block,iron door]
       rgba: [197, 197, 197]
       bounds: [0.0, 0.0, 0.8125, 1.0, 1.0, 1.0]
     - id: 72
@@ -620,10 +620,10 @@ blocks:
       names: [smooth stairs,stone brick stairs]
       rgba: [136, 136, 136]
     - id: 110
-      names: [mycel, mycelium]
+      names: [mycel,mycelium]
       rgba: [128, 107, 111]
     - id: 111
-      names: [lily pad, lilypad]
+      names: [water lily,lily pad,lilypad]
       rgba: [19, 139, 33]
       bounds: [0.125, 0.0, 0.125, 0.875, 0.0625, 0.875]      
     - id: 112

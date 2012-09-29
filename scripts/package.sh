@@ -4,7 +4,7 @@
 
 MINECRAFT_VERSION=1.3.2
 MCP_DIR=~/bin/mcp72
-ADDITIONAL_PACKAGE_DIRS="watson"
+ADDITIONAL_PACKAGE_DIRS="watson ClientCommands"
 ADDITIONAL_RESOURCE_FILES="*.yml"
 JAR_DIR=~/.minecraft/older_versions
 
@@ -56,7 +56,7 @@ rm META-INF/*
 # "$ADDITIONAL_RESOURCE_FILES".
 
 for DIR in $ADDITIONAL_PACKAGE_DIRS; do
-  rsync -a "$MCP_DIR/src/minecraft/$DIR" --exclude='*~' --exclude='*.java' --include="$ADDITIONAL_RESOURCE_FILES" .
+  rsync -qa "$MCP_DIR/src/minecraft/$DIR" --exclude='*~' --exclude='*.java' --include="$ADDITIONAL_RESOURCE_FILES" .
 done
 
 #------------------------------------------------------------------------------

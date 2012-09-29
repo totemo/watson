@@ -8,11 +8,15 @@ import net.minecraft.src.GuiIngame;
 import net.minecraft.src.GuiNewChat;
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.Packet3Chat;
+import net.minecraft.src.mod_ClientCommands;
 import watson.analysis.Sherlock;
 import watson.chat.ChatProcessor;
+import watson.cli.HighlightCommand;
+import watson.cli.TagCommand;
+import watson.cli.WatsonCommand;
 import watson.debug.Log;
 
-// --------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 /**
  * Provides a centralised Facade to control the facilities of this mod.
  */
@@ -40,6 +44,11 @@ public class Controller
     _sherlock = new Sherlock(ChatProcessor.getInstance().getChatClassifier());
     BlockTypeRegistry.instance.loadBlockTypes();
     _chatHighlighter.loadHighlights();
+
+    // Initialise the commands.
+    mod_ClientCommands.getInstance().registerCommand(new WatsonCommand());
+    mod_ClientCommands.getInstance().registerCommand(new TagCommand());
+    mod_ClientCommands.getInstance().registerCommand(new HighlightCommand());
   }
 
   // --------------------------------------------------------------------------
@@ -108,6 +117,7 @@ public class Controller
   {
     getBlockEditSet().clear();
     _variables.clear();
+    localChat("Watson edits cleared.");
   }
 
   // --------------------------------------------------------------------------
@@ -142,7 +152,7 @@ public class Controller
       serverChat(query);
     }
   } // queryPreviousEdits
-  
+
   // --------------------------------------------------------------------------
   /**
    * Turn on or off all Watson displays.
@@ -152,6 +162,7 @@ public class Controller
   public void setDisplayed(boolean displayed)
   {
     _displayed = displayed;
+    localChat("Watson display " + (displayed ? "enabled." : "disabled."));
   }
 
   // --------------------------------------------------------------------------
@@ -211,6 +222,7 @@ public class Controller
    */
   public void localChat(String message)
   {
+    System.out.println(message);
     if (getChatGui() != null)
     {
       getChatGui().printChatMessage(_chatHighlighter.highlight(message));

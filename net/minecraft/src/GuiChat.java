@@ -8,8 +8,6 @@ import java.util.List;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import watson.cli.CLI;
-
 public class GuiChat extends GuiScreen
 {
   private String         field_73898_b         = "";
@@ -102,25 +100,73 @@ public class GuiChat extends GuiScreen
     }
     else if (par2 == 28)
     {
+      /*
+       * String var3 = this.inputField.getText().trim();
+       * 
+       * if (var3.length() > 0) {
+       * this.mc.ingameGUI.getChatGUI().func_73767_b(var3);
+       * 
+       * if (!this.mc.handleClientCommand(var3)) {
+       * this.mc.thePlayer.sendChatMessage(var3); } }
+       * 
+       * this.mc.displayGuiScreen((GuiScreen)null);
+       */
+      /*
+       * String var3 = this.inputField.getText().trim();
+       * 
+       * if (var3.length() > 0) {
+       * this.mc.ingameGUI.getChatGUI().func_73767_b(var3);
+       * 
+       * ChatTab tab = this.mc.ingameGUI.getChatGUI().getActiveChatTab(); if
+       * (tab != null && tab.getProfile() != null &&
+       * tab.getProfile().getFilters() != null && !var3.startsWith("/")) {
+       * List<ChatFilter> tabFilters = tab.getProfile().getFilters(); for
+       * (ChatFilter tabFilter : tabFilters) { if (tabFilter.matches(var3)) {
+       * tab.updateVariables(tabFilter.getVariables(var3)); var3 =
+       * tab.parse(tabFilter.getOutput());
+       * 
+       * if (tabFilter.getConsume()) break; } } }
+       * this.mc.thePlayer.sendChatMessage(var3); }
+       * 
+       * this.mc.displayGuiScreen((GuiScreen)null);
+       */
+      /*
+       * String var3 = this.inputField.getText().trim();
+       * 
+       * if (var3.length() > 0) {
+       * this.mc.ingameGUI.getChatGUI().func_73767_b(var3);
+       * 
+       * List possibleCommands =
+       * mod_ClientCommands.getInstance().getClientCommandManager
+       * ().getPossibleCommands(this.mc.thePlayer, var3); if
+       * (var3.startsWith("/") && possibleCommands != null &&
+       * !possibleCommands.isEmpty())
+       * mod_ClientCommands.getInstance().getClientCommandManager
+       * ().executeCommand(this.mc.thePlayer, var3); else { StringBuilder text =
+       * new StringBuilder(var3); for (ChatCallback callback :
+       * mod_ClientCommands.getInstance().getChatCallbacks()) if
+       * (!callback.execute(text)) break;
+       * 
+       * this.mc.thePlayer.sendChatMessage(text.toString()); } }
+       */
+      // this.mc.displayGuiScreen((GuiScreen)null);
+      //
       String var3 = this.inputField.getText().trim();
 
       if (var3.length() > 0)
       {
         this.mc.ingameGUI.getChatGUI().func_73767_b(var3);
 
-        // Sure, I could modify Minecraft.handleClientCommand(), but every
-        // man and his dog wants to modify that class, including ModLoader.
-        if (!this.mc.handleClientCommand(var3))
+        if (!mod_ClientCommands.getInstance().handleClientCommand(var3))
         {
-          if (!CLI.instance.interceptedCommand(var3))
-          {
-            this.mc.thePlayer.sendChatMessage(var3);
-          }
+          this.mc.thePlayer.sendChatMessage(mod_ClientCommands.getInstance().executeChatCallbacks(
+            var3));
         }
-
       }
 
       this.mc.displayGuiScreen((GuiScreen) null);
+
+      // */
     }
     else if (par2 == 200)
     {
@@ -394,5 +440,10 @@ public class GuiChat extends GuiScreen
   public boolean doesGuiPauseGame()
   {
     return false;
+  }
+
+  public GuiTextField getInputField()
+  {
+    return this.inputField;
   }
 }

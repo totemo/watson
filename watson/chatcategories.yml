@@ -171,19 +171,27 @@ categories:
     - tag: list.header
       fullRegex: "^There are \\d+ out of maximum \\d+ players online\\.$"   
     - tag: list.default
-      initialRegex: "^Default: \\w+(?:, \\w+)*(?:,(?: )?)?$" 
-      fullRegex: "^Default: \\w+(?:, \\w+)*$"   
+      extensible: true
+      initialRegex: "^[dD]efault: \\w+(?: \\w+)*$" 
+      fullRegex: "^[dD]efault: \\w+(?: \\w+)*$"   
+#      initialRegex: "^[dD]efault: \\w+(?:, \\w+)*(?:,(?: )?)?$" 
+#      fullRegex: "^[dD]efault: \\w+(?:, \\w+)*$"   
     - tag: list.moderators
-      initialRegex: "^Moderators: \\w+(?:, \\w+)*(?:,(?: )?)?$" 
-      fullRegex: "^Moderators: \\w+(?:, \\w+)*$" 
+      extensible: true
+      initialRegex: "^[mM]oderators: \\w+(?: \\w+)*$" 
+      fullRegex: "^[mM]oderators: \\w+(?:, \\w+)*$"     
+#      initialRegex: "^[mM]oderators: \\w+(?:, \\w+)*(?:,(?: )?)?$" 
+#      fullRegex: "^mM]oderators: \\w+(?:, \\w+)*$"
+ 
     - tag: list.modmode
-      fullRegex: "^ModMode: \\w+(?:, \\w+)*$"   
+      extensible: true
+      fullRegex: "^[mM]od[mM]ode: \\w+(?: \\w+)*$"   
     - tag: list.padmins
-      fullRegex: "^PAdmins: \\w+(?:, \\w+)*$"   
+      fullRegex: "^[pP][aA]dmins: \\w+(?: \\w+)*$"   
     - tag: list.cadmins
-      fullRegex: "^CAdmins: \\w+(?:, \\w+)*$"   
+      fullRegex: "^[cC][aA]dmins: \\w+(?: \\w+)*$"   
     - tag: list.headadmins
-      fullRegex: "^HeadAdmins: \\w+(?:, \\w+)*$"
+      fullRegex: "^[hH]ead[aA]dmins: \\w+(?: \\w+)*$"
          
     - tag: wg.permission
       fullRegex: "^You don't have permission for this area\\.$"   
@@ -313,10 +321,13 @@ categories:
       fullRegex: "^Searching Block changes from player \\w+ in the last \\d+ minutes (?:within \\d+ blocks of you )?in \\w+:$"
     - tag: lb.header 
       initialRegex: "^(?: |\\w)+ (?:destructions|changes) from player \\w+ in the .*$" 
-      fullRegex: "^(?: |\\w)+ (?:destructions|changes) from player \\w+ (?:in the last \\d+ minutes )?(?:within \\d+ blocks of you )?in \\w+(?: summed up by (players|blocks))?:$"   
+      fullRegex: "^(?: |\\w)+ (?:destructions|changes) from player \\w+ (?:in the last \\d+ minutes )?(?:within \\d+ blocks of you )?in \\w+(?: summed up by (players|blocks))?:$"
+      
+      # Since the server is no longer splitting lines, just list the full regex.   
     - tag: nc.any
-      initialRegex: "^NCP?: \\w+ failed .*$"
-      fullRegex: "^NCP?: \\w+ failed .*\\. VL \\d+"
+      fullRegex: "^NCP?: \\w+ failed .*$"
+    - tag: nl.any
+      fullRegex: "^NL: \\w+ logged on \\w+, .*$"
     - tag: server.pvp
       fullRegex: "^\\w+ (killed|took down) \\w+ with a (?:\\w| )+$"   
     - tag: server.obituary

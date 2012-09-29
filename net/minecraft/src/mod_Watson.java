@@ -45,6 +45,15 @@ public class mod_Watson extends BaseMod
 
   // --------------------------------------------------------------------------
   /**
+   * And now for a game of "Guess the ModLoader API".
+   */
+  public String getPriorities()
+  {
+    return "required-before:mod_ClientCommands";
+  }
+
+  // --------------------------------------------------------------------------
+  /**
    * Do the following initialisation when the mod is loaded:
    * <ul>
    * <li>Check that the ModLoader version matches and abort if not.</li>
