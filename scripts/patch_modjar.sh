@@ -23,6 +23,6 @@ fn_error()
 
 rm -rf "$TMP_DIR" && mkdir "$TMP_DIR" || fn_error "could not remake staging area"
 cd "$TMP_DIR" || fn_error "could not change to staging area"
-jar xf "$TREVOR_JAR" || fn_error "could not unpack Trevor's modjar"
-unzip -o "$WATSON_ZIP" || fn_error "could not unpack today's Watson build"
-rm -f "$OUTPUT_JAR" && jar cf "$OUTPUT_JAR" . || fn_error "could not create output jar"
+jar xf "$TREVOR_JAR" >& /dev/null || fn_error "could not unpack Trevor's modjar"
+unzip -o "$WATSON_ZIP" >& /dev/null || fn_error "could not unpack today's Watson build"
+rm -f "$OUTPUT_JAR" && jar cf "$OUTPUT_JAR" . >& /dev/null || fn_error "could not create output jar"

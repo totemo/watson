@@ -84,7 +84,8 @@ public class RenderWatson extends Render
   /**
    * Render an WatsonEntity instance at the specified x, y, z and time.
    */
-  private void renderEntityWatson(EntityWatson entity, float tick)
+  private void renderEntityWatson(@SuppressWarnings("unused") EntityWatson entity,
+                                  float tick)
   {
 
     RenderHelper.disableStandardItemLighting();
@@ -100,7 +101,9 @@ public class RenderWatson extends Render
     GL11.glColor3f(1.0f, 1.0f, 1.0f); // Necessary?
     GL11.glDepthFunc(GL11.GL_ALWAYS); // Why do chests etc still occlude?
 
-    Controller.instance.getBlockEditSet().drawOutlines();
+    BlockEditSet edits = Controller.instance.getBlockEditSet();
+    edits.drawOutlines();
+    edits.drawVectors();
 
     // Restore normal depth buffer function.
     GL11.glDepthFunc(GL11.GL_LEQUAL);
@@ -110,5 +113,8 @@ public class RenderWatson extends Render
 
     GL11.glPopMatrix();
     RenderHelper.enableStandardItemLighting();
+
+    edits.drawAnnotations();
+
   } // renderEntityWatson
 } // class RenderWatson

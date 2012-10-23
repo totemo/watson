@@ -1,12 +1,6 @@
 package net.minecraft.src;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -64,19 +58,7 @@ public class mod_Watson extends BaseMod
   @Override
   public void load()
   {
-    File modDir = getModDirectory();
-    if (!modDir.isDirectory())
-    {
-      try
-      {
-        modDir.mkdirs();
-      }
-      catch (Exception ex)
-      {
-        Log.exception(Level.SEVERE,
-          "could not create mod directory: " + modDir, ex);
-      }
-    }
+    Controller.createDirectories();
 
     Log.setDebug(true);
     Log.info("Loading Watson version " + VERSION);
@@ -157,60 +139,9 @@ public class mod_Watson extends BaseMod
 
   // --------------------------------------------------------------------------
   /**
-   * Return the directory where this mod's data files are stored.
-   * 
-   * @return the directory where this mod's data files are stored.
-   */
-  public static File getModDirectory()
-  {
-    File minecraftDir = Minecraft.getMinecraftDir();
-    return new File(minecraftDir, MOD_SUBDIR);
-  }
-
-  // --------------------------------------------------------------------------
-  /**
-   * Return an input stream that reads the specified file or resource name.
-   * 
-   * If the file exists in the mod-specific configuration directory, it is
-   * loaded from there. Otherwise, the resource of the same name is loaded from
-   * the minecraft.jar file.
-   * 
-   * @return an input stream that reads the specified file or resource name.
-   */
-  public static InputStream getConfigurationStream(String fileName)
-    throws IOException
-  {
-    File file = new File(getModDirectory(), fileName);
-    if (file.canRead())
-    {
-      Log.info("Loading \"" + fileName + "\" from file.");
-      return new BufferedInputStream(new FileInputStream(file));
-    }
-    else
-    {
-      Log.info("Loading \"" + fileName + "\" from resource in minecraft.jar.");
-      ClassLoader loader = mod_Watson.class.getClassLoader();
-      return loader.getResourceAsStream(MOD_PACKAGE + '/' + fileName);
-    }
-  } // getConfigurationStream
-
-  // --------------------------------------------------------------------------
-  /**
    * Version string; should match Minecraft version or bail out.
    */
-  private static final String VERSION     = "1.3.2";
-
-  /**
-   * The main package name of the classes of this mod, and also the name of the
-   * subdirectory of .minecraft/mods/ where mod-specific settings are stored.
-   */
-  private static final String MOD_PACKAGE = "watson";
-
-  /**
-   * Directory where mod files reside, relative to the .minecraft/ directory.
-   */
-  private static final String MOD_SUBDIR  = "mods" + File.separator
-                                            + MOD_PACKAGE;
+  private static final String VERSION = "1.3.2";
 
   // --------------------------------------------------------------------------
   /**

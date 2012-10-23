@@ -34,7 +34,7 @@ public class ModModeAnalysis extends Analysis
   @SuppressWarnings("unused")
   private void changeModMode(watson.chat.ChatLine line)
   {
-    Controller.instance.setDisplayed(line.getCategory().getTag().equals(
-      "mod.entermodmode"));
+    Controller.instance.getDisplaySettings().setDisplayed(
+      line.getCategory().getTag().equals("mod.entermodmode"));
   }
 } // class ModModeAnalysis

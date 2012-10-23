@@ -25,8 +25,7 @@ fn_error()
 
 cd "$MCP_DIR" || fn_error "MCP directory doesn't exist."
 
-./recompile.sh
-./reobfuscate.sh
+./recompile.sh && ./reobfuscate.sh || fn_error "could not rebuild the mod."
 
 #------------------------------------------------------------------------------
 
@@ -40,5 +39,5 @@ rm -rf "$TMP_DIR" && mkdir -p "$TMP_DIR" || fn_error "could not create staging a
 cp "$MCP_DIR"/src/minecraft/watson/*.yml "$MCP_DIR"/reobf/minecraft/watson/ || fn_error "could not copy YAML config files."
 cd "$TMP_DIR"
 cp -r "$MCP_DIR"/reobf/minecraft/* . || fn_error "could not copy reobfuscated classes."
-jar xf "$MCP_DIR"/lib/snakeyaml-1.10.jar org/ || fn_error "could not extract SnakeYAML classes."
+jar xf "$MCP_DIR"/lib/snakeyaml-1.10.jar org/ >& /dev/null || fn_error "could not extract SnakeYAML classes."
 zip -r "$OUTPUT_FILE" *

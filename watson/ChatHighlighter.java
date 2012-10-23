@@ -12,7 +12,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import net.minecraft.src.mod_Watson;
 
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -160,7 +159,7 @@ public class ChatHighlighter
   {
     try
     {
-      InputStream in = mod_Watson.getConfigurationStream(CHAT_HIGHLIGHTS_FILE);
+      InputStream in = Controller.getConfigurationStream(CHAT_HIGHLIGHTS_FILE);
       try
       {
         loadHighlights(in);
@@ -225,7 +224,7 @@ public class ChatHighlighter
   {
     try
     {
-      File file = new File(mod_Watson.getModDirectory(), CHAT_HIGHLIGHTS_FILE);
+      File file = new File(Controller.getModDirectory(), CHAT_HIGHLIGHTS_FILE);
       BufferedWriter writer = new BufferedWriter(new FileWriter(file));
       try
       {

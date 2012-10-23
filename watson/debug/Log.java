@@ -7,7 +7,8 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.minecraft.src.mod_Watson;
+import watson.Controller;
+
 
 // ----------------------------------------------------------------------------
 /**
@@ -141,7 +142,7 @@ public class Log
 
     try
     {
-      File logFile = new File(mod_Watson.getModDirectory(), LOG_FILE);
+      File logFile = new File(Controller.getModDirectory(), LOG_FILE);
       _fileHandler = new FileHandler(logFile.getAbsolutePath());
       _fileHandler.setFormatter(formatter);
       _logger.addHandler(_fileHandler);

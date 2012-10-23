@@ -97,9 +97,9 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
         if (index < 150 && type.getId() != 1)
         {
           String target = String.format(
-            "(%2d) %02d-%02d %02d:%02d:%02d (%d,%d,%d) %C%d %s", index, month,
-            day, hour, minute, second, x, y, z, (created ? '+' : '-'),
-            type.getId(), player);
+            "\247%c(%2d) %02d-%02d %02d:%02d:%02d (%d,%d,%d) %C%d %s",
+            getChatColourChar(x, y, z), index, month, day, hour, minute,
+            second, x, y, z, (created ? '+' : '-'), type.getId(), player);
           Controller.instance.localChat(target);
         }
 
@@ -172,8 +172,9 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
         if (index < 150 && type.getId() != 1)
         {
           String target = String.format(
-            "(%2d) %02d-%02d %02d:%02d:%02d (%d,%d,%d) %C%d %s", index, month,
-            day, hour, minute, second, x, y, z, '-', type.getId(), player);
+            "\247%c(%2d) %02d-%02d %02d:%02d:%02d (%d,%d,%d) %C%d %s",
+            getChatColourChar(x, y, z), index, month, day, hour, minute,
+            second, x, y, z, '-', type.getId(), player);
           Controller.instance.localChat(target);
         }
       }
@@ -183,6 +184,32 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
       // System.out.println(ex);
     }
   } // lbCoordReplaced
+
+  // --------------------------------------------------------------------------
+  /**
+   * Get the colour to highlight coordinates when they are re-echoed into chat.
+   * 
+   * The colour changes whenever the
+   */
+  private char getChatColourChar(int x, int y, int z)
+  {
+    // Check whether we should advance the index.
+    int dx = x - _lastX;
+    int dy = y - _lastY;
+    int dz = z - _lastZ;
+
+    // Skip the sqrt().
+    float distance = dx * dx + dy * dy + dz * dz;
+    if (distance > _COLOUR_PROXIMITY_LIMIT * _COLOUR_PROXIMITY_LIMIT)
+    {
+      _colourIndex = (_colourIndex + 1) % _COLOUR_CYCLE.length;
+    }
+    _lastX = x;
+    _lastY = y;
+    _lastZ = z;
+
+    return _COLOUR_CYCLE[_colourIndex];
+  } // getChatColourChar
 
   // --------------------------------------------------------------------------
   /**
@@ -215,36 +242,69 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
    * A reusable Calendar instance used to interpret any time stamps found in
    * LogBlock results.
    */
-  protected Calendar _time        = Calendar.getInstance();
+  protected Calendar           _time                   = Calendar.getInstance();
 
   /**
    * Used to infer the implicit (absent) year in LogBlock timestamps.
    */
-  protected Calendar _now         = Calendar.getInstance();
+  protected Calendar           _now                    = Calendar.getInstance();
 
   // --------------------------------------------------------------------------
   /**
+   * The cycle of colours used to highlight distinct ore deposits when
+   * coordinates are re-echoed.
+   * 
+   * red, orange, yellow, lightgreen, lightblue, purple, magenta
+   */
+  protected static final char  _COLOUR_CYCLE[]         = {'4', '6', 'e', 'a',
+    'b', '5', 'd'                                      };
+
+  /**
+   * The index into the _COLOUR_CYCLE array referencing the current chat colour.
+   * 
+   * Since the very first colour is pretty much guaranteed to roll over (since
+   * _lastX, _lastY, _lastZ will be nowhere near), init to the end of the cycle
+   * in anticipation).
+   * 
+   * TODO: Make the colour of echoed coordinates stable? Or at least reset when
+   * the lb header is seen.
+   */
+  protected int                _colourIndex            = _COLOUR_CYCLE.length - 1;
+
+  /**
+   * The minimum distance that ore deposits (or blocks in general) must be
+   * separated by to colour them differently when their coordinates are echoed
+   * in chat.
+   */
+  protected static final float _COLOUR_PROXIMITY_LIMIT = 5.0f;
+
+  /**
+   * The last set of coordinates re-echoed in chat.
+   */
+  protected int                _lastX, _lastY, _lastZ;
+
+  /**
    * Current page number extracted from lb.page lines.
    */
-  protected int      _currentPage = 0;
+  protected int                _currentPage            = 0;
 
   /**
    * Total number of pages of results, from lb.page lines.
    */
-  protected int      _pageCount   = 0;
+  protected int                _pageCount              = 0;
 
   /**
    * The Pattern of full lines with the ID (not tag) lb.coord.
    */
-  protected Pattern  _lbCoord;
+  protected Pattern            _lbCoord;
 
   /**
    * The Pattern of full lines with the ID (not tag) lb.coordreplaced.
    */
-  protected Pattern  _lbCoordReplaced;
+  protected Pattern            _lbCoordReplaced;
 
   /**
    * The Pattern of full lines with the ID (not tag) lb.page.
    */
-  protected Pattern  _lbPage;
+  protected Pattern            _lbPage;
 } // class LbCoordsAnalysis

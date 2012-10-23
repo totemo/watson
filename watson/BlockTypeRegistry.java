@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
-import net.minecraft.src.mod_Watson;
 
 import org.yaml.snakeyaml.Yaml;
 
@@ -41,7 +40,7 @@ public final class BlockTypeRegistry
     try
     {
       BlockTypeRegistry registry = BlockTypeRegistry.instance;
-      InputStream in = mod_Watson.getConfigurationStream(BLOCK_TYPES_FILE);
+      InputStream in = Controller.getConfigurationStream(BLOCK_TYPES_FILE);
       try
       {
         registry.loadBlockTypes(in);

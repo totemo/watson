@@ -7,7 +7,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 
 import net.minecraft.src.GuiNewChat;
-import net.minecraft.src.mod_Watson;
 import watson.BlockEdit;
 import watson.BlockEditSet;
 import watson.Controller;
@@ -105,7 +104,7 @@ public class ChatProcessor
   {
     try
     {
-      InputStream in = mod_Watson.getConfigurationStream(CHAT_CATEGORIES_FILE);
+      InputStream in = Controller.getConfigurationStream(CHAT_CATEGORIES_FILE);
       try
       {
         _chatClassifier.loadChatCategories(in);
@@ -130,7 +129,7 @@ public class ChatProcessor
   {
     try
     {
-      InputStream in = mod_Watson.getConfigurationStream(CHAT_EXCLUSIONS_FILE);
+      InputStream in = Controller.getConfigurationStream(CHAT_EXCLUSIONS_FILE);
       try
       {
         _excludeTagChatHandler.loadExclusions(in);
@@ -159,7 +158,7 @@ public class ChatProcessor
   {
     _excludeTagChatHandler.setExcluded(tag, !visible);
 
-    File exclusionsFile = new File(mod_Watson.getModDirectory(),
+    File exclusionsFile = new File(Controller.getModDirectory(),
       CHAT_EXCLUSIONS_FILE);
     _excludeTagChatHandler.saveExclusions(exclusionsFile);
 

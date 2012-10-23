@@ -1,7 +1,14 @@
 package watson;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.logging.Level;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.GuiIngame;
@@ -9,8 +16,12 @@ import net.minecraft.src.GuiNewChat;
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.Packet3Chat;
 import net.minecraft.src.mod_ClientCommands;
+import net.minecraft.src.mod_Watson;
 import watson.analysis.Sherlock;
 import watson.chat.ChatProcessor;
+import watson.cli.AnnoCommand;
+import watson.cli.CalcCommand;
+import watson.cli.CaseInsensitivePrefixFileFilter;
 import watson.cli.HighlightCommand;
 import watson.cli.TagCommand;
 import watson.cli.WatsonCommand;
@@ -47,8 +58,10 @@ public class Controller
 
     // Initialise the commands.
     mod_ClientCommands.getInstance().registerCommand(new WatsonCommand());
+    mod_ClientCommands.getInstance().registerCommand(new AnnoCommand());
     mod_ClientCommands.getInstance().registerCommand(new TagCommand());
     mod_ClientCommands.getInstance().registerCommand(new HighlightCommand());
+    mod_ClientCommands.getInstance().registerCommand(new CalcCommand());
   }
 
   // --------------------------------------------------------------------------
@@ -72,6 +85,17 @@ public class Controller
   public ChatHighlighter getChatHighlighter()
   {
     return _chatHighlighter;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return the {@link DisplaySettings} which control what is drawn.
+   * 
+   * @return the {@link DisplaySettings} which control what is drawn.
+   */
+  public DisplaySettings getDisplaySettings()
+  {
+    return _displaySettings;
   }
 
   // --------------------------------------------------------------------------
@@ -106,6 +130,134 @@ public class Controller
     }
     return edits;
   } // getBlockEditSet
+
+  // --------------------------------------------------------------------------
+  /**
+   * Save the current {@link BlockEditSet} to the specified file in
+   * getSaveDirectory().
+   * 
+   * @param fileName the file name to write; if it is null and there is a
+   *          current player variable value, a default file name of the form
+   *          player-YYYY-MM-DD-hh.mm.ss is used.
+   * 
+   */
+  public void saveBlockEditFile(String fileName)
+  {
+    // Compute default fileName?
+    if (fileName == null)
+    {
+      String player = (String) getVariables().get("player");
+      if (player == null)
+      {
+        localError("No current player set, so you must specify a file name.");
+        return;
+      }
+      else
+      {
+        Calendar calendar = Calendar.getInstance();
+        fileName = String.format("%s-%4d-%02d-%02d-%02d.%02d.%02d", player,
+          calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1,
+          calendar.get(Calendar.DAY_OF_MONTH),
+          calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),
+          calendar.get(Calendar.SECOND));
+      }
+    } // if
+
+    createBlockEditDirectory();
+
+    File file = new File(getBlockEditDirectory(), fileName);
+    try
+    {
+      BlockEditSet edits = getBlockEditSet();
+      int editCount = edits.save(file);
+      int annoCount = edits.getAnnotations().size();
+      localChat(String.format("Saved %d edits and %d annotations to %s",
+        editCount, annoCount, fileName));
+    }
+    catch (IOException ex)
+    {
+      Log.exception(Level.SEVERE, "error saving BlockEditSet to " + file, ex);
+      localError("The file " + fileName + " could not be saved.");
+    }
+  } // saveBlockEditFile
+
+  // --------------------------------------------------------------------------
+  /**
+   * Load the set of {@link BlockEdit}s from the specified file.
+   * 
+   * @param fileName the file name, or the start of the file name (beginning of
+   *          player name), in the BlockEdit saves directory.
+   * 
+   * @TODO: Does this need to be smarter about which dimension/server we're in?
+   */
+  public void loadBlockEditFile(String fileName)
+  {
+    File file = new File(getBlockEditDirectory(), fileName);
+    if (!file.canRead())
+    {
+      // Try to find a file that begins with fileName, i.e. treat that as the
+      // player name.
+      File[] files = getBlockEditFileList(fileName);
+      if (files.length > 0)
+      {
+        // Chose the most recent matching file.
+        file = files[files.length - 1];
+      }
+    }
+
+    if (file.canRead())
+    {
+      try
+      {
+        BlockEditSet edits = getBlockEditSet();
+        int editCount = edits.load(file);
+        int annoCount = edits.getAnnotations().size();
+        localChat(String.format("Loaded %d edits and %d annotations from %s",
+          editCount, annoCount, file.getName()));
+      }
+      catch (Exception ex)
+      {
+        Log.exception(Level.SEVERE, "error loading BlockEditSet from " + file,
+          ex);
+        localError("The file " + fileName + " could not be loaded.");
+      }
+    }
+    else
+    {
+      localError("Can't open " + fileName + " to read.");
+    }
+  } // loadBlockEditFile
+
+  // --------------------------------------------------------------------------
+  /**
+   * List all of the {@link BlockEditSet} save files whose names begin with the
+   * specified prefix, matched case-insensitively.
+   */
+  public void listBlockEditFiles(String prefix)
+  {
+    File[] files = getBlockEditFileList(prefix);
+    localChat(files.length + " matching file(s):");
+    for (File file : files)
+    {
+      localChat(file.getName());
+    }
+  } // listBlockEditFiles
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return an array of {@link BlockEditSet} save files whose names begin with
+   * the specified prefix, matched case insensitively.
+   * 
+   * @param prefix the case-insensitive prefix.
+   * @return the array of files.
+   */
+  public File[] getBlockEditFileList(String prefix)
+  {
+    File[] files = getBlockEditDirectory().listFiles(
+      new CaseInsensitivePrefixFileFilter(prefix));
+    Arrays.sort(files);
+    return files;
+  }
 
   // --------------------------------------------------------------------------
   /**
@@ -152,55 +304,6 @@ public class Controller
       serverChat(query);
     }
   } // queryPreviousEdits
-
-  // --------------------------------------------------------------------------
-  /**
-   * Turn on or off all Watson displays.
-   * 
-   * @param displayed true if Watson draws stuff; false otherwise.
-   */
-  public void setDisplayed(boolean displayed)
-  {
-    _displayed = displayed;
-    localChat("Watson display " + (displayed ? "enabled." : "disabled."));
-  }
-
-  // --------------------------------------------------------------------------
-  /**
-   * Return true if Watson draws stuff; false otherwise.
-   * 
-   * @return true if Watson draws stuff; false otherwise.
-   */
-  public boolean isDisplayed()
-  {
-    return _displayed;
-  }
-
-  // --------------------------------------------------------------------------
-  /**
-   * Turn on or off the wireframe block outline display.
-   * 
-   * @param outlineShown if true, block outlines are drawn.
-   */
-  public void setOutlineShown(boolean outlineShown)
-  {
-    _outlineShown = outlineShown;
-  }
-
-  // --------------------------------------------------------------------------
-  /**
-   * Return true if block outines should be drawn.
-   * 
-   * This method takes into account the last calls to both setOutlineShown() and
-   * setDisplayed(). It will return false if outlines are disabled or if the
-   * overall Watson display is turned off.
-   * 
-   * @return true if block outines should be drawn.
-   */
-  public boolean isOutlineShown()
-  {
-    return _displayed && _outlineShown;
-  }
 
   // --------------------------------------------------------------------------
   /**
@@ -295,9 +398,106 @@ public class Controller
 
   // --------------------------------------------------------------------------
   /**
+   * Create the mod-specific subdirectory and subdirectories of that.
+   */
+  public static void createDirectories()
+  {
+    File modDir = getModDirectory();
+    if (!modDir.isDirectory())
+    {
+      try
+      {
+        modDir.mkdirs();
+      }
+      catch (Exception ex)
+      {
+        Log.exception(Level.SEVERE,
+          "could not create mod directory: " + modDir, ex);
+      }
+    }
+  } // createDirectories
+
+  // --------------------------------------------------------------------------
+  /**
+   * Ensure that the BlockEditSet saves directory exists.
+   */
+  public static void createBlockEditDirectory()
+  {
+    File dir = getBlockEditDirectory();
+    if (!dir.isDirectory())
+    {
+      try
+      {
+        dir.mkdirs();
+      }
+      catch (Exception ex)
+      {
+        Log.exception(Level.SEVERE, "could not create saves directory: " + dir,
+          ex);
+      }
+    }
+  } // createBlockEditDirectory
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return the directory where this mod's data files are stored.
+   * 
+   * @return the directory where this mod's data files are stored.
+   */
+  public static File getModDirectory()
+  {
+    File minecraftDir = Minecraft.getMinecraftDir();
+    return new File(minecraftDir, MOD_SUBDIR);
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return the directory where BlockEditSet files are saved.
+   * 
+   * @return the directory where BlockEditSet files are saved.
+   */
+  public static File getBlockEditDirectory()
+  {
+    return new File(getModDirectory(), SAVE_SUBDIR);
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return an input stream that reads the specified file or resource name.
+   * 
+   * If the file exists in the mod-specific configuration directory, it is
+   * loaded from there. Otherwise, the resource of the same name is loaded from
+   * the minecraft.jar file.
+   * 
+   * @return an input stream that reads the specified file or resource name.
+   */
+  public static InputStream getConfigurationStream(String fileName)
+    throws IOException
+  {
+    File file = new File(Controller.getModDirectory(), fileName);
+    if (file.canRead())
+    {
+      Log.info("Loading \"" + fileName + "\" from file.");
+      return new BufferedInputStream(new FileInputStream(file));
+    }
+    else
+    {
+      Log.info("Loading \"" + fileName + "\" from resource in minecraft.jar.");
+      ClassLoader loader = mod_Watson.class.getClassLoader();
+      return loader.getResourceAsStream(Controller.MOD_PACKAGE + '/' + fileName);
+    }
+  } // getConfigurationStream
+
+  // --------------------------------------------------------------------------
+  /**
    * Makes inferences based on LogBlock query results.
    */
   protected Sherlock                      _sherlock;
+
+  /**
+   * The settings affecting what is displayed and how.
+   */
+  protected DisplaySettings               _displaySettings = new DisplaySettings();
 
   /**
    * A map from the a String containing the server address and dimension number
@@ -305,17 +505,6 @@ public class Controller
    * {@link RenderWatson}.
    */
   protected HashMap<String, BlockEditSet> _edits           = new HashMap<String, BlockEditSet>();
-
-  /**
-   * True if wireframe block outlines should be drawn.
-   */
-  protected boolean                       _outlineShown    = true;
-
-  /**
-   * True if all Watson displays can be drawn. Other flags disable individual
-   * displays.
-   */
-  protected boolean                       _displayed       = true;
 
   /**
    * A cached reference to the GuiNewChat instance, set up as soon as it becomes
@@ -337,4 +526,22 @@ public class Controller
    * Used to compute time stamps for queryPreviousEdits().
    */
   Calendar                                _calendar        = Calendar.getInstance();
+
+  /**
+   * The main package name of the classes of this mod, and also the name of the
+   * subdirectory of .minecraft/mods/ where mod-specific settings are stored.
+   */
+  private static final String             MOD_PACKAGE      = "watson";
+
+  /**
+   * Directory where mod files reside, relative to the .minecraft/ directory.
+   */
+  private static final String             MOD_SUBDIR       = "mods"
+                                                             + File.separator
+                                                             + MOD_PACKAGE;
+  /**
+   * Subdirectory of the mod specific directory where {@link BlockEditSet}s are
+   * saved.
+   */
+  private static final String             SAVE_SUBDIR      = "saves";
 } // class Controller
