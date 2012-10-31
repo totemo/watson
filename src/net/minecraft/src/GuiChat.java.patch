@@ -1,0 +1,21 @@
+--- vanillasrc/minecraft/net/minecraft/src/GuiChat.java	2012-10-31 15:47:21.423712168 +1030
++++ modsrc/minecraft/net/minecraft/src/GuiChat.java	2012-10-31 18:16:47.296003205 +1030
+@@ -99,9 +99,9 @@
+             {
+                 this.mc.ingameGUI.getChatGUI().addToSentMessages(var3);
+ 
+-                if (!this.mc.handleClientCommand(var3))
++                if (!mod_ClientCommands.getInstance().handleClientCommand(var3))
+                 {
+-                    this.mc.thePlayer.sendChatMessage(var3);
++                    this.mc.thePlayer.sendChatMessage(mod_ClientCommands.getInstance().executeChatCallbacks(var3));
+                 }
+             }
+ 
+@@ -365,4 +365,6 @@
+     {
+         return false;
+     }
++    
++    public GuiTextField getInputField() { return this.inputField; }
+ }

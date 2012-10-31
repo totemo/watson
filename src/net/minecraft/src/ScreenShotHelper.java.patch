@@ -1,0 +1,16 @@
+--- vanillasrc/minecraft/net/minecraft/src/ScreenShotHelper.java	2012-10-31 15:48:20.281444128 +1030
++++ modsrc/minecraft/net/minecraft/src/ScreenShotHelper.java	2012-10-31 18:16:47.307001322 +1030
+@@ -73,9 +73,12 @@
+         String var2 = dateFormat.format(new Date()).toString();
+         int var3 = 1;
+ 
++        // Append player name if set.
++        String player = (String) watson.Controller.instance.getVariables().get("player");
++        String playerSuffix = (player != null) ? "-" + player : "";
+         while (true)
+         {
+-            File var1 = new File(par0File, var2 + (var3 == 1 ? "" : "_" + var3) + ".png");
++            File var1 = new File(par0File, var2 + playerSuffix + (var3 == 1 ? "" : "-" + var3) + ".png");
+ 
+             if (!var1.exists())
+             {
