@@ -58,6 +58,7 @@ public class CoalBlockAnalysis extends Analysis
       Controller.instance.getVariables().put("y", Integer.parseInt(m.group(2)));
       Controller.instance.getVariables().put("z", Integer.parseInt(m.group(3)));
       _lbPositionTime = System.currentTimeMillis();
+      _expectingFirstEdit = true;
     }
   }
 
@@ -87,9 +88,15 @@ public class CoalBlockAnalysis extends Analysis
 
       BlockType type = BlockTypeRegistry.instance.getBlockTypeByName(block);
 
-      Controller.instance.getVariables().put("time", _time.getTimeInMillis());
-      Controller.instance.getVariables().put("player", player);
-      Controller.instance.getVariables().put("block", type.getId());
+      // Update player, etc, variables on the most recent edit result only.
+      if (_expectingFirstEdit)
+      {
+        Controller.instance.getVariables().put("time", _time.getTimeInMillis());
+        Controller.instance.getVariables().put("player", player);
+        Controller.instance.getVariables().put("block", type.getId());
+        _expectingFirstEdit = false;
+      }
+
       int x = (Integer) Controller.instance.getVariables().get("x");
       int y = (Integer) Controller.instance.getVariables().get("y");
       int z = (Integer) Controller.instance.getVariables().get("z");
@@ -170,6 +177,17 @@ public class CoalBlockAnalysis extends Analysis
    * #POSITION_TIMEOUT_MILLIS}.
    */
   protected long            _lbPositionTime         = 0;
+
+  /**
+   * This flag is set to true when the coordinate header for LogBlock toolblock
+   * (coal ore) queries has just been parsed, and we are expecting to see the
+   * first edit result. It is cleared to false again after the first result.
+   * 
+   * The purpose of this is to allow us to set variables (particularly "player")
+   * from the most recent edit, which is the first listed. Older edits of the
+   * same block should have no effect on variables.
+   */
+  protected boolean         _expectingFirstEdit     = false;
 
   /**
    * The maximum time separation between an lb.position and a subsequent lb.edit
