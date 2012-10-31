@@ -30,7 +30,7 @@ public class BlockEditSet
 {
   // --------------------------------------------------------------------------
   /**
-   * Remove all entries from the list.
+   * Default constructor.
    */
   public BlockEditSet()
   {
@@ -244,8 +244,8 @@ public class BlockEditSet
       GL11.glLineWidth(0.5f);
 
       // Unit X and Y vectors used for cross products to get arrow axes.
-      Vec3 unitX = Vec3.getVec3Pool().getVecFromPool(1, 0, 0);
-      Vec3 unitY = Vec3.getVec3Pool().getVecFromPool(0, 1, 0);
+      Vec3 unitX = Vec3.field_82592_a.getVecFromPool(1, 0, 0);
+      Vec3 unitY = Vec3.field_82592_a.getVecFromPool(0, 1, 0);
 
       // We only need to draw vectors if there are at least 2 edits.
       Iterator<BlockEdit> it = _edits.iterator();
@@ -261,9 +261,9 @@ public class BlockEditSet
                          || (!next.creation && settings.isLinkedDestructions());
           if (show)
           {
-            Vec3 pPos = Vec3.getVec3Pool().getVecFromPool(0.5 + prev.x,
+            Vec3 pPos = Vec3.field_82592_a.getVecFromPool(0.5 + prev.x,
               0.5 + prev.y, 0.5 + prev.z);
-            Vec3 nPos = Vec3.getVec3Pool().getVecFromPool(0.5 + next.x,
+            Vec3 nPos = Vec3.field_82592_a.getVecFromPool(0.5 + next.x,
               0.5 + next.y, 0.5 + next.z);
             // Vector difference, from prev to next.
             Vec3 diff = nPos.subtract(pPos);
@@ -289,18 +289,16 @@ public class BlockEditSet
 
               // Position of the tip and tail of the arrow, sitting in the
               // middle of the vector.
-              Vec3 tip = Vec3.getVec3Pool().getVecFromPool(
+              Vec3 tip = Vec3.field_82592_a.getVecFromPool(
                 pPos.xCoord * (0.5 - arrowScale) + nPos.xCoord
-                  * (0.5 + arrowScale),
-                pPos.yCoord * (0.5 - arrowScale) + nPos.yCoord
-                  * (0.5 + arrowScale),
+                  * (0.5 + arrowScale), pPos.yCoord * (0.5 - arrowScale)
+                                        + nPos.yCoord * (0.5 + arrowScale),
                 pPos.zCoord * (0.5 - arrowScale) + nPos.zCoord
                   * (0.5 + arrowScale));
-              Vec3 tail = Vec3.getVec3Pool().getVecFromPool(
+              Vec3 tail = Vec3.field_82592_a.getVecFromPool(
                 pPos.xCoord * (0.5 + arrowScale) + nPos.xCoord
-                  * (0.5 - arrowScale),
-                pPos.yCoord * (0.5 + arrowScale) + nPos.yCoord
-                  * (0.5 - arrowScale),
+                  * (0.5 - arrowScale), pPos.yCoord * (0.5 + arrowScale)
+                                        + nPos.yCoord * (0.5 - arrowScale),
                 pPos.zCoord * (0.5 + arrowScale) + nPos.zCoord
                   * (0.5 - arrowScale));
 
