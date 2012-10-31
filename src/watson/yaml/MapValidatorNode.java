@@ -67,6 +67,7 @@ public class MapValidatorNode extends TypeValidatorNode
 
     return valid;
   } // validate
+
   // --------------------------------------------------------------------------
   /**
    * Expected child nodes.
