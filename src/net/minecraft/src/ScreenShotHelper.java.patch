@@ -1,5 +1,5 @@
 --- vanillasrc/minecraft/net/minecraft/src/ScreenShotHelper.java	2012-10-31 15:48:20.281444128 +1030
-+++ modsrc/minecraft/net/minecraft/src/ScreenShotHelper.java	2012-10-31 18:16:47.307001322 +1030
++++ modsrc/minecraft/net/minecraft/src/ScreenShotHelper.java	2012-10-31 19:29:39.808973551 +1030
 @@ -73,9 +73,12 @@
          String var2 = dateFormat.format(new Date()).toString();
          int var3 = 1;

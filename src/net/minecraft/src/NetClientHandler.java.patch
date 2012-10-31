@@ -1,5 +1,5 @@
 --- vanillasrc/minecraft/net/minecraft/src/NetClientHandler.java	2012-10-31 15:47:32.952700866 +1030
-+++ modsrc/minecraft/net/minecraft/src/NetClientHandler.java	2012-10-31 18:16:47.305001664 +1030
++++ modsrc/minecraft/net/minecraft/src/NetClientHandler.java	2012-10-31 19:29:39.805974074 +1030
 @@ -686,7 +686,7 @@
  
      public void handleChat(Packet3Chat par1Packet3Chat)
