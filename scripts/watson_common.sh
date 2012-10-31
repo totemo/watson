@@ -1,9 +1,22 @@
+#------------------------------------------------------------------------------
+# These lines need to change with the Minecraft and MCP versions.
 
-MC_VERSION=1.4.2
-MCP_DIR=~/bin/mcp719
-JAR_DIR=~/.minecraft/older_versions
+MCP_VER=719
+MC_VER=1.4.2
 
 #------------------------------------------------------------------------------
+# These lines only change if your directory setup is different to mine.
+
+MCP_DIR=~/bin/mcp$MCP_VER
+GIT_DIR=~/projects/watson
+JAR_DIR=~/.minecraft/versions
+
+#------------------------------------------------------------------------------
+
+DATE=$(date +%Y-%m-%d)
+
+#------------------------------------------------------------------------------
+# Echo the message in $* to stderr and exit with error status 1.
 
 fn_error()
 {

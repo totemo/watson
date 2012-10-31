@@ -1,29 +1,21 @@
 #!/bin/bash
+
+set -o nounset
+. ~/bin/watson_common.sh
+
 #------------------------------------------------------------------------------
 # Changeable bits up here:
 
-MINECRAFT_VERSION=1.3.2
-MCP_DIR=~/bin/mcp72
 ADDITIONAL_PACKAGE_DIRS="watson ClientCommands"
 ADDITIONAL_RESOURCE_FILES="*.yml"
-JAR_DIR=~/.minecraft/older_versions
 
 #------------------------------------------------------------------------------
 # Hopefully no serviceable parts below here:
 
-MINECRAFT_JAR=$JAR_DIR/minecraft-$MINECRAFT_VERSION.jar
-OUTPUT_JAR=$JAR_DIR/minecraft-$MINECRAFT_VERSION-roundtrip.jar
+MINECRAFT_JAR=$JAR_DIR/minecraft-$MC_VER.jar
+OUTPUT_JAR=$JAR_DIR/minecraft-$MC_VER-roundtrip.jar
 OBFUSCATED_JAR=../temp/client_reobf.jar
 STAGING_DIR="$MCP_DIR/packaging"
-ECLIPSE_BIN_DIR="$MCP_DIR/eclipse/Client/bin"
-
-#------------------------------------------------------------------------------
-
-fn_error()
-{
-  echo >&2 "ERROR: ""$@"
-  exit 1
-}
 
 #------------------------------------------------------------------------------
 # Compile and reobfuscate.

@@ -9,7 +9,7 @@ set -o nounset
 DATE=$(date +%Y-%m-%d_%H%M%S)
 FILE=~/backups/watson-$DATE.tar.gz
 tar cvzf "$FILE" -C ~/bin/mcp$MCP_VER/src/minecraft/ \
-  net/minecraft/src/mod_Watson.java \
+  net/minecraft/src/mod_*.java \
   watson/ \
   scripts/ \
   ClientCommands/ || echo "Backup failed." && exit 1

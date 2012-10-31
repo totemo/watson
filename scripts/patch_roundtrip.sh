@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -o nounset
+. ~/bin/watson_common.sh
+
 DO_WECUI=true
 DO_REI=true
 DO_OPTI=true
@@ -8,8 +11,8 @@ DO_LITE=true
 STAGE_DIR=/tmp/stage
 MODS_DIR=/tmp/mods
 
-ROUNDTRIP_JAR=~/.minecraft/older_versions/minecraft-1.3.2-roundtrip.jar
-MOD_JAR=~/.minecraft/older_versions/minecraft-1.3.2-mod.jar
+ROUNDTRIP_JAR=$JAR_DIRminecraft-1.3.2-roundtrip.jar
+MOD_JAR=$JAR_DIRminecraft-1.3.2-mod.jar
 
 WECUI_ZIP=~/bin/mcp72/compat/WorldEditCUI-1.3.2a.zip
 WECUI_SUBDIR=WorldEditCUI-1.3.2a/classes/
@@ -22,14 +25,6 @@ OPTI_SUBDIR=./
 
 LITE_ZIP=~/bin/mcp72/compat/liteloader_1.3.2.zip
 LITE_SUBDIR=./
-
-#------------------------------------------------------------------------------
-
-fn_error()
-{
-  echo >&2 "ERROR: ""$@"
-  exit 1
-}
 
 #------------------------------------------------------------------------------
 

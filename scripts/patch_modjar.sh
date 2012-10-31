@@ -1,23 +1,15 @@
 #!/bin/bash
 
-MC_VER=1.3.2
-OUTPUT_DIR=~/.minecraft/older_versions
+set -o nounset
+. ~/bin/watson_common.sh
+
 TMP_DIR=/tmp/watson_modjar/
 
 #------------------------------------------------------------------------------
 
-TREVOR_JAR=$OUTPUT_DIR/minecraft-$MC_VER-trevor.jar
-DATE=$(date +%Y-%m-%d)
-WATSON_ZIP=$OUTPUT_DIR/watson-$MC_VER-$DATE.zip
-OUTPUT_JAR=$OUTPUT_DIR/minecraft-$MC_VER-trevor-watson-$DATE.jar
-
-#------------------------------------------------------------------------------
-
-fn_error()
-{
-  echo >&2 "ERROR: ""$@"
-  exit 1
-}
+TREVOR_JAR=$JAR_DIR/minecraft-$MC_VER-trevor.jar
+WATSON_ZIP=$JAR_DIR/watson-$MC_VER-$DATE.zip
+OUTPUT_JAR=$JAR_DIR/minecraft-$MC_VER-trevor-watson-$DATE.jar
 
 #------------------------------------------------------------------------------
 
