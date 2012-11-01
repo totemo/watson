@@ -383,25 +383,10 @@ blocks:
     - id: 52
       names: [mob spawner]
       rgba: [25, 40, 51]
-
-      # data: 0 = oak, 1 = spruce, 2 = birch, 3 = jungle
     - id: 53
       data: 0
       names: [wood stairs]
       rgba: [188, 152, 98]
-    - id: 53
-      data: 1
-      names: [spruce wood stairs]
-      rgba: [188, 152, 98]
-    - id: 53
-      data: 2
-      names: [birch wood stairs]
-      rgba: [188, 152, 98]
-    - id: 53
-      data: 3
-      names: [jungle wood stairs]
-      rgba: [188, 152, 98]
-
     - id: 54
       names: [chest]
       rgba: [167, 110, 31]
@@ -543,7 +528,7 @@ blocks:
       names: [jack o lantern,jackolantern]
       rgba: [226, 152, 19]
     - id: 92
-      names: [cake]
+      names: [cake block,cake]
       rgba: [234, 233, 235]
       bounds: [0.0625, 0.0, 0.0625, 0.9375, 0.5, 0.9375]      
     - id: 93
@@ -703,4 +688,50 @@ blocks:
     - id: 133
       names: [emerald block]
       rgba: [131, 237, 161]
-            
+    - id: 134
+      names: [spruce wood stairs]
+      rgba: [188, 152, 98]
+    - id: 135
+      names: [birch wood stairs]
+      rgba: [188, 152, 98]
+    - id: 136
+      names: [jungle wood stairs]
+      rgba: [188, 152, 98]
+    - id: 137
+      names: [command,command block]
+      rgba: [195, 124, 77]
+    - id: 138
+      names: [beacon]
+      rgba: [160, 235, 232]
+      bounds: [0.1875, 0.1875, 0.1875, 0.8125, 0.875, 0.8125]
+    - id: 139
+      names: [cobble wall]
+      rgba: [86, 86, 86]
+      bounds: [0.25, 0.0, 0.25, 0.75, 1.0, 0.75]
+    - id: 140
+      names: [flower pot]
+      rgba: [155, 86, 67]
+      bounds: [0.3125, 0.0, 0.3125, 0.6875, 0.375, 0.6875]
+    - id: 141
+      names: [carrot]
+      rgba: [0, 198, 21]
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.25, 1.0]
+    - id: 142
+      names: [potato]
+      rgba: [0, 198, 21]
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.25, 1.0]
+    - id: 143
+      names: [wood button]
+      rgba: [188, 152, 98]
+      bounds: [0.3125, 0.375, 0.0, 0.6875, 0.625, 0.125]
+      
+      # Are there data values to set textures?
+    - id: 144
+      names: [skull]
+      rgba: [161, 161, 161]      
+      bounds: [0.25, 0.0, 0.25, 0.75, 0.5, 0.75]
+    - id: 145
+      names: [anvil]
+      rgba: [41, 41, 41]      
+      bounds: [0.125, 0.0, 0.125, 0.875, 1.0, 0.875]
+
