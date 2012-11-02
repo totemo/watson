@@ -3,16 +3,16 @@ Watson Overview
 
 Watson is a Minecraft mod designed to make the task of moderating on the reddit Minecraft servers a little easier.  The current features of the mod are:
 
-1.  It reassembles chat lines that were split by Bukkit, so that they can be categorised and parsed with regular expressions. Watson can exclude chat lines from being displayed in the client, based on their category.
-1. It displays individual edits as wireframe 3-D boxes.
-1. It draws vectors between edits indicating the time sequence of edits.
-1. It draws text annotations in 3-D space. These can act as teleport targets.
-1. Edits and annotations can be saved to files and loaded at a later date.
-1. There's a simple built-in calculator for working out stone:diamond ratios.
-1. It uses colour to highlight parts of chat that match regular expressions. This can be used to draw attention to banned words. It can also be used to highlight the names of people, acting as a rudimentary friends list.
-1. It adds player names to screenshots automatically.
-1. It does a `/region info regionname` for you when you right click on a region with the wooden sword (rate limited to once every 10 seconds - the wooden sword will simply list the region name the other times).
-1. In order to shorten coordinate displays and make them easier to read, Watson also hides the LogBlock coords lines from chat and re-echoes them in a custom, brief format, where block IDs are numeric rather than words.  Re-echoed coordinates are assigned colours based on their physical proximity.  This makes separate ore deposits easy to distinguish in the coordinate listing.
+*  It reassembles chat lines that were split by Bukkit, so that they can be categorised and parsed with regular expressions. Watson can exclude chat lines from being displayed in the client, based on their category.
+* It displays individual edits as wireframe 3-D boxes.
+* It draws vectors between edits indicating the time sequence of edits.
+* It draws text annotations in 3-D space. These can act as teleport targets.
+* Edits and annotations can be saved to files and loaded at a later date.
+* There's a simple built-in calculator for working out stone:diamond ratios.
+* It uses colour to highlight parts of chat that match regular expressions. This can be used to draw attention to banned words. It can also be used to highlight the names of people, acting as a rudimentary friends list.
+* It adds player names to screenshots automatically.
+* It does a `/region info regionname` for you when you right click on a region with the wooden sword (rate limited to once every 10 seconds - the wooden sword will simply list the region name the other times).
+* In order to shorten coordinate displays and make them easier to read, Watson also hides the LogBlock coords lines from chat and re-echoes them in a custom, brief format, where block IDs are numeric rather than words.  Re-echoed coordinates are assigned colours based on their physical proximity.  This makes separate ore deposits easy to distinguish in the coordinate listing.
 
 Using Watson
 ------------
@@ -210,13 +210,15 @@ Watson has been tested for compatibility with:
 Building
 --------
 
-Some notes on my build process:
+### Notes
+
 * The build scripts use variables set in scripts/watson_common.sh to customise the paths to inputs and outputs.
 * scripts/watson_binaries.sh outputs a ZIP file of the mod classes and resources in ~/.minecraft/versions/.  The ZIP can be loaded with MagicLauncher or applied to minecraft.jar as a patch.
 * A copy of src/watson/*.yml is placed in the ZIP under watson/.  These serve as defaults for configuration files.
 * The SnakeYAML classes are also built into the ZIP.
 
-Building:
+### Procedure
+
 1. Ensure that scripts/watson_common.sh is correct for your environment.  In particular, check that the MCP_DIR variable matches the location of your MCP installation.
 2. Patch minecraft.jar with ModLoader.
 3. Decompile with MCP.
