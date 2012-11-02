@@ -1,4 +1,5 @@
-# Watson Overview
+Watson Overview
+===============
 
 Watson is a Minecraft mod designed to make the task of moderating on the reddit Minecraft servers a little easier.  The current features of the mod are:
 
@@ -13,7 +14,8 @@ Watson is a Minecraft mod designed to make the task of moderating on the reddit 
 1. It does a `/region info regionname` for you when you right click on a region with the wooden sword (rate limited to once every 10 seconds - the wooden sword will simply list the region name the other times).
 1. In order to shorten coordinate displays and make them easier to read, Watson also hides the LogBlock coords lines from chat and re-echoes them in a custom, brief format, where block IDs are numeric rather than words.  Re-echoed coordinates are assigned colours based on their physical proximity.  This makes separate ore deposits easy to distinguish in the coordinate listing.
 
-## Using Watson
+Using Watson
+------------
 ### Viewing Edits
 
 Turn on the Watson display. This display is turned on and off automatically when switching in and out of modmode on S and P:
@@ -179,7 +181,9 @@ And for help:
 
 The list of tag names is a file chatcategories.yml in the Minecraft JAR file.  It can be overridden by extracting it to .minecraft/mods/watson/chatcategories.yml.
 
-## Files
+
+Files
+-----
 
 * **.minecraft/mods/watson/log.txt** - The debugging log. Also includes a log of chat messages.
 * **.minecraft/mods/watson/chatexclusions.yml** - The list of excluded chat category tags in YAML format.
@@ -189,52 +193,58 @@ The list of tag names is a file chatcategories.yml in the Minecraft JAR file.  I
 * **.minecraft/mods/watson/saves/** - Directory of save files containing records of edited blocks and annotations.
 
 
-## Compatibility
+Compatibility
+-------------
 
 Watson has been tested for compatibility with:
 
-* Minecraft 1.3.2 with ModLoader 1.3.2
-* WorldEditCUI 1.3.2a
-* Rei's Minimap for 1.3.2, version 3.2_05
-* Optifine 1.3.2_HD_B3
-* LiteLoader for Minecraft 1.3.2
-* Macro/Keybind Mod 0.9.3 - but note that commands originating here bypass the Watson command interpreter and go direct to the server.
+* Minecraft 1.4.2 with ModLoader 1.4.2
+* WorldEditCUI for 1.4.2 (when that is available)
+* Rei's Minimap for 1.4.2, version 3.2_05
+* Optifine 1.4.2_HD_U_A7
+* LiteLoader for Minecraft 1.4.2
+* Macro/Keybind Mod 0.9.5 - but note that commands originating here bypass the Watson command interpreter and go direct to the server.
+* MagicLauncher
 
-The Watson binary download is compatible with MagicLauncher.
 
-## Building
+Building
+--------
 
-My build process is a little bit ad-hoc at the moment.  I'll describe what I do on the understanding that there's probably (hopefully) a better way.  If you know what that better way is, talk to me.
+Some notes on my build process:
+* The build scripts use variables set in scripts/watson_common.sh to customise the paths to inputs and outputs.
+* scripts/watson_binaries.sh outputs a ZIP file of the mod classes and resources in ~/.minecraft/versions/.  The ZIP can be loaded with MagicLauncher or applied to minecraft.jar as a patch.
+* A copy of src/watson/*.yml is placed in the ZIP under watson/.  These serve as defaults for configuration files.
+* The SnakeYAML classes are also built into the ZIP.
 
-Some notes on the build process:
-* If you build the mod without using these scripts, be sure to copy watson/*.yml into the built JAR file, in the watson/ directory of the Minecraft JAR.  
-* The SnakeYAML classes need to end up in the Minecraft JAR too.
+Building:
+1. Ensure that scripts/watson_common.sh is correct for your environment.  In particular, check that the MCP_DIR variable matches the location of your MCP installation.
+2. Patch minecraft.jar with ModLoader.
+3. Decompile with MCP.
+4. Copy in the Watson sources.
+5. Patch the Mojang sources with src/net/minecraft/src/*.java.patch.
+6. Put snakeyaml-1.10.jar in the mcp<version>/lib/ directory.
+7. Run scripts/watson_binaries.sh.
 
-1. Patch minecraft.jar with ModLoader.
-1. Decompile with MCP.
-1. Mix in the Watson sources.
-1. Put snakeyaml-1.10.jar in the mcp72/lib/ directory.
-1. Run scripts/package.sh.  Note that this script uses hardwired paths to MCP and the stock Minecraft JAR.   You'll need to edit some variables up the top of it.
-1. To add in the abovementioned extra mods, use scripts/patch_roundtrip.sh.  As with package.sh, this script has some hardwired paths that need fixing.
 
-## Planned Features
+Planned Features
+----------------
 
 * A client-side spatial database for grouping adjacent edits (e.g. ores) together to facilitate better reporting of related edits (e.g. grouping related diamond edits) that can then act as a target for a smart teleport feature.
 * A simple keybinding facility, since the Macro/Keybind mod bypasses the Watson CLI.
 * Parsing of fields out of LogBlock results is currently hard-coded. This can and should be driven by a description of the fields in chatcategories.yml.
 * A 3-D cursor that can highlight edits and step through them in the sequence that they occurred.
 * The ability to filter edits and coalblock results by player, distance, time etc.
-* The ability to load and save sets of edits so that an investigation can continue at a later date.
 * Rei's minimap style billboards identifying the timestamps of key edits (e.g. ores).
-* Some automatic queries to hone in on probably grief an xray patterns.
-* Command line improvements: when you omit on|off parameters they should act as a toggle.
+* Some automatic queries to hone in on probable grief an xray patterns.
 * The ability to customise the re-echoing of coordinate lines.
 
-## Bugs
 
-* If you see a block drawn as bright magenta and somewhat smaller than 1 cubic meter, it means that the name for that block in chatcategories.yml doesn't match what LogBlock calls it. Let me know.
+Bugs
+----
+
+* If you see a block drawn as bright magenta and somewhat smaller than 1 cubic meter, it means that the name for that block in blocks.yml doesn't match what LogBlock calls it. Let me know.
 * Re-echoed coordinate lines are currently hard coded to not echo stone at all. This should be customisable.
-* Command line help is ugly because of the variable width font.
 * Currently any code that deals with timestamps assumes the current year. This will break around New Year's.
 * The calculator should probably use a custom lexer (rather than JDK class) so that extra spaces in mathematical expressions can be removed.
+* Command line help is ugly because of the variable width font.
 
