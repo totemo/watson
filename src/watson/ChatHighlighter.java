@@ -12,7 +12,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
@@ -88,8 +87,9 @@ public class ChatHighlighter
       {
         Highlight highlight = new Highlight(colourCode, pattern);
         _highlights.add(highlight);
-        Controller.instance.localChat("Added highlight #" + _highlights.size()
-                                      + " " + highlight.toString());
+        Controller.instance.localOutput("Added highlight #"
+                                        + _highlights.size() + " "
+                                        + highlight.toString());
         saveHighlights();
       }
       catch (PatternSyntaxException ex)
@@ -109,7 +109,7 @@ public class ChatHighlighter
   {
     if (_highlights.size() == 0)
     {
-      Controller.instance.localChat("No highlights set.");
+      Controller.instance.localOutput("No highlights set.");
     }
     else
     {
@@ -123,7 +123,7 @@ public class ChatHighlighter
         builder.append(_colourNames.get(highlight.colourCode));
         builder.append(' ');
         builder.append(highlight.pattern.pattern());
-        Controller.instance.localChat(builder.toString());
+        Controller.instance.localOutput(builder.toString());
       } // for
     } // else
   } // listHighlights
@@ -145,7 +145,7 @@ public class ChatHighlighter
     else
     {
       _highlights.remove(index - 1);
-      Controller.instance.localChat("Removed highlight #" + index);
+      Controller.instance.localOutput("Removed highlight #" + index);
       saveHighlights();
     }
   } // removeHighlight

@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.minecraft.client.Minecraft;
+import watson.Configuration;
 import watson.Controller;
 import watson.EntityWatson;
 import watson.RenderWatson;
@@ -34,7 +35,7 @@ public class mod_Watson extends BaseMod
   @Override
   public String getVersion()
   {
-    return VERSION;
+    return Controller.instance.getVersionNumber();
   }
 
   // --------------------------------------------------------------------------
@@ -59,15 +60,15 @@ public class mod_Watson extends BaseMod
   public void load()
   {
     Controller.createDirectories();
-
-    Log.setDebug(true);
-    Log.info("Loading Watson version " + VERSION);
+    Configuration.instance.load();
+    Log.info("Loading Watson version " + Controller.instance.getVersion());
 
     // Bail out if this mod's version doesn't match the ModLoader version.
     if (!getVersion().equals(getModLoaderVersion()))
     {
-      Log.severe("mismatched ModLoader version: (" + getModLoaderVersion()
-                 + ")");
+      Log.severe(String.format(
+        "mismatched ModLoader version: Watson: %s, ModLoader: %s",
+        getVersion(), getModLoaderVersion()));
       return;
     }
 
@@ -108,7 +109,16 @@ public class mod_Watson extends BaseMod
   {
     if (mc.theWorld != _lastWorld || mc.thePlayer != _lastPlayer)
     {
-      Log.debug("setting up EntityWatson");
+      Log.debug("Setting up EntityWatson.");
+
+      // If this is the first time entering a world/dimension entry in this
+      // session, show the startup banner.
+      if (_lastWorld == null && Configuration.instance.isEnabled())
+      {
+        Controller.instance.localOutput(String.format(
+          "Watson %s. Type /w help, for help.",
+          Controller.instance.getVersion()));
+      }
       _lastWorld = mc.theWorld;
       _lastPlayer = mc.thePlayer;
 
@@ -132,33 +142,27 @@ public class mod_Watson extends BaseMod
    */
   public String getModLoaderVersion()
   {
-    final Pattern PATTERN = Pattern.compile("\\d(\\.\\d)+$");
+    final Pattern PATTERN = Pattern.compile("\\d+(\\.\\d+)+$");
     Matcher matcher = PATTERN.matcher(ModLoader.VERSION);
     return (matcher.find()) ? matcher.group() : "";
   }
 
   // --------------------------------------------------------------------------
   /**
-   * Version string; should match Minecraft version or bail out.
-   */
-  private static final String VERSION = "1.4.2";
-
-  // --------------------------------------------------------------------------
-  /**
    * The world at the time that the last Entity used to render the edits was
    * spawned.
    */
-  protected World             _lastWorld;
+  protected World          _lastWorld;
 
   /**
    * The player at the time that the last Entity used to render the edits was
    * spawned.
    */
-  protected EntityPlayerSP    _lastPlayer;
+  protected EntityPlayerSP _lastPlayer;
 
   /**
    * An entity that depicts all of the edits currently under examination.
    */
-  protected EntityWatson      _watsonEntity;
+  protected EntityWatson   _watsonEntity;
 
 } // class mod_Watson

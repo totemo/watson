@@ -94,7 +94,7 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
         // TODO: fix this :) Have a class that allows dynamic control of
         // filtered coords.
         // Hacked in re-echoing of coords so we can see TP targets.
-        if (index < 150 && type.getId() != 1)
+        if (type.getId() != 1)
         {
           String target = String.format(
             "\247%c(%2d) %02d-%02d %02d:%02d:%02d (%d,%d,%d) %C%d %s",

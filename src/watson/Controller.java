@@ -1,14 +1,18 @@
 package watson;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.GuiIngame;
@@ -37,16 +41,23 @@ public class Controller
   /**
    * Singleton.
    */
-  public static final Controller instance = new Controller();
+  public static final Controller instance      = new Controller();
 
   // --------------------------------------------------------------------------
   /**
-   * Mod-wide initialisation tasks:
-   * <ul>
-   * <li>loading chat categories</li>
-   * <li>initialising Sherlock</li>
-   * <li>loading block types</li>
-   * </ul>
+   * The colour of the output of Watson commands (light blue).
+   */
+  public static final String     OUTPUT_COLOUR = "\247b";
+
+  /**
+   * The colour of the output of Watson error messages (red).
+   */
+  public static final String     ERROR_COLOUR  = "\2474";
+
+  // --------------------------------------------------------------------------
+  /**
+   * Mod-wide initialisation tasks, including loading configuration files and
+   * setting up commands.
    */
   public void initialise()
   {
@@ -62,6 +73,61 @@ public class Controller
     mod_ClientCommands.getInstance().registerCommand(new TagCommand());
     mod_ClientCommands.getInstance().registerCommand(new HighlightCommand());
     mod_ClientCommands.getInstance().registerCommand(new CalcCommand());
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return the full version string, in the form:
+   * 
+   * <pre>
+   * version-YYYY-MM-DD)
+   * </pre>
+   * 
+   * where version should match the Minecraft version number.
+   * 
+   * The version text is loaded from the watson/version resource.
+   * 
+   * @return the full version string.
+   */
+  public String getVersion()
+  {
+    if (_version == null)
+    {
+      ClassLoader loader = getClass().getClassLoader();
+      InputStream in = loader.getResourceAsStream(MOD_PACKAGE + "/version");
+      if (in == null)
+      {
+        _version = "unknown";
+      }
+      else
+      {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        try
+        {
+          _version = reader.readLine();
+        }
+        catch (IOException ex)
+        {
+          Log.exception(Level.SEVERE, "error reading version resource", ex);
+          _version = "unknown";
+        }
+      }
+    }
+    return _version;
+  } // getVersion
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return the initial numeric portion of the version, which should be of the
+   * form <major>.<minor>[.<micro>].
+   * 
+   * @return the initial numeric portion of the version.
+   */
+  public String getVersionNumber()
+  {
+    final Pattern PATTERN = Pattern.compile("\\d+(\\.\\d+)+");
+    Matcher matcher = PATTERN.matcher(getVersion());
+    return (matcher.find()) ? matcher.group() : "";
   }
 
   // --------------------------------------------------------------------------
@@ -113,7 +179,11 @@ public class Controller
     // Note: Minecraft.theWorld.getWorldInfo().getDimension() doesn't update.
     Minecraft mc = ModLoader.getMinecraftInstance();
     StringBuilder idBuilder = new StringBuilder();
-    if (!mc.isSingleplayer())
+
+    // This code might get referenced at startup when changing display settings
+    // if the mod happens to be disabled in the config file. At that time,
+    // mc.getServerData() will be null. Let's avoid that crash.
+    if (!mc.isSingleplayer() && mc.getServerData() != null)
     {
       idBuilder.append(mc.getServerData().serverIP);
     }
@@ -171,7 +241,7 @@ public class Controller
       BlockEditSet edits = getBlockEditSet();
       int editCount = edits.save(file);
       int annoCount = edits.getAnnotations().size();
-      localChat(String.format("Saved %d edits and %d annotations to %s",
+      localOutput(String.format("Saved %d edits and %d annotations to %s",
         editCount, annoCount, fileName));
     }
     catch (IOException ex)
@@ -212,7 +282,7 @@ public class Controller
         BlockEditSet edits = getBlockEditSet();
         int editCount = edits.load(file);
         int annoCount = edits.getAnnotations().size();
-        localChat(String.format("Loaded %d edits and %d annotations from %s",
+        localOutput(String.format("Loaded %d edits and %d annotations from %s",
           editCount, annoCount, file.getName()));
       }
       catch (Exception ex)
@@ -236,10 +306,10 @@ public class Controller
   public void listBlockEditFiles(String prefix)
   {
     File[] files = getBlockEditFileList(prefix);
-    localChat(files.length + " matching file(s):");
+    localOutput("\247b" + files.length + " matching file(s):");
     for (File file : files)
     {
-      localChat(file.getName());
+      localOutput("\247b" + file.getName());
     }
   } // listBlockEditFiles
 
@@ -269,7 +339,7 @@ public class Controller
   {
     getBlockEditSet().clear();
     _variables.clear();
-    localChat("Watson edits cleared.");
+    localOutput("Watson edits cleared.");
   }
 
   // --------------------------------------------------------------------------
@@ -325,11 +395,23 @@ public class Controller
    */
   public void localChat(String message)
   {
-    System.out.println(message);
     if (getChatGui() != null)
     {
       getChatGui().printChatMessage(_chatHighlighter.highlight(message));
     }
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Display the specified Watson command output in the local client's chat GUI.
+   * 
+   * Watson command outpus is all displayed in the colour OUTPUT_COLOUR;
+   * 
+   * @param message the message to display.
+   */
+  public void localOutput(String message)
+  {
+    localChat(OUTPUT_COLOUR + message);
   }
 
   // --------------------------------------------------------------------------
@@ -346,7 +428,7 @@ public class Controller
   {
     if (getChatGui() != null)
     {
-      getChatGui().printChatMessage("§4" + message);
+      getChatGui().printChatMessage(ERROR_COLOUR + message);
     }
   }
 
@@ -490,6 +572,11 @@ public class Controller
 
   // --------------------------------------------------------------------------
   /**
+   * Cache the version string after it is loaded from a resource.
+   */
+  protected String                        _version;
+
+  /**
    * Makes inferences based on LogBlock query results.
    */
   protected Sherlock                      _sherlock;
@@ -525,7 +612,7 @@ public class Controller
   /**
    * Used to compute time stamps for queryPreviousEdits().
    */
-  Calendar                                _calendar        = Calendar.getInstance();
+  protected Calendar                      _calendar        = Calendar.getInstance();
 
   /**
    * The main package name of the classes of this mod, and also the name of the

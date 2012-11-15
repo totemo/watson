@@ -59,6 +59,13 @@ for f in `ls $MCP_DIR/lib/*.jar 2>/dev/null`; do
 done
 
 #------------------------------------------------------------------------------
+# Update the version resource.
+
+echo "$MC_VER ($DATE)" > "$MCP_DIR"/src/minecraft/watson/version && \
+cp "$MCP_DIR"/src/minecraft/watson/version ./watson/version    || \
+fn_error "could not update the version resource"
+
+#------------------------------------------------------------------------------
 # Package the result.
 
 jar cf "$OUTPUT_JAR" . || fn_error "Can't create output JAR."

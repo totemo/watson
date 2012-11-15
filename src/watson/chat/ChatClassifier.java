@@ -200,7 +200,7 @@ public class ChatClassifier
    */
   public void classify(String line)
   {
-    Log.debug(line);
+    Log.info(line);
 
     ChatLine thisLine = new ChatLine(line);
     // Match this line in isolation.

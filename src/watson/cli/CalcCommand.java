@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
 
-import net.minecraft.src.CommandBase;
 import net.minecraft.src.ICommandSender;
 import net.minecraft.src.SyntaxErrorException;
 
@@ -17,7 +16,7 @@ import net.minecraft.src.SyntaxErrorException;
  * literal, rather than treating it as negation or subtraction. So ditch it.
  * Also doesn't understand numbers in scientific notation. Useless.
  */
-public class CalcCommand extends CommandBase
+public class CalcCommand extends WatsonCommandBase
 {
   // --------------------------------------------------------------------------
   /**
@@ -68,8 +67,8 @@ public class CalcCommand extends CommandBase
       try
       {
         // Light blue.
-        sender.sendChatToPlayer(String.format("\247b%s = %g", commandLine,
-          calculation(tokenizer)));
+        localOutput(sender,
+          String.format("%s = %g", commandLine, calculation(tokenizer)));
       }
       catch (IOException ex)
       {
@@ -84,9 +83,11 @@ public class CalcCommand extends CommandBase
    */
   private void help(ICommandSender sender)
   {
-    sender.sendChatToPlayer("Usage:");
-    sender.sendChatToPlayer("  /calc help");
-    sender.sendChatToPlayer("  /calc <expression>  -  Compute an arithmetic expression.");
+    localOutput(sender, "Usage:");
+    localOutput(sender, "  /calc help");
+    localOutput(sender,
+      "  /calc <expression>  -  Compute an arithmetic expression.");
+    localOutput(sender, "Documentation: http://github.com/totemo/watson");
   }
 
   // --------------------------------------------------------------------------
@@ -98,10 +99,13 @@ public class CalcCommand extends CommandBase
   private static String concat(String[] args)
   {
     StringBuilder commandLine = new StringBuilder();
-    for (String arg : args)
+    for (int i = 0; i < args.length; ++i)
     {
-      commandLine.append(' ');
-      commandLine.append(arg);
+      commandLine.append(args[i]);
+      if (i < args.length - 1)
+      {
+        commandLine.append(' ');
+      }
     }
     return commandLine.toString();
   } // concat

@@ -87,34 +87,36 @@ public class RenderWatson extends Render
   private void renderEntityWatson(@SuppressWarnings("unused") EntityWatson entity,
                                   float tick)
   {
+    if (Configuration.instance.isEnabled()
+        && Controller.instance.getDisplaySettings().isDisplayed())
+    {
+      RenderHelper.disableStandardItemLighting();
 
-    RenderHelper.disableStandardItemLighting();
+      GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+      GL11.glEnable(GL11.GL_BLEND);
+      GL11.glDisable(GL11.GL_TEXTURE_2D);
+      GL11.glDepthMask(false);
 
-    GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-    GL11.glEnable(GL11.GL_BLEND);
-    GL11.glDisable(GL11.GL_TEXTURE_2D);
-    GL11.glDepthMask(false);
+      GL11.glPushMatrix();
+      GL11.glTranslatef((float) -getPlayerXGuess(tick),
+        (float) -getPlayerYGuess(tick), (float) -getPlayerZGuess(tick));
+      GL11.glColor3f(1.0f, 1.0f, 1.0f); // Necessary?
+      GL11.glDepthFunc(GL11.GL_ALWAYS); // Why do chests etc still occlude?
 
-    GL11.glPushMatrix();
-    GL11.glTranslatef((float) -getPlayerXGuess(tick),
-      (float) -getPlayerYGuess(tick), (float) -getPlayerZGuess(tick));
-    GL11.glColor3f(1.0f, 1.0f, 1.0f); // Necessary?
-    GL11.glDepthFunc(GL11.GL_ALWAYS); // Why do chests etc still occlude?
+      BlockEditSet edits = Controller.instance.getBlockEditSet();
+      edits.drawOutlines();
+      edits.drawVectors();
 
-    BlockEditSet edits = Controller.instance.getBlockEditSet();
-    edits.drawOutlines();
-    edits.drawVectors();
+      // Restore normal depth buffer function.
+      GL11.glDepthFunc(GL11.GL_LEQUAL);
+      GL11.glDepthMask(true);
+      GL11.glEnable(GL11.GL_TEXTURE_2D);
+      GL11.glDisable(GL11.GL_BLEND);
 
-    // Restore normal depth buffer function.
-    GL11.glDepthFunc(GL11.GL_LEQUAL);
-    GL11.glDepthMask(true);
-    GL11.glEnable(GL11.GL_TEXTURE_2D);
-    GL11.glDisable(GL11.GL_BLEND);
+      GL11.glPopMatrix();
+      RenderHelper.enableStandardItemLighting();
 
-    GL11.glPopMatrix();
-    RenderHelper.enableStandardItemLighting();
-
-    edits.drawAnnotations();
-
+      edits.drawAnnotations();
+    } // if Watson is enabled and drawing
   } // renderEntityWatson
 } // class RenderWatson

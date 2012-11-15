@@ -3,7 +3,6 @@ package watson.cli;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import net.minecraft.src.CommandBase;
 import net.minecraft.src.ICommandSender;
 import net.minecraft.src.SyntaxErrorException;
 import watson.Annotation;
@@ -14,7 +13,7 @@ import watson.Controller;
 /**
  * A command to manipulate annotations in the current {@link BlockEditSet}.
  */
-public class AnnoCommand extends CommandBase
+public class AnnoCommand extends WatsonCommandBase
 {
   // --------------------------------------------------------------------------
   /**
@@ -51,15 +50,15 @@ public class AnnoCommand extends CommandBase
         BlockEditSet edits = Controller.instance.getBlockEditSet();
         ArrayList<Annotation> annotations = edits.getAnnotations();
 
-        sender.sendChatToPlayer(String.format("%d annotation(s)",
-          annotations.size()));
+        localOutput(sender,
+          String.format("%d annotation(s)", annotations.size()));
         int index = 1;
         for (Annotation annotation : annotations)
         {
           String line = String.format("(%d) (%d,%d,%d) %s", index,
             annotation.getX(), annotation.getY(), annotation.getZ(),
             annotation.getText());
-          sender.sendChatToPlayer(line);
+          localOutput(sender, line);
           ++index;
         }
         return;
@@ -68,8 +67,8 @@ public class AnnoCommand extends CommandBase
       {
         BlockEditSet edits = Controller.instance.getBlockEditSet();
         ArrayList<Annotation> annotations = edits.getAnnotations();
-        sender.sendChatToPlayer(String.format("%d annotation(s) cleared.",
-          annotations.size()));
+        localOutput(sender,
+          String.format("%d annotation(s) cleared.", annotations.size()));
         annotations.clear();
         return;
       }
@@ -92,7 +91,7 @@ public class AnnoCommand extends CommandBase
           }
           else
           {
-            sender.sendChatToPlayer("§4Annotation index out of range.");
+            localError(sender, "Annotation index out of range.");
           }
           return;
         }
@@ -108,12 +107,12 @@ public class AnnoCommand extends CommandBase
           if (index >= 0 && index < annotations.size())
           {
             annotations.remove(index);
-            sender.sendChatToPlayer(String.format("Removed annotation #%d",
-              (index + 1)));
+            localOutput(sender,
+              String.format("Removed annotation #%d", (index + 1)));
           }
           else
           {
-            sender.sendChatToPlayer("§4Annotation index out of range.");
+            localError(sender, "Annotation index out of range.");
           }
           return;
         }
@@ -126,7 +125,7 @@ public class AnnoCommand extends CommandBase
         Integer z = (Integer) vars.get("z");
         if (x == null || y == null || z == null)
         {
-          sender.sendChatToPlayer("§4Use the LogBlock tool to set a position.");
+          localError(sender, "Use the LogBlock tool to set a position.");
         }
         else
         {
@@ -146,7 +145,7 @@ public class AnnoCommand extends CommandBase
           String description = String.format("(%d) (%d,%d,%d) %s",
             annotations.size(), annotation.getX(), annotation.getY(),
             annotation.getZ(), annotation.getText());
-          sender.sendChatToPlayer(description);
+          localOutput(sender, description);
         }
         return;
       }
@@ -161,13 +160,14 @@ public class AnnoCommand extends CommandBase
    */
   private void help(ICommandSender sender)
   {
-    sender.sendChatToPlayer("Usage:");
-    sender.sendChatToPlayer("  /anno help");
-    sender.sendChatToPlayer("  /anno clear");
-    sender.sendChatToPlayer("  /anno list");
-    sender.sendChatToPlayer("  /anno add <text>");
-    sender.sendChatToPlayer("  /anno remove <number>");
-    sender.sendChatToPlayer("  /anno tp <number>");
+    localOutput(sender, "Usage:");
+    localOutput(sender, "  /anno help");
+    localOutput(sender, "  /anno clear");
+    localOutput(sender, "  /anno list");
+    localOutput(sender, "  /anno add <text>");
+    localOutput(sender, "  /anno remove <number>");
+    localOutput(sender, "  /anno tp <number>");
+    localOutput(sender, "Documentation: http://github.com/totemo/watson");
   }
 
 } // class AnnoCommand

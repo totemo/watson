@@ -1,6 +1,5 @@
 package watson.cli;
 
-import net.minecraft.src.CommandBase;
 import net.minecraft.src.ICommandSender;
 import net.minecraft.src.SyntaxErrorException;
 import watson.chat.ChatProcessor;
@@ -9,7 +8,7 @@ import watson.chat.ChatProcessor;
 /**
  * An ICommand implementation for the /tag commands.
  */
-public class TagCommand extends CommandBase
+public class TagCommand extends WatsonCommandBase
 {
   // --------------------------------------------------------------------------
   /**
@@ -66,10 +65,11 @@ public class TagCommand extends CommandBase
    */
   public void help(ICommandSender sender)
   {
-    sender.sendChatToPlayer("Usage:");
-    sender.sendChatToPlayer("  /tag help");
-    sender.sendChatToPlayer("  /tag list");
-    sender.sendChatToPlayer("  /tag hide name");
-    sender.sendChatToPlayer("  /tag show name");
+    localOutput(sender, "Usage:");
+    localOutput(sender, "  /tag help");
+    localOutput(sender, "  /tag list");
+    localOutput(sender, "  /tag hide <name>");
+    localOutput(sender, "  /tag show <name>");
+    localOutput(sender, "Documentation: http://github.com/totemo/watson");
   }
 } // class TagCommand

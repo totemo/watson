@@ -34,7 +34,7 @@ Use LogBlock to get the coordinates.  As Watson sees coordinates listed in chat,
 
 ![Edits with default vector length.](https://raw.github.com/totemo/watson/master/wiki/images/2012-10-24_02.20.01-flipflopfla.png)
 
-Watson groups edits together based on spatial proximity and assigns a different colour to each group.  This allows separate ore deposits to be readily distinguished.
+Watson groups edits together based on spatial proximity and echoes the co-ordinates in chat using a different colour for each group.  This allows separate ore deposits to be readily distinguished.
 
 To teleport to an edit of interest:
 

@@ -1,8 +1,8 @@
 package watson.cli;
 
-import net.minecraft.src.CommandBase;
 import net.minecraft.src.ICommandSender;
 import net.minecraft.src.SyntaxErrorException;
+import watson.Configuration;
 import watson.Controller;
 import watson.DisplaySettings;
 
@@ -10,7 +10,7 @@ import watson.DisplaySettings;
 /**
  * An ICommand implementation for the Watson /w command set.
  */
-public class WatsonCommand extends CommandBase
+public class WatsonCommand extends WatsonCommandBase
 {
   // --------------------------------------------------------------------------
   /**
@@ -236,6 +236,56 @@ public class WatsonCommand extends CommandBase
       }
     } // file
 
+    // "/w config" command.
+    if (args.length >= 2 && args[0].equals("config"))
+    {
+      // Enable or disable the mod as a whole.
+      if (args[1].equals("watson"))
+      {
+        if (args.length == 2)
+        {
+          Configuration.instance.setEnabled(!Configuration.instance.isEnabled());
+          return;
+        }
+        else if (args.length == 3)
+        {
+          if (args[2].equals("on"))
+          {
+            Configuration.instance.setEnabled(true);
+            return;
+          }
+          else if (args[2].equals("off"))
+          {
+            Configuration.instance.setEnabled(false);
+            return;
+          }
+        }
+      } // /w config watson
+
+      // Enable or disable debug logging.
+      if (args[1].equals("debug"))
+      {
+        if (args.length == 2)
+        {
+          Configuration.instance.setDebug(!Configuration.instance.isDebug());
+          return;
+        }
+        else if (args.length == 3)
+        {
+          if (args[2].equals("on"))
+          {
+            Configuration.instance.setDebug(true);
+            return;
+          }
+          else if (args[2].equals("off"))
+          {
+            Configuration.instance.setDebug(false);
+            return;
+          }
+        }
+      } // /w config debug
+    } // config
+
     throw new SyntaxErrorException("commands.generic.syntax", new Object[0]);
   } // processCommand
 
@@ -245,19 +295,28 @@ public class WatsonCommand extends CommandBase
    */
   public void help(ICommandSender sender)
   {
-    sender.sendChatToPlayer("Usage:");
-    sender.sendChatToPlayer("  /w help");
-    sender.sendChatToPlayer("  /w display [on|off]");
-    sender.sendChatToPlayer("  /w outline [on|off]");
-    sender.sendChatToPlayer("  /w anno [on|off]");
-    sender.sendChatToPlayer("  /w vector [on|off]");
-    sender.sendChatToPlayer("  /w vector creations [on|off]");
-    sender.sendChatToPlayer("  /w vector destructions [on|off]");
-    sender.sendChatToPlayer("  /w vector length <decimal>");
-    sender.sendChatToPlayer("  /w clear");
-    sender.sendChatToPlayer("  /w pre");
-    sender.sendChatToPlayer("  /w file list [<playername>]");
-    sender.sendChatToPlayer("  /w file load <filename>|<playername>");
-    sender.sendChatToPlayer("  /w file save [<filename>]");
+    localOutput(sender, "Usage:");
+    localOutput(sender, "  /w help");
+    localOutput(sender, "  /w display [on|off]");
+    localOutput(sender, "  /w outline [on|off]");
+    localOutput(sender, "  /w anno [on|off]");
+    localOutput(sender, "  /w vector [on|off]");
+    localOutput(sender, "  /w vector (creations|destructions) [on|off]");
+    localOutput(sender, "  /w vector length <decimal>");
+    localOutput(sender, "  /w clear");
+    localOutput(sender, "  /w pre");
+    localOutput(sender, "  /w file list [<playername>]");
+    localOutput(sender, "  /w file load <filename>|<playername>");
+    localOutput(sender, "  /w file save [<filename>]");
+    localOutput(sender, "  /w config <name> <value>");
+    localOutput(sender, "  /hl help");
+    localOutput(sender, "  /anno help");
+    localOutput(sender, "  /tag help");
+    localOutput(sender, "Documentation: http://github.com/totemo/watson");
+    if (!Configuration.instance.isEnabled())
+    {
+      localOutput(sender, "Watson is currently disabled.");
+      localOutput(sender, "To re-enable, use: /w config watson on");
+    }
   }
 } // class WatsonCommand

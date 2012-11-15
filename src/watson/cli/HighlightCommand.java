@@ -1,6 +1,5 @@
 package watson.cli;
 
-import net.minecraft.src.CommandBase;
 import net.minecraft.src.ICommandSender;
 import net.minecraft.src.SyntaxErrorException;
 import watson.ChatHighlighter;
@@ -10,7 +9,7 @@ import watson.Controller;
 /**
  * The Watson /hl command.
  */
-public class HighlightCommand extends CommandBase
+public class HighlightCommand extends WatsonCommandBase
 {
   // --------------------------------------------------------------------------
   /**
@@ -76,10 +75,11 @@ public class HighlightCommand extends CommandBase
    */
   public void help(ICommandSender sender)
   {
-    sender.sendChatToPlayer("Usage:");
-    sender.sendChatToPlayer("  /hl help");
-    sender.sendChatToPlayer("  /hl add colour pattern");
-    sender.sendChatToPlayer("  /hl list");
-    sender.sendChatToPlayer("  /hl remove number");
+    localOutput(sender, "Usage:");
+    localOutput(sender, "  /hl help");
+    localOutput(sender, "  /hl add <colour> <pattern>");
+    localOutput(sender, "  /hl list");
+    localOutput(sender, "  /hl remove <number>");
+    localOutput(sender, "Documentation: http://github.com/totemo/watson");
   }
 } // class HighlightCommand

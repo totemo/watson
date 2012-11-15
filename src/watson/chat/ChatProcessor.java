@@ -7,8 +7,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 
 import net.minecraft.src.GuiNewChat;
+import net.minecraft.src.ModLoader;
 import watson.BlockEdit;
 import watson.BlockEditSet;
+import watson.Configuration;
 import watson.Controller;
 import watson.debug.Log;
 
@@ -72,8 +74,17 @@ public class ChatProcessor
    */
   public void addChatToQueue(String chat)
   {
-    _chatQueue.add(chat);
-  }
+    if (Configuration.instance.isEnabled())
+    {
+      _chatQueue.add(chat);
+    }
+    else
+    {
+      // Watson is disabled. Use default Minecraft processing.
+      ModLoader.getMinecraftInstance().ingameGUI.getChatGUI().printChatMessage(
+        chat);
+    }
+  } // addToChatQueue
 
   // --------------------------------------------------------------------------
   /**
@@ -82,8 +93,9 @@ public class ChatProcessor
    */
   public void processChatQueue()
   {
-    // clear the queue of chat messages that have arrived from the network
-    // thread.
+    // Clear the queue of chat messages that have arrived from the network
+    // thread. Do this even if Watson is disabled, to clear any chats from just
+    // before it was disabled.
     for (;;)
     {
       String chat = _chatQueue.poll();
@@ -162,8 +174,8 @@ public class ChatProcessor
       CHAT_EXCLUSIONS_FILE);
     _excludeTagChatHandler.saveExclusions(exclusionsFile);
 
-    Controller.instance.localChat((visible ? "Show " : "Hide ") + tag
-                                  + " lines.");
+    Controller.instance.localOutput((visible ? "Show " : "Hide ") + tag
+                                    + " lines.");
   }
 
   // --------------------------------------------------------------------------
@@ -179,7 +191,7 @@ public class ChatProcessor
       message.append(' ');
       message.append(tag);
     }
-    Controller.instance.localChat(message.toString());
+    Controller.instance.localOutput(message.toString());
   } // listHiddenTags
 
   // --------------------------------------------------------------------------

@@ -66,7 +66,7 @@ public class RegionInfoAnalysis extends Analysis
    * Sets of /region info commands will be issued no closer together than this
    * number of milliseconds.
    */
-  protected static final long TIMEOUT_MILLIS = 10000;
+  protected static final long TIMEOUT_MILLIS = 3000;
 
   /**
    * The last time that the /region info command was automatically issued.

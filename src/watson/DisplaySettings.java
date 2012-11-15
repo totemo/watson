@@ -15,8 +15,8 @@ public class DisplaySettings
   public void setDisplayed(boolean displayed)
   {
     _displayed = displayed;
-    Controller.instance.localChat("Watson display "
-                                  + (displayed ? "enabled." : "disabled."));
+    Controller.instance.localOutput("Watson display "
+                                    + (displayed ? "enabled." : "disabled."));
   }
 
   // --------------------------------------------------------------------------
@@ -39,8 +39,8 @@ public class DisplaySettings
   public void setOutlineShown(boolean outlineShown)
   {
     _outlineShown = outlineShown;
-    Controller.instance.localChat("Outline display "
-                                  + (outlineShown ? "enabled." : "disabled."));
+    Controller.instance.localOutput("Outline display "
+                                    + (outlineShown ? "enabled." : "disabled."));
   }
 
   // --------------------------------------------------------------------------
@@ -67,9 +67,9 @@ public class DisplaySettings
   public void setAnnotationsShown(boolean annotationsShown)
   {
     _annotationsShown = annotationsShown;
-    Controller.instance.localChat("Annotation display "
-                                  + (annotationsShown ? "enabled."
-                                    : "disabled."));
+    Controller.instance.localOutput("Annotation display "
+                                    + (annotationsShown ? "enabled."
+                                      : "disabled."));
   }
 
   // --------------------------------------------------------------------------
@@ -93,8 +93,8 @@ public class DisplaySettings
   public void setVectorsShown(boolean vectorsShown)
   {
     _vectorsShown = vectorsShown;
-    Controller.instance.localChat("Vector display "
-                                  + (vectorsShown ? "enabled." : "disabled."));
+    Controller.instance.localOutput("Vector display "
+                                    + (vectorsShown ? "enabled." : "disabled."));
   }
 
   // --------------------------------------------------------------------------
@@ -122,8 +122,8 @@ public class DisplaySettings
   public void setLinkedCreations(boolean linkedCreations)
   {
     _linkedCreations = linkedCreations;
-    Controller.instance.localChat("Vectors between block creations will be "
-                                  + (linkedCreations ? "shown." : "hidden."));
+    Controller.instance.localOutput("Vectors between block creations will be "
+                                    + (linkedCreations ? "shown." : "hidden."));
   }
 
   // --------------------------------------------------------------------------
@@ -147,8 +147,9 @@ public class DisplaySettings
   public void setLinkedDestructions(boolean linkedDestructions)
   {
     _linkedDestructions = linkedDestructions;
-    Controller.instance.localChat("Vectors between block destructions will be "
-                                  + (linkedDestructions ? "shown." : "hidden."));
+    Controller.instance.localOutput("Vectors between block destructions will be "
+                                    + (linkedDestructions ? "shown."
+                                      : "hidden."));
   }
 
   // --------------------------------------------------------------------------
@@ -171,8 +172,8 @@ public class DisplaySettings
   public void setMinVectorLength(float minVectorLength)
   {
     _minVectorLength = minVectorLength;
-    Controller.instance.localChat("Minimum vector length set to "
-                                  + minVectorLength);
+    Controller.instance.localOutput("Minimum vector length set to "
+                                    + minVectorLength);
   }
 
   // --------------------------------------------------------------------------

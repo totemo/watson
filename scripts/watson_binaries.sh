@@ -22,6 +22,14 @@ rm -f "$OUTPUT_FILE" || fn_error "could not delete old file."
 rm -rf "$TMP_DIR" && mkdir -p "$TMP_DIR" || fn_error "could not create staging area."
 
 #------------------------------------------------------------------------------
+# Update the version information in the source tree and build area.
+
+mkdir -p "$TMP_DIR/watson"                                       && \
+echo "$MC_VER ($DATE)" > "$MCP_DIR"/src/minecraft/watson/version && \
+cp "$MCP_DIR"/src/minecraft/watson/version "$TMP_DIR/watson"     || \
+fn_error "could not update version resource"
+  
+#------------------------------------------------------------------------------
 
 cp "$MCP_DIR"/src/minecraft/watson/*.yml "$MCP_DIR"/reobf/minecraft/watson/ || fn_error "could not copy YAML config files."
 cd "$TMP_DIR"

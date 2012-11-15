@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 
 import watson.Controller;
 
-
 // ----------------------------------------------------------------------------
 /**
  * A simple facade over the Java logging facilities that coordinates all of
@@ -98,6 +97,17 @@ public class Log
   public static void setDebug(boolean enabled)
   {
     _logger.setLevel(enabled ? Level.FINE : Level.CONFIG);
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return true if debug messages are logged.
+   * 
+   * @return true if debug messages are logged.
+   */
+  public static boolean isDebug()
+  {
+    return _logger.getLevel().intValue() <= Level.FINE.intValue();
   }
 
   // --------------------------------------------------------------------------
