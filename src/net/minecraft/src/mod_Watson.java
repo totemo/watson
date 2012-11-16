@@ -63,13 +63,14 @@ public class mod_Watson extends BaseMod
     Configuration.instance.load();
     Log.info("Loading Watson version " + Controller.instance.getVersion());
 
-    // Bail out if this mod's version doesn't match the ModLoader version.
+    // ModLoader currently misreports its version, so we can not be strict about
+    // matching it. If it compiles, assume it's gonna work.
     if (!getVersion().equals(getModLoaderVersion()))
     {
-      Log.severe(String.format(
+      Log.warning(String.format(
         "mismatched ModLoader version: Watson: %s, ModLoader: %s",
         getVersion(), getModLoaderVersion()));
-      return;
+      // return;
     }
 
     Controller.instance.initialise();

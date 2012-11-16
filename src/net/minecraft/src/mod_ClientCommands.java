@@ -6,8 +6,6 @@ import java.util.List;
 import ClientCommands.ChatCallback;
 import ClientCommands.ClientCommandManager;
 
-
-
 public class mod_ClientCommands extends BaseMod
 {
   private static mod_ClientCommands instance             = null;
@@ -57,7 +55,7 @@ public class mod_ClientCommands extends BaseMod
   @Override
   public String getVersion()
   {
-    return "v0.9 by slide23, totemo for Minecraft v1.3.2";
+    return "v0.9 by slide23, totemo for Minecraft v1.4.4";
   }
 
   @Override
