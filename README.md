@@ -182,10 +182,35 @@ And for help:
 The list of tag names is a file chatcategories.yml in the Minecraft JAR file.  It can be overridden by extracting it to .minecraft/mods/watson/chatcategories.yml.
 
 
+### Configuration File
+
+Watson's main configuration settings are stored in ".minecraft/mods/watson/configuration.yml".  They can be changed using the "/w config" command.  If a setting can be either "on" or "off", omitting a value for it in "/w config" will reverse the current value.
+
+<table>
+  <tr>
+    <th>Setting</th> <th>Values</th> <th>Default</th>  <th>Purpose</th> <th>Example</th>
+  </tr>
+  <tr>
+    <td>watson</td> <td>on / off</td> <td>on</td> <td>Enable/disable all Watson functions.</td> <td>/w config watson off</td>
+  </tr>
+  <tr>
+    <td>debug</td> <td>on / off</td> <td>off</td> <td>Enable/disable all debug messages in the log file.</td> <td>/w config debug</td>
+  </tr>
+  <tr>
+    <td>auto_page</td> <td>on / off</td> <td>off</td> <td>(Experimental) Enable/disable automatic paging through "/w pre" results (up to 3 pages).</td> <td>/w config auto_page on</td>
+  </tr>
+  <tr>
+    <td>region_info_timeout</td> <td>decimal number of seconds >= 1.0</td> <td>5.0</td> <td>Minimum elapsed time between automatic "/region info" commands when right clicking with the wooden sword.</td> <td>/w config region_info_timeout 3</td>
+  </tr>
+  
+</table>
+
+
 Files
 -----
 
 * **.minecraft/mods/watson/log.txt** - The debugging log. Also includes a log of chat messages.
+* **.minecraft/mods/watson/configuration.yml** - The main configuration file.  Stores a variety of settings that persist between Minecraft sessions.
 * **.minecraft/mods/watson/chatexclusions.yml** - The list of excluded chat category tags in YAML format.
 * **.minecraft/mods/watson/chathighights.yml** - The list of colours and regular expressions for highlighting chat content. The default contents of this file are saved in the modified minecraft.jar file and saved as a separate file the first time /hl add or /hl remove is run.
 * **.minecraft/mods/watson/chatcategories.yml** - If this file exists, it overrides the default version of it stored in minecraft.jar. It defines the categories of chat lines and the regular expressions used to recognise them.
