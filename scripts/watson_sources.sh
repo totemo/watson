@@ -43,8 +43,8 @@ done
 
 #------------------------------------------------------------------------------
 
-cd "$MCP_DIR/modsrc/minecraft/" && cp -r * "$GIT_DIR"/src || fn_error "could not copy sources"
 cd "$MCP_DIR" && cp src/minecraft/watson/*.yml modsrc/minecraft/watson || fn_error "could not copy YAML files"
+cd "$MCP_DIR/modsrc/minecraft/" && cp -r * "$GIT_DIR"/src || fn_error "could not copy sources"
 
 #------------------------------------------------------------------------------
 # Clear out any Mojang sources. Any changes should be covered by .patch files.

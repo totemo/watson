@@ -179,7 +179,7 @@ categories:
     - tag: list.moderators
       extensible: true
       initialRegex: "^[mM]oderators: \\w+(?: \\w+)*$" 
-      fullRegex: "^[mM]oderators: \\w+(?:, \\w+)*$"     
+      fullRegex: "^[mM]oderators: \\w+(?: \\w+)*$"     
 #      initialRegex: "^[mM]oderators: \\w+(?:, \\w+)*(?:,(?: )?)?$" 
 #      fullRegex: "^mM]oderators: \\w+(?:, \\w+)*$"
  
