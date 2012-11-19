@@ -191,16 +191,16 @@ Watson's main configuration settings are stored in ".minecraft/mods/watson/confi
     <th>Setting</th> <th>Values</th> <th>Default</th>  <th>Purpose</th> <th>Example</th>
   </tr>
   <tr>
-    <td>watson</td> <td>on / off</td> <td>on</td> <td>Enable/disable all Watson functions.</td> <td>/w config watson off</td>
+    <td>watson</td> <td>on / off</td> <td>on</td> <td>Enable/disable all Watson functions.</td> <td><pre>/w config watson off</pre></td>
   </tr>
   <tr>
-    <td>debug</td> <td>on / off</td> <td>off</td> <td>Enable/disable all debug messages in the log file.</td> <td>/w config debug</td>
+    <td>debug</td> <td>on / off</td> <td>off</td> <td>Enable/disable all debug messages in the log file.</td> <td><pre>/w config debug</pre></td>
   </tr>
   <tr>
-    <td>auto_page</td> <td>on / off</td> <td>off</td> <td>(Experimental) Enable/disable automatic paging through "/w pre" results (up to 3 pages).</td> <td>/w config auto_page on</td>
+    <td>auto_page</td> <td>on / off</td> <td>off</td> <td>(Experimental) Enable/disable automatic paging through "/w pre" results (up to 3 pages).</td> <td><pre>/w config auto_page on</pre></td>
   </tr>
   <tr>
-    <td>region_info_timeout</td> <td>decimal number of seconds >= 1.0</td> <td>5.0</td> <td>Minimum elapsed time between automatic "/region info" commands when right clicking with the wooden sword.</td> <td>/w config region_info_timeout 3</td>
+    <td>region_info_timeout</td> <td>decimal number of seconds >= 1.0</td> <td>5.0</td> <td>Minimum elapsed time between automatic "/region info" commands when right clicking with the wooden sword.</td> <td><pre>/w config region_info_timeout 3</pre></td>
   </tr>
   
 </table>
