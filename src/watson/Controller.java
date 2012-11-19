@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -434,15 +435,51 @@ public class Controller
 
   // --------------------------------------------------------------------------
   /**
-   * Send the specified message in a chat packet to the server.
+   * Queue the specified message in a chat packet for transmission to the
+   * server.
    * 
    * @param message the chat message to send.
    */
   public void serverChat(String message)
   {
-    Packet3Chat chat = new Packet3Chat(message);
-    ModLoader.clientSendPacket(chat);
+    _serverChatQueue.add(message);
   }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Send the specified chat message to the server immediately (not throttled).
+   * 
+   * @param message the chat message to send.
+   */
+  public void immediateServerChat(String message)
+  {
+    if (message != null)
+    {
+      ModLoader.clientSendPacket(new Packet3Chat(message));
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * To prevent Watson's "/w pre" command from automatically issuing /lb page
+   * commands at a rate that would annoy the server's spam filter, outgoing
+   * (programmatically generated) chat packets are added to this queue and rate
+   * limited to at most one per CHAT_TIMEOUT_MILLIS milliseconds.
+   */
+  public void processServerChatQueue()
+  {
+    // Just in case System.currentTimeMillis() is stil relatively expensive...
+    if (!_serverChatQueue.isEmpty())
+    {
+      long now = System.currentTimeMillis();
+      if (now - _lastServerChatTime >= CHAT_TIMEOUT_MILLIS)
+      {
+        _lastServerChatTime = now;
+        String message = _serverChatQueue.poll();
+        immediateServerChat(message);
+      }
+    }
+  } // processServerChatQueue
 
   // --------------------------------------------------------------------------
   /**
@@ -584,14 +621,14 @@ public class Controller
   /**
    * The settings affecting what is displayed and how.
    */
-  protected DisplaySettings               _displaySettings = new DisplaySettings();
+  protected DisplaySettings               _displaySettings    = new DisplaySettings();
 
   /**
    * A map from the a String containing the server address and dimension number
    * to the corresponding set of {@link BlockEdit}s that are displayed by
    * {@link RenderWatson}.
    */
-  protected HashMap<String, BlockEditSet> _edits           = new HashMap<String, BlockEditSet>();
+  protected HashMap<String, BlockEditSet> _edits              = new HashMap<String, BlockEditSet>();
 
   /**
    * A cached reference to the GuiNewChat instance, set up as soon as it becomes
@@ -602,33 +639,51 @@ public class Controller
   /**
    * The chat highlighter.
    */
-  protected ChatHighlighter               _chatHighlighter = new ChatHighlighter();
+  protected ChatHighlighter               _chatHighlighter    = new ChatHighlighter();
 
   /**
    * Map from name to value of all of the variables scraped from chat lines.
    */
-  protected HashMap<String, Object>       _variables       = new HashMap<String, Object>();
+  protected HashMap<String, Object>       _variables          = new HashMap<String, Object>();
 
   /**
    * Used to compute time stamps for queryPreviousEdits().
    */
-  protected Calendar                      _calendar        = Calendar.getInstance();
+  protected Calendar                      _calendar           = Calendar.getInstance();
+
+  /**
+   * A queue of programmatically generated chats (commands to be sent to the
+   * server).
+   */
+  protected ConcurrentLinkedQueue<String> _serverChatQueue    = new ConcurrentLinkedQueue<String>();
+
+  /**
+   * The last local time at which a queued up chat was sent to the server.
+   */
+  protected long                          _lastServerChatTime;
+
+  /**
+   * The minimum number of milliseconds between sending chat messages added
+   * using serverChat() to the server.
+   */
+  public static final int                 CHAT_TIMEOUT_MILLIS = 1000;
 
   /**
    * The main package name of the classes of this mod, and also the name of the
    * subdirectory of .minecraft/mods/ where mod-specific settings are stored.
    */
-  private static final String             MOD_PACKAGE      = "watson";
+  protected static final String           MOD_PACKAGE         = "watson";
 
   /**
    * Directory where mod files reside, relative to the .minecraft/ directory.
    */
-  private static final String             MOD_SUBDIR       = "mods"
-                                                             + File.separator
-                                                             + MOD_PACKAGE;
+  protected static final String           MOD_SUBDIR          = "mods"
+                                                                + File.separator
+                                                                + MOD_PACKAGE;
   /**
    * Subdirectory of the mod specific directory where {@link BlockEditSet}s are
    * saved.
    */
-  private static final String             SAVE_SUBDIR      = "saves";
+  protected static final String           SAVE_SUBDIR         = "saves";
+
 } // class Controller

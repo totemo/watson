@@ -284,6 +284,49 @@ public class WatsonCommand extends WatsonCommandBase
           }
         }
       } // /w config debug
+
+      // Enable or disable automatic "/lb coords" paging.
+      if (args[1].equals("auto_page"))
+      {
+        if (args.length == 2)
+        {
+          Configuration.instance.setAutoPage(!Configuration.instance.isAutoPage());
+          return;
+        }
+        else if (args.length == 3)
+        {
+          if (args[2].equals("on"))
+          {
+            Configuration.instance.setAutoPage(true);
+            return;
+          }
+          else if (args[2].equals("off"))
+          {
+            Configuration.instance.setAutoPage(false);
+            return;
+          }
+        }
+      } // /w config auto_page
+
+      // Set minimum time separation between automatic "/region info"s.
+      if (args[1].equals("region_info_timeout"))
+      {
+        if (args.length == 3)
+        {
+          try
+          {
+            double seconds = Double.parseDouble(args[2]);
+            Configuration.instance.setRegionInfoTimeoutSeconds(seconds);
+            return;
+          }
+          catch (NumberFormatException ex)
+          {
+            // TODO: How to generate a more informative error message than
+            // just the default "Invalid command syntax"?
+          }
+        }
+      } // /w config auto_page
+
     } // config
 
     throw new SyntaxErrorException("commands.generic.syntax", new Object[0]);

@@ -1,13 +1,11 @@
 package watson;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
-
 
 import org.yaml.snakeyaml.Yaml;
 
@@ -50,7 +48,7 @@ public final class BlockTypeRegistry
         in.close();
       }
     }
-    catch (IOException ex)
+    catch (Exception ex)
     {
       Log.exception(Level.SEVERE, "error loading block types: ", ex);
     }

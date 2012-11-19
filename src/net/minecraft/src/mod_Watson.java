@@ -128,6 +128,7 @@ public class mod_Watson extends BaseMod
     }
 
     ChatProcessor.getInstance().processChatQueue();
+    Controller.instance.processServerChatQueue();
     return true;
   } // onTickInGame
 

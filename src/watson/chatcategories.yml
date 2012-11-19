@@ -199,8 +199,7 @@ categories:
       fullRegex: "^Can you build\\? (Yes|No)$"   
     - tag: wg.regions
       id: wg.regions
-      initialRegex: "^Applicable regions: \\w+.*$" 
-      fullRegex: "^Applicable regions: (\\w+(?:, \\w+)*)$"   
+      fullRegex: "^Applicable regions: ([a-zA-Z0-9_-]+(?:, [a-zA-Z0-9_-]+)*)$"   
     - tag: wg.noregions
       fullRegex: "^WorldGuard: No defined regions here!$"
 
@@ -211,27 +210,27 @@ categories:
     - tag: wg.expanded
       fullRegex: "^Region (?:expanded|contracted) \\d+ blocks\\.$"   
     - tag: wg.saved
-      fullRegex: "^Region saved as \\w+\\.$"   
+      fullRegex: "^Region saved as [a-zA-Z0-9_-]+\\.$"   
 
     - tag: wg.region
-      fullRegex: "^Region: \\w+ \\(type: \\w+\\)$"   
+      fullRegex: "^Region: [a-zA-Z0-9_-]+ \\(type: \\w+\\)$"   
     - tag: wg.updated
-      fullRegex: "^Region '\\w+' updated\\.$"   
+      fullRegex: "^Region '[a-zA-Z0-9_-]+' updated\\.$"   
     - tag: wg.area
       fullRegex: "^Region updated with new area\\.$"   
     - tag: wg.notregion
-      fullRegex: "^A region with ID '\\w+' doesn't exist\\.$"   
+      fullRegex: "^A region with ID '[a-zA-Z0-9_-]+' doesn't exist\\.$"   
     - tag: wg.setparent
-      fullRegex: "^Parent of '\\w+' set to '\\w+'\\.$"   
+      fullRegex: "^Parent of '[a-zA-Z0-9_-]+' set to '[a-zA-Z0-9_-]+'\\.$"   
     - tag: wg.priority
-      fullRegex: "^Priority: \\d+$"   
+      fullRegex: "^Priority: \\d+$"
 
     # The line noise on the end of this regexp accounts for all of the places
     # where ", flag-name: ALLOW" could be split.
     - tag: wg.flags
       fullRegex: "^Flags: (?:\\w|-)+: (?:ALLOW|DENY)(?:, (?:\\w|-)+: (?:ALLOW|DENY))*(?:,(?: (?:(?:\\w|-)+(?::(?: (?:\\w+)?)?)?)?)?)?$"   
     - tag: wg.parent
-      fullRegex: "^Parent: (?:\\w+|\\(none\\))$"   
+      fullRegex: "^Parent: (?:[a-zA-Z0-9_-]+|\\(none\\))$"   
     - tag: wg.owners
       initialRegex: "^Owners: \\w+(?:, \\w+)*(?:,(?: )?)?$"
       fullRegex: "^Owners: \\w+(?:, \\w+)*$"   
@@ -241,7 +240,7 @@ categories:
     - tag: wg.bounds
       fullRegex: "^Bounds: \\(-?\\d+,\\d+,-?\\d+\\) \\(-?\\d+,\\d+,-?\\d+\\)$"   
     - tag: wg.removed
-      fullRegex: "^Region '\\w+' removed\\.$"   
+      fullRegex: "^Region '[a-zA-Z0-9_-]+' removed\\.$"   
          
     - tag: we.first 
       fullRegex: "^First position set to \\(-?\\d+\\.\\d+, -?\\d+\\.\\d+, -?\\d+\\.\\d+\\)(: \\(\\d+\\))?\\.$"   
@@ -259,12 +258,16 @@ categories:
     - tag: lb.header
       fullRegex: "^No results found\\.$"   
     - tag: lb.header
+      id: lb.header.changes
       fullRegex: "^\\d+ changes? found\\.$"   
     - tag: lb.header
+      id: lb.header.blocks
       fullRegex: "^\\d+ blocks? found\\.$"
     - tag: lb.header
+      id: lb.header.sumblocks
       fullRegex: "^Created - Destroyed - Block$"   
     - tag: lb.header
+      id: lb.header.sumplayers
       fullRegex: "^Created - Destroyed - Player$"   
     - tag: lb.tool
       fullRegex: "^Tool (?:en|dis)abled\\.$"   
@@ -316,11 +319,15 @@ categories:
     # TODO: pretty sure even these lines get broken.
     - tag: lb.sum
       fullRegex: "^\\d+[ ]{6,}\\d+[ ]{6,}(?:\\w| )+$"   
-    - tag: lb.header 
+    - tag: lb.header
+      id: lb.header.searching
       initialRegex: "^Searching Block changes from player \\w+ in the .*$" 
       fullRegex: "^Searching Block changes from player \\w+ in the last \\d+ minutes (?:within \\d+ blocks of you )?in \\w+:$"
-    - tag: lb.header 
-      initialRegex: "^(?: |\\w)+ (?:destructions|changes) from player \\w+ in the .*$" 
+      
+    # "§3Diamond ore changes from player totemo in the last 1440 minutes in world:"
+    - tag: lb.header
+      id: lb.header.block
+      initialRegex: "^(?: |\\w)+ (?:destructions|changes) from player \\w+ .*$" 
       fullRegex: "^(?: |\\w)+ (?:destructions|changes) from player \\w+ (?:in the last \\d+ minutes )?(?:within \\d+ blocks of you )?in \\w+(?: summed up by (players|blocks))?:$"
       
       # Since the server is no longer splitting lines, just list the full regex.   

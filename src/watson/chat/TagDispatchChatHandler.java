@@ -8,6 +8,9 @@ import java.util.HashMap;
  * on the tag of the {@link ChatCategory} assigned to a {@link ChatLine}.
  * 
  * This class only supports a single {@link IChatHandler} for each distinct tag.
+ * 
+ * TODO: Add support for multiple handlers for each tag, because there may be
+ * contention for hooking the header lines in the future.
  */
 public class TagDispatchChatHandler implements IChatHandler
 {

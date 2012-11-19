@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import watson.BlockEdit;
 import watson.BlockType;
 import watson.BlockTypeRegistry;
+import watson.Configuration;
 import watson.Controller;
 import watson.chat.ChatClassifier;
 import watson.chat.ChatProcessor;
@@ -32,17 +33,17 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
       this, "lbCoord"));
     tagDispatchChatHandler.setChatHandler("lb.coordreplaced",
       new MethodChatHandler(this, "lbCoordReplaced"));
+    tagDispatchChatHandler.setChatHandler("lb.page", new MethodChatHandler(
+      this, "lbPage"));
+    tagDispatchChatHandler.setChatHandler("lb.header", new MethodChatHandler(
+      this, "lbHeader"));
 
-    // No longer automatically calling /lb next
-    // _chatHandler.setChatHandler("lb.page",
-    // new MethodChatHandler(this, "lbPage"));
     _lbCoord = ChatProcessor.getInstance().getChatClassifier().getChatCategoryById(
       "lb.coord").getFullPattern();
     _lbCoordReplaced = ChatProcessor.getInstance().getChatClassifier().getChatCategoryById(
       "lb.coordreplaced").getFullPattern();
-
-    // _lbPage =
-    // ChatProcessor.getInstance().getChatClassifier().getChatCategoryById("lb.page").getFullPattern();
+    _lbPage = ChatProcessor.getInstance().getChatClassifier().getChatCategoryById(
+      "lb.page").getFullPattern();
   } // registerAnalysis
 
   // --------------------------------------------------------------------------
@@ -103,18 +104,8 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
           Controller.instance.localChat(target);
         }
 
-        // // Having found a valid coordinate, also ask for the next page.
-        // // Put a limit of 200 pages on it.
-        // if (_currentPage != 0 && _currentPage < _pageCount
-        // && _currentPage <= 200)
-        // {
-        // // Remember that we don't need to do this again until next page is
-        // // parsed.
-        // _currentPage = 0;
-        // Packet3Chat chat = new Packet3Chat("/lb next");
-        // ModLoader.clientSendPacket(chat);
-        // }
-      }
+        requestNextPage();
+      } // regexp matched
     }
     catch (Exception ex)
     {
@@ -169,7 +160,7 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
 
         // TODO: fix this :)
         // Hacked in re-echoing of coords so we can see TP targets.
-        if (index < 150 && type.getId() != 1)
+        if (type.getId() != 1)
         {
           String target = String.format(
             "\247%c(%2d) %02d-%02d %02d:%02d:%02d (%d,%d,%d) %C%d %s",
@@ -177,7 +168,9 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
             second, x, y, z, '-', type.getId(), player);
           Controller.instance.localChat(target);
         }
-      }
+
+        requestNextPage();
+      } // regexp matched
     }
     catch (Exception ex)
     {
@@ -214,7 +207,11 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
   // --------------------------------------------------------------------------
   /**
    * This method is called by the {@link ChatClassifier} when a chat line is
-   * assigned the "lb.coord" category.
+   * assigned the "lb.page" category.
+   * 
+   * We run "/lb page (n+1)" automatically if there are 3 or less pages of
+   * results in the "/lb coords" output. This gets all of the coords from a
+   * "/w pre" ("limit 45" == 3 pages).
    */
   @SuppressWarnings("unused")
   private void lbPage(watson.chat.ChatLine line)
@@ -227,8 +224,16 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
         int currentPage = Integer.parseInt(m.group(1));
         int pageCount = Integer.parseInt(m.group(2));
 
-        _currentPage = currentPage;
-        _pageCount = pageCount;
+        // Enforce the page limit here.
+        if (pageCount <= MAX_PAGES)
+        {
+          _currentPage = currentPage;
+          _pageCount = pageCount;
+        }
+        else
+        {
+          _currentPage = _pageCount = 0;
+        }
       }
     }
     catch (Exception ex)
@@ -236,6 +241,51 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
       // System.out.println(ex);
     }
   } // lbPage
+
+  // --------------------------------------------------------------------------
+  /**
+   * Sometimes you do an /lb query (e.g. "/lb time 4h block 56 sum p") that
+   * results in a page header ("Page 1/3"), and immediately follow that with an
+   * "/lb coords" query that doesn't have a page header. Consequently,
+   * _currentPage and _pageCount can be set to the values for the preceding
+   * query and requestNextPage() will attempt to page through. To prevent that,
+   * we look for the various headers in /lb results and clear the counters.
+   */
+  @SuppressWarnings("unused")
+  private void lbHeader(watson.chat.ChatLine line)
+  {
+    _currentPage = _pageCount = 0;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * This method is called when coordinates are parsed out of chat to request
+   * the next page of "/lb coords" results, up to a maximum of MAX_PAGES pages.
+   */
+  private void requestNextPage()
+  {
+    if (Configuration.instance.isAutoPage())
+    {
+      if (_currentPage != 0 && _currentPage < _pageCount
+          && _pageCount <= MAX_PAGES)
+      {
+        Controller.instance.serverChat(String.format("/lb page %d",
+          _currentPage + 1));
+
+        // Remember that we don't need to do this again until next page is
+        // parsed.
+        _currentPage = _pageCount = 0;
+      }
+    }
+  } // requestNextPage
+
+  // --------------------------------------------------------------------------
+  /**
+   * The maximum number of pages for which "/lb page (n+1)" will be
+   * automatically called. If the total page count is more than this, the user
+   * must manually page though all of them.
+   */
+  protected static final int   MAX_PAGES               = 3;
 
   // --------------------------------------------------------------------------
   /**
@@ -276,7 +326,7 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
    * separated by to colour them differently when their coordinates are echoed
    * in chat.
    */
-  protected static final float _COLOUR_PROXIMITY_LIMIT = 5.0f;
+  protected static final float _COLOUR_PROXIMITY_LIMIT = 4.0f;
 
   /**
    * The last set of coordinates re-echoed in chat.

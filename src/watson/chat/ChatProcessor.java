@@ -1,7 +1,6 @@
 package watson.chat;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
@@ -126,7 +125,7 @@ public class ChatProcessor
         in.close();
       }
     }
-    catch (IOException ex)
+    catch (Exception ex)
     {
       Log.exception(Level.SEVERE, "error loading chat categories: ", ex);
     }
@@ -151,7 +150,7 @@ public class ChatProcessor
         in.close();
       }
     }
-    catch (IOException ex)
+    catch (Exception ex)
     {
       Log.exception(Level.SEVERE, "error loading chat exclusions: ", ex);
     }
