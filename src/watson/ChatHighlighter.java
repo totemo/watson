@@ -152,7 +152,7 @@ public class ChatHighlighter
 
   // --------------------------------------------------------------------------
   /**
-   * Load the chat categories from a YAML file in the mod's configuration
+   * Load the highlights from a YAML file in the mod's configuration
    * subdirectory, or from minecraft.jar as a fallback.
    */
   public void loadHighlights()
@@ -177,7 +177,7 @@ public class ChatHighlighter
 
   // --------------------------------------------------------------------------
   /**
-   * Load the excluded chat category tags from the specified InputStream.
+   * Load the highlights from the specified InputStream.
    * 
    * TODO: this could, with some effort, be a bit more forgiving of file format
    * errors.
@@ -218,7 +218,7 @@ public class ChatHighlighter
 
   // --------------------------------------------------------------------------
   /**
-   * Save the highlights to the disk.
+   * Save the highlights to the configuration file.
    */
   public void saveHighlights()
   {
