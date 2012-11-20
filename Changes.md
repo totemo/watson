@@ -7,7 +7,7 @@ Change History
 1.4.2 (2012-11-20)
 ------------------
 * Configuration setting for rate of automatic /region info command with wood sword.
-* Experimental support for automatic pagin through /w pre results (configured off by default).
+* Experimental support for automatic paging through /w pre results (configured off by default).
 * Throttling of commands sent to server.
 * Regexp fixes in chatcategories.yml.
 * Allow highlight patterns to contain spaces, rather than requiring \s.
