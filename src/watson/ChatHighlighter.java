@@ -15,7 +15,8 @@ import java.util.regex.PatternSyntaxException;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
-import watson.chat.ChatClassifier;
+import watson.chat.Colour;
+import watson.chat.Text;
 import watson.debug.Log;
 
 // ----------------------------------------------------------------------------
@@ -57,46 +58,43 @@ public class ChatHighlighter
    */
   public String highlight(String chat)
   {
-    String result = chat;
+    Text text = new Text(chat);
     for (Highlight h : _highlights)
     {
-      result = h.highlight(result);
+      h.highlight(text);
     }
-    return result;
+    return text.toFormattedString();
   }
 
   // --------------------------------------------------------------------------
   /**
    * Add another pattern to highlight.
    * 
-   * @param colour either the name of a colour, or a single character colour
+   * @param colourName either the name of a colour, or a single character colour
    *          code in the character class [0-9a-fA-F].
    * @param pattern the regular expression describing sequences of characters to
    *          be highlighted.
    */
-  public void addHighlight(String colour, String pattern)
+  public void addHighlight(String colourName, String pattern)
   {
-    Character colourCode = getColourCode(colour);
-    if (colourCode == null)
+    try
     {
-      Controller.instance.localError(colour + " is not a valid colour name.");
+      Highlight highlight = new Highlight(Colour.getByCodeOrName(colourName),
+        pattern);
+      _highlights.add(highlight);
+      Controller.instance.localOutput("Added highlight #" + _highlights.size()
+                                      + " " + highlight.toString());
+      saveHighlights();
     }
-    else
+    catch (PatternSyntaxException ex)
     {
-      try
-      {
-        Highlight highlight = new Highlight(colourCode, pattern);
-        _highlights.add(highlight);
-        Controller.instance.localOutput("Added highlight #"
-                                        + _highlights.size() + " "
-                                        + highlight.toString());
-        saveHighlights();
-      }
-      catch (PatternSyntaxException ex)
-      {
-        Controller.instance.localError(pattern
-                                       + " is not a valid regular expression.");
-      }
+      Controller.instance.localError(pattern
+                                     + " is not a valid regular expression.");
+    }
+    catch (IllegalArgumentException ex)
+    {
+      Controller.instance.localError(colourName
+                                     + " is not a valid colour name.");
     }
   } // addHighlight
 
@@ -120,14 +118,13 @@ public class ChatHighlighter
         builder.append('(');
         builder.append(i + 1);
         builder.append(") ");
-        builder.append(_colourNames.get(highlight.colourCode));
+        builder.append(highlight.colour.name());
         builder.append(' ');
         builder.append(highlight.pattern.pattern());
         Controller.instance.localOutput(builder.toString());
       } // for
     } // else
   } // listHighlights
-
   // --------------------------------------------------------------------------
   /**
    * Remove the highlight identified by the 1-based identifier as shown by
@@ -254,70 +251,25 @@ public class ChatHighlighter
 
   // --------------------------------------------------------------------------
   /**
-   * Define a colour name to colour code mapping.
-   * 
-   * The first name specified for a given colour code is treated as the
-   * canonical name, which will be returned when looking up the colour name by
-   * colour code.
-   * 
-   * @param name the name of the colour.
-   * @param colourCode the corresponding colour code character.
-   */
-  static void addColour(String name, char colourCode)
-  {
-    Character code = colourCode;
-    _colours.put(name, code);
-    if (!_colourNames.containsKey(code))
-    {
-      _colourNames.put(code, name);
-    }
-  } // addColour
-
-  // --------------------------------------------------------------------------
-  /**
-   * Return the single character colour code for the colour with the given name.
-   * 
-   * @param colourName the name of the colour, or a single character that is a
-   *          valid colour code in the character class [0-9a-fA-F].
-   * @return the corresponding normalised (lower case) colour code character in
-   *         the character class [0-9a-f].
-   */
-  static Character getColourCode(String colourName)
-  {
-    if (colourName.length() == 1)
-    {
-      char code = Character.toLowerCase(colourName.charAt(0));
-      if ((code >= '0' && code <= '9') || (code >= 'a' && code <= 'f'))
-      {
-        return code;
-      }
-    }
-
-    // Otherwise, more than one character, or a single non-colour-code
-    // character:
-    return _colours.get(colourName.toLowerCase());
-  } // getColourCode
-
-  // --------------------------------------------------------------------------
-  /**
-   * A POD type that records the association between a colour code and a
-   * Pattern.
+   * Records the association between a colour code and a Pattern.
    */
   private static class Highlight
   {
+    // ------------------------------------------------------------------------
     /**
-     * Constuctor.
+     * Constructor.
      * 
-     * @param colourCode a validated colour code in [0-9a-f].
+     * @param colour the Colour to highlight chat text that matches the Pattern.
      * @param pattern a regular expression to match.
      * @throws PatternSyntaxException if the pattern doesn't compile.
      */
-    public Highlight(char colourCode, String pattern)
+    public Highlight(Colour colour, String pattern)
     {
-      this.colourCode = colourCode;
+      this.colour = colour;
       this.pattern = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
     }
 
+    // ------------------------------------------------------------------------
     /**
      * Constructor.
      * 
@@ -331,10 +283,11 @@ public class ChatHighlighter
     public Highlight(HashMap<String, Object> attributes)
     {
       // Let this barf exceptions.
-      this(getColourCode((String) attributes.get("colourCode")),
+      this(Colour.getByCodeOrName((String) attributes.get("colourCode")),
         (String) attributes.get("pattern"));
     }
 
+    // ------------------------------------------------------------------------
     /**
      * Return a HashMap<> of the attributes of this object that is suitable for
      * YAML serialisation.
@@ -345,132 +298,52 @@ public class ChatHighlighter
     public HashMap<String, Object> getSaveData()
     {
       HashMap<String, Object> data = new HashMap<String, Object>();
-      data.put("colourCode", _colourNames.get(colourCode));
+      data.put("colourCode", colour.name());
       data.put("pattern", pattern.pattern());
       return data;
     }
 
+    // ------------------------------------------------------------------------
     /**
-     * Highlight with colourCode any parts of the specified chat line that match
+     * Highlight with colour any parts of the specified chat text that match the
      * pattern.
      * 
-     * @param chat the chat line to highlight.
-     * @return the version of the line with highlighting inserted.
+     * @param text the chat text to highlight, modified in place.
      */
-    public String highlight(String chat)
+    public void highlight(Text text)
     {
-      Matcher m = pattern.matcher(chat);
-      int start = 0;
-      StringBuilder result = new StringBuilder();
+      Matcher m = pattern.matcher(text.toUnformattedString());
       while (m.find())
       {
-        // Add everything before the match to the result.
-        String head = chat.substring(start, m.start());
-        result.append(head);
-
-        // Work out the original colour code.
-        String originalColourCode = ChatClassifier.getLastColourCode(result.toString());
-
-        // Append the highlighted match.
-        result.append(ChatClassifier.COLOUR_CHAR);
-        result.append(colourCode);
-        result.append(chat.substring(m.start(), m.end()));
-
-        // Restore the original or default colour after the highlight.
-        // Assuming here that the match itself does not contain any
-        // colour codes that we care about.
-        result.append(originalColourCode);
-
-        // Set up to extract the next head substring.
-        start = m.end();
-      } // while there are matches
-
-      // Append any remaining characters after the last match.
-      result.append(chat.substring(start, chat.length()));
-      return result.toString();
+        text.setColour(m.start(), m.end(), colour);
+      }
     } // highlight
 
+    // ------------------------------------------------------------------------
     /**
      * Return a string representation of this Highlight (shown to the user).
      */
     public String toString()
     {
-      return _colourNames.get(colourCode) + ' ' + pattern.pattern();
+      return colour.name() + ' ' + pattern.pattern();
     }
 
+    // ------------------------------------------------------------------------
     /**
-     * The chat colour code character to assign (0-9, a-f).
+     * The chat colour to assign.
      */
-    public char    colourCode;
+    public Colour  colour;
 
     /**
      * The regular expression which describes what should be highlighted.
      */
     public Pattern pattern;
+
   }; // inner class Highlight
 
   // --------------------------------------------------------------------------
   /**
    * Highlight patterns.
    */
-  protected ArrayList<Highlight>              _highlights  = new ArrayList<ChatHighlighter.Highlight>();
-
-  /**
-   * Maps colour names to colour code characters.
-   */
-  protected static HashMap<String, Character> _colours     = new HashMap<String, Character>();
-
-  /**
-   * Maps colour code characters to colour names.
-   */
-  protected static HashMap<Character, String> _colourNames = new HashMap<Character, String>();
-
-  // Register all of the standard colour names. They should all be lower case.
-  static
-  {
-    addColour("black", '0');
-
-    addColour("darkblue", '1');
-    addColour("navy", '1');
-
-    addColour("green", '2');
-    addColour("darkgreen", '2');
-
-    addColour("cyan", '3');
-
-    addColour("red", '4');
-    addColour("darkred", '4');
-
-    addColour("purple", '5');
-
-    addColour("orange", '6');
-    addColour("gold", '6');
-    addColour("brown", '6');
-
-    addColour("lightgrey", '7');
-    addColour("lightgray", '7');
-
-    addColour("grey", '8');
-    addColour("darkgrey", '8');
-    addColour("gray", '8');
-    addColour("darkgray", '8');
-
-    addColour("blue", '9');
-
-    addColour("lightgreen", 'a');
-
-    addColour("lightblue", 'b');
-
-    addColour("lightred", 'c');
-    addColour("brightred", 'c');
-    addColour("rose", 'c');
-
-    addColour("pink", 'd');
-    addColour("lightpurple", 'd');
-    addColour("magenta", 'd');
-
-    addColour("yellow", 'e');
-
-    addColour("white", 'f');
-  }
+  protected ArrayList<Highlight> _highlights = new ArrayList<ChatHighlighter.Highlight>();
 } // class ChatHighlighter
