@@ -18,6 +18,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.Tessellator;
 import net.minecraft.src.Vec3;
+import net.minecraft.src.Vec3Pool;
 
 import org.lwjgl.opengl.GL11;
 
@@ -236,7 +237,8 @@ public class BlockEditSet
     DisplaySettings settings = Controller.instance.getDisplaySettings();
     if (settings.areVectorsShown() && !_edits.isEmpty())
     {
-      Tessellator tess = Tessellator.instance;
+      final Vec3Pool pool = ModLoader.getMinecraftInstance().theWorld.getWorldVec3Pool();
+      final Tessellator tess = Tessellator.instance;
       tess.startDrawing(GL11.GL_LINES);
 
       // TODO: Make the vector colour and thickness configurable.
@@ -244,8 +246,8 @@ public class BlockEditSet
       GL11.glLineWidth(0.5f);
 
       // Unit X and Y vectors used for cross products to get arrow axes.
-      Vec3 unitX = Vec3.field_82592_a.getVecFromPool(1, 0, 0);
-      Vec3 unitY = Vec3.field_82592_a.getVecFromPool(0, 1, 0);
+      Vec3 unitX = pool.getVecFromPool(1, 0, 0);
+      Vec3 unitY = pool.getVecFromPool(0, 1, 0);
 
       // We only need to draw vectors if there are at least 2 edits.
       Iterator<BlockEdit> it = _edits.iterator();
@@ -261,10 +263,10 @@ public class BlockEditSet
                          || (!next.creation && settings.isLinkedDestructions());
           if (show)
           {
-            Vec3 pPos = Vec3.field_82592_a.getVecFromPool(0.5 + prev.x,
-              0.5 + prev.y, 0.5 + prev.z);
-            Vec3 nPos = Vec3.field_82592_a.getVecFromPool(0.5 + next.x,
-              0.5 + next.y, 0.5 + next.z);
+            Vec3 pPos = pool.getVecFromPool(0.5 + prev.x, 0.5 + prev.y,
+              0.5 + prev.z);
+            Vec3 nPos = pool.getVecFromPool(0.5 + next.x, 0.5 + next.y,
+              0.5 + next.z);
             // Vector difference, from prev to next.
             Vec3 diff = nPos.subtract(pPos);
 
@@ -289,18 +291,18 @@ public class BlockEditSet
 
               // Position of the tip and tail of the arrow, sitting in the
               // middle of the vector.
-              Vec3 tip = Vec3.field_82592_a.getVecFromPool(
+              Vec3 tip = pool.getVecFromPool(
                 pPos.xCoord * (0.5 - arrowScale) + nPos.xCoord
                   * (0.5 + arrowScale), pPos.yCoord * (0.5 - arrowScale)
                                         + nPos.yCoord * (0.5 + arrowScale),
                 pPos.zCoord * (0.5 - arrowScale) + nPos.zCoord
                   * (0.5 + arrowScale));
-              Vec3 tail = Vec3.field_82592_a.getVecFromPool(
-                pPos.xCoord * (0.5 + arrowScale) + nPos.xCoord
-                  * (0.5 - arrowScale), pPos.yCoord * (0.5 + arrowScale)
-                                        + nPos.yCoord * (0.5 - arrowScale),
-                pPos.zCoord * (0.5 + arrowScale) + nPos.zCoord
-                  * (0.5 - arrowScale));
+              Vec3 tail = pool.getVecFromPool(pPos.xCoord * (0.5 + arrowScale)
+                                              + nPos.xCoord
+                                              * (0.5 - arrowScale),
+                pPos.yCoord * (0.5 + arrowScale) + nPos.yCoord
+                  * (0.5 - arrowScale), pPos.zCoord * (0.5 + arrowScale)
+                                        + nPos.zCoord * (0.5 - arrowScale));
 
               // Fin axes, perpendicular to vector. Scale by vector length.
               // If the vector is colinear with the Y axis, use the X axis for
@@ -348,7 +350,6 @@ public class BlockEditSet
       } // if
     } // if drawing
   } // drawVectors
-
   // --------------------------------------------------------------------------
   /**
    * Draw all of the annotations associated with this BlockEditSet.
