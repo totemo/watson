@@ -41,6 +41,8 @@ public class ClientCommandManager implements ICommandManager
   public boolean handleClientCommand(String commandLine)
   {
     String[] tokens = getTokens(commandLine);
+    if (tokens.length == 0)
+        return false;
     ICommand command = getCommand(tokens[0]);
     if (command != null)
     {
