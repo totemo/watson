@@ -6,12 +6,16 @@ set -o nounset
 PACKAGE_DIR=net/minecraft/src
 
 #------------------------------------------------------------------------------
-# NOTE: getchangedsrc.sh only works correctly if you have run recompile.sh.
 
 cd "$GIT_DIR"/scripts/ && \
   for FILE in *.sh; do
     cp ~/bin/$FILE . || fn_error "could not update $FILE"
   done
+
+# NOTE: getchangedsrc.sh only works correctly if you have run recompile.sh.
+if [ ! -d "$MCP_DIR/modsrc" ]; then
+  cd "$MCP_DIR" && ./recompile.sh && ./getchangedsrc.sh || fn_error "could not set up modsrc subdirectory"
+fi
 
 cd "$MCP_DIR/modsrc" && rm -rf ./minecraft/ || fn_error "could not purge client modsrc directory"
 cd "$MCP_DIR" && ./getchangedsrc.sh || fn_error "could not get changed sources"
@@ -43,7 +47,8 @@ done
 
 #------------------------------------------------------------------------------
 
-cd "$MCP_DIR" && cp src/minecraft/watson/*.yml modsrc/minecraft/watson || fn_error "could not copy YAML files"
+cd "$MCP_DIR" && cp src/minecraft/watson/*.yml   modsrc/minecraft/watson || fn_error "could not copy YAML files"
+cd "$MCP_DIR" && cp src/minecraft/watson/version modsrc/minecraft/watson || fn_error "could not copy version resource"
 cd "$MCP_DIR/modsrc/minecraft/" && cp -r * "$GIT_DIR"/src || fn_error "could not copy sources"
 
 #------------------------------------------------------------------------------
