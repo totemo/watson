@@ -223,12 +223,12 @@ Compatibility
 
 Watson has been tested for compatibility with:
 
-* Minecraft 1.4.2 with ModLoader 1.4.2
-* WorldEditCUI for 1.4.2 (when that is available)
-* Rei's Minimap for 1.4.2, version 3.2_05
-* Optifine 1.4.2_HD_U_A7
+* Minecraft 1.4.5 with ModLoader 1.4.5
+* WorldEditCUI for 1.4.5
+* Rei's Minimap for 1.4.5, version 3.2_05
+* Optifine 1.4.5_HD_U_D3
 * LiteLoader for Minecraft 1.4.2
-* Macro/Keybind Mod 0.9.5 - but note that commands originating here bypass the Watson command interpreter and go direct to the server.
+* Macro/Keybind Mod 0.9.6.1 - but note that commands originating here bypass the Watson command interpreter and go direct to the server.
 * MagicLauncher
 
 
@@ -240,6 +240,7 @@ Building
 * The build scripts use variables set in scripts/watson_common.sh to customise the paths to inputs and outputs.
 * scripts/watson_binaries.sh outputs a ZIP file of the mod classes and resources in ~/.minecraft/versions/.  The ZIP can be loaded with MagicLauncher or applied to minecraft.jar as a patch.
 * A copy of src/watson/*.yml is placed in the ZIP under watson/.  These serve as defaults for configuration files.
+* A simple text file, watson/version is stored as a resource in the ZIP and displayed as the current Watson version at startup.
 * The SnakeYAML classes are also built into the ZIP.
 
 ### Procedure
