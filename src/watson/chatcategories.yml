@@ -280,7 +280,7 @@ categories:
       fullRegex: "^There isn't a page '\\d+'$"   
     - tag: lb.position
       id: lb.position
-      fullRegex: "^Block changes at (-?\\d+):(-?\\d+):(-?\\d+) in \\w+:$"   
+      fullRegex: "^Block changes at (-?\\d+):(-?\\d+):(-?\\d+) in .+:$"   
     - tag: lb.edit
       id: lb.edit
       # Optional bit at the end deals with signs. :)
@@ -322,7 +322,7 @@ categories:
     - tag: lb.header
       id: lb.header.searching
       initialRegex: "^Searching Block changes from player \\w+ in the .*$" 
-      fullRegex: "^Searching Block changes from player \\w+ in the last \\d+ minutes (?:within \\d+ blocks of you )?in \\w+:$"
+      fullRegex: "^Searching Block changes from player \\w+ in the last \\d+ minutes (?:within \\d+ blocks of you )?in .+:$"
       
     # "§3Diamond ore changes from player totemo in the last 1440 minutes in world:"
     - tag: lb.header
