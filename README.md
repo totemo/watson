@@ -160,9 +160,17 @@ As of version 1.4.5 (2012-11-28), the /hl add command allows a style instead of 
   </tr>
   <tr>
     <td>Bold</td> <td>+</td> <td><pre>/hl add + hello</pre></td>  <td>Highlight hello in bold.</td>
+  </tr>
+  <tr>
     <td>Italic</td> <td>/</td> <td><pre>/hl add /orange ^<w+></pre></td>  <td>Highlight the player name in global chat messages in orange italics.</td>
+  </tr>
+  <tr>
     <td>Underline</td> <td>_</td> <td><pre>/hl add _ the</pre></td>  <td>Underline "the".</td>
+  </tr>
+  <tr>
     <td>Strikethrough</td> <td>-</td> <td><pre>/hl add - redacted</pre></td>  <td>Strike through the word "redacted".</td>
+  </tr>
+  <tr>
     <td>Random</td> <td>?</td> <td><pre>/hl add ? magic</pre></td>  <td>Replace "magic" with random glyphs.</td>
   </tr>
 </table>
