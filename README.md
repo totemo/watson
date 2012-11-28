@@ -162,7 +162,7 @@ As of version 1.4.5 (2012-11-28), the /hl add command allows a style instead of 
     <td>Bold</td> <td>+</td> <td><pre>/hl add + hello</pre></td>  <td>Highlight hello in bold.</td>
   </tr>
   <tr>
-    <td>Italic</td> <td>/</td> <td><pre>/hl add /orange ^<w+></pre></td>  <td>Highlight the player name in global chat messages in orange italics.</td>
+    <td>Italic</td> <td>/</td> <td><pre>/hl add /orange ^&lt;\w+&gt;</pre></td>  <td>Highlight the player name in global chat messages in orange italics.</td>
   </tr>
   <tr>
     <td>Underline</td> <td>_</td> <td><pre>/hl add _ the</pre></td>  <td>Underline "the".</td>
