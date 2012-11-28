@@ -15,21 +15,21 @@ import java.util.regex.PatternSyntaxException;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
-import watson.chat.Colour;
+import watson.chat.Format;
 import watson.chat.Text;
 import watson.debug.Log;
 
 // ----------------------------------------------------------------------------
 /**
- * Uses colour to highlights parts of chat messages that match regular
- * expressions.
+ * Uses colour and formatting to highlights parts of chat messages that match
+ * regular expressions.
  * 
  * This is useful for drawing attention to naughty words in chat, and can also
  * be used to modify the colour of messages originating from the server.
  * 
- * TODO: add support for '+', '_', '-' and '/' in colour codes to signify bold,
- * underline, strikeout and italic font styles respectively, in conjunction with
- * or as an alternative to pure colour. e.g. /col set +_red firetruck
+ * {@link Format} controls the colour and formatting attributes of text. See the
+ * documentation of that class for more information on Watson's take on
+ * formatting codes.
  */
 public class ChatHighlighter
 {
@@ -70,17 +70,17 @@ public class ChatHighlighter
   /**
    * Add another pattern to highlight.
    * 
-   * @param colourName either the name of a colour, or a single character colour
-   *          code in the character class [0-9a-fA-F].
+   * @param format a format specifier consisting of zero or more of the
+   *          punctuation symbols [+/_-?], and/or a colour name or a Minecraft
+   *          colour code character, [0-9]a-fA-F].
    * @param pattern the regular expression describing sequences of characters to
    *          be highlighted.
    */
-  public void addHighlight(String colourName, String pattern)
+  public void addHighlight(String format, String pattern)
   {
     try
     {
-      Highlight highlight = new Highlight(Colour.getByCodeOrName(colourName),
-        pattern);
+      Highlight highlight = new Highlight(new Format(format), pattern);
       _highlights.add(highlight);
       Controller.instance.localOutput("Added highlight #" + _highlights.size()
                                       + " " + highlight.toString());
@@ -93,8 +93,8 @@ public class ChatHighlighter
     }
     catch (IllegalArgumentException ex)
     {
-      Controller.instance.localError(colourName
-                                     + " is not a valid colour name.");
+      Controller.instance.localError(format
+                                     + " is not a valid format specifier.");
     }
   } // addHighlight
 
@@ -118,13 +118,12 @@ public class ChatHighlighter
         builder.append('(');
         builder.append(i + 1);
         builder.append(") ");
-        builder.append(highlight.colour.name());
-        builder.append(' ');
-        builder.append(highlight.pattern.pattern());
+        builder.append(highlight.toString());
         Controller.instance.localOutput(builder.toString());
       } // for
     } // else
   } // listHighlights
+
   // --------------------------------------------------------------------------
   /**
    * Remove the highlight identified by the 1-based identifier as shown by
@@ -259,13 +258,13 @@ public class ChatHighlighter
     /**
      * Constructor.
      * 
-     * @param colour the Colour to highlight chat text that matches the Pattern.
+     * @param format the Format to highlight chat text that matches the Pattern.
      * @param pattern a regular expression to match.
      * @throws PatternSyntaxException if the pattern doesn't compile.
      */
-    public Highlight(Colour colour, String pattern)
+    public Highlight(Format format, String pattern)
     {
-      this.colour = colour;
+      this.format = format;
       this.pattern = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
     }
 
@@ -283,7 +282,7 @@ public class ChatHighlighter
     public Highlight(HashMap<String, Object> attributes)
     {
       // Let this barf exceptions.
-      this(Colour.getByCodeOrName((String) attributes.get("colourCode")),
+      this(new Format((String) attributes.get("colourCode")),
         (String) attributes.get("pattern"));
     }
 
@@ -298,7 +297,7 @@ public class ChatHighlighter
     public HashMap<String, Object> getSaveData()
     {
       HashMap<String, Object> data = new HashMap<String, Object>();
-      data.put("colourCode", colour.name());
+      data.put("colourCode", format.getCode());
       data.put("pattern", pattern.pattern());
       return data;
     }
@@ -315,7 +314,7 @@ public class ChatHighlighter
       Matcher m = pattern.matcher(text.toUnformattedString());
       while (m.find())
       {
-        text.setColour(m.start(), m.end(), colour);
+        text.setFormat(m.start(), m.end(), format);
       }
     } // highlight
 
@@ -325,14 +324,14 @@ public class ChatHighlighter
      */
     public String toString()
     {
-      return colour.name() + ' ' + pattern.pattern();
+      return format.toString() + ' ' + pattern.pattern();
     }
 
     // ------------------------------------------------------------------------
     /**
      * The chat colour to assign.
      */
-    public Colour  colour;
+    public Format  format;
 
     /**
      * The regular expression which describes what should be highlighted.

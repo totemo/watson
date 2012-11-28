@@ -1,5 +1,14 @@
 Change History
 ==============
+1.4.5 (2012-11-28)
+------------------
+* Added support for text styles in the chat highlighter.
+
+1.4.5 (2012-11-22)
+------------------
+* Fixed client crash when entering / on its own (Dumbo52 patch).
+* Allow world names in chatcategories.yml to be essentially arbitrary.
+
 1.4.4 (2012-11-20)
 ------------------
 * Recompiled 1.4.2 (2012-11-20) for 1.4.4

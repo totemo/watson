@@ -9,8 +9,7 @@ import java.util.HashMap;
  * NOTE: (compiler-generated) Colour.valueOf(String) will throw an
  * IllegalArgumentException if the specified colour name is not valid.
  */
-public enum Colour
-{
+public enum Colour {
   black('0'), darkblue('1'), navy('1'), green('2'), darkgreen('2'), cyan('3'), red(
     '4'), darkred('4'), purple('5'), orange('6'), gold('6'), brown('6'), lightgrey(
     '7'), lightgray('7'), grey('8'), darkgrey('8'), gray('8'), darkgray('8'), blue(
@@ -89,6 +88,28 @@ public enum Colour
       return Colour.valueOf(codeOrName.toLowerCase());
     }
   }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return true if the specified character signifies a valid Minecraft colour
+   * (but not formatting attribute) code.
+   * 
+   * @return true if the specified character signifies a valid Minecraft colour
+   *         (but not formatting attribute) code.
+   */
+  public static boolean isColour(char code)
+  {
+    // Characer.isDigit() is too general for this.
+    if (code >= '0' && code <= '9')
+    {
+      return true;
+    }
+    else
+    {
+      char lower = Character.toLowerCase(code);
+      return lower >= 'a' && lower <= 'f';
+    }
+  } // isColour
 
   // --------------------------------------------------------------------------
   /**

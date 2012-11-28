@@ -148,6 +148,25 @@ Let's say we'd like to make the "Unknown command." error message stand out a bit
 
     /hl add red ^Unknown\scommand.*
 
+Highlights are applied to a line of chat in the order that they were defined.
+
+Valid colour names are: black, darkblue/navy, darkgreen/green, cyan, darkred/red, purple, orange/gold/brown, lightgrey/lightgray, darkgrey/darkgray/grey/gray, blue, lightgreen, lightblue, lightred/brightred/rose, pink/lightpurple/magenta, yellow, white
+
+As of version 1.4.5 (2012-11-28), the /hl add command allows a style instead of a colour, or preceding the colour.
+
+<table>
+  <tr>
+    <th>Style</th> <th>Code</th> <th>Example</th>  <th>Meaning</th>
+  </tr>
+  <tr>
+    <td>Bold</td> <td>+</td> <td><pre>/hl add + hello</pre></td>  <td>Highlight hello in bold.</td>
+    <td>Italic</td> <td>/</td> <td><pre>/hl add /orange ^<w+></pre></td>  <td>Highlight the player name in global chat messages in orange italics.</td>
+    <td>Underline</td> <td>_</td> <td><pre>/hl add _ the</pre></td>  <td>Underline "the".</td>
+    <td>Strikethrough</td> <td>-</td> <td><pre>/hl add - redacted</pre></td>  <td>Strike through the word "redacted".</td>
+    <td>Random</td> <td>?</td> <td><pre>/hl add ? magic</pre></td>  <td>Replace "magic" with random glyphs.</td>
+  </tr>
+</table>
+
 List the existing patterns if you need to remove any:
 
     /hl list
