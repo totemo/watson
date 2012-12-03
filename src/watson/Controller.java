@@ -23,6 +23,7 @@ import net.minecraft.src.Packet3Chat;
 import net.minecraft.src.mod_ClientCommands;
 import net.minecraft.src.mod_Watson;
 import watson.analysis.Sherlock;
+import watson.chat.ChatHighlighter;
 import watson.chat.ChatProcessor;
 import watson.cli.AnnoCommand;
 import watson.cli.CalcCommand;

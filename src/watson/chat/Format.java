@@ -25,7 +25,7 @@ public class Format
 
   // --------------------------------------------------------------------------
   /**
-   * The {@link watson.ChatHighlighter} class smooshes the Minecraft colour
+   * The {@link watson.chat.ChatHighlighter} class smooshes the Minecraft colour
    * letter ('0'-'9', 'a'-'f') and 5 style bits into a 16-bit char, so style
    * bits are chosen such that they are outside the ASCII range.
    * 

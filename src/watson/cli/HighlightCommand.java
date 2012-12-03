@@ -2,8 +2,8 @@ package watson.cli;
 
 import net.minecraft.src.ICommandSender;
 import net.minecraft.src.SyntaxErrorException;
-import watson.ChatHighlighter;
 import watson.Controller;
+import watson.chat.ChatHighlighter;
 
 // --------------------------------------------------------------------------
 /**
