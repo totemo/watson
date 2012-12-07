@@ -117,6 +117,7 @@ public class RenderWatson extends Render
       RenderHelper.enableStandardItemLighting();
 
       edits.drawAnnotations();
+      // edits.drawHUD();
     } // if Watson is enabled and drawing
   } // renderEntityWatson
 } // class RenderWatson

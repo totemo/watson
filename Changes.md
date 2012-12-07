@@ -2,6 +2,11 @@ Change History
 ==============
 1.4.5 (2012-11-28)
 ------------------
+* Fixed code to guess the year in LogBlock timestamps.
+* Added spatial database, ore listing (/w ores) and ore teleport (/w tp) features.
+
+1.4.5 (2012-11-28)
+------------------
 * Added support for text styles in the chat highlighter.
 
 1.4.5 (2012-11-22)

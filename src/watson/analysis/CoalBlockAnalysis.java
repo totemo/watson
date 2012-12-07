@@ -1,6 +1,5 @@
 package watson.analysis;
 
-import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -8,6 +7,7 @@ import watson.BlockEdit;
 import watson.BlockType;
 import watson.BlockTypeRegistry;
 import watson.Controller;
+import watson.TimeStamp;
 import watson.chat.ChatClassifier;
 import watson.chat.ChatProcessor;
 import watson.chat.MethodChatHandler;
@@ -80,7 +80,7 @@ public class CoalBlockAnalysis extends Analysis
       int hour = Integer.parseInt(m.group(3));
       int minute = Integer.parseInt(m.group(4));
       int second = Integer.parseInt(m.group(5));
-      _time.set(_now.get(Calendar.YEAR), month - 1, day, hour, minute, second);
+      long millis = TimeStamp.toMillis(month, day, hour, minute, second);
 
       String player = m.group(6);
       String action = m.group(7);
@@ -91,7 +91,7 @@ public class CoalBlockAnalysis extends Analysis
       // Update player, etc, variables on the most recent edit result only.
       if (_expectingFirstEdit)
       {
-        Controller.instance.getVariables().put("time", _time.getTimeInMillis());
+        Controller.instance.getVariables().put("time", millis);
         Controller.instance.getVariables().put("player", player);
         Controller.instance.getVariables().put("block", type.getId());
         _expectingFirstEdit = false;
@@ -103,7 +103,7 @@ public class CoalBlockAnalysis extends Analysis
 
       boolean created = action.equals("created");
       Controller.instance.getBlockEditSet().addBlockEdit(
-        new BlockEdit(_time.getTimeInMillis(), player, created, x, y, z, type));
+        new BlockEdit(millis, player, created, x, y, z, type));
     }
   } // lbEdit
 
@@ -125,8 +125,8 @@ public class CoalBlockAnalysis extends Analysis
       int hour = Integer.parseInt(m.group(3));
       int minute = Integer.parseInt(m.group(4));
       int second = Integer.parseInt(m.group(5));
-      _time.set(_now.get(Calendar.YEAR), month - 1, day, hour, minute, second);
-      Controller.instance.getVariables().put("time", _time.getTimeInMillis());
+      long millis = TimeStamp.toMillis(month, day, hour, minute, second);
+      Controller.instance.getVariables().put("time", millis);
 
       String player = m.group(6);
       String oldBlock = m.group(7);
@@ -141,22 +141,11 @@ public class CoalBlockAnalysis extends Analysis
 
       // Just add the destruction.
       Controller.instance.getBlockEditSet().addBlockEdit(
-        new BlockEdit(_time.getTimeInMillis(), player, false, x, y, z, type));
+        new BlockEdit(millis, player, false, x, y, z, type));
     }
   } // lbEditReplaced
 
   // --------------------------------------------------------------------------
-  /**
-   * A reusable Calendar instance used to interpret any time stamps found in
-   * LogBlock results.
-   */
-  protected Calendar        _time                   = Calendar.getInstance();
-
-  /**
-   * Used to infer the implicit (absent) year in LogBlock timestamps.
-   */
-  protected Calendar        _now                    = Calendar.getInstance();
-
   /**
    * The pattern of full lb.position lines.
    */

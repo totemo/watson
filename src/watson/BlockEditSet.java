@@ -16,11 +16,14 @@ import java.util.regex.Pattern;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.ModLoader;
+import net.minecraft.src.ScaledResolution;
 import net.minecraft.src.Tessellator;
 import net.minecraft.src.Vec3;
 import net.minecraft.src.Vec3Pool;
 
 import org.lwjgl.opengl.GL11;
+
+import watson.db.OreDB;
 
 // ----------------------------------------------------------------------------
 /**
@@ -162,6 +165,7 @@ public class BlockEditSet
       writer.close();
     }
   } // save
+
   // --------------------------------------------------------------------------
   /**
    * Remove all entries from the list.
@@ -170,6 +174,7 @@ public class BlockEditSet
   {
     _edits.clear();
     _annotations.clear();
+    _oreDB.clear();
   }
 
   // --------------------------------------------------------------------------
@@ -211,6 +216,7 @@ public class BlockEditSet
   public void addBlockEdit(BlockEdit edit)
   {
     _edits.add(edit);
+    _oreDB.addBlockEdit(edit);
   }
 
   // --------------------------------------------------------------------------
@@ -350,6 +356,7 @@ public class BlockEditSet
       } // if
     } // if drawing
   } // drawVectors
+
   // --------------------------------------------------------------------------
   /**
    * Draw all of the annotations associated with this BlockEditSet.
@@ -377,6 +384,27 @@ public class BlockEditSet
 
   // --------------------------------------------------------------------------
   /**
+   * Experimental: draw a HUD overlay listing ores.
+   */
+  public void drawHUD()
+  {
+    try
+    {
+      GL11.glPushMatrix();
+
+      Minecraft mc = ModLoader.getMinecraftInstance();
+      ScaledResolution scaledResolution = new ScaledResolution(mc.gameSettings,
+        mc.displayWidth, mc.displayHeight);
+
+    }
+    finally
+    {
+      GL11.glPopMatrix();
+    }
+  } // drawHUD
+
+  // --------------------------------------------------------------------------
+  /**
    * Return the list of {@link Annotation}s.
    * 
    * @return the list of {@link Annotation}s.
@@ -384,6 +412,17 @@ public class BlockEditSet
   public ArrayList<Annotation> getAnnotations()
   {
     return _annotations;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return the spatial database of ore deposits.
+   * 
+   * @return the spatial database of ore deposits.
+   */
+  public OreDB getOreDB()
+  {
+    return _oreDB;
   }
 
   // --------------------------------------------------------------------------
@@ -408,6 +447,11 @@ public class BlockEditSet
    * The list of Annotations associated with this set of edits.
    */
   protected ArrayList<Annotation> _annotations           = new ArrayList<Annotation>();
+
+  /**
+   * The spatial database indexing the edits.
+   */
+  protected OreDB                 _oreDB                 = new OreDB();
 
   /**
    * Size of the arrow on a unit length vector.

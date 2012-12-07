@@ -1,4 +1,4 @@
-package watson;
+package watson.chat;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -15,8 +15,7 @@ import java.util.regex.PatternSyntaxException;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
-import watson.chat.Format;
-import watson.chat.Text;
+import watson.Controller;
 import watson.debug.Log;
 
 // ----------------------------------------------------------------------------

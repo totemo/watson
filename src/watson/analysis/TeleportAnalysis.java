@@ -57,15 +57,7 @@ public class TeleportAnalysis extends Analysis
         // block destruction (earlier) and not the cobble creation (later).
         BlockEdit edit = Controller.instance.getBlockEditSet().findEdit(x, y,
           z, (String) Controller.instance.getVariables().get("player"));
-        if (edit != null)
-        {
-          Controller.instance.getVariables().put("time", edit.time);
-          Controller.instance.getVariables().put("player", edit.player);
-          Controller.instance.getVariables().put("block", edit.type.getId());
-          Controller.instance.getVariables().put("x", x);
-          Controller.instance.getVariables().put("y", y);
-          Controller.instance.getVariables().put("z", z);
-        }
+        Controller.instance.selectBlockEdit(edit);
       }
     }
     catch (Exception ex)

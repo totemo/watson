@@ -5,6 +5,7 @@ import net.minecraft.src.SyntaxErrorException;
 import watson.Configuration;
 import watson.Controller;
 import watson.DisplaySettings;
+import watson.db.OreDB;
 
 // --------------------------------------------------------------------------
 /**
@@ -51,6 +52,11 @@ public class WatsonCommand extends WatsonCommandBase
       else if (args[0].equals("pre"))
       {
         Controller.instance.queryPreviousEdits();
+        return;
+      }
+      else if (args[0].equals("ores"))
+      {
+        Controller.instance.getBlockEditSet().getOreDB().listDeposits();
         return;
       }
     }
@@ -198,6 +204,42 @@ public class WatsonCommand extends WatsonCommandBase
       }
       // Other args.length and args[1] values will throw.
     } // vector
+
+    // Ore teleport commands: /w tp [next|prev|<number>]
+    if (args.length >= 1 && args[0].equals("tp"))
+    {
+      OreDB oreDB = Controller.instance.getBlockEditSet().getOreDB();
+      if (args.length == 1)
+      {
+        oreDB.tpNext();
+        return;
+      }
+      else if (args.length == 2)
+      {
+        if (args[1].equals("next"))
+        {
+          oreDB.tpNext();
+          return;
+        }
+        else if (args[1].equals("prev"))
+        {
+          oreDB.tpPrev();
+          return;
+        }
+        else
+        {
+          try
+          {
+            oreDB.tpIndex(Integer.parseInt(args[1]));
+          }
+          catch (NumberFormatException ex)
+          {
+            Controller.instance.localError("The /w tp parameter should be next, prev or an integer.");
+          }
+          return;
+        }
+      }
+    } // /w tp
 
     // File commands.
     if (args.length >= 2 && args[0].equals("file"))
@@ -348,6 +390,8 @@ public class WatsonCommand extends WatsonCommandBase
     localOutput(sender, "  /w vector length <decimal>");
     localOutput(sender, "  /w clear");
     localOutput(sender, "  /w pre");
+    localOutput(sender, "  /w ores");
+    localOutput(sender, "  /w tp [next|prev|<number>]");
     localOutput(sender, "  /w file list [<playername>]");
     localOutput(sender, "  /w file load <filename>|<playername>");
     localOutput(sender, "  /w file save [<filename>]");
@@ -361,5 +405,5 @@ public class WatsonCommand extends WatsonCommandBase
       localOutput(sender, "Watson is currently disabled.");
       localOutput(sender, "To re-enable, use: /w config watson on");
     }
-  }
+  } // help
 } // class WatsonCommand

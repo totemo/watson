@@ -1,6 +1,6 @@
 package watson.analysis;
 
-import java.util.Calendar;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,10 +9,13 @@ import watson.BlockType;
 import watson.BlockTypeRegistry;
 import watson.Configuration;
 import watson.Controller;
+import watson.TimeStamp;
 import watson.chat.ChatClassifier;
 import watson.chat.ChatProcessor;
+import watson.chat.Colour;
 import watson.chat.MethodChatHandler;
 import watson.chat.TagDispatchChatHandler;
+import watson.debug.Log;
 
 // --------------------------------------------------------------------------
 /**
@@ -70,8 +73,7 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
         int hour = Integer.parseInt(m.group(4));
         int minute = Integer.parseInt(m.group(5));
         int second = Integer.parseInt(m.group(6));
-        // Who the FUCK uses 0-based months?!?
-        _time.set(_now.get(Calendar.YEAR), month - 1, day, hour, minute, second);
+        long millis = TimeStamp.toMillis(month, day, hour, minute, second);
 
         String player = m.group(7);
         String action = m.group(8);
@@ -81,7 +83,7 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
         int z = Integer.parseInt(m.group(12));
 
         BlockType type = BlockTypeRegistry.instance.getBlockTypeByName(block);
-        Controller.instance.getVariables().put("time", _time.getTimeInMillis());
+        Controller.instance.getVariables().put("time", millis);
         Controller.instance.getVariables().put("player", player);
         Controller.instance.getVariables().put("block", type.getId());
         Controller.instance.getVariables().put("x", x);
@@ -90,7 +92,7 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
 
         boolean created = action.equals("created");
         Controller.instance.getBlockEditSet().addBlockEdit(
-          new BlockEdit(_time.getTimeInMillis(), player, created, x, y, z, type));
+          new BlockEdit(millis, player, created, x, y, z, type));
 
         // TODO: fix this :) Have a class that allows dynamic control of
         // filtered coords.
@@ -109,7 +111,7 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
     }
     catch (Exception ex)
     {
-      // System.out.println(ex);
+      Log.exception(Level.INFO, "error parsing lb coords", ex);
     }
   } // lbCoord
 
@@ -137,7 +139,7 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
         int hour = Integer.parseInt(m.group(4));
         int minute = Integer.parseInt(m.group(5));
         int second = Integer.parseInt(m.group(6));
-        _time.set(_now.get(Calendar.YEAR), month - 1, day, hour, minute, second);
+        long millis = TimeStamp.toMillis(month, day, hour, minute, second);
 
         String player = m.group(7);
         String oldBlock = m.group(8);
@@ -147,7 +149,7 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
         int z = Integer.parseInt(m.group(12));
 
         BlockType type = BlockTypeRegistry.instance.getBlockTypeByName(oldBlock);
-        Controller.instance.getVariables().put("time", _time.getTimeInMillis());
+        Controller.instance.getVariables().put("time", millis);
         Controller.instance.getVariables().put("player", player);
         Controller.instance.getVariables().put("block", type.getId());
         Controller.instance.getVariables().put("x", x);
@@ -156,7 +158,7 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
 
         // Store the destruction but don't bother with the creation.
         Controller.instance.getBlockEditSet().addBlockEdit(
-          new BlockEdit(_time.getTimeInMillis(), player, false, x, y, z, type));
+          new BlockEdit(millis, player, false, x, y, z, type));
 
         // TODO: fix this :)
         // Hacked in re-echoing of coords so we can see TP targets.
@@ -177,7 +179,6 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
       // System.out.println(ex);
     }
   } // lbCoordReplaced
-
   // --------------------------------------------------------------------------
   /**
    * Get the colour to highlight coordinates when they are re-echoed into chat.
@@ -289,25 +290,13 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
 
   // --------------------------------------------------------------------------
   /**
-   * A reusable Calendar instance used to interpret any time stamps found in
-   * LogBlock results.
-   */
-  protected Calendar           _time                   = Calendar.getInstance();
-
-  /**
-   * Used to infer the implicit (absent) year in LogBlock timestamps.
-   */
-  protected Calendar           _now                    = Calendar.getInstance();
-
-  // --------------------------------------------------------------------------
-  /**
    * The cycle of colours used to highlight distinct ore deposits when
    * coordinates are re-echoed.
-   * 
-   * red, orange, yellow, lightgreen, lightblue, purple, magenta
    */
-  protected static final char  _COLOUR_CYCLE[]         = {'4', '6', 'e', 'a',
-    'b', '5', 'd'                                      };
+  protected static final char  _COLOUR_CYCLE[]         = {Colour.red.getCode(),
+    Colour.orange.getCode(), Colour.yellow.getCode(),
+    Colour.lightgreen.getCode(), Colour.lightblue.getCode(),
+    Colour.purple.getCode(), Colour.magenta.getCode()  };
 
   /**
    * The index into the _COLOUR_CYCLE array referencing the current chat colour.

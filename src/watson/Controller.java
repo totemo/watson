@@ -351,7 +351,7 @@ public class Controller
    * query takes the form:
    * 
    * <pre>
-   * /lb before MM-DD hh:mm:ss player name coords limit 45
+   * /lb before DD.MM.YYYY hh:mm:ss player name coords limit 45
    * </pre>
    * 
    * This method is called in response to the "/w pre" command.
@@ -388,6 +388,28 @@ public class Controller
   {
     return _variables;
   }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Set the current state variables from a {@link BlockEdit}, the same as they
+   * would be set if they were set from a LogBlock toolblock (coal ore) query.
+   * 
+   * Do nothing if the edit is null.
+   * 
+   * @param edit the edit to select.
+   */
+  public void selectBlockEdit(BlockEdit edit)
+  {
+    if (edit != null)
+    {
+      _variables.put("time", edit.time);
+      _variables.put("player", edit.player);
+      _variables.put("block", edit.type.getId());
+      _variables.put("x", edit.x);
+      _variables.put("y", edit.y);
+      _variables.put("z", edit.z);
+    }
+  } // selectBlockEdit
 
   // --------------------------------------------------------------------------
   /**
