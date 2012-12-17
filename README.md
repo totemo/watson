@@ -16,6 +16,20 @@ Watson is a Minecraft mod designed to make the task of moderating on the reddit 
 * In order to shorten coordinate displays and make them easier to read, Watson also hides the LogBlock coords lines from chat and re-echoes them in a custom, brief format, where block IDs are numeric rather than words.  Re-echoed coordinates are assigned colours based on their physical proximity.  This makes separate ore deposits easy to distinguish in the coordinate listing.
 
 
+Downloads
+---------
+<table>
+  <tr>
+    <th>Version</th> <th>sha256sum</th> <th>File</th> <th>Link</th>
+  </tr>
+  <tr>
+    <td>1.4.5 (2012-12-18)</td> <td>8a73754dbbcf9f16de807f7eb6b75cef789e2db1698e2176eb7adb112affb9f8</td> <td>watson-1.4.5-2012-12-18.zip</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXb1NJVHZ4MVRzUHM</td>  
+  </tr>
+</table>
+
+
+
+
 Using Watson
 ------------
 ### Viewing Edits
