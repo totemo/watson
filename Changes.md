@@ -12,7 +12,8 @@ Change History
 * Rendering of edits is now unaffected by REI's minimap rendering settings.
 * Added some chat categories in an attempt to fix an intermittent bug echoing /search results.
 * Suppress the version in the startup message if it is "unknown".
-* Automatic paging through LogBlock coords results of 3 pages or less is now the default.
+* Automatic paging through LogBlock coords results of 3 pages or less is now the default for new installations.
+  * If you have run previous versions, enable this with: /w config auto_page on
 * Adjusted the default highlight patterns to highlight some common errors and reduce false positives.
 
 1.4.5 (2012-11-28)

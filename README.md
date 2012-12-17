@@ -5,6 +5,7 @@ Watson is a Minecraft mod designed to make the task of moderating on the reddit 
 
 *  It reassembles chat lines that were split by Bukkit, so that they can be categorised and parsed with regular expressions. Watson can exclude chat lines from being displayed in the client, based on their category.
 * It displays individual edits as wireframe 3-D boxes.
+* It groups edits of ore blocks into ore deposits, numbers each deposit, shows the numbers in 3-D space and provides commands to teleport to deposits and compute a stone:diamond ratio.
 * It draws vectors between edits indicating the time sequence of edits.
 * It draws text annotations in 3-D space. These can act as teleport targets.
 * Edits and annotations can be saved to files and loaded at a later date.
@@ -13,6 +14,7 @@ Watson is a Minecraft mod designed to make the task of moderating on the reddit 
 * It adds player names to screenshots automatically.
 * It does a `/region info regionname` for you when you right click on a region with the wooden sword (rate limited to once every 10 seconds - the wooden sword will simply list the region name the other times).
 * In order to shorten coordinate displays and make them easier to read, Watson also hides the LogBlock coords lines from chat and re-echoes them in a custom, brief format, where block IDs are numeric rather than words.  Re-echoed coordinates are assigned colours based on their physical proximity.  This makes separate ore deposits easy to distinguish in the coordinate listing.
+
 
 Using Watson
 ------------
@@ -31,10 +33,11 @@ Use LogBlock to get the coordinates.  As Watson sees coordinates listed in chat,
     /lb time 12h player playername block 56 coords
     /lb page 2
     /lb page 3
+    /lb page 4
 
 ![Edits with default vector length.](https://raw.github.com/totemo/watson/master/wiki/images/2012-10-24_02.20.01-flipflopfla.png)
 
-Watson groups edits together based on spatial proximity and echoes the co-ordinates in chat using a different colour for each group.  This allows separate ore deposits to be readily distinguished.
+When listing edits in chat, Watson groups groups them together based on spatial proximity and echoes the co-ordinates using a different colour for each group.  This allows separate ore deposits to be readily distinguished.
 
 To teleport to an edit of interest:
 
@@ -61,6 +64,50 @@ If you forget any of the above commands:
     /w help
 
 
+### Viewing Ore Deposits
+
+Watson groups adjacent destructions of ore blocks into ore deposits.  Here, "adjacent" includes blocks up to 1 block away along all three cardinal axes simultaneously.  Ore deposits are assigned numeric labels starting at 1 and increasing in time.  All diamonds are numbered first, then emeralds, then iron, gold, lapis, redstone and finally coal.  Thus, if the coordinates of 5 diamond deposits and 10 iron deposits have been retrieved from the LogBlock database, the diamond deposits will be numbered from 1 to 5, with 1 being the oldest diamond, and the iron deposits will be numbered from 6 to 15, with 6 being the oldest iron deposit.
+
+To list all of the deposits:
+
+    /w ore
+
+The "/w tp" command can teleport to the next deposit in the sequence (starting at one), the previous one, or the deposit with a specific number:
+
+    /w tp
+    /w tp next
+    /w tp prev
+    /w tp 17
+
+The "/w tp" command is just a synonym for "/w tp next".  Teleporting to an ore deposit with "/w tp" selects that deposit, so that "/w pre" will show the edits leading up to it.
+
+To automatically compute stone:diamond ratios for the current set of diamond deposits:
+
+    /w ratio
+    
+Watson will compute one stone:diamond ratio for the time period that includes all diamond deposits listed by /w ore.  If there are segments of time where diamonds were mined particularly quickly, Watson will compute additional stone:diamond ratios for those smaller time segments too.
+
+It is also possible to see what the current time is at the server, which can be useful information when looking at LogBlock time stamps:
+
+    /w servertime
+
+The numbers of deposits are drawn in 3-D and can be hidden, shown or toggled with the "/w label" command:
+
+    /w label off
+    /w label on
+    /w label
+
+Given the above commands for working with ore deposits, a basic x-ray checking procedure would be as follows:
+
+1. List top miners: `/lb time 12h block 56 sum p`
+1. List diamond edits for one particular miner: `/lb time 12h player fred block 56 coords`
+1. Page through all coordinate results: `/lb next`
+1. List ore deposits.  This will show their timestamps: `/w ore`
+1. Check the stone:diamond ratio: `/w ratio`
+1. Teleport to specific deposits for more detailed examination: `/w tp`
+1. See what happened before the deposit in question was uncovered: `/w pre`
+
+
 ### Manipulating the Vector and Outline Displays
 
 Watson draws vectors (arrows) from each edit to the next edit which is more recent, provided that the distance in space between the edits is greater than the minimum vector length.  The default minimum length is 4.  To draw vectors between all edits:
@@ -74,6 +121,8 @@ To hide, show or toggle the vector display:
     /w vector off
     /w vector on
     /w vector
+    
+Watson remembers whether the vector display was on or off the last time Minecraft was run and uses that as the default state at startup.
 
 To hide, show or toggle the outlines of blocks:
 
@@ -229,7 +278,15 @@ Watson's main configuration settings are stored in ".minecraft/mods/watson/confi
   <tr>
     <td>region_info_timeout</td> <td>decimal number of seconds >= 1.0</td> <td>5.0</td> <td>Minimum elapsed time between automatic "/region info" commands when right clicking with the wooden sword.</td> <td><pre>/w config region_info_timeout 3</pre></td>
   </tr>
-  
+  <tr>
+    <td>billboard_background</td> <td>ARGB colour as 8 hexadecinal digits</td> <td>A8000000</td> <td>The colour of the background of annotation and ore label billboards.</td> <td><pre>/w config billboard_background 7f000000</pre></td>
+  </tr>
+  <tr>
+    <td>billboard_foreground</td> <td>ARGB colour as 8 hexadecinal digits</td> <td>7FFFFFFF</td> <td>The colour of the foreground of annotation and ore label billboards.</td> <td><pre>/w config billboard_background 7fa0a0a0</pre></td>
+  </tr>
+  <tr>
+    <td>group_ores_in_creative</td> <td>on / off</td> <td>off</td> <td>If "on", edits are grouped into ore deposits even in creative mode.  If "off", thata processing only happens in survival mode.</td> <td><pre>/w config group_ores_in_creative on</pre></td>
+  </tr>
 </table>
 
 
@@ -299,7 +356,6 @@ Bugs
 
 * If you see a block drawn as bright magenta and somewhat smaller than 1 cubic meter, it means that the name for that block in blocks.yml doesn't match what LogBlock calls it. Let me know.
 * Re-echoed coordinate lines are currently hard coded to not echo stone at all. This should be customisable.
-* Currently any code that deals with timestamps assumes the current year. This will break around New Year's.
 * The calculator should probably use a custom lexer (rather than JDK class) so that extra spaces in mathematical expressions can be removed.
 * Command line help is ugly because of the variable width font.
 
