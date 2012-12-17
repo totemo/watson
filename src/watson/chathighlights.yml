@@ -2,4 +2,9 @@ highlights:
   - colourCode: red
     pattern: g(a)+y|gh(e)+y|fag(got)?
   - colourCode: red
-    pattern: ni[gq]+(a|er)
+    pattern: ni[gq]{2,}+(a|er)
+  - pattern: ^Unknown\scommand.*
+    colourCode: red
+  - pattern: Player\snot\sfound
+    colourCode: red
+
