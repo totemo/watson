@@ -100,8 +100,8 @@ public class mod_Watson extends BaseMod
    * _chatClassifier, where they will end up being handled by Sherlock and may
    * ultimately be rendered.
    * 
-   * @param partialticks
-   * @param mc
+   * @param partialticks the fractional tick time.
+   * @param mc The Minecraft instance.
    * @return true to signify that we want to continue receiving callbacks
    *         (rather than be de-registered).
    */
@@ -116,9 +116,10 @@ public class mod_Watson extends BaseMod
       // session, show the startup banner.
       if (_lastWorld == null && Configuration.instance.isEnabled())
       {
-        Controller.instance.localOutput(String.format(
-          "Watson %s. Type /w help, for help.",
-          Controller.instance.getVersion()));
+        String version = Controller.instance.getVersion();
+        String format = (version.length() != 0 && !version.equals("unknown")) ? "Watson %s. Type /w help, for help."
+          : "Watson. Type /w help, for help.";
+        Controller.instance.localOutput(String.format(format, version));
       }
       _lastWorld = mc.theWorld;
       _lastPlayer = mc.thePlayer;
