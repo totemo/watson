@@ -282,10 +282,10 @@ Watson's main configuration settings are stored in ".minecraft/mods/watson/confi
     <td>billboard_background</td> <td>ARGB colour as 8 hexadecinal digits</td> <td>A8000000</td> <td>The colour of the background of annotation and ore label billboards.</td> <td><pre>/w config billboard_background 7f000000</pre></td>
   </tr>
   <tr>
-    <td>billboard_foreground</td> <td>ARGB colour as 8 hexadecinal digits</td> <td>7FFFFFFF</td> <td>The colour of the foreground of annotation and ore label billboards.</td> <td><pre>/w config billboard_background 7fa0a0a0</pre></td>
+    <td>billboard_foreground</td> <td>ARGB colour as 8 hexadecinal digits</td> <td>7FFFFFFF</td> <td>The colour of the foreground of annotation and ore label billboards.</td> <td><pre>/w config billboard_foreground 7fa0a0a0</pre></td>
   </tr>
   <tr>
-    <td>group_ores_in_creative</td> <td>on / off</td> <td>off</td> <td>If "on", edits are grouped into ore deposits even in creative mode.  If "off", thata processing only happens in survival mode.</td> <td><pre>/w config group_ores_in_creative on</pre></td>
+    <td>group_ores_in_creative</td> <td>on / off</td> <td>off</td> <td>If "on", edits are grouped into ore deposits even in creative mode.  If "off", that processing only happens in survival mode.</td> <td><pre>/w config group_ores_in_creative on</pre></td>
   </tr>
 </table>
 
@@ -341,13 +341,11 @@ Building
 Planned Features
 ----------------
 
-* A client-side spatial database for grouping adjacent edits (e.g. ores) together to facilitate better reporting of related edits (e.g. grouping related diamond edits) that can then act as a target for a smart teleport feature.
 * A simple keybinding facility, since the Macro/Keybind mod bypasses the Watson CLI.
 * Parsing of fields out of LogBlock results is currently hard-coded. This can and should be driven by a description of the fields in chatcategories.yml.
 * A 3-D cursor that can highlight edits and step through them in the sequence that they occurred.
 * The ability to filter edits and coalblock results by player, distance, time etc.
-* Rei's minimap style billboards identifying the timestamps of key edits (e.g. ores).
-* Some automatic queries to hone in on probable grief an xray patterns.
+* Some automatic queries to hone in on probable grief and xray patterns.
 * The ability to customise the re-echoing of coordinate lines.
 
 
