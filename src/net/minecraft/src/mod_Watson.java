@@ -120,6 +120,12 @@ public class mod_Watson extends BaseMod
         String format = (version.length() != 0 && !version.equals("unknown")) ? "Watson %s. Type /w help, for help."
           : "Watson. Type /w help, for help.";
         Controller.instance.localOutput(String.format(format, version));
+
+        // Only set display settings on first connect. Subsequent connects
+        // should retain the previous display state.
+        Controller.instance.getDisplaySettings().configure(
+          Controller.instance.getServerIP(),
+          mc.theWorld.getWorldInfo().getGameType());
       }
       _lastWorld = mc.theWorld;
       _lastPlayer = mc.thePlayer;

@@ -1,11 +1,26 @@
 package watson;
 
+import net.minecraft.src.EnumGameType;
+
 // --------------------------------------------------------------------------
 /**
  * Records the current settings that affect the Watson displays.
  */
 public class DisplaySettings
 {
+  // --------------------------------------------------------------------------
+  /**
+   * This method configures the initial display settings based on the server
+   * being connected to and the game type.
+   */
+  public void configure(String serverIP, EnumGameType gameType)
+  {
+    // The Watson display defaults to on. On survival servers, assume the
+    // presence of ModMode and its associated notifications to turn on or off
+    // the display.
+    _displayed = gameType.isCreative();
+  }
+
   // --------------------------------------------------------------------------
   /**
    * Turn on or off all Watson displays.
