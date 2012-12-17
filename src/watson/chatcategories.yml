@@ -62,6 +62,10 @@ categories:
       extensible: true
       initialRegex: "^I'm sorry, but you do not have permission to perform this [A-Za-z. ]+$"
       fullRegex: "^I'm sorry, but you do not have permission to perform this command. Please contact the server administrators if you believe that this is in error.$"
+    - tag: server.itemsearch
+      fullRegex: "^Searching for: .*$"
+    - tag: server.itemresult
+      fullRegex: "^#\\d+ \\(.*\\)$"
 
     - tag: lwc.chestnotice
       fullRegex: "^Notice: That \\w+ Chest is locked by \\w+\\.$"  
@@ -101,7 +105,7 @@ categories:
     - tag: req.cancelled
       fullRegex: "^Request #\\d+ no longer needs to be handled$"   
     - tag: req.entry
-      fullRegex: "^#\\d+. \\[\\w+\\] \\w{3}.\\d+@\\d+.\\d+.\\d+ by \\w+ - .*$"   
+      fullRegex: "^#\\d+\\. \\[\\w+\\] \\w{3}.\\d+@\\d+.\\d+.\\d+ by \\w+ - .*$"   
     - tag: req.status
       fullRegex: "^Mod Request #\\d+ - OPEN$"   
     - tag: req.status
@@ -255,7 +259,8 @@ categories:
     - tag: we.selpoint
       fullRegex: "^p\\|\\d+\\|-?\\d+\\|-?\\d+\\|-?\\d+\\|\\d+$"   
 
-    - tag: lb.header
+    - tag: lb.header.noresults
+      id: lb.header.noresults
       fullRegex: "^No results found\\.$"   
     - tag: lb.header
       id: lb.header.changes
@@ -263,10 +268,10 @@ categories:
     - tag: lb.header
       id: lb.header.blocks
       fullRegex: "^\\d+ blocks? found\\.$"
-    - tag: lb.header
+    - tag: lb.header.sumblocks
       id: lb.header.sumblocks
       fullRegex: "^Created - Destroyed - Block$"   
-    - tag: lb.header
+    - tag: lb.header.sumplayers
       id: lb.header.sumplayers
       fullRegex: "^Created - Destroyed - Player$"   
     - tag: lb.tool
@@ -305,7 +310,7 @@ categories:
     - tag: lb.coord
       id: lb.coord
       initialRegex: "^\\(\\d+\\) \\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2} \\w+ (created|destroyed) .*" 
-      fullRegex: "^\\((\\d+)\\) (\\d{2})-(\\d{2}) (\\d{2}):(\\d{2}):(\\d{2}) (\\w+) (created|destroyed) ([a-zA-Z ]+) at (-?\\d+):(\\d+):(-?\\d+)$"   
+      fullRegex: "^\\((\\d+)\\) (\\d{2})-(\\d{2}) (\\d{2}):(\\d{2}):(\\d{2}) (\\w+) (created|destroyed) ([a-zA-Z ]+)(?: \\[(.*)\\] \\[(.*)\\] \\[(.*)\\] \\[(.*)\\])? at (-?\\d+):(\\d+):(-?\\d+)$"   
     - tag: lb.coordreplaced
       id: lb.coordreplaced
       initialRegex: "^\\(\\d+\\) \\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2} \\w+ replaced .*" 
@@ -318,17 +323,31 @@ categories:
 
     # TODO: pretty sure even these lines get broken.
     - tag: lb.sum
-      fullRegex: "^\\d+[ ]{6,}\\d+[ ]{6,}(?:\\w| )+$"   
+      id: lb.sum
+      fullRegex: "^(\\d+)[ ]{6,}(\\d+)[ ]{6,}((?:\\w| )+)$"
     - tag: lb.header
       id: lb.header.searching
       initialRegex: "^Searching Block changes from player \\w+ in the .*$" 
       fullRegex: "^Searching Block changes from player \\w+ in the last \\d+ minutes (?:within \\d+ blocks of you )?in .+:$"
+
+    # A specialisation of ID lb.header.block, below, to match the query issued when /w ratio is done.
+    - tag: lb.header.ratio
+      id: lb.header.ratio
+      fullRegex: "Stone and diamond ore changes from player \\w+ between (\\d+) and (\\d+) minutes ago in .+ summed up by blocks:"
+
+    # A specialisation of ID lb.header.block for the query used to infer the local time on the server.
+    - tag: lb.header.timecheck
+      id: lb.header.timecheck
+      fullRegex: "Block changes from player watsonservertimecheck between (\\d+) and \\d+ minutes ago in .+:"
       
     # "§3Diamond ore changes from player totemo in the last 1440 minutes in world:"
+    # "§3Stone and diamond ore changes from player freddo between 869 and 787 minutes ago in world summed up by blocks:"
+    # Yeah, negative time.  Query is correct.  LogBlock header is wrong.  Result is right.
+    #   "§3Block changes from player darkhawk02 more than -81 minutes ago in world:"
     - tag: lb.header
       id: lb.header.block
       initialRegex: "^(?: |\\w)+ (?:destructions|changes) from player \\w+ .*$" 
-      fullRegex: "^(?: |\\w)+ (?:destructions|changes) from player \\w+ (?:in the last \\d+ minutes )?(?:within \\d+ blocks of you )?in \\w+(?: summed up by (players|blocks))?:$"
+      fullRegex: "^(?: |,|\\w)+ (?:destructions|changes) from player \\w+ (?:in the last \\d+ minutes |between \\d+ and \\d+ minutes ago |more than -?\\d+ minutes ago )?(?:within \\d+ blocks of you )?in .+(?: summed up by (players|blocks))?:$"
       
       # Since the server is no longer splitting lines, just list the full regex.   
     - tag: nc.any
@@ -355,3 +374,6 @@ categories:
       fullRegex: "^\\w+ was shot by \\w+$"
     - tag: server.obituary
       fullRegex: "^\\w+ was slain by \\w+$"
+    - tag: server.obituary
+      fullRegex: "^\\w+ was squashed by a falling anvil$"
+

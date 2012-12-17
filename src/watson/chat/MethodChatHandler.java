@@ -124,11 +124,11 @@ public class MethodChatHandler implements IChatHandler
       {
         if (_singleArgRevise)
         {
-          _reviseMethod.invoke(_target, oldLine, newLine);
+          _reviseMethod.invoke(_target, newLine);
         }
         else
         {
-          _reviseMethod.invoke(_target, newLine);
+          _reviseMethod.invoke(_target, oldLine, newLine);
         }
       }
       catch (Exception ex)

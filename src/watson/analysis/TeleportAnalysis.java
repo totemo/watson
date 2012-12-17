@@ -26,7 +26,7 @@ public class TeleportAnalysis extends Analysis
   @Override
   public void registerAnalysis(TagDispatchChatHandler tagDispatchChatHandler)
   {
-    tagDispatchChatHandler.setChatHandler("lb.tp", new MethodChatHandler(this,
+    tagDispatchChatHandler.addChatHandler("lb.tp", new MethodChatHandler(this,
       "lbTp"));
     _lbTp = ChatProcessor.getInstance().getChatClassifier().getChatCategoryById(
       "lb.tp").getFullPattern();

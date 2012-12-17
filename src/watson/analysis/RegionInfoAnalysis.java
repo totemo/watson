@@ -27,7 +27,7 @@ public class RegionInfoAnalysis extends Analysis
   @Override
   public void registerAnalysis(TagDispatchChatHandler tagDispatchChatHandler)
   {
-    tagDispatchChatHandler.setChatHandler("wg.regions", new MethodChatHandler(
+    tagDispatchChatHandler.addChatHandler("wg.regions", new MethodChatHandler(
       this, "wgRegions"));
     _wgRegions = ChatProcessor.getInstance().getChatClassifier().getChatCategoryById(
       "wg.regions").getFullPattern();

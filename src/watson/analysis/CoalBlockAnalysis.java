@@ -28,11 +28,11 @@ public class CoalBlockAnalysis extends Analysis
   @Override
   public void registerAnalysis(TagDispatchChatHandler tagDispatchChatHandler)
   {
-    tagDispatchChatHandler.setChatHandler("lb.position", new MethodChatHandler(
+    tagDispatchChatHandler.addChatHandler("lb.position", new MethodChatHandler(
       this, "lbPosition"));
-    tagDispatchChatHandler.setChatHandler("lb.edit", new MethodChatHandler(
+    tagDispatchChatHandler.addChatHandler("lb.edit", new MethodChatHandler(
       this, "lbEdit"));
-    tagDispatchChatHandler.setChatHandler("lb.editreplaced",
+    tagDispatchChatHandler.addChatHandler("lb.editreplaced",
       new MethodChatHandler(this, "lbEditReplaced"));
     _lbPosition = ChatProcessor.getInstance().getChatClassifier().getChatCategoryById(
       "lb.position").getFullPattern();

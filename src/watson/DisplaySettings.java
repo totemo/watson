@@ -85,6 +85,30 @@ public class DisplaySettings
 
   // --------------------------------------------------------------------------
   /**
+   * Turn on or off the ore deposit number labels.
+   * 
+   * @param labelsShown if true, labels are shown.
+   */
+  public void setLabelsShown(boolean labelsShown)
+  {
+    _labelsShown = labelsShown;
+    Controller.instance.localOutput("Ore deposit label display "
+                                    + (labelsShown ? "enabled." : "disabled."));
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return true if ore deposit labels should be drawn.
+   * 
+   * @return true if ore deposit labels should be drawn.
+   */
+  public boolean areLabelsShown()
+  {
+    return _displayed && _labelsShown;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
    * Turn on or off the wireframe vector display.
    * 
    * @param outlineShown if true, vectors between sufficiently spaced blocks are
@@ -92,7 +116,7 @@ public class DisplaySettings
    */
   public void setVectorsShown(boolean vectorsShown)
   {
-    _vectorsShown = vectorsShown;
+    Configuration.instance.setVectorsShown(vectorsShown);
     Controller.instance.localOutput("Vector display "
                                     + (vectorsShown ? "enabled." : "disabled."));
   }
@@ -109,7 +133,7 @@ public class DisplaySettings
    */
   public boolean areVectorsShown()
   {
-    return _displayed && _vectorsShown;
+    return _displayed && Configuration.instance.getVectorsShown();
   }
 
   // --------------------------------------------------------------------------
@@ -200,15 +224,14 @@ public class DisplaySettings
   protected boolean _outlineShown       = true;
 
   /**
-   * True if wireframe block outlines should be drawn.
+   * True if annotations should be drawn.
    */
   protected boolean _annotationsShown   = true;
 
   /**
-   * True if vectors between blocks that are more than getMinVectorLength()
-   * blocks apart should be drawn.
+   * True if ore deposit labels should be drawn.
    */
-  protected boolean _vectorsShown       = true;
+  protected boolean _labelsShown        = true;
 
   /**
    * If true, creation edits are linked by vectors.

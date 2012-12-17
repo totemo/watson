@@ -1,9 +1,19 @@
 Change History
 ==============
-1.4.5 (2012-11-28)
+1.4.5 (2012-12-18)
 ------------------
+* Added spatial database, ore listing (/w ore) and ore teleport (/w tp) features.
+* Added labels to each ore deposit; visibility controlled with /w label.
+* Added automatic stone:diamond ratio calculations (/w ratio).
+* Added "/w servertime" to get the time at the server.
 * Fixed code to guess the year in LogBlock timestamps.
-* Added spatial database, ore listing (/w ores) and ore teleport (/w tp) features.
+* Fixed re-echoing of sign contents in /lb coords queries.
+* The visibility of the vector display is now saved between client sessions.
+* Rendering of edits is now unaffected by REI's minimap rendering settings.
+* Added some chat categories in an attempt to fix an intermittent bug echoing /search results.
+* Suppress the version in the startup message if it is "unknown".
+* Automatic paging through LogBlock coords results of 3 pages or less is now the default.
+* Adjusted the default highlight patterns to highlight some common errors and reduce false positives.
 
 1.4.5 (2012-11-28)
 ------------------

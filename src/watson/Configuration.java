@@ -65,6 +65,12 @@ public class Configuration
       Log.setDebug((Boolean) dom.get("debug"));
       _autoPage = (Boolean) dom.get("auto_page");
       _regionInfoTimeoutSeconds = ((Number) dom.get("region_info_timeout")).doubleValue();
+      _vectorsShown = (Boolean) dom.get("vectors_shown");
+      _billboardBackground = (Integer) dom.get("billboard_background");
+      _billboardForeground = (Integer) dom.get("billboard_foreground");
+      _groupingOresInCreative = (Boolean) dom.get("group_ores_in_creative");
+      Log.debug(Integer.toHexString(_billboardBackground));
+      Log.debug(Integer.toHexString(_billboardForeground));
     }
     catch (FileNotFoundException ex)
     {
@@ -91,6 +97,10 @@ public class Configuration
       dom.put("debug", isDebug());
       dom.put("auto_page", isAutoPage());
       dom.put("region_info_timeout", getRegionInfoTimeoutSeconds());
+      dom.put("vectors_shown", getVectorsShown());
+      dom.put("billboard_background", getBillboardBackground());
+      dom.put("billboard_foreground", getBillboardForeground());
+      dom.put("group_ores_in_creative", isGroupingOresInCreative());
 
       DumperOptions options = new DumperOptions();
       options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
@@ -247,13 +257,124 @@ public class Configuration
       root.addChild("enabled", new TypeValidatorNode(Boolean.class, true, true));
       root.addChild("debug", new TypeValidatorNode(Boolean.class, true, false));
       root.addChild("auto_page", new TypeValidatorNode(Boolean.class, true,
-        false));
+        true));
       root.addChild("region_info_timeout", new TypeValidatorNode(Double.class,
         true, 5.0));
+      root.addChild("vectors_shown", new TypeValidatorNode(Boolean.class, true,
+        true));
+      root.addChild("billboard_background", new TypeValidatorNode(
+        Integer.class, true, 0x7F000000));
+      root.addChild("billboard_foreground", new TypeValidatorNode(
+        Integer.class, true, 0xFFFFFFFF));
+      root.addChild("group_ores_in_creative", new TypeValidatorNode(
+        Boolean.class, true, false));
 
       _validator.setRoot(root);
     }
   } // configureValidator
+
+  // --------------------------------------------------------------------------
+  /**
+   * Enable or disable the vector display.
+   * 
+   * @param dispayVectors if true, the vector display will be visible.
+   */
+  public void setVectorsShown(boolean dispayVectors)
+  {
+    _vectorsShown = dispayVectors;
+    save();
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return true if the vector display will be visible.
+   * 
+   * @return true if the vector display will be visible.
+   */
+  public boolean getVectorsShown()
+  {
+    return _vectorsShown;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Set the background colour of billboards to the specified ARGB colour.
+   * 
+   * @param argb the colour; alpha in the most significant octet, blue in the
+   *          least significant octet.
+   */
+  public void setBillboardBackground(int argb)
+  {
+    _billboardBackground = argb;
+    Controller.instance.localOutput(String.format(
+      "Billboard background colour set to #%08X.", _billboardBackground));
+    save();
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return the background colour of billboards to the specified ARGB colour.
+   * 
+   * @return the background colour of billboards to the specified ARGB colour.
+   */
+  public int getBillboardBackground()
+  {
+    return _billboardBackground;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Set the foreground colour of billboards to the specified ARGB colour.
+   * 
+   * @param argb the colour; alpha in the most significant octet, blue in the
+   *          least significant octet.
+   */
+  public void setBillboardForeground(int argb)
+  {
+    _billboardForeground = argb;
+    Controller.instance.localOutput(String.format(
+      "Billboard foreground colour set to #%08X.", _billboardForeground));
+    save();
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return the foreground colour of billboards to the specified ARGB colour.
+   * 
+   * @return the foreground colour of billboards to the specified ARGB colour.
+   */
+  public int getBillboardForeground()
+  {
+    return _billboardForeground;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Control whether ores are grouped even in creative mode.
+   * 
+   * By defaultm, ores receive no special treatment in creative mode.
+   * 
+   * @param groupingOresInCreative if true, ores are grouped and can be listed
+   *          using /w ores in creative mode. If false, that facility is only
+   *          available in survival type modes.
+   */
+  public void setGroupingOresInCreative(boolean groupingOresInCreative)
+  {
+    _groupingOresInCreative = groupingOresInCreative;
+    Controller.instance.localOutput((_groupingOresInCreative ? "Enabled"
+      : "Disabled") + " grouping of ores in creating mode.");
+    save();
+  }
+  // --------------------------------------------------------------------------
+  /**
+   * Return true if grouping of ores is enabled even in creative mode.
+   * 
+   * @return true if grouping of ores is enabled even in creative mode.
+   */
+  public boolean isGroupingOresInCreative()
+  {
+    return _groupingOresInCreative;
+  }
 
   // --------------------------------------------------------------------------
   /**
@@ -281,11 +402,34 @@ public class Configuration
    * If true, "/lb page" is executed to page through "/lb coords" results, up to
    * 3 pages.
    */
-  protected boolean             _autoPage                 = false;
+  protected boolean             _autoPage                 = true;
 
   /**
    * The timeout between automatic calls to "/region info" in seconds.
    */
   protected double              _regionInfoTimeoutSeconds = 5.0;
+
+  /**
+   * If true, the vector display is enabled.
+   */
+  protected boolean             _vectorsShown             = true;
+
+  /**
+   * Background colour of text billboards (annotations etc) as an ARGB (alpha in
+   * the most significant octet, blue in the least significant one).
+   */
+  protected int                 _billboardBackground      = 0xA8000000;
+
+  /**
+   * Background colour of text billboards (annotations etc) as an ARGB (alpha in
+   * the most significant octet, blue in the least significant one).
+   */
+  protected int                 _billboardForeground      = 0x7FFFFFFF;
+
+  /**
+   * If true, group ores even in creative mode.
+   */
+  protected boolean             _groupingOresInCreative   = false;
+
 } // class Configuration
 

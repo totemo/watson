@@ -61,6 +61,23 @@ public class TimeStamp
 
   // --------------------------------------------------------------------------
   /**
+   * Format a millisecond time into the format "DD.MM.YYYY hh:mm:ss" so that it
+   * can be used as a "since" or "before" parameter value in LogBlock queries.
+   * 
+   * @param millis a timestamp in the form of milliseconds since epoch.
+   * @return a the formatted time.
+   */
+  public static String formatQueryTime(long millis)
+  {
+    _time.setTimeInMillis(millis);
+    return String.format("%d.%d.%d %02d:%02d:%02d",
+      _time.get(Calendar.DAY_OF_MONTH), _time.get(Calendar.MONTH) + 1,
+      _time.get(Calendar.YEAR), _time.get(Calendar.HOUR_OF_DAY),
+      _time.get(Calendar.MINUTE), _time.get(Calendar.SECOND));
+  }
+
+  // --------------------------------------------------------------------------
+  /**
    * A reusable Calendar instance used to interpret any time stamps found in
    * LogBlock results.
    */

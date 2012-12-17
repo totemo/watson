@@ -42,6 +42,19 @@ public class TypedOreDB
 
   // --------------------------------------------------------------------------
   /**
+   * Return the set of deposits for fast iteration (drawing labels etc).
+   * 
+   * Consider the returned reference immutable.
+   * 
+   * @return the set of deposits for fast iteration (drawing labels etc).
+   */
+  public TreeSet<OreDeposit> getOreDeposits()
+  {
+    return _oreDeposits;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
    * Return the number of {@link OreDeposit}s in the database.
    * 
    * @return the number of {@link OreDeposit}s in the database.

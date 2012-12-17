@@ -20,9 +20,9 @@ public class ModModeAnalysis extends Analysis
   @Override
   public void registerAnalysis(TagDispatchChatHandler tagDispatchChatHandler)
   {
-    tagDispatchChatHandler.setChatHandler("mod.entermodmode",
+    tagDispatchChatHandler.addChatHandler("mod.entermodmode",
       new MethodChatHandler(this, "changeModMode"));
-    tagDispatchChatHandler.setChatHandler("mod.leavemodmode",
+    tagDispatchChatHandler.addChatHandler("mod.leavemodmode",
       new MethodChatHandler(this, "changeModMode"));
   } // registerAnalysis
 

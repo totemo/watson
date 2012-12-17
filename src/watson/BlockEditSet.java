@@ -60,6 +60,7 @@ public class BlockEditSet
       Calendar time = Calendar.getInstance();
       String line;
       int edits = 0;
+      BlockEdit blockEdit = null;
       while ((line = reader.readLine()) != null)
       {
         Matcher edit = editPattern.matcher(line);
@@ -83,8 +84,8 @@ public class BlockEditSet
 
           BlockType type = BlockTypeRegistry.instance.getBlockTypeByIdData(id,
             data);
-          BlockEdit blockEdit = new BlockEdit(time.getTimeInMillis(), player,
-            created, x, y, z, type);
+          blockEdit = new BlockEdit(time.getTimeInMillis(), player, created, x,
+            y, z, type);
           addBlockEdit(blockEdit);
           ++edits;
         } // if
@@ -102,6 +103,12 @@ public class BlockEditSet
           }
         }
       } // while
+
+      // If there was at least one BlockEdit, select it.
+      if (blockEdit != null)
+      {
+        Controller.instance.selectBlockEdit(blockEdit);
+      }
       return edits;
     }
     finally
@@ -216,8 +223,17 @@ public class BlockEditSet
   public void addBlockEdit(BlockEdit edit)
   {
     _edits.add(edit);
-    _oreDB.addBlockEdit(edit);
-  }
+
+    // Only cluster edits into ore deposits on non-creative (survival,
+    // adventure) games. I assume this will not stuff up for admins etc whose
+    // gamemode is creative, but just in case, allow a configuration override.
+    Minecraft mc = ModLoader.getMinecraftInstance();
+    if (!mc.theWorld.getWorldInfo().getGameType().isCreative()
+        || Configuration.instance.isGroupingOresInCreative())
+    {
+      _oreDB.addBlockEdit(edit);
+    }
+  } // addBlockEdit
 
   // --------------------------------------------------------------------------
   /**

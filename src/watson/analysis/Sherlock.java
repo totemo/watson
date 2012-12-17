@@ -34,6 +34,8 @@ public class Sherlock
     _analyses.add(new ModModeAnalysis());
     _analyses.add(new RegionInfoAnalysis());
     _analyses.add(new TeleportAnalysis());
+    _analyses.add(new RatioAnalysis());
+    _analyses.add(ServerTime.instance);
 
     for (Analysis analysis : _analyses)
     {

@@ -70,6 +70,61 @@ public class OreDeposit implements Comparable<OreDeposit>
 
   // ---------------------------------------------------------------------------
   /**
+   * Scan through all edits and return the earliest edit in the deposit.
+   * 
+   * This is not the same as the key deposit, which is the earliest of those
+   * edits with the lowest Y coordinate.
+   * 
+   * @return the earliest edit in the deposit.
+   */
+  public BlockEdit getEarliestEdit()
+  {
+    BlockEdit edit = null;
+    for (OreBlock block : _oreBlocks)
+    {
+      if (edit == null)
+      {
+        edit = block.getEdit();
+      }
+      else
+      {
+        if (block.getEdit().time < edit.time)
+        {
+          edit = block.getEdit();
+        }
+      }
+    } // for
+    return edit;
+  } // getEarliestEdit
+
+  // ---------------------------------------------------------------------------
+  /**
+   * Scan through all edits and return the latest edit in the deposit.
+   * 
+   * @return the latest edit in the deposit.
+   */
+  public BlockEdit getLatestEdit()
+  {
+    BlockEdit edit = null;
+    for (OreBlock block : _oreBlocks)
+    {
+      if (edit == null)
+      {
+        edit = block.getEdit();
+      }
+      else
+      {
+        if (block.getEdit().time > edit.time)
+        {
+          edit = block.getEdit();
+        }
+      }
+    } // for
+    return edit;
+  } // getLatestEdit
+
+  // ---------------------------------------------------------------------------
+  /**
    * Return the {@link BlockType} of this deposit.
    * 
    * @return the {@link BlockType} of this deposit.

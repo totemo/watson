@@ -5,6 +5,7 @@ import net.minecraft.src.SyntaxErrorException;
 import watson.Configuration;
 import watson.Controller;
 import watson.DisplaySettings;
+import watson.analysis.ServerTime;
 import watson.db.OreDB;
 
 // --------------------------------------------------------------------------
@@ -54,9 +55,19 @@ public class WatsonCommand extends WatsonCommandBase
         Controller.instance.queryPreviousEdits();
         return;
       }
-      else if (args[0].equals("ores"))
+      else if (args[0].equals("ore"))
       {
         Controller.instance.getBlockEditSet().getOreDB().listDeposits();
+        return;
+      }
+      else if (args[0].equals("ratio"))
+      {
+        Controller.instance.getBlockEditSet().getOreDB().showRatios();
+        return;
+      }
+      else if (args[0].equals("servertime"))
+      {
+        ServerTime.instance.queryServerTime(true);
         return;
       }
     }
@@ -204,6 +215,31 @@ public class WatsonCommand extends WatsonCommandBase
       }
       // Other args.length and args[1] values will throw.
     } // vector
+
+    // "/w label" command.
+    if (args.length >= 1 && args[0].equals("label"))
+    {
+      if (args.length == 1)
+      {
+        // Toggle display.
+        display.setLabelsShown(!display.areLabelsShown());
+        return;
+      }
+      else if (args.length == 2)
+      {
+        if (args[1].equals("on"))
+        {
+          display.setLabelsShown(true);
+          return;
+        }
+        else if (args[1].equals("off"))
+        {
+          display.setLabelsShown(false);
+          return;
+        }
+      }
+      // Other args.length and args[1] values will throw.
+    } // "/w label"
 
     // Ore teleport commands: /w tp [next|prev|<number>]
     if (args.length >= 1 && args[0].equals("tp"))
@@ -369,7 +405,71 @@ public class WatsonCommand extends WatsonCommandBase
         }
       } // /w config auto_page
 
+      // Set the text billboard background colour.
+      if (args[1].equals("billboard_background"))
+      {
+        if (args.length == 3)
+        {
+          try
+          {
+            // Need to truncate 64-bit values, otherwise numbers >7FFFFFFF will
+            // throw.
+            int argb = (int) Long.parseLong(args[2], 16);
+            Configuration.instance.setBillboardBackground(argb);
+            return;
+          }
+          catch (NumberFormatException ex)
+          {
+            Controller.instance.localError("The colour should be a 32-bit hexadecimal ARGB value.");
+            return;
+          }
+        }
+      } // /w config billboard_background
+
+      // Set the text billboard foreground colour.
+      if (args[1].equals("billboard_foreground"))
+      {
+        if (args.length == 3)
+        {
+          try
+          {
+            // Need to truncate 64-bit values, otherwise numbers >7FFFFFFF will
+            // throw.
+            int argb = (int) Long.parseLong(args[2], 16);
+            Configuration.instance.setBillboardForeground(argb);
+            return;
+          }
+          catch (NumberFormatException ex)
+          {
+            Controller.instance.localError("The colour should be a 32-bit hexadecimal ARGB value.");
+            return;
+          }
+        }
+      } // /w config billboard_foreground
     } // config
+
+    // Enable or disable forced grouping of ores in creative mode.
+    if (args[1].equals("group_ores_in_creative"))
+    {
+      if (args.length == 2)
+      {
+        Configuration.instance.setGroupingOresInCreative(!Configuration.instance.isGroupingOresInCreative());
+        return;
+      }
+      else if (args.length == 3)
+      {
+        if (args[2].equals("on"))
+        {
+          Configuration.instance.setGroupingOresInCreative(true);
+          return;
+        }
+        else if (args[2].equals("off"))
+        {
+          Configuration.instance.setGroupingOresInCreative(false);
+          return;
+        }
+      }
+    } // /w config debug
 
     throw new SyntaxErrorException("commands.generic.syntax", new Object[0]);
   } // processCommand
@@ -388,10 +488,13 @@ public class WatsonCommand extends WatsonCommandBase
     localOutput(sender, "  /w vector [on|off]");
     localOutput(sender, "  /w vector (creations|destructions) [on|off]");
     localOutput(sender, "  /w vector length <decimal>");
+    localOutput(sender, "  /w label [on|off]");
     localOutput(sender, "  /w clear");
     localOutput(sender, "  /w pre");
-    localOutput(sender, "  /w ores");
+    localOutput(sender, "  /w ore");
+    localOutput(sender, "  /w ratio");
     localOutput(sender, "  /w tp [next|prev|<number>]");
+    localOutput(sender, "  /w servertime");
     localOutput(sender, "  /w file list [<playername>]");
     localOutput(sender, "  /w file load <filename>|<playername>");
     localOutput(sender, "  /w file save [<filename>]");

@@ -25,6 +25,7 @@ import net.minecraft.src.mod_Watson;
 import watson.analysis.Sherlock;
 import watson.chat.ChatHighlighter;
 import watson.chat.ChatProcessor;
+import watson.chat.Colour;
 import watson.cli.AnnoCommand;
 import watson.cli.CalcCommand;
 import watson.cli.CaseInsensitivePrefixFileFilter;
@@ -47,14 +48,14 @@ public class Controller
 
   // --------------------------------------------------------------------------
   /**
-   * The colour of the output of Watson commands (light blue).
+   * The colour of the output of Watson commands.
    */
-  public static final String     OUTPUT_COLOUR = "\247b";
+  public static final String     OUTPUT_COLOUR = Colour.lightblue.getCodeString();
 
   /**
-   * The colour of the output of Watson error messages (red).
+   * The colour of the output of Watson error messages.
    */
-  public static final String     ERROR_COLOUR  = "\2474";
+  public static final String     ERROR_COLOUR  = Colour.red.getCodeString();
 
   // --------------------------------------------------------------------------
   /**
@@ -68,6 +69,13 @@ public class Controller
     _sherlock = new Sherlock(ChatProcessor.getInstance().getChatClassifier());
     BlockTypeRegistry.instance.loadBlockTypes();
     _chatHighlighter.loadHighlights();
+
+    // Set up some extra chat exclusions that may not yet be in the config file
+    // but ought to be. The "No results found." line is suppressed to hide
+    // the LogBlock query that checks server time. The line is manually
+    // re-echoed after that.
+    ChatProcessor.getInstance().setChatTagVisible("lb.header.timecheck", false);
+    ChatProcessor.getInstance().setChatTagVisible("lb.header.noresults", false);
 
     // Initialise the commands.
     mod_ClientCommands.getInstance().registerCommand(new WatsonCommand());
@@ -168,6 +176,21 @@ public class Controller
 
   // --------------------------------------------------------------------------
   /**
+   * Return the IP address of DNS name of the currently connected server, or
+   * null if not connected.
+   * 
+   * @return the IP address of DNS name of the currently connected server, or
+   *         null if not connected.
+   */
+  public String getServerIP()
+  {
+    Minecraft mc = ModLoader.getMinecraftInstance();
+    return (!mc.isSingleplayer() && mc.getServerData() != null) ? mc.getServerData().serverIP
+      : null;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
    * Return the current {@link BlockEditSet} under examination.
    * 
    * A separate {@link BlockEditSet} is maintained for each dimension
@@ -184,10 +207,11 @@ public class Controller
 
     // This code might get referenced at startup when changing display settings
     // if the mod happens to be disabled in the config file. At that time,
-    // mc.getServerData() will be null. Let's avoid that crash.
-    if (!mc.isSingleplayer() && mc.getServerData() != null)
+    // getServerIP() will be null. Let's avoid that crash.
+    String serverIP = getServerIP();
+    if (serverIP != null)
     {
-      idBuilder.append(mc.getServerData().serverIP);
+      idBuilder.append(serverIP);
     }
     idBuilder.append('/');
     idBuilder.append(mc.thePlayer.dimension);
@@ -308,10 +332,22 @@ public class Controller
   public void listBlockEditFiles(String prefix)
   {
     File[] files = getBlockEditFileList(prefix);
-    localOutput("\247b" + files.length + " matching file(s):");
+    if (files.length == 0)
+    {
+      localOutput("No matching files.");
+    }
+    else if (files.length == 1)
+    {
+      localOutput("1 matching file:");
+    }
+    else
+    {
+      localOutput(files.length + " matching files:");
+    }
+
     for (File file : files)
     {
-      localOutput("\247b" + file.getName());
+      localOutput(file.getName());
     }
   } // listBlockEditFiles
 

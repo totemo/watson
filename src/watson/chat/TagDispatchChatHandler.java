@@ -1,16 +1,12 @@
 package watson.chat;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 // --------------------------------------------------------------------------
 /**
  * An IChatHandler that dispatches to other IChatHandler implementations based
  * on the tag of the {@link ChatCategory} assigned to a {@link ChatLine}.
- * 
- * This class only supports a single {@link IChatHandler} for each distinct tag.
- * 
- * TODO: Add support for multiple handlers for each tag, because there may be
- * contention for hooking the header lines in the future.
  */
 public class TagDispatchChatHandler implements IChatHandler
 {
@@ -24,9 +20,15 @@ public class TagDispatchChatHandler implements IChatHandler
    * @param handler the {@link IChatHandler} implementation that handles the
    *          lines.
    */
-  public void setChatHandler(String tag, IChatHandler handler)
+  public void addChatHandler(String tag, IChatHandler handler)
   {
-    _handlers.put(tag, handler);
+    HashSet<IChatHandler> handlerSet = _handlers.get(tag);
+    if (handlerSet == null)
+    {
+      handlerSet = new HashSet<IChatHandler>();
+      _handlers.put(tag, handlerSet);
+    }
+    handlerSet.add(handler);
   }
 
   // --------------------------------------------------------------------------
@@ -36,12 +38,15 @@ public class TagDispatchChatHandler implements IChatHandler
   @Override
   public void classify(ChatLine line)
   {
-    IChatHandler handler = getHandler(line);
-    if (handler != null)
+    HashSet<IChatHandler> handlerSet = getHandlerSet(line);
+    if (handlerSet != null)
     {
-      handler.classify(line);
+      for (IChatHandler handler : handlerSet)
+      {
+        handler.classify(line);
+      }
     }
-  }
+  } // classify
 
   // --------------------------------------------------------------------------
   /**
@@ -50,26 +55,33 @@ public class TagDispatchChatHandler implements IChatHandler
   @Override
   public void revise(ChatLine oldLine, ChatLine newLine)
   {
-    IChatHandler handler = getHandler(newLine);
-    if (handler != null)
+    HashSet<IChatHandler> handlerSet = getHandlerSet(newLine);
+    if (handlerSet != null)
     {
-      handler.revise(oldLine, newLine);
+      for (IChatHandler handler : handlerSet)
+      {
+        handler.revise(oldLine, newLine);
+      }
     }
-  }
+  } // revise
 
   // --------------------------------------------------------------------------
   /**
-   * Return the {@link IChatHandler} to dispatched to based on the assigned
-   * {@link ChatCategory} of the {@link ChatLine}.
+   * Return the set of {@link IChatHandler}s to dispatch to based on the
+   * assigned {@link ChatCategory} of the {@link ChatLine}.
+   * 
+   * @return the set of {@link IChatHandler}s to dispatch to based on the
+   *         assigned {@link ChatCategory} of the {@link ChatLine}.
    */
-  private IChatHandler getHandler(ChatLine line)
+  private HashSet<IChatHandler> getHandlerSet(ChatLine line)
   {
     return _handlers.get(line.getCategory().getTag());
   }
 
   // --------------------------------------------------------------------------
   /**
-   * A map from the ChatCategory tag string to the IChatHandler to invoke.
+   * A map from the ChatCategory tag string to a set of {@link IChatHandler}s to
+   * invoke.
    */
-  HashMap<String, IChatHandler> _handlers = new HashMap<String, IChatHandler>();
+  HashMap<String, HashSet<IChatHandler>> _handlers = new HashMap<String, HashSet<IChatHandler>>();
 } // class TagDispatchChatHandler

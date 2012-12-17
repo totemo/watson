@@ -84,12 +84,39 @@ public class OreBlock implements Comparable<OreBlock>
   // --------------------------------------------------------------------------
   /**
    * @see java.lang.Comparable#compareTo(java.lang.Object)
+   * 
+   *      The "least" {@link OreBlock} (which will be indexed into the
+   *      {@link OreDeposit} first. After that, blocks with the same Y
+   *      coordinate should be ordered in ascending order by timestamp, and
+   *      after that, compare X and Z to disambiguate.
    */
   @Override
   public int compareTo(OreBlock other)
   {
-    return Long.signum(getEdit().time - other.getEdit().time);
-  }
+    if (getLocation().getY() != other.getLocation().getY())
+    {
+      return getLocation().getY() - other.getLocation().getY();
+    }
+    else if (getEdit().time != other.getEdit().time)
+    {
+      return Long.signum(getEdit().time - other.getEdit().time);
+    }
+    else if (getLocation().getX() != other.getLocation().getX())
+    {
+      return getLocation().getX() - other.getLocation().getX();
+    }
+    else if (getLocation().getZ() != other.getLocation().getZ())
+    {
+      return getLocation().getZ() - other.getLocation().getZ();
+    }
+    else
+    {
+      // Then I guess it's the same one. Probably this series of tests won't
+      // get past the time comparison in most cases anyway unless it truly is
+      // equal.
+      return 0;
+    }
+  } // compareTo
 
   // --------------------------------------------------------------------------
   /**

@@ -32,14 +32,16 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
   public void registerAnalysis(TagDispatchChatHandler tagDispatchChatHandler)
   {
     // Set up some test handling of lb.coord:
-    tagDispatchChatHandler.setChatHandler("lb.coord", new MethodChatHandler(
+    tagDispatchChatHandler.addChatHandler("lb.coord", new MethodChatHandler(
       this, "lbCoord"));
-    tagDispatchChatHandler.setChatHandler("lb.coordreplaced",
+    tagDispatchChatHandler.addChatHandler("lb.coordreplaced",
       new MethodChatHandler(this, "lbCoordReplaced"));
-    tagDispatchChatHandler.setChatHandler("lb.page", new MethodChatHandler(
+    tagDispatchChatHandler.addChatHandler("lb.page", new MethodChatHandler(
       this, "lbPage"));
-    tagDispatchChatHandler.setChatHandler("lb.header", new MethodChatHandler(
+    tagDispatchChatHandler.addChatHandler("lb.header", new MethodChatHandler(
       this, "lbHeader"));
+    tagDispatchChatHandler.addChatHandler("lb.header.noresults",
+      new MethodChatHandler(this, "lbHeader"));
 
     _lbCoord = ChatProcessor.getInstance().getChatClassifier().getChatCategoryById(
       "lb.coord").getFullPattern();
@@ -78,9 +80,26 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
         String player = m.group(7);
         String action = m.group(8);
         String block = m.group(9);
-        int x = Integer.parseInt(m.group(10));
-        int y = Integer.parseInt(m.group(11));
-        int z = Integer.parseInt(m.group(12));
+
+        // If there are an extra 4 groups, then we're dealing with a sign.
+        String sign1 = null, sign2 = null, sign3 = null, sign4 = null;
+        int x, y, z;
+        if (m.groupCount() == 16)
+        {
+          sign1 = m.group(10);
+          sign2 = m.group(11);
+          sign3 = m.group(12);
+          sign4 = m.group(13);
+          x = Integer.parseInt(m.group(14));
+          y = Integer.parseInt(m.group(15));
+          z = Integer.parseInt(m.group(16));
+        }
+        else
+        {
+          x = Integer.parseInt(m.group(10));
+          y = Integer.parseInt(m.group(11));
+          z = Integer.parseInt(m.group(12));
+        }
 
         BlockType type = BlockTypeRegistry.instance.getBlockTypeByName(block);
         Controller.instance.getVariables().put("time", millis);
@@ -99,11 +118,23 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
         // Hacked in re-echoing of coords so we can see TP targets.
         if (type.getId() != 1)
         {
-          String target = String.format(
-            "\247%c(%2d) %02d-%02d %02d:%02d:%02d (%d,%d,%d) %C%d %s",
-            getChatColourChar(x, y, z), index, month, day, hour, minute,
-            second, x, y, z, (created ? '+' : '-'), type.getId(), player);
-          Controller.instance.localChat(target);
+          String output;
+          if (sign1 == null)
+          {
+            output = String.format(
+              "\247%c(%2d) %02d-%02d %02d:%02d:%02d (%d,%d,%d) %C%d %s",
+              getChatColourChar(x, y, z), index, month, day, hour, minute,
+              second, x, y, z, (created ? '+' : '-'), type.getId(), player);
+          }
+          else
+          {
+            output = String.format(
+              "\247%c(%2d) %02d-%02d %02d:%02d:%02d (%d,%d,%d) %C%d %s [%s] [%s] [%s] [%s]",
+              getChatColourChar(x, y, z), index, month, day, hour, minute,
+              second, x, y, z, (created ? '+' : '-'), type.getId(), player,
+              sign1, sign2, sign3, sign4);
+          }
+          Controller.instance.localChat(output);
         }
 
         requestNextPage();
@@ -114,7 +145,6 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
       Log.exception(Level.INFO, "error parsing lb coords", ex);
     }
   } // lbCoord
-
   // --------------------------------------------------------------------------
   /**
    * This method is called by the {@link ChatClassifier} when a chat line is
@@ -179,6 +209,7 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
       // System.out.println(ex);
     }
   } // lbCoordReplaced
+
   // --------------------------------------------------------------------------
   /**
    * Get the colour to highlight coordinates when they are re-echoed into chat.

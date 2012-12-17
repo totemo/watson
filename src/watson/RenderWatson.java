@@ -95,6 +95,9 @@ public class RenderWatson extends Render
       GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
       GL11.glEnable(GL11.GL_BLEND);
       GL11.glDisable(GL11.GL_TEXTURE_2D);
+      GL11.glDisable(GL11.GL_LIGHTING);
+      GL11.glDisable(GL11.GL_FOG);
+
       GL11.glDepthMask(false);
 
       GL11.glPushMatrix();
@@ -112,11 +115,14 @@ public class RenderWatson extends Render
       GL11.glDepthMask(true);
       GL11.glEnable(GL11.GL_TEXTURE_2D);
       GL11.glDisable(GL11.GL_BLEND);
+      GL11.glEnable(GL11.GL_FOG);
+      GL11.glEnable(GL11.GL_LIGHTING);
 
       GL11.glPopMatrix();
       RenderHelper.enableStandardItemLighting();
 
       edits.drawAnnotations();
+      edits.getOreDB().drawDepositLabels();
       // edits.drawHUD();
     } // if Watson is enabled and drawing
   } // renderEntityWatson
