@@ -1,5 +1,9 @@
 Change History
 ==============
+1.4.6 (2012-12-22)
+------------------
+* Recompiled 1.4.5 (2012-12-18) for 1.4.6.
+
 1.4.5 (2012-12-18)
 ------------------
 * Added spatial database, ore listing (/w ore) and ore teleport (/w tp) features.

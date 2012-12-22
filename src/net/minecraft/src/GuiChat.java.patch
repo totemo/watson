@@ -1,5 +1,5 @@
---- vanillasrc/minecraft/net/minecraft/src/GuiChat.java	2012-10-31 15:47:21.423712168 +1030
-+++ modsrc/minecraft/net/minecraft/src/GuiChat.java	2012-10-31 19:29:39.796975644 +1030
+--- vanillasrc/minecraft/net/minecraft/src/GuiChat.java	2012-12-22 14:13:20.553969521 +1030
++++ modsrc/minecraft/net/minecraft/src/GuiChat.java	2012-12-22 14:22:33.412244918 +1030
 @@ -99,9 +99,9 @@
              {
                  this.mc.ingameGUI.getChatGUI().addToSentMessages(var3);
@@ -16,6 +16,6 @@
      {
          return false;
      }
-+    
++
 +    public GuiTextField getInputField() { return this.inputField; }
  }
