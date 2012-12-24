@@ -55,9 +55,9 @@ Use LogBlock to get the coordinates.  As Watson sees coordinates listed in chat,
     /lb page 3
     /lb page 4
 
-![Edits with default vector length.](https://raw.github.com/totemo/watson/master/wiki/images/2012-10-24_02.20.01-flipflopfla.png)
+![Edits with default vector length.](https://raw.github.com/totemo/watson/master/wiki/images/screenshot1.png)
 
-When listing edits in chat, Watson groups groups them together based on spatial proximity and echoes the co-ordinates using a different colour for each group.  This allows separate ore deposits to be readily distinguished.
+When listing edits in chat, Watson groups them together based on spatial proximity and echoes the co-ordinates using a different colour for each group.  This allows separate ore deposits to be readily distinguished, for the purpose of selecting which edit to teleport to with /lb tp.  (However, note that there is a separate /w tp feature for teleporting to ore deposits, discussed later.)
 
 To teleport to an edit of interest:
 
@@ -87,6 +87,10 @@ If you forget any of the above commands:
 ### Viewing Ore Deposits
 
 Watson groups adjacent destructions of ore blocks into ore deposits.  Here, "adjacent" includes blocks up to 1 block away along all three cardinal axes simultaneously.  Ore deposits are assigned numeric labels starting at 1 and increasing in time.  All diamonds are numbered first, then emeralds, then iron, gold, lapis, redstone and finally coal.  Thus, if the coordinates of 5 diamond deposits and 10 iron deposits have been retrieved from the LogBlock database, the diamond deposits will be numbered from 1 to 5, with 1 being the oldest diamond, and the iron deposits will be numbered from 6 to 15, with 6 being the oldest iron deposit.
+
+![Vector length 1.](https://raw.github.com/totemo/watson/master/wiki/images/screenshot2.png)
+
+Ore deposits are colour-coded according to ore type, with diamonds listed in light blue, emerald in light green, iron orange, gold yellow, lapis blue, redstone red and coal listed in dark grey.
 
 To list all of the deposits:
 
@@ -133,8 +137,6 @@ Given the above commands for working with ore deposits, a basic x-ray checking p
 Watson draws vectors (arrows) from each edit to the next edit which is more recent, provided that the distance in space between the edits is greater than the minimum vector length.  The default minimum length is 4.  To draw vectors between all edits:
 
     /w vector length 1
-
-![Vector length 1.](https://raw.github.com/totemo/watson/master/wiki/images/2012-10-24_02.20.31-flipflopfla.png)
 
 To hide, show or toggle the vector display:
 
