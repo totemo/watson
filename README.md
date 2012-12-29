@@ -25,6 +25,15 @@ GitHub has dropped support for uploading files, so downloads will be hosted on G
     <th>Version</th> <th colspan="2">Details</th>
   </tr>
   <tr>
+    <td rowspan="3">1.4.6<br>(2012-12-29)</td> <td>sha256sum -b</td> <td>4b726f1e738cd4799efd35cc15d92a3162c4e299658e79fcc38a7b2f56f6058f</td>
+  </tr>
+  <tr>
+    <td>File Name</td> <td>watson-1.4.6-2012-12-29.zip</td>
+  </tr>
+  <tr>
+    <td>Link</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXNHlMcFpLRDVCd2c</td>
+  </tr>
+  <tr>
     <td rowspan="3">1.4.5<br>(2012-12-18)</td> <td>sha256sum -b</td> <td>8a73754dbbcf9f16de807f7eb6b75cef789e2db1698e2176eb7adb112affb9f8</td> 
   </tr>
   <tr>

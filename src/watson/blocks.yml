@@ -1,6 +1,9 @@
 # Each block may be listed under multiple names, the first of which is the 
 # primary name and should always be the name that LogBlock returns in query 
 # results.  Subsequent names are aliases for use in Watson queries.
+# For future reference, the name that LogBlock uses seems to always be the 
+# Material enum value from the Bukkit API:
+#   http://jd.bukkit.org/apidocs/org/bukkit/Material.html
 #
 # rgba values are a 4-tuple of integers in the range [0,255], specifying red, 
 # green, blue and alpha components of wireframe colour. The alpha value can be
@@ -330,33 +333,38 @@ blocks:
       # are just "step".
     - id: 44
       data: 0
-      names: [step,slab,smooth stone slab]
+      names: [step,slab,smooth stone slab, smooth stone step]
       rgba: [176, 176, 176]
       bounds: [0.0, 0.0, 0.0, 1.0, 0.5, 1.0]
     - id: 44
       data: 1
-      names: [step,slab,sandstone slab]
+      names: [sandstone slab, sandstone step]
       rgba: [197, 189, 117]
       bounds: [0.0, 0.0, 0.0, 1.0, 0.5, 1.0]
     - id: 44
       data: 2
-      names: [wood step,slab,oak slab]
+      names: [wood step,oak slab, oak step]
       rgba: [188, 152, 98]
       bounds: [0.0, 0.0, 0.0, 1.0, 0.5, 1.0]
     - id: 44
       data: 3
-      names: [step,slab,cobblestone slab]
+      names: [cobblestone slab, cobblestone step]
       rgba: [78, 74, 66]
       bounds: [0.0, 0.0, 0.0, 1.0, 0.5, 1.0]
     - id: 44
       data: 4
-      names: [step,slab,brick slab]
+      names: [brick slab, brick step]
       rgba: [155, 86, 67]
       bounds: [0.0, 0.0, 0.0, 1.0, 0.5, 1.0]
     - id: 44
       data: 5
-      names: [step,slab,stone brick slab]
+      names: [stone brick slab, stone brick step]
       rgba: [136, 136, 136]
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.5, 1.0]
+    - id: 44
+      data: 6
+      names: [nether brick slab, nether brick step]
+      rgba: [48, 24, 28]
       bounds: [0.0, 0.0, 0.0, 1.0, 0.5, 1.0]
     - id: 45
       names: [brick]
