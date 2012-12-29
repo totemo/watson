@@ -1,5 +1,11 @@
 Change History
 ==============
+1.4.6 (2012-12-29)
+------------------
+* Added nether brick slabs to blocks.yml.
+* Recompiled against non-buggy ModLoader.
+* Uploaded binaries.
+
 1.4.6 (2012-12-22)
 ------------------
 * Recompiled 1.4.5 (2012-12-18) for 1.4.6.
