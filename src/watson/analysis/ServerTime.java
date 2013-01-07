@@ -234,7 +234,7 @@ public class ServerTime extends Analysis
    * facility to suppress that line for the time check query. Don't look at me
    * like that. :P
    */
-  protected boolean                  _echoNextNoResults       = false;
+  protected boolean                  _echoNextNoResults       = true;
 
   /**
    * If true, the result of querying the current server time will be displayed
