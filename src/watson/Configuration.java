@@ -266,8 +266,10 @@ public class Configuration
         Integer.class, true, 0x7F000000));
       root.addChild("billboard_foreground", new TypeValidatorNode(
         Integer.class, true, 0xFFFFFFFF));
+
+      // Default to true until we can distinguish server vs player gamemode.
       root.addChild("group_ores_in_creative", new TypeValidatorNode(
-        Boolean.class, true, false));
+        Boolean.class, true, true));
 
       _validator.setRoot(root);
     }
@@ -362,7 +364,7 @@ public class Configuration
   {
     _groupingOresInCreative = groupingOresInCreative;
     Controller.instance.localOutput((_groupingOresInCreative ? "Enabled"
-      : "Disabled") + " grouping of ores in creating mode.");
+      : "Disabled") + " grouping of ores in creative mode.");
     save();
   }
   // --------------------------------------------------------------------------
@@ -428,8 +430,12 @@ public class Configuration
 
   /**
    * If true, group ores even in creative mode.
+   * 
+   * I currently know of no way of distinguishing the server's gamemode from
+   * that of the player. Therefore, it is best if this setting is left true so
+   * that "/w ore" works for admins in creative mode.
    */
-  protected boolean             _groupingOresInCreative   = false;
+  protected boolean             _groupingOresInCreative   = true;
 
 } // class Configuration
 
