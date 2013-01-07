@@ -69,6 +69,7 @@ public class Configuration
       _billboardBackground = (Integer) dom.get("billboard_background");
       _billboardForeground = (Integer) dom.get("billboard_foreground");
       _groupingOresInCreative = (Boolean) dom.get("group_ores_in_creative");
+      _teleportCommand = (String) dom.get("teleport_command");
       Log.debug(Integer.toHexString(_billboardBackground));
       Log.debug(Integer.toHexString(_billboardForeground));
     }
@@ -101,6 +102,7 @@ public class Configuration
       dom.put("billboard_background", getBillboardBackground());
       dom.put("billboard_foreground", getBillboardForeground());
       dom.put("group_ores_in_creative", isGroupingOresInCreative());
+      dom.put("teleport_command", getTeleportCommand());
 
       DumperOptions options = new DumperOptions();
       options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
@@ -244,39 +246,6 @@ public class Configuration
 
   // --------------------------------------------------------------------------
   /**
-   * Perform lazy initialisation of the SnakeValidator used to validate in
-   * load().
-   */
-  protected void configureValidator()
-  {
-    if (_validator == null)
-    {
-      _validator = new SnakeValidator();
-
-      MapValidatorNode root = new MapValidatorNode();
-      root.addChild("enabled", new TypeValidatorNode(Boolean.class, true, true));
-      root.addChild("debug", new TypeValidatorNode(Boolean.class, true, false));
-      root.addChild("auto_page", new TypeValidatorNode(Boolean.class, true,
-        true));
-      root.addChild("region_info_timeout", new TypeValidatorNode(Double.class,
-        true, 5.0));
-      root.addChild("vectors_shown", new TypeValidatorNode(Boolean.class, true,
-        true));
-      root.addChild("billboard_background", new TypeValidatorNode(
-        Integer.class, true, 0x7F000000));
-      root.addChild("billboard_foreground", new TypeValidatorNode(
-        Integer.class, true, 0xFFFFFFFF));
-
-      // Default to true until we can distinguish server vs player gamemode.
-      root.addChild("group_ores_in_creative", new TypeValidatorNode(
-        Boolean.class, true, true));
-
-      _validator.setRoot(root);
-    }
-  } // configureValidator
-
-  // --------------------------------------------------------------------------
-  /**
    * Enable or disable the vector display.
    * 
    * @param dispayVectors if true, the vector display will be visible.
@@ -354,7 +323,7 @@ public class Configuration
   /**
    * Control whether ores are grouped even in creative mode.
    * 
-   * By defaultm, ores receive no special treatment in creative mode.
+   * By default, ores receive no special treatment in creative mode.
    * 
    * @param groupingOresInCreative if true, ores are grouped and can be listed
    *          using /w ores in creative mode. If false, that facility is only
@@ -367,6 +336,7 @@ public class Configuration
       : "Disabled") + " grouping of ores in creative mode.");
     save();
   }
+
   // --------------------------------------------------------------------------
   /**
    * Return true if grouping of ores is enabled even in creative mode.
@@ -377,6 +347,71 @@ public class Configuration
   {
     return _groupingOresInCreative;
   }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Set the format string used to generate the teleport command set to the
+   * server.
+   * 
+   * @param format a format string suitable for use with String.format(); but
+   *          only %d and %g are recognised as numeric format specifiers.
+   */
+  public void setTeleportCommand(String format)
+  {
+    _teleportCommand = format;
+    Controller.instance.localOutput(String.format(
+      "Teleport command format set to \"%s\".", _teleportCommand));
+    save();
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return the format string used to generate the teleport command set to the
+   * server.
+   * 
+   * @return the format string used to generate the teleport command set to the
+   *         server.
+   */
+  public String getTeleportCommand()
+  {
+    return _teleportCommand;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Perform lazy initialisation of the SnakeValidator used to validate in
+   * load().
+   */
+  protected void configureValidator()
+  {
+    if (_validator == null)
+    {
+      _validator = new SnakeValidator();
+
+      MapValidatorNode root = new MapValidatorNode();
+      root.addChild("enabled", new TypeValidatorNode(Boolean.class, true, true));
+      root.addChild("debug", new TypeValidatorNode(Boolean.class, true, false));
+      root.addChild("auto_page", new TypeValidatorNode(Boolean.class, true,
+        true));
+      root.addChild("region_info_timeout", new TypeValidatorNode(Double.class,
+        true, 5.0));
+      root.addChild("vectors_shown", new TypeValidatorNode(Boolean.class, true,
+        true));
+      root.addChild("billboard_background", new TypeValidatorNode(
+        Integer.class, true, 0x7F000000));
+      root.addChild("billboard_foreground", new TypeValidatorNode(
+        Integer.class, true, 0xFFFFFFFF));
+
+      // Default to true until we can distinguish server vs player gamemode.
+      root.addChild("group_ores_in_creative", new TypeValidatorNode(
+        Boolean.class, true, true));
+
+      root.addChild("teleport_command", new TypeValidatorNode(String.class,
+        true, "/tppos %g %d %g"));
+
+      _validator.setRoot(root);
+    }
+  } // configureValidator
 
   // --------------------------------------------------------------------------
   /**
@@ -436,6 +471,12 @@ public class Configuration
    * that "/w ore" works for admins in creative mode.
    */
   protected boolean             _groupingOresInCreative   = true;
+
+  /**
+   * The default teleport command. X and Z coordinates are formatted as doubles
+   * to signify that 0.5 should be added to centre the player in the block.
+   */
+  protected String              _teleportCommand          = "/tppos %g %d %g";
 
 } // class Configuration
 

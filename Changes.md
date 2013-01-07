@@ -1,5 +1,11 @@
 Change History
 ==============
+1.4.6 (2013-01-07)
+------------------
+* Added a configurable format specifier for /tppos-style commands.
+* Default to grouping ores in creative, since detecting the server's gamemode doesn't work.
+* Fixed initial suppression of 'No results found.' message.
+
 1.4.6 (2012-12-29)
 ------------------
 * Added nether brick slabs to blocks.yml.

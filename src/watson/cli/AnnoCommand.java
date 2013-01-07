@@ -86,8 +86,8 @@ public class AnnoCommand extends WatsonCommandBase
           if (index >= 0 && index < annotations.size())
           {
             Annotation annotation = annotations.get(index);
-            Controller.instance.serverChat(String.format("/tppos %d %d %d",
-              annotation.getX(), annotation.getY(), annotation.getZ()));
+            Controller.instance.teleport(annotation.getX(), annotation.getY(),
+              annotation.getZ());
           }
           else
           {
@@ -129,18 +129,10 @@ public class AnnoCommand extends WatsonCommandBase
         }
         else
         {
-          StringBuilder text = new StringBuilder();
-          for (int i = 1; i < args.length; ++i)
-          {
-            text.append(args[i]);
-            if (i < args.length - 1)
-            {
-              text.append(' ');
-            }
-          }
           BlockEditSet edits = Controller.instance.getBlockEditSet();
           ArrayList<Annotation> annotations = edits.getAnnotations();
-          Annotation annotation = new Annotation(x, y, z, text.toString());
+          String text = concatArgs(args, 1, args.length, " ");
+          Annotation annotation = new Annotation(x, y, z, text);
           annotations.add(annotation);
           String description = String.format("(%d) (%d,%d,%d) %s",
             annotations.size(), annotation.getX(), annotation.getY(),

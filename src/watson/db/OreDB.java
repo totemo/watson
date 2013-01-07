@@ -193,11 +193,7 @@ public class OreDB
       _tpIndex = index = limitOreDepositIndex(index);
       OreDeposit deposit = getOreDeposit(index);
       IntCoord coord = deposit.getKeyOreBlock().getLocation();
-
-      // Add 0.5 to the x and z coordinates to put us dead centre.
-      String command = String.format("/tppos %g %d %g", coord.getX() + 0.5,
-        coord.getY(), coord.getZ() + 0.5);
-      Controller.instance.serverChat(command);
+      Controller.instance.teleport(coord.getX(), coord.getY(), coord.getZ());
       Controller.instance.localOutput(String.format(
         "Teleporting you to ore #%d", index));
 

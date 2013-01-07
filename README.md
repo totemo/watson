@@ -25,22 +25,42 @@ GitHub has dropped support for uploading files, so downloads will be hosted on G
     <th>Version</th> <th colspan="2">Details</th>
   </tr>
   <tr>
-    <td rowspan="3">1.4.6<br>(2012-12-29)</td> <td>sha256sum -b</td> <td>4b726f1e738cd4799efd35cc15d92a3162c4e299658e79fcc38a7b2f56f6058f</td>
+    <td rowspan="4">1.4.6<br>(2013-01-07)</td> <td>sha256sum -b</td> <td>690cadc7a1d05804e25c683859d88da3fb902ba8f90455125b1df92a457860eb</td>
+  </tr>
+  <tr>
+    <td>File Name</td> <td>watson-1.4.6-2013-01-07.zip</td>
+  </tr>
+  <tr>
+    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXSDhHX3p0dkZvV2s</td>
+  </tr>
+  <tr>
+    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#146-2013-01-07">description</a></td>
+  </tr>
+
+  <tr>
+    <td rowspan="4">1.4.6<br>(2012-12-29)</td> <td>sha256sum -b</td> <td>4b726f1e738cd4799efd35cc15d92a3162c4e299658e79fcc38a7b2f56f6058f</td>
   </tr>
   <tr>
     <td>File Name</td> <td>watson-1.4.6-2012-12-29.zip</td>
   </tr>
   <tr>
-    <td>Link</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXNHlMcFpLRDVCd2c</td>
+    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXNHlMcFpLRDVCd2c</td>
   </tr>
   <tr>
-    <td rowspan="3">1.4.5<br>(2012-12-18)</td> <td>sha256sum -b</td> <td>8a73754dbbcf9f16de807f7eb6b75cef789e2db1698e2176eb7adb112affb9f8</td> 
+    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#146-2012-12-29">description</a></td>
+  </tr>
+  
+  <tr>
+    <td rowspan="4">1.4.5<br>(2012-12-18)</td> <td>sha256sum -b</td> <td>8a73754dbbcf9f16de807f7eb6b75cef789e2db1698e2176eb7adb112affb9f8</td> 
   </tr>
   <tr>
     <td>File Name</td> <td>watson-1.4.5-2012-12-18.zip</td> 
   </tr>
   <tr>    
-    <td>Link</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXb1NJVHZ4MVRzUHM</td>  
+    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXb1NJVHZ4MVRzUHM</td>  
+  </tr>
+  <tr>
+    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#145-2012-12-18">description</a></td>
   </tr>
 </table>
 
@@ -316,7 +336,10 @@ Watson's main configuration settings are stored in ".minecraft/mods/watson/confi
     <td>billboard_foreground</td> <td>ARGB colour as 8 hexadecinal digits</td> <td>7FFFFFFF</td> <td>The colour of the foreground of annotation and ore label billboards.</td> <td><pre>/w config billboard_foreground 7fa0a0a0</pre></td>
   </tr>
   <tr>
-    <td>group_ores_in_creative</td> <td>on / off</td> <td>off</td> <td>If "on", edits are grouped into ore deposits even in creative mode.  If "off", that processing only happens in survival mode.</td> <td><pre>/w config group_ores_in_creative on</pre></td>
+    <td>group_ores_in_creative</td> <td>on / off</td> <td>on</td> <td>If "on", edits are grouped into ore deposits even in creative mode.  If "off", that processing only happens in survival mode.  Currently defaulted to on until a reliable way to distinguish the server's gamemode from that of the player is determined.</td> <td><pre>/w config group_ores_in_creative on</pre></td>
+  </tr>
+  <tr>
+    <td>teleport_command</td> <td>format string</td> <td>/tppos %g %d %g</td> <td>Specifies the formatting of the command used to teleport to specific coordinates in the implementation of "/w tp" and "/anno tp" commands.  Only %d (for integers) and %g (for decimal numbers) are supported as formatting specifiers.</td> <td><pre>/w config teleport_command /tppos %d %d %d</pre></td>
   </tr>
 </table>
 

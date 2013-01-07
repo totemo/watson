@@ -34,4 +34,31 @@ public abstract class WatsonCommandBase extends CommandBase
   {
     sender.sendChatToPlayer(Controller.ERROR_COLOUR + message);
   }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return the concatenation of arguments from the args[] array, for the
+   * indices between begin (inclusive) and end (exclusive) and using the
+   * specified separator between arguments (but not leading or trailing).
+   * 
+   * @param args the array of command argument strings.
+   * @param begin the inclusive start index of the range.
+   * @param end the inclusive start index of the range.
+   * @param separator the separator to be inserted between consecutive arguments
+   *          in the range.
+   */
+  public static String concatArgs(String[] args, int begin, int end,
+                                  String separator)
+  {
+    StringBuilder result = new StringBuilder();
+    for (int i = begin; i < end; ++i)
+    {
+      result.append(args[i]);
+      if (i < end - 1)
+      {
+        result.append(separator);
+      }
+    }
+    return result.toString();
+  } // concatArgs
 } // class WatsonCommandBase

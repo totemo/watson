@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -446,6 +447,45 @@ public class Controller
       _variables.put("z", edit.z);
     }
   } // selectBlockEdit
+
+  // --------------------------------------------------------------------------
+  /**
+   * Teleport to the middle of the block specified by integer coordinates.
+   * 
+   * Essentials only accepts integer coordinates for teleports. Other plugins
+   * use floating point coordinates. This method hides the difference by
+   * formatting the teleport command using the
+   * Configuration.getTeleportCommand() setting.
+   * 
+   * @param x the x coordinate of the block.
+   * @param y the y coordinate of the block.
+   * @param z the z coordinate of the block.
+   */
+  public void teleport(int x, int y, int z)
+  {
+    // Find %d and %g in the command format.
+    String format = Configuration.instance.getTeleportCommand();
+    Pattern specifier = Pattern.compile("%[dg]");
+    Matcher specifiers = specifier.matcher(format);
+
+    // If unspecified, default is false ("integer").
+    BitSet isDouble = new BitSet();
+    int i = 0;
+    while (specifiers.find())
+    {
+      isDouble.set(i, specifiers.group().equals("%g"));
+      ++i;
+    }
+
+    // I think (hope) it's reasonable to assume /tppos style commands will list
+    // x, y and z in that order.
+    Number nx = (isDouble.get(0) ? (Number) (x + 0.5) : x);
+    Number ny = (isDouble.get(1) ? (Number) (y + 0.5) : y);
+    Number nz = (isDouble.get(2) ? (Number) (z + 0.5) : z);
+    String command = String.format(format, nx, ny, nz);
+    Log.debug(command);
+    serverChat(command);
+  } // teleport
 
   // --------------------------------------------------------------------------
   /**

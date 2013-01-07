@@ -150,71 +150,11 @@ public class WatsonCommand extends WatsonCommandBase
     // "vector" command.
     if (args.length >= 1 && args[0].equals("vector"))
     {
-      if (args.length == 1)
+      if (handleVectorCommand(sender, args))
       {
-        // Toggle vector drawing.
-        display.setVectorsShown(!display.areVectorsShown());
         return;
       }
-      else if (args.length == 2)
-      {
-        if (args[1].equals("on"))
-        {
-          display.setVectorsShown(true);
-          return;
-        }
-        else if (args[1].equals("off"))
-        {
-          display.setVectorsShown(false);
-          return;
-        }
-        else if (args[1].equals("creations"))
-        {
-          display.setLinkedCreations(!display.isLinkedCreations());
-          return;
-        }
-        else if (args[1].equals("destructions"))
-        {
-          display.setLinkedDestructions(!display.isLinkedDestructions());
-          return;
-        }
-      }
-      else if (args.length == 3)
-      {
-        if (args[1].equals("creations"))
-        {
-          if (args[2].equals("on"))
-          {
-            display.setLinkedCreations(true);
-            return;
-          }
-          else if (args[2].equals("off"))
-          {
-            display.setLinkedCreations(false);
-            return;
-          }
-        }
-        else if (args[1].equals("destructions"))
-        {
-          if (args[2].equals("on"))
-          {
-            display.setLinkedDestructions(true);
-            return;
-          }
-          else if (args[2].equals("off"))
-          {
-            display.setLinkedDestructions(false);
-            return;
-          }
-        }
-        else if (args[1].equals("length"))
-        {
-          display.setMinVectorLength(Float.parseFloat(args[2]));
-          return;
-        }
-      }
-      // Other args.length and args[1] values will throw.
-    } // vector
+    }
 
     // "/w label" command.
     if (args.length >= 1 && args[0].equals("label"))
@@ -317,136 +257,227 @@ public class WatsonCommand extends WatsonCommandBase
     // "/w config" command.
     if (args.length >= 2 && args[0].equals("config"))
     {
-      // Enable or disable the mod as a whole.
-      if (args[1].equals("watson"))
+      if (handleConfigCommand(sender, args))
       {
-        if (args.length == 2)
-        {
-          Configuration.instance.setEnabled(!Configuration.instance.isEnabled());
-          return;
-        }
-        else if (args.length == 3)
-        {
-          if (args[2].equals("on"))
-          {
-            Configuration.instance.setEnabled(true);
-            return;
-          }
-          else if (args[2].equals("off"))
-          {
-            Configuration.instance.setEnabled(false);
-            return;
-          }
-        }
-      } // /w config watson
-
-      // Enable or disable debug logging.
-      if (args[1].equals("debug"))
-      {
-        if (args.length == 2)
-        {
-          Configuration.instance.setDebug(!Configuration.instance.isDebug());
-          return;
-        }
-        else if (args.length == 3)
-        {
-          if (args[2].equals("on"))
-          {
-            Configuration.instance.setDebug(true);
-            return;
-          }
-          else if (args[2].equals("off"))
-          {
-            Configuration.instance.setDebug(false);
-            return;
-          }
-        }
-      } // /w config debug
-
-      // Enable or disable automatic "/lb coords" paging.
-      if (args[1].equals("auto_page"))
-      {
-        if (args.length == 2)
-        {
-          Configuration.instance.setAutoPage(!Configuration.instance.isAutoPage());
-          return;
-        }
-        else if (args.length == 3)
-        {
-          if (args[2].equals("on"))
-          {
-            Configuration.instance.setAutoPage(true);
-            return;
-          }
-          else if (args[2].equals("off"))
-          {
-            Configuration.instance.setAutoPage(false);
-            return;
-          }
-        }
-      } // /w config auto_page
-
-      // Set minimum time separation between automatic "/region info"s.
-      if (args[1].equals("region_info_timeout"))
-      {
-        if (args.length == 3)
-        {
-          try
-          {
-            double seconds = Double.parseDouble(args[2]);
-            Configuration.instance.setRegionInfoTimeoutSeconds(seconds);
-            return;
-          }
-          catch (NumberFormatException ex)
-          {
-            // TODO: How to generate a more informative error message than
-            // just the default "Invalid command syntax"?
-          }
-        }
-      } // /w config auto_page
-
-      // Set the text billboard background colour.
-      if (args[1].equals("billboard_background"))
-      {
-        if (args.length == 3)
-        {
-          try
-          {
-            // Need to truncate 64-bit values, otherwise numbers >7FFFFFFF will
-            // throw.
-            int argb = (int) Long.parseLong(args[2], 16);
-            Configuration.instance.setBillboardBackground(argb);
-            return;
-          }
-          catch (NumberFormatException ex)
-          {
-            Controller.instance.localError("The colour should be a 32-bit hexadecimal ARGB value.");
-            return;
-          }
-        }
-      } // /w config billboard_background
-
-      // Set the text billboard foreground colour.
-      if (args[1].equals("billboard_foreground"))
-      {
-        if (args.length == 3)
-        {
-          try
-          {
-            // Need to truncate 64-bit values, otherwise numbers >7FFFFFFF will
-            // throw.
-            int argb = (int) Long.parseLong(args[2], 16);
-            Configuration.instance.setBillboardForeground(argb);
-            return;
-          }
-          catch (NumberFormatException ex)
-          {
-            Controller.instance.localError("The colour should be a 32-bit hexadecimal ARGB value.");
-            return;
-          }
-        }
-      } // /w config billboard_foreground
+        return;
+      }
     } // config
+
+    throw new SyntaxErrorException("commands.generic.syntax", new Object[0]);
+  } // processCommand
+
+  // --------------------------------------------------------------------------
+  /**
+   * Handle the various /w vector subcommands.
+   * 
+   * @return true if the command was processed successfully.
+   */
+  protected boolean handleVectorCommand(ICommandSender sender, String[] args)
+  {
+    DisplaySettings display = Controller.instance.getDisplaySettings();
+    if (args.length == 1)
+    {
+      // Toggle vector drawing.
+      display.setVectorsShown(!display.areVectorsShown());
+      return true;
+    }
+    else if (args.length == 2)
+    {
+      if (args[1].equals("on"))
+      {
+        display.setVectorsShown(true);
+        return true;
+      }
+      else if (args[1].equals("off"))
+      {
+        display.setVectorsShown(false);
+        return true;
+      }
+      else if (args[1].equals("creations"))
+      {
+        display.setLinkedCreations(!display.isLinkedCreations());
+        return true;
+      }
+      else if (args[1].equals("destructions"))
+      {
+        display.setLinkedDestructions(!display.isLinkedDestructions());
+        return true;
+      }
+    }
+    else if (args.length == 3)
+    {
+      if (args[1].equals("creations"))
+      {
+        if (args[2].equals("on"))
+        {
+          display.setLinkedCreations(true);
+          return true;
+        }
+        else if (args[2].equals("off"))
+        {
+          display.setLinkedCreations(false);
+          return true;
+        }
+      }
+      else if (args[1].equals("destructions"))
+      {
+        if (args[2].equals("on"))
+        {
+          display.setLinkedDestructions(true);
+          return true;
+        }
+        else if (args[2].equals("off"))
+        {
+          display.setLinkedDestructions(false);
+          return true;
+        }
+      }
+      else if (args[1].equals("length"))
+      {
+        display.setMinVectorLength(Float.parseFloat(args[2]));
+        return true;
+      }
+    }
+    return false;
+  } // handleVectorCommand
+
+  // --------------------------------------------------------------------------
+  /**
+   * Handle the various /w config subcommands.
+   * 
+   * @return true if the command was processed successfully.
+   */
+  protected boolean handleConfigCommand(ICommandSender sender, String[] args)
+  {
+    // Enable or disable the mod as a whole.
+    if (args[1].equals("watson"))
+    {
+      if (args.length == 2)
+      {
+        Configuration.instance.setEnabled(!Configuration.instance.isEnabled());
+        return true;
+      }
+      else if (args.length == 3)
+      {
+        if (args[2].equals("on"))
+        {
+          Configuration.instance.setEnabled(true);
+          return true;
+        }
+        else if (args[2].equals("off"))
+        {
+          Configuration.instance.setEnabled(false);
+          return true;
+        }
+      }
+    } // /w config watson
+
+    // Enable or disable debug logging.
+    if (args[1].equals("debug"))
+    {
+      if (args.length == 2)
+      {
+        Configuration.instance.setDebug(!Configuration.instance.isDebug());
+        return true;
+      }
+      else if (args.length == 3)
+      {
+        if (args[2].equals("on"))
+        {
+          Configuration.instance.setDebug(true);
+          return true;
+        }
+        else if (args[2].equals("off"))
+        {
+          Configuration.instance.setDebug(false);
+          return true;
+        }
+      }
+    } // /w config debug
+
+    // Enable or disable automatic "/lb coords" paging.
+    if (args[1].equals("auto_page"))
+    {
+      if (args.length == 2)
+      {
+        Configuration.instance.setAutoPage(!Configuration.instance.isAutoPage());
+        return true;
+      }
+      else if (args.length == 3)
+      {
+        if (args[2].equals("on"))
+        {
+          Configuration.instance.setAutoPage(true);
+          return true;
+        }
+        else if (args[2].equals("off"))
+        {
+          Configuration.instance.setAutoPage(false);
+          return true;
+        }
+      }
+    } // /w config auto_page
+
+    // Set minimum time separation between automatic "/region info"s.
+    if (args[1].equals("region_info_timeout"))
+    {
+      if (args.length == 3)
+      {
+        try
+        {
+          double seconds = Double.parseDouble(args[2]);
+          Configuration.instance.setRegionInfoTimeoutSeconds(seconds);
+          return true;
+        }
+        catch (NumberFormatException ex)
+        {
+          Controller.instance.localError("The timeout should be a decimal number of seconds.");
+          return true;
+        }
+      }
+    } // /w config region_info_timeout
+
+    // Set the text billboard background colour.
+    if (args[1].equals("billboard_background"))
+    {
+      if (args.length == 3)
+      {
+        try
+        {
+          // Need to truncate 64-bit values, otherwise numbers >7FFFFFFF will
+          // throw.
+          int argb = (int) Long.parseLong(args[2], 16);
+          Configuration.instance.setBillboardBackground(argb);
+          return true;
+        }
+        catch (NumberFormatException ex)
+        {
+          Controller.instance.localError("The colour should be a 32-bit hexadecimal ARGB value.");
+          return true;
+        }
+      }
+    } // /w config billboard_background
+
+    // Set the text billboard foreground colour.
+    if (args[1].equals("billboard_foreground"))
+    {
+      if (args.length == 3)
+      {
+        try
+        {
+          // Need to truncate 64-bit values, otherwise numbers >7FFFFFFF will
+          // throw.
+          int argb = (int) Long.parseLong(args[2], 16);
+          Configuration.instance.setBillboardForeground(argb);
+          return true;
+        }
+        catch (NumberFormatException ex)
+        {
+          Controller.instance.localError("The colour should be a 32-bit hexadecimal ARGB value.");
+          return true;
+        }
+      }
+    } // /w config billboard_foreground
 
     // Enable or disable forced grouping of ores in creative mode.
     if (args[1].equals("group_ores_in_creative"))
@@ -454,25 +485,31 @@ public class WatsonCommand extends WatsonCommandBase
       if (args.length == 2)
       {
         Configuration.instance.setGroupingOresInCreative(!Configuration.instance.isGroupingOresInCreative());
-        return;
+        return true;
       }
       else if (args.length == 3)
       {
         if (args[2].equals("on"))
         {
           Configuration.instance.setGroupingOresInCreative(true);
-          return;
+          return true;
         }
         else if (args[2].equals("off"))
         {
           Configuration.instance.setGroupingOresInCreative(false);
-          return;
+          return true;
         }
       }
-    } // /w config debug
+    } // /w config group_ores_in_creative
 
-    throw new SyntaxErrorException("commands.generic.syntax", new Object[0]);
-  } // processCommand
+    if (args[1].equals("teleport_command") && args.length >= 3)
+    {
+      String format = concatArgs(args, 2, args.length, " ");
+      Configuration.instance.setTeleportCommand(format);
+      return true;
+    }
+    return false;
+  } // handleConfigCommand
 
   // --------------------------------------------------------------------------
   /**
