@@ -1,5 +1,9 @@
 Change History
 ==============
+1.4.7 (2013-01-23)
+------------------
+* Recompiled for 1.4.7.
+
 1.4.6 (2013-01-07)
 ------------------
 * Added a configurable format specifier for /tppos-style commands.
