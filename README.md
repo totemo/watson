@@ -260,15 +260,15 @@ Watson contains a simple calculator that understands +, -, *, / and parentheses 
 
 ### Highlighting Chat Content
 
-Let's say we'd like to make the "Unknown command." error message stand out a bit more by making it bright red:
+Watson can highlight text that matches a specified [Java regular expression](http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html) using colour and formatting.  Let's say we'd like to make the "Unknown command." error message stand out a bit more by making it bright red:
 
     /hl add red ^Unknown\scommand.*
 
-Highlights are applied to a line of chat in the order that they were defined.
+All currently defined highlights are applied to a line of chat in the order that they were defined.
 
 Valid colour names are: black, darkblue/navy, darkgreen/green, cyan, darkred/red, purple, orange/gold/brown, lightgrey/lightgray, darkgrey/darkgray/grey/gray, blue, lightgreen, lightblue, lightred/brightred/rose, pink/lightpurple/magenta, yellow, white
 
-As of version 1.4.5 (2012-11-28), the /hl add command allows a style instead of a colour, or preceding the colour.
+The /hl add command allows a style instead of a colour, or preceding the colour.
 
 <table>
   <tr>
@@ -291,11 +291,11 @@ As of version 1.4.5 (2012-11-28), the /hl add command allows a style instead of 
   </tr>
 </table>
 
-List the existing patterns if you need to remove any:
+To list the existing patterns if you need to remove any:
 
     /hl list
 
-Remove a specific pattern by number:
+To remove a specific pattern by number:
 
     /hl remove 3
 
@@ -303,7 +303,10 @@ And if you forget any commands, try:
 
     /hl help
 
+
 ### Hiding Chat Lines by Category
+
+Watson classifies chat text into categories according to patterns specified in chatcategories.yml in the Minecraft JAR file (part of the Watson ZIP file).  That file can be overridden by extracting it to .minecraft/mods/watson/chatcategories.yml.  Individual categories can be hidden from chat using the /tag command.
 
 To turn off chat lines, e.g. the deathroll:
 
@@ -321,8 +324,6 @@ To list the lines that are currently excluded from chat:
 And for help:
 
     /tag help
-
-The list of tag names is a file chatcategories.yml in the Minecraft JAR file.  It can be overridden by extracting it to .minecraft/mods/watson/chatcategories.yml.
 
 
 ### Configuration File
