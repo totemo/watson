@@ -80,39 +80,80 @@ public class OreDB
   /**
    * List all of the ore deposits in the database in chat.
    * 
-   * TODO: add support for paging?
+   * @param page the 1-based page index to list; page numbers less than 1 are
+   *          assumed to have been eliminated by the caller.
    */
-  public void listDeposits()
+  public void listDeposits(int page)
   {
     int depositCount = getOreDepositCount();
-    if (depositCount == 1)
+    int pages = (depositCount + Controller.PAGE_LINES - 1)
+                / Controller.PAGE_LINES;
+
+    if (depositCount == 0)
     {
-      Controller.instance.localOutput("There is 1 ore deposit.");
+      Controller.instance.localOutput("There are no ore deposits.");
     }
     else
     {
-      Controller.instance.localOutput(String.format(Locale.US,
-        "There are %d ore deposits.", depositCount));
-    }
-    int id = 1;
-    for (TypedOreDB db : _db.values())
-    {
-      for (OreDeposit deposit : db.getOreDeposits())
+      if (page > pages)
       {
-        long time = deposit.getTimeStamp();
-        OreBlock block = deposit.getKeyOreBlock();
-        BlockType type = block.getEdit().type;
-        String player = block.getEdit().player;
-        String line = String.format(Locale.US,
-          "\247%c(%3d) %s (% 5d % 3d % 5d) %2d [%2d] %s",
-          _chatColours.get(type).getCode(), id,
-          TimeStamp.formatMonthDayTime(time), block.getLocation().getX(),
-          block.getLocation().getY(), block.getLocation().getZ(), type.getId(),
-          deposit.getBlockCount(), player);
-        Controller.instance.localChat(line);
-        ++id;
-      } // for all deposits of this ore type
-    } // for all types of deposits
+        Controller.instance.localError(String.format(Locale.US,
+          "The highest page number is %d.", pages));
+      }
+      else
+      {
+        if (depositCount == 1)
+        {
+          Controller.instance.localOutput("There is 1 ore deposit.");
+        }
+        else
+        {
+          Controller.instance.localOutput(String.format(Locale.US,
+            "There are %d ore deposits.", depositCount));
+        }
+
+        // Most of the time, there is only a single page of deposits and it is
+        // more efficient therefore to iterate linearly to skip pages.
+        int id = 1;
+        int start = 1 + (page - 1) * Controller.PAGE_LINES;
+        int end = start + Controller.PAGE_LINES;
+        outer: for (TypedOreDB db : _db.values())
+        {
+          for (OreDeposit deposit : db.getOreDeposits())
+          {
+            if (id >= start && id < end)
+            {
+              long time = deposit.getTimeStamp();
+              OreBlock block = deposit.getKeyOreBlock();
+              BlockType type = block.getEdit().type;
+              String player = block.getEdit().player;
+              String line = String.format(Locale.US,
+                "\247%c(%3d) %s (% 5d % 3d % 5d) %2d [%2d] %s",
+                _chatColours.get(type).getCode(), id,
+                TimeStamp.formatMonthDayTime(time), block.getLocation().getX(),
+                block.getLocation().getY(), block.getLocation().getZ(),
+                type.getId(), deposit.getBlockCount(), player);
+              Controller.instance.localChat(line);
+            }
+
+            ++id;
+            if (id >= end)
+            {
+              break outer;
+            }
+          } // for all deposits of this ore type
+        } // for all types of deposits
+
+        if (page < pages)
+        {
+          Controller.instance.localOutput(String.format(Locale.US,
+            "Page %d of %d.", page, pages));
+          Controller.instance.localOutput(String.format(Locale.US,
+            "Use \"/w ore %d\" to view the next page.", (page + 1)));
+        }
+
+      } // page number is valid
+    } // there are ore deposits
   } // listDeposits
 
   // --------------------------------------------------------------------------
@@ -275,7 +316,7 @@ public class OreDB
     } // if there are deposits
     else
     {
-      Controller.instance.localOutput("There are no ore deposits.");
+      Controller.instance.localOutput("There are no diamond ore deposits.");
     }
   } // showRatios
 

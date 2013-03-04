@@ -50,11 +50,6 @@ public class WatsonCommand extends WatsonCommandBase
         Controller.instance.clearBlockEditSet();
         return;
       }
-      else if (args[0].equals("ore"))
-      {
-        Controller.instance.getBlockEditSet().getOreDB().listDeposits();
-        return;
-      }
       else if (args[0].equals("ratio"))
       {
         Controller.instance.getBlockEditSet().getOreDB().showRatios();
@@ -66,6 +61,38 @@ public class WatsonCommand extends WatsonCommandBase
         return;
       }
     }
+
+    // "/w ore [<page>]"
+    if (args.length >= 1 && args[0].equals("ore"))
+    {
+      if (args.length == 1)
+      {
+        Controller.instance.getBlockEditSet().getOreDB().listDeposits(1);
+        return;
+      }
+      else if (args.length == 2)
+      {
+        boolean validPage = false;
+        try
+        {
+          int page = Integer.parseInt(args[1]);
+          if (page > 0)
+          {
+            validPage = true;
+            Controller.instance.getBlockEditSet().getOreDB().listDeposits(page);
+          }
+        }
+        catch (NumberFormatException ex)
+        {
+          // Handled by validPage check.
+        }
+        if (!validPage)
+        {
+          Controller.instance.localError("The page number should be greater than zero.");
+        }
+        return;
+      }
+    } // "/w ore"
 
     // "/w pre [<count>]"
     if (args.length >= 1 && args[0].equals("pre"))
@@ -719,7 +746,7 @@ public class WatsonCommand extends WatsonCommandBase
     localOutput(sender, "  /w clear");
     localOutput(sender, "  /w pre [<count>]");
     localOutput(sender, "  /w post [<count>]");
-    localOutput(sender, "  /w ore");
+    localOutput(sender, "  /w ore [<page>]");
     localOutput(sender, "  /w ratio");
     localOutput(sender, "  /w tp [next|prev|<number>]");
     localOutput(sender, "  /w servertime");

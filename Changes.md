@@ -11,6 +11,7 @@ Change History
 * Added a configuration option for the maximum number of pages to query automatically.
 * Added configuration options for the default count values for "/w pre" and "/w post".
 * Added paging of "/w file list" output.
+* Added paging of "/w ore" output.
 
 1.4.7 (2013-01-23)
 ------------------

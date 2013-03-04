@@ -358,7 +358,7 @@ public class Controller
       int pages = (files.length + PAGE_LINES - 1) / PAGE_LINES;
       if (page > pages)
       {
-        localOutput(String.format(Locale.US, "The highest page number is %d.",
+        localError(String.format(Locale.US, "The highest page number is %d.",
           pages));
       }
       else
@@ -781,7 +781,7 @@ public class Controller
   /**
    * Number of chat lines in a page.
    */
-  protected static final int              PAGE_LINES       = 50;
+  public static final int                 PAGE_LINES       = 50;
 
   /**
    * Cache the version string after it is loaded from a resource.
