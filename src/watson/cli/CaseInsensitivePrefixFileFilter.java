@@ -14,12 +14,13 @@ public class CaseInsensitivePrefixFileFilter implements FileFilter
   /**
    * Constructor.
    * 
-   * @param prefix the prefix to match. Null is treated as the empty string and
-   *          matches any name.
+   * @param prefix the prefix to match. Null or "*" is treated as the empty
+   *          string and matches any name.
    */
   public CaseInsensitivePrefixFileFilter(String prefix)
   {
-    _lowerPrefix = (prefix == null) ? "" : prefix.toLowerCase();
+    _lowerPrefix = (prefix == null || prefix.equals("*")) ? ""
+      : prefix.toLowerCase();
   }
 
   // --------------------------------------------------------------------------

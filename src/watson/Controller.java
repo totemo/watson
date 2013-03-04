@@ -333,27 +333,56 @@ public class Controller
   /**
    * List all of the {@link BlockEditSet} save files whose names begin with the
    * specified prefix, matched case-insensitively.
+   * 
+   * @param prefix the start of the file name to match.
+   * @param page the 1-based page number of the resuls to list.
    */
-  public void listBlockEditFiles(String prefix)
+  public void listBlockEditFiles(String prefix, int page)
   {
     File[] files = getBlockEditFileList(prefix);
     if (files.length == 0)
     {
       localOutput("No matching files.");
     }
-    else if (files.length == 1)
-    {
-      localOutput("1 matching file:");
-    }
     else
     {
-      localOutput(files.length + " matching files:");
-    }
+      if (files.length == 1)
+      {
+        localOutput("1 matching file:");
+      }
+      else
+      {
+        localOutput(files.length + " matching files:");
+      }
 
-    for (File file : files)
-    {
-      localOutput(file.getName());
-    }
+      int pages = (files.length + PAGE_LINES - 1) / PAGE_LINES;
+      if (page > pages)
+      {
+        localOutput(String.format(Locale.US, "The highest page number is %d.",
+          pages));
+      }
+      else
+      {
+        localOutput(String.format(Locale.US, "Page %d of %d.", page, pages));
+
+        // page <= pages
+        int start = (page - 1) * PAGE_LINES;
+        int end = Math.min(files.length, page * PAGE_LINES);
+
+        for (int i = start; i < end; ++i)
+        {
+          localOutput("    " + files[i].getName());
+        }
+
+        localOutput(String.format(Locale.US, "Page %d of %d.", page, pages));
+        if (page < pages)
+        {
+          localOutput(String.format(Locale.US,
+            "Use \"/w file list %s %d\" to see the next page.", prefix,
+            (page + 1)));
+        }
+      } // if the page number is valid
+    } // if there are matches
   } // listBlockEditFiles
 
   // --------------------------------------------------------------------------
@@ -749,6 +778,11 @@ public class Controller
   } // getConfigurationStream
 
   // --------------------------------------------------------------------------
+  /**
+   * Number of chat lines in a page.
+   */
+  protected static final int              PAGE_LINES       = 50;
+
   /**
    * Cache the version string after it is loaded from a resource.
    */

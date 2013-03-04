@@ -10,6 +10,7 @@ Change History
 * Added "/w post [<count>]" to query up to count edits after the selected edit.
 * Added a configuration option for the maximum number of pages to query automatically.
 * Added configuration options for the default count values for "/w pre" and "/w post".
+* Added paging of "/w file list" output.
 
 1.4.7 (2013-01-23)
 ------------------

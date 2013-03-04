@@ -285,12 +285,34 @@ public class WatsonCommand extends WatsonCommandBase
       {
         if (args.length == 2)
         {
-          Controller.instance.listBlockEditFiles(null);
+          Controller.instance.listBlockEditFiles("*", 1);
           return;
         }
         else if (args.length == 3)
         {
-          Controller.instance.listBlockEditFiles(args[2]);
+          Controller.instance.listBlockEditFiles(args[2], 1);
+          return;
+        }
+        else if (args.length == 4)
+        {
+          boolean validPage = false;
+          try
+          {
+            int page = Integer.parseInt(args[3]);
+            if (page > 0)
+            {
+              validPage = true;
+              Controller.instance.listBlockEditFiles(args[2], page);
+            }
+          }
+          catch (NumberFormatException ex)
+          {
+            // Handled by validPage check.
+          }
+          if (!validPage)
+          {
+            Controller.instance.localError("The page number should be greater than zero.");
+          }
           return;
         }
       }
@@ -326,7 +348,6 @@ public class WatsonCommand extends WatsonCommandBase
 
     throw new SyntaxErrorException("commands.generic.syntax", new Object[0]);
   } // processCommand
-
   // --------------------------------------------------------------------------
   /**
    * Handle the various /w vector subcommands.
@@ -702,7 +723,7 @@ public class WatsonCommand extends WatsonCommandBase
     localOutput(sender, "  /w ratio");
     localOutput(sender, "  /w tp [next|prev|<number>]");
     localOutput(sender, "  /w servertime");
-    localOutput(sender, "  /w file list [<playername>]");
+    localOutput(sender, "  /w file list [*|<playername>] [<page>]");
     localOutput(sender, "  /w file load <filename>|<playername>");
     localOutput(sender, "  /w file save [<filename>]");
     localOutput(sender, "  /w config <name> <value>");
