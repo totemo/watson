@@ -3,6 +3,7 @@ package watson.cli;
 import java.io.IOException;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
+import java.util.Locale;
 
 import net.minecraft.src.ICommandSender;
 import net.minecraft.src.SyntaxErrorException;
@@ -67,8 +68,8 @@ public class CalcCommand extends WatsonCommandBase
       try
       {
         // Light blue.
-        localOutput(sender,
-          String.format("%s = %g", commandLine, calculation(tokenizer)));
+        localOutput(sender, String.format(Locale.US, "%s = %g", commandLine,
+          calculation(tokenizer)));
       }
       catch (IOException ex)
       {

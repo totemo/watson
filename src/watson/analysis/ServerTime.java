@@ -2,6 +2,7 @@ package watson.analysis;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -96,10 +97,11 @@ public class ServerTime extends Analysis
       if (_localMinusServerMinutes.get(serverIP) == null)
       {
         Calendar pastTime = getPastTime();
-        String date = String.format("%d.%d.%d",
+        String date = String.format(Locale.US, "%d.%d.%d",
           pastTime.get(Calendar.DAY_OF_MONTH),
           pastTime.get(Calendar.MONTH) + 1, pastTime.get(Calendar.YEAR));
         String query = String.format(
+          Locale.US,
           "/lb player watsonservertimecheck since %s 00:00:00 before %s 00:00:01 limit 1",
           date, date);
         Log.debug("Server time query for " + serverIP + ": " + query);

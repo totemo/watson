@@ -2,6 +2,7 @@ package watson.cli;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 import net.minecraft.src.ICommandSender;
 import net.minecraft.src.SyntaxErrorException;
@@ -51,11 +52,11 @@ public class AnnoCommand extends WatsonCommandBase
         ArrayList<Annotation> annotations = edits.getAnnotations();
 
         localOutput(sender,
-          String.format("%d annotation(s)", annotations.size()));
+          String.format(Locale.US, "%d annotation(s)", annotations.size()));
         int index = 1;
         for (Annotation annotation : annotations)
         {
-          String line = String.format("(%d) (%d,%d,%d) %s", index,
+          String line = String.format(Locale.US, "(%d) (%d,%d,%d) %s", index,
             annotation.getX(), annotation.getY(), annotation.getZ(),
             annotation.getText());
           localOutput(sender, line);
@@ -67,8 +68,10 @@ public class AnnoCommand extends WatsonCommandBase
       {
         BlockEditSet edits = Controller.instance.getBlockEditSet();
         ArrayList<Annotation> annotations = edits.getAnnotations();
-        localOutput(sender,
-          String.format("%d annotation(s) cleared.", annotations.size()));
+        localOutput(
+          sender,
+          String.format(Locale.US, "%d annotation(s) cleared.",
+            annotations.size()));
         annotations.clear();
         return;
       }
@@ -108,7 +111,7 @@ public class AnnoCommand extends WatsonCommandBase
           {
             annotations.remove(index);
             localOutput(sender,
-              String.format("Removed annotation #%d", (index + 1)));
+              String.format(Locale.US, "Removed annotation #%d", (index + 1)));
           }
           else
           {
@@ -134,7 +137,7 @@ public class AnnoCommand extends WatsonCommandBase
           String text = concatArgs(args, 1, args.length, " ");
           Annotation annotation = new Annotation(x, y, z, text);
           annotations.add(annotation);
-          String description = String.format("(%d) (%d,%d,%d) %s",
+          String description = String.format(Locale.US, "(%d) (%d,%d,%d) %s",
             annotations.size(), annotation.getX(), annotation.getY(),
             annotation.getZ(), annotation.getText());
           localOutput(sender, description);

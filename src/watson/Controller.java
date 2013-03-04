@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
@@ -252,8 +253,9 @@ public class Controller
       else
       {
         Calendar calendar = Calendar.getInstance();
-        fileName = String.format("%s-%4d-%02d-%02d-%02d.%02d.%02d", player,
-          calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1,
+        fileName = String.format(Locale.US, "%s-%4d-%02d-%02d-%02d.%02d.%02d",
+          player, calendar.get(Calendar.YEAR),
+          calendar.get(Calendar.MONTH) + 1,
           calendar.get(Calendar.DAY_OF_MONTH),
           calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),
           calendar.get(Calendar.SECOND));
@@ -268,8 +270,9 @@ public class Controller
       BlockEditSet edits = getBlockEditSet();
       int editCount = edits.save(file);
       int annoCount = edits.getAnnotations().size();
-      localOutput(String.format("Saved %d edits and %d annotations to %s",
-        editCount, annoCount, fileName));
+      localOutput(String.format(Locale.US,
+        "Saved %d edits and %d annotations to %s", editCount, annoCount,
+        fileName));
     }
     catch (IOException ex)
     {
@@ -309,8 +312,9 @@ public class Controller
         BlockEditSet edits = getBlockEditSet();
         int editCount = edits.load(file);
         int annoCount = edits.getAnnotations().size();
-        localOutput(String.format("Loaded %d edits and %d annotations from %s",
-          editCount, annoCount, file.getName()));
+        localOutput(String.format(Locale.US,
+          "Loaded %d edits and %d annotations from %s", editCount, annoCount,
+          file.getName()));
       }
       catch (Exception ex)
       {
@@ -406,7 +410,7 @@ public class Controller
       int second = _calendar.get(Calendar.SECOND);
       String player = (String) _variables.get("player");
 
-      String query = String.format(
+      String query = String.format(Locale.US,
         "/lb before %d.%d.%d %02d:%02d:%02d player %s coords limit 45", day,
         month, year, hour, minute, second, player);
       Log.debug(query);
@@ -482,7 +486,7 @@ public class Controller
     Number nx = (isDouble.get(0) ? (Number) (x + 0.5) : x);
     Number ny = (isDouble.get(1) ? (Number) (y + 0.5) : y);
     Number nz = (isDouble.get(2) ? (Number) (z + 0.5) : z);
-    String command = String.format(format, nx, ny, nz);
+    String command = String.format(Locale.US, format, nx, ny, nz);
     Log.debug(command);
     serverChat(command);
   } // teleport

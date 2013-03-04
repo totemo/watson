@@ -1,6 +1,7 @@
 package watson;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 // ----------------------------------------------------------------------------
 /**
@@ -53,7 +54,7 @@ public class TimeStamp
   public static String formatMonthDayTime(long millis)
   {
     _time.setTimeInMillis(millis);
-    return String.format("%02d-%02d %02d:%02d:%02d",
+    return String.format(Locale.US, "%02d-%02d %02d:%02d:%02d",
       _time.get(Calendar.MONTH) + 1, _time.get(Calendar.DAY_OF_MONTH),
       _time.get(Calendar.HOUR_OF_DAY), _time.get(Calendar.MINUTE),
       _time.get(Calendar.SECOND));
@@ -70,7 +71,7 @@ public class TimeStamp
   public static String formatQueryTime(long millis)
   {
     _time.setTimeInMillis(millis);
-    return String.format("%d.%d.%d %02d:%02d:%02d",
+    return String.format(Locale.US, "%d.%d.%d %02d:%02d:%02d",
       _time.get(Calendar.DAY_OF_MONTH), _time.get(Calendar.MONTH) + 1,
       _time.get(Calendar.YEAR), _time.get(Calendar.HOUR_OF_DAY),
       _time.get(Calendar.MINUTE), _time.get(Calendar.SECOND));

@@ -2,6 +2,7 @@ package watson.db;
 
 import java.util.Calendar;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.logging.Level;
 
 import net.minecraft.client.Minecraft;
@@ -90,7 +91,7 @@ public class OreDB
     }
     else
     {
-      Controller.instance.localOutput(String.format(
+      Controller.instance.localOutput(String.format(Locale.US,
         "There are %d ore deposits.", depositCount));
     }
     int id = 1;
@@ -102,7 +103,7 @@ public class OreDB
         OreBlock block = deposit.getKeyOreBlock();
         BlockType type = block.getEdit().type;
         String player = block.getEdit().player;
-        String line = String.format(
+        String line = String.format(Locale.US,
           "\247%c(%3d) %s (% 5d % 3d % 5d) %2d [%2d] %s",
           _chatColours.get(type).getCode(), id,
           TimeStamp.formatMonthDayTime(time), block.getLocation().getX(),
@@ -194,7 +195,7 @@ public class OreDB
       OreDeposit deposit = getOreDeposit(index);
       IntCoord coord = deposit.getKeyOreBlock().getLocation();
       Controller.instance.teleport(coord.getX(), coord.getY(), coord.getZ());
-      Controller.instance.localOutput(String.format(
+      Controller.instance.localOutput(String.format(Locale.US,
         "Teleporting you to ore #%d", index));
 
       // "Select" the tp target so that /w pre will work.
@@ -408,7 +409,7 @@ public class OreDB
 
     // The player name is at most 16 characters. As such, this query will be 96
     // characters long and will NOT result in a kick for being >100 characters.
-    String query = String.format(
+    String query = String.format(Locale.US,
       "/lb player %s since %s before %s sum b block 1 56", player, sinceTime,
       beforeTime);
     Log.debug(query);

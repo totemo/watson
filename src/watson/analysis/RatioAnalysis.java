@@ -1,6 +1,7 @@
 package watson.analysis;
 
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -120,7 +121,7 @@ public class RatioAnalysis extends Analysis
           Calendar before = Calendar.getInstance();
           before.set(Calendar.SECOND, 0);
           before.add(Calendar.MINUTE, -(localMinusServer + _beforeMinutes));
-          String period = String.format("Between %s and %s:",
+          String period = String.format(Locale.US, "Between %s and %s:",
             TimeStamp.formatQueryTime(since.getTimeInMillis()),
             TimeStamp.formatQueryTime(before.getTimeInMillis()));
           Log.debug("Between " + _sinceMinutes + " and " + _beforeMinutes
@@ -143,8 +144,8 @@ public class RatioAnalysis extends Analysis
           }
           else
           {
-            message = String.format("stone:diamond = %d / %d = %.3g",
-              _stoneCount, _diamondCount,
+            message = String.format(Locale.US,
+              "stone:diamond = %d / %d = %.3g", _stoneCount, _diamondCount,
               (_stoneCount / (double) _diamondCount));
           }
           Controller.instance.localOutput(period);

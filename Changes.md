@@ -1,5 +1,10 @@
 Change History
 ==============
+1.4.7 (2013-03-04)
+------------------
+* Recompiled with JDK 7.
+* Changed all string formatting to use an explicit US locale so that user's language settings don't break file I/O and server teleport commands.
+
 1.4.7 (2013-01-23)
 ------------------
 * Recompiled for 1.4.7.

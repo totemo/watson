@@ -1,5 +1,6 @@
 package watson.analysis;
 
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -121,7 +122,7 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
           String output;
           if (sign1 == null)
           {
-            output = String.format(
+            output = String.format(Locale.US,
               "\247%c(%2d) %02d-%02d %02d:%02d:%02d (%d,%d,%d) %C%d %s",
               getChatColourChar(x, y, z), index, month, day, hour, minute,
               second, x, y, z, (created ? '+' : '-'), type.getId(), player);
@@ -129,6 +130,7 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
           else
           {
             output = String.format(
+              Locale.US,
               "\247%c(%2d) %02d-%02d %02d:%02d:%02d (%d,%d,%d) %C%d %s [%s] [%s] [%s] [%s]",
               getChatColourChar(x, y, z), index, month, day, hour, minute,
               second, x, y, z, (created ? '+' : '-'), type.getId(), player,
@@ -194,7 +196,7 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
         // Hacked in re-echoing of coords so we can see TP targets.
         if (type.getId() != 1)
         {
-          String target = String.format(
+          String target = String.format(Locale.US,
             "\247%c(%2d) %02d-%02d %02d:%02d:%02d (%d,%d,%d) %C%d %s",
             getChatColourChar(x, y, z), index, month, day, hour, minute,
             second, x, y, z, '-', type.getId(), player);
@@ -301,7 +303,7 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
       if (_currentPage != 0 && _currentPage < _pageCount
           && _pageCount <= MAX_PAGES)
       {
-        Controller.instance.serverChat(String.format("/lb page %d",
+        Controller.instance.serverChat(String.format(Locale.US, "/lb page %d",
           _currentPage + 1));
 
         // Remember that we don't need to do this again until next page is

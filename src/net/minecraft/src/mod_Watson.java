@@ -1,5 +1,6 @@
 package net.minecraft.src;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -67,7 +68,7 @@ public class mod_Watson extends BaseMod
     // matching it. If it compiles, assume it's gonna work.
     if (!getVersion().equals(getModLoaderVersion()))
     {
-      Log.warning(String.format(
+      Log.warning(String.format(Locale.US,
         "mismatched ModLoader version: Watson: %s, ModLoader: %s",
         getVersion(), getModLoaderVersion()));
       // return;
@@ -119,7 +120,8 @@ public class mod_Watson extends BaseMod
         String version = Controller.instance.getVersion();
         String format = (version.length() != 0 && !version.equals("unknown")) ? "Watson %s. Type /w help, for help."
           : "Watson. Type /w help, for help.";
-        Controller.instance.localOutput(String.format(format, version));
+        Controller.instance.localOutput(String.format(Locale.US, format,
+          version));
 
         // Only set display settings on first connect. Subsequent connects
         // should retain the previous display state.

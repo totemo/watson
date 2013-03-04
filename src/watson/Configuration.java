@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.logging.Level;
 
 import org.yaml.snakeyaml.DumperOptions;
@@ -228,7 +229,7 @@ public class Configuration
       seconds = MIN_REGION_INFO_TIMEOUT;
     }
     _regionInfoTimeoutSeconds = seconds;
-    Controller.instance.localOutput(String.format(
+    Controller.instance.localOutput(String.format(Locale.US,
       "Automatic region info timeout set to %.2f seconds.", seconds));
     save();
   }
@@ -277,7 +278,7 @@ public class Configuration
   public void setBillboardBackground(int argb)
   {
     _billboardBackground = argb;
-    Controller.instance.localOutput(String.format(
+    Controller.instance.localOutput(String.format(Locale.US,
       "Billboard background colour set to #%08X.", _billboardBackground));
     save();
   }
@@ -303,7 +304,7 @@ public class Configuration
   public void setBillboardForeground(int argb)
   {
     _billboardForeground = argb;
-    Controller.instance.localOutput(String.format(
+    Controller.instance.localOutput(String.format(Locale.US,
       "Billboard foreground colour set to #%08X.", _billboardForeground));
     save();
   }
@@ -359,7 +360,7 @@ public class Configuration
   public void setTeleportCommand(String format)
   {
     _teleportCommand = format;
-    Controller.instance.localOutput(String.format(
+    Controller.instance.localOutput(String.format(Locale.US,
       "Teleport command format set to \"%s\".", _teleportCommand));
     save();
   }
