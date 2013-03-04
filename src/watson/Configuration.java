@@ -72,8 +72,9 @@ public class Configuration
       _groupingOresInCreative = (Boolean) dom.get("group_ores_in_creative");
       _teleportCommand = (String) dom.get("teleport_command");
       _chatTimeoutSeconds = (Double) dom.get("chat_timeout");
-      Log.debug(Integer.toHexString(_billboardBackground));
-      Log.debug(Integer.toHexString(_billboardForeground));
+      _maxAutoPages = (Integer) dom.get("max_auto_pages");
+      _preCount = (Integer) dom.get("pre_count");
+      _postCount = (Integer) dom.get("post_count");
     }
     catch (FileNotFoundException ex)
     {
@@ -106,6 +107,9 @@ public class Configuration
       dom.put("group_ores_in_creative", isGroupingOresInCreative());
       dom.put("teleport_command", getTeleportCommand());
       dom.put("chat_timeout", getChatTimeoutSeconds());
+      dom.put("max_auto_pages", getMaxAutoPages());
+      dom.put("pre_count", getPreCount());
+      dom.put("post_count", getPostCount());
 
       DumperOptions options = new DumperOptions();
       options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
@@ -415,6 +419,86 @@ public class Configuration
 
   // --------------------------------------------------------------------------
   /**
+   * Set the maximum number of pages of "/lb coords" results that will be
+   * automatically stepped through by issuing "/lb page #" commands.
+   * 
+   * @param maxAutoPages the number of pages.
+   */
+  public void setMaxAutoPages(int maxAutoPages)
+  {
+    _maxAutoPages = maxAutoPages;
+    Controller.instance.localOutput(String.format(
+      Locale.US,
+      "Up to %d pages of \"/lb coords\" results will be stepped through automatically.",
+      maxAutoPages));
+    save();
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return the maximum number of pages of "/lb coords" results that will be
+   * automatically stepped through by issuing "/lb page #" commands.
+   * 
+   * @return the maximum number of pages of "/lb coords" results that will be
+   *         automatically stepped through by issuing "/lb page #" commands.
+   */
+  public int getMaxAutoPages()
+  {
+    return _maxAutoPages;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Set the number of edits to fetch from LogBlock when "/w pre" is run.
+   * 
+   * @param preCount the number of edits.
+   */
+  public void setPreCount(int preCount)
+  {
+    _preCount = preCount;
+    Controller.instance.localOutput(String.format(Locale.US,
+      "By default, \"/w pre\" will return %d edits.", _preCount));
+    save();
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return the number of edits to fetch from LogBlock when "/w pre" is run.
+   * 
+   * @return the number of edits to fetch from LogBlock when "/w pre" is run.
+   */
+  public int getPreCount()
+  {
+    return _preCount;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Set the number of edits to fetch from LogBlock when "/w post" is run.
+   * 
+   * @param postCount the number of edits.
+   */
+  public void setPostCount(int postCount)
+  {
+    _postCount = postCount;
+    Controller.instance.localOutput(String.format(Locale.US,
+      "By default, \"/w post\" will return %d edits.", _postCount));
+    save();
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return the number of edits to fetch from LogBlock when "/w post" is run.
+   * 
+   * @return the number of edits to fetch from LogBlock when "/w post" is run.
+   */
+  public int getPostCount()
+  {
+    return _postCount;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
    * Perform lazy initialisation of the SnakeValidator used to validate in
    * load().
    */
@@ -446,6 +530,11 @@ public class Configuration
         true, "/tppos %g %d %g"));
       root.addChild("chat_timeout", new TypeValidatorNode(Double.class, true,
         1.1));
+      root.addChild("max_auto_pages", new TypeValidatorNode(Integer.class,
+        true, 3));
+      root.addChild("pre_count", new TypeValidatorNode(Integer.class, true, 45));
+      root.addChild("post_count",
+        new TypeValidatorNode(Integer.class, true, 45));
 
       _validator.setRoot(root);
     }
@@ -521,5 +610,21 @@ public class Configuration
    * sent chat messages (usually commands to the server).
    */
   protected double              _chatTimeoutSeconds       = 1.1;
+
+  /**
+   * The maximum number of pages of "/lb coords" results that will be
+   * automatically stepped through by issuing "/lb page #" commands.
+   */
+  protected int                 _maxAutoPages             = 3;
+
+  /**
+   * The number of edits to fetch from LogBlock when "/w pre" is run.
+   */
+  protected int                 _preCount                 = 45;
+
+  /**
+   * The number of edits to fetch from LogBlock when "/w post" is run.
+   */
+  protected int                 _postCount                = 45;
 } // class Configuration
 

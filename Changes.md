@@ -6,6 +6,10 @@ Change History
 * Changed all string formatting to use an explicit US locale so that user's language settings don't break file I/O and server teleport commands.
 * Added a chat_timeout setting to configure the rate at which all programmatically generated commands are sent to the server via chat.
 * Recognise "piston moving piece" as a type of block.
+* Added optional count parameter to "/w pre" to specify number of edits to fetch.
+* Added "/w post [<count>]" to query up to count edits after the selected edit.
+* Added a configuration option for the maximum number of pages to query automatically.
+* Added configuration options for the default count values for "/w pre" and "/w post".
 
 1.4.7 (2013-01-23)
 ------------------

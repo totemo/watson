@@ -392,12 +392,14 @@ public class Controller
    * query takes the form:
    * 
    * <pre>
-   * /lb before DD.MM.YYYY hh:mm:ss player name coords limit 45
+   * /lb before DD.MM.YYYY hh:mm:ss player name coords limit <count>
    * </pre>
    * 
-   * This method is called in response to the "/w pre" command.
+   * This method is called in response to the "/w pre [<count>]" command.
+   * 
+   * @param count the maximum number of edits that should be returned.
    */
-  public void queryPreviousEdits()
+  public void queryPreEdits(int count)
   {
     if (_variables.containsKey("player") && _variables.containsKey("time"))
     {
@@ -411,12 +413,47 @@ public class Controller
       String player = (String) _variables.get("player");
 
       String query = String.format(Locale.US,
-        "/lb before %d.%d.%d %02d:%02d:%02d player %s coords limit 45", day,
-        month, year, hour, minute, second, player);
+        "/lb before %d.%d.%d %02d:%02d:%02d player %s coords limit %d", day,
+        month, year, hour, minute, second, player, count);
       Log.debug(query);
       serverChat(query);
     }
-  } // queryPreviousEdits
+  } // queryPreEdits
+
+  // --------------------------------------------------------------------------
+  /**
+   * Issue a LogBlock query that selects the edits that came immediately after
+   * the most recent coalblock, /lb query result, or /lb tp destination. The
+   * query takes the form:
+   * 
+   * <pre>
+   * /lb since DD.MM.YYYY hh:mm:ss player name coords limit <count> asc
+   * </pre>
+   * 
+   * This method is called in response to the "/w post [<count>]" command.
+   * 
+   * @param count the maximum number of edits that should be returned.
+   */
+  public void queryPostEdits(int count)
+  {
+    if (_variables.containsKey("player") && _variables.containsKey("time"))
+    {
+      _calendar.setTimeInMillis((Long) _variables.get("time"));
+      int day = _calendar.get(Calendar.DAY_OF_MONTH);
+      int month = _calendar.get(Calendar.MONTH) + 1;
+      int year = _calendar.get(Calendar.YEAR);
+      int hour = _calendar.get(Calendar.HOUR_OF_DAY);
+      int minute = _calendar.get(Calendar.MINUTE);
+      int second = _calendar.get(Calendar.SECOND);
+      String player = (String) _variables.get("player");
+
+      String query = String.format(Locale.US,
+        "/lb since %d.%d.%d %02d:%02d:%02d player %s coords limit %d asc", day,
+        month, year, hour, minute, second, player, count);
+      Log.debug(query);
+      serverChat(query);
+    }
+  } // queryPostEdits
 
   // --------------------------------------------------------------------------
   /**

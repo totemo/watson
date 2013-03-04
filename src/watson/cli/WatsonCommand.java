@@ -50,11 +50,6 @@ public class WatsonCommand extends WatsonCommandBase
         Controller.instance.clearBlockEditSet();
         return;
       }
-      else if (args[0].equals("pre"))
-      {
-        Controller.instance.queryPreviousEdits();
-        return;
-      }
       else if (args[0].equals("ore"))
       {
         Controller.instance.getBlockEditSet().getOreDB().listDeposits();
@@ -68,6 +63,72 @@ public class WatsonCommand extends WatsonCommandBase
       else if (args[0].equals("servertime"))
       {
         ServerTime.instance.queryServerTime(true);
+        return;
+      }
+    }
+
+    // "/w pre [<count>]"
+    if (args.length >= 1 && args[0].equals("pre"))
+    {
+      if (args.length == 1)
+      {
+        Controller.instance.queryPreEdits(Configuration.instance.getPreCount());
+        return;
+      }
+      else if (args.length == 2)
+      {
+        boolean validCount = false;
+        try
+        {
+          int count = Integer.parseInt(args[1]);
+          if (count > 0)
+          {
+            validCount = true;
+            Controller.instance.queryPreEdits(count);
+          }
+        }
+        catch (NumberFormatException ex)
+        {
+          // Handled by validCount test.
+        }
+
+        if (!validCount)
+        {
+          Controller.instance.localError("The count parameter should be a positive number of edits to fetch.");
+        }
+        return;
+      }
+    }
+
+    // "/w post [<count>]"
+    if (args.length >= 1 && args[0].equals("post"))
+    {
+      if (args.length == 1)
+      {
+        Controller.instance.queryPostEdits(Configuration.instance.getPostCount());
+        return;
+      }
+      else if (args.length == 2)
+      {
+        boolean validCount = false;
+        try
+        {
+          int count = Integer.parseInt(args[1]);
+          if (count > 0)
+          {
+            validCount = true;
+            Controller.instance.queryPostEdits(count);
+          }
+        }
+        catch (NumberFormatException ex)
+        {
+          // Handled by validCount test.
+        }
+
+        if (!validCount)
+        {
+          Controller.instance.localError("The count parameter should be a positive number of edits to fetch.");
+        }
         return;
       }
     }
@@ -425,7 +486,7 @@ public class WatsonCommand extends WatsonCommandBase
       {
         try
         {
-          double seconds = Double.parseDouble(args[2]);
+          double seconds = Math.abs(Double.parseDouble(args[2]));
           Configuration.instance.setRegionInfoTimeoutSeconds(seconds);
           return true;
         }
@@ -517,7 +578,7 @@ public class WatsonCommand extends WatsonCommandBase
       {
         try
         {
-          double seconds = Double.parseDouble(args[2]);
+          double seconds = Math.abs(Double.parseDouble(args[2]));
           Configuration.instance.setChatTimeoutSeconds(seconds);
           return true;
         }
@@ -528,6 +589,93 @@ public class WatsonCommand extends WatsonCommandBase
         }
       }
     } // /w config chat_timeout
+
+    // Set the maximum number of pages of "/lb coords" results automatically
+    // paged through.
+    if (args[1].equals("max_auto_pages"))
+    {
+      if (args.length == 3)
+      {
+        boolean validCount = false;
+        try
+        {
+          int count = Integer.parseInt(args[2]);
+          if (count > 0)
+          {
+            validCount = true;
+            Configuration.instance.setMaxAutoPages(count);
+          }
+        }
+        catch (NumberFormatException ex)
+        {
+          // Handled by validCount flag.
+        }
+
+        if (!validCount)
+        {
+          Controller.instance.localError("The minimum number of pages should be at least 1.");
+        }
+        return true;
+      } // if
+    } // /w config pre_count
+
+    // Set the default number of edits to query when no count parameter is
+    // specified with "/w pre".
+    if (args[1].equals("pre_count"))
+    {
+      if (args.length == 3)
+      {
+        boolean validCount = false;
+        try
+        {
+          int count = Integer.parseInt(args[2]);
+          if (count > 0)
+          {
+            validCount = true;
+            Configuration.instance.setPreCount(count);
+          }
+        }
+        catch (NumberFormatException ex)
+        {
+          // Handled by validCount flag.
+        }
+
+        if (!validCount)
+        {
+          Controller.instance.localError("The count should be a positive integer.");
+        }
+        return true;
+      } // if
+    } // /w config pre_count
+
+    // Set the default number of edits to query when no count parameter is
+    // specified with "/w post".
+    if (args[1].equals("post_count"))
+    {
+      if (args.length == 3)
+      {
+        boolean validCount = false;
+        try
+        {
+          int count = Integer.parseInt(args[2]);
+          if (count > 0)
+          {
+            validCount = true;
+            Configuration.instance.setPostCount(count);
+          }
+        }
+        catch (NumberFormatException ex)
+        {
+          // Handled by validCount flag.
+        }
+
+        if (!validCount)
+        {
+          Controller.instance.localError("The count should be a positive integer.");
+        }
+        return true;
+      } // if
+    } // /w config post_count
 
     return false;
   } // handleConfigCommand
@@ -548,7 +696,8 @@ public class WatsonCommand extends WatsonCommandBase
     localOutput(sender, "  /w vector length <decimal>");
     localOutput(sender, "  /w label [on|off]");
     localOutput(sender, "  /w clear");
-    localOutput(sender, "  /w pre");
+    localOutput(sender, "  /w pre [<count>]");
+    localOutput(sender, "  /w post [<count>]");
     localOutput(sender, "  /w ore");
     localOutput(sender, "  /w ratio");
     localOutput(sender, "  /w tp [next|prev|<number>]");
@@ -567,4 +716,5 @@ public class WatsonCommand extends WatsonCommandBase
       localOutput(sender, "To re-enable, use: /w config watson on");
     }
   } // help
+
 } // class WatsonCommand

@@ -243,9 +243,9 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
    * This method is called by the {@link ChatClassifier} when a chat line is
    * assigned the "lb.page" category.
    * 
-   * We run "/lb page (n+1)" automatically if there are 3 or less pages of
-   * results in the "/lb coords" output. This gets all of the coords from a
-   * "/w pre" ("limit 45" == 3 pages).
+   * We run "/lb page (n+1)" automatically if the number of pages of results in
+   * the "/lb coords" output is less than or equal to the max_auto_pages
+   * configuration setting.
    */
   @SuppressWarnings("unused")
   private void lbPage(watson.chat.ChatLine line)
@@ -259,7 +259,7 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
         int pageCount = Integer.parseInt(m.group(2));
 
         // Enforce the page limit here.
-        if (pageCount <= MAX_PAGES)
+        if (pageCount <= Configuration.instance.getMaxAutoPages())
         {
           _currentPage = currentPage;
           _pageCount = pageCount;
@@ -294,14 +294,15 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
   // --------------------------------------------------------------------------
   /**
    * This method is called when coordinates are parsed out of chat to request
-   * the next page of "/lb coords" results, up to a maximum of MAX_PAGES pages.
+   * the next page of "/lb coords" results, up to the configured maximum number
+   * of pages.
    */
   private void requestNextPage()
   {
     if (Configuration.instance.isAutoPage())
     {
       if (_currentPage != 0 && _currentPage < _pageCount
-          && _pageCount <= MAX_PAGES)
+          && _pageCount <= Configuration.instance.getMaxAutoPages())
       {
         Controller.instance.serverChat(String.format(Locale.US, "/lb page %d",
           _currentPage + 1));
@@ -312,14 +313,6 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
       }
     }
   } // requestNextPage
-
-  // --------------------------------------------------------------------------
-  /**
-   * The maximum number of pages for which "/lb page (n+1)" will be
-   * automatically called. If the total page count is more than this, the user
-   * must manually page though all of them.
-   */
-  protected static final int   MAX_PAGES               = 3;
 
   // --------------------------------------------------------------------------
   /**
