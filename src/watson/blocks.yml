@@ -230,7 +230,7 @@ blocks:
       names: [piston base]
       rgba: [89, 89, 89]
     - id: 34
-      names: [piston extension]
+      names: [piston extension,piston moving piece]
       rgba: [180, 144, 90]
 
     # Wool:
