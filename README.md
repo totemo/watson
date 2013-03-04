@@ -347,6 +347,9 @@ Watson's main configuration settings are stored in ".minecraft/mods/watson/confi
     <td>region_info_timeout</td> <td>decimal number of seconds >= 1.0</td> <td>5.0</td> <td>Minimum elapsed time between automatic "/region info" commands when right clicking with the wooden sword.</td> <td>/w config region_info_timeout 3</td>
   </tr>
   <tr>
+    <td>chat_timeout</td> <td>decimal number of seconds >= 0.0</td> <td>1.1</td> <td>Minimum elapsed time between automatically issued commands commands (e.g. /lb next) being sent to the server in the form of chat messages.</td> <td>/w config chat_timeout 1.0</td>
+  </tr>
+  <tr>
     <td>billboard_background</td> <td>ARGB colour as 8 hexadecinal digits</td> <td>A8000000</td> <td>The colour of the background of annotation and ore label billboards.</td> <td>/w config billboard_background 7f000000</td>
   </tr>
   <tr>

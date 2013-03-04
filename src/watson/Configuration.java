@@ -71,6 +71,7 @@ public class Configuration
       _billboardForeground = (Integer) dom.get("billboard_foreground");
       _groupingOresInCreative = (Boolean) dom.get("group_ores_in_creative");
       _teleportCommand = (String) dom.get("teleport_command");
+      _chatTimeoutSeconds = (Double) dom.get("chat_timeout");
       Log.debug(Integer.toHexString(_billboardBackground));
       Log.debug(Integer.toHexString(_billboardForeground));
     }
@@ -104,6 +105,7 @@ public class Configuration
       dom.put("billboard_foreground", getBillboardForeground());
       dom.put("group_ores_in_creative", isGroupingOresInCreative());
       dom.put("teleport_command", getTeleportCommand());
+      dom.put("chat_timeout", getChatTimeoutSeconds());
 
       DumperOptions options = new DumperOptions();
       options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
@@ -380,6 +382,39 @@ public class Configuration
 
   // --------------------------------------------------------------------------
   /**
+   * Set the minimum number of seconds that must elapse between programmatically
+   * sent chat messages (usually commands to the server).
+   * 
+   * @param seconds timeout in seconds.
+   */
+  public void setChatTimeoutSeconds(double seconds)
+  {
+    if (seconds < 0.0)
+    {
+      seconds = 0.0;
+    }
+    _chatTimeoutSeconds = seconds;
+    Controller.instance.localOutput(String.format(Locale.US,
+      "Chat command timeout set to %.2f seconds.", seconds));
+    save();
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return the minimum number of seconds that must elapse between
+   * programmatically sent chat messages (usually commands to the server).
+   * 
+   * @return the minimum number of seconds that must elapse between
+   *         programmatically sent chat messages (usually commands to the
+   *         server).
+   */
+  public double getChatTimeoutSeconds()
+  {
+    return _chatTimeoutSeconds;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
    * Perform lazy initialisation of the SnakeValidator used to validate in
    * load().
    */
@@ -409,6 +444,8 @@ public class Configuration
 
       root.addChild("teleport_command", new TypeValidatorNode(String.class,
         true, "/tppos %g %d %g"));
+      root.addChild("chat_timeout", new TypeValidatorNode(Double.class, true,
+        1.1));
 
       _validator.setRoot(root);
     }
@@ -479,5 +516,10 @@ public class Configuration
    */
   protected String              _teleportCommand          = "/tppos %g %d %g";
 
+  /**
+   * The minimum number of seconds that must elapse between programmatically
+   * sent chat messages (usually commands to the server).
+   */
+  protected double              _chatTimeoutSeconds       = 1.1;
 } // class Configuration
 

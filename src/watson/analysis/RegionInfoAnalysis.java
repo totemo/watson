@@ -58,12 +58,13 @@ public class RegionInfoAnalysis extends Analysis
           ++regionCount;
         }
 
-        // Controller.serverChat() queues up commands and issues them at the
-        // rate of one per second. Avoid queueing up many "/region info"s
+        // Controller.serverChat() queues up commands and issues them at a
+        // controlled rate. Avoid queueing up many "/region info"s
         // when the user is spamming wood sword where there are multiple
         // overlapping regions. Add the corresponding delay for each additional
         // region queried *after the first*.
-        _lastCommandTime = now + Controller.CHAT_TIMEOUT_MILLIS
+        _lastCommandTime = now
+                           + (long) (1000 * Configuration.instance.getChatTimeoutSeconds())
                            * Math.max(0, regionCount - 1);
 
       } // if line is valid

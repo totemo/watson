@@ -508,6 +508,27 @@ public class WatsonCommand extends WatsonCommandBase
       Configuration.instance.setTeleportCommand(format);
       return true;
     }
+
+    // Set minimum time separation between programmatically generated chat
+    // messages sent to the server
+    if (args[1].equals("chat_timeout"))
+    {
+      if (args.length == 3)
+      {
+        try
+        {
+          double seconds = Double.parseDouble(args[2]);
+          Configuration.instance.setChatTimeoutSeconds(seconds);
+          return true;
+        }
+        catch (NumberFormatException ex)
+        {
+          Controller.instance.localError("The timeout should be a decimal number of seconds.");
+          return true;
+        }
+      }
+    } // /w config chat_timeout
+
     return false;
   } // handleConfigCommand
 

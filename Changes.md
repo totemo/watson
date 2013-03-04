@@ -4,6 +4,7 @@ Change History
 ------------------
 * Recompiled with JDK 7.
 * Changed all string formatting to use an explicit US locale so that user's language settings don't break file I/O and server teleport commands.
+* Added a chat_timeout setting to configure the rate at which all programmatically generated commands are sent to the server via chat.
 
 1.4.7 (2013-01-23)
 ------------------
