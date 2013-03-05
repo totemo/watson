@@ -111,6 +111,17 @@ To teleport to an edit of interest:
 Perhaps, look at what happened immediately before that edit.  The Watson "pre" command displays the edits immediately before the most recently "selected" block. Just teleporting to an edit selects it for this purpose. Alternatively, when you check a block using the LogBlock toolblock (coal ore), that also selects it.
 
     /w pre
+    
+By default, "/w pre" queries 45 edits from LogBlock.  You can explicitly override that number:
+
+    /w pre 75
+    
+There's also a "/w post" command that queries LogBlock for the edits that happened immediately after the selected block:
+
+    /w post
+    /w post 60
+    
+The default numbers of edits for the "/w pre" and "/w post" queries are adjustable using the pre_count and post_count configuration setting, respectively.  If you increase those, you will also want to adjust the max_auto_pages setting to page through all of those results automatically.
 
 Perhaps, look at the immediate vicinity of an edit:
 
@@ -140,6 +151,10 @@ Ore deposits are colour-coded according to ore type, with diamonds listed in lig
 To list all of the deposits:
 
     /w ore
+
+Or if there are multiple pages (50 deposits to a page) you may need to specify a page number:
+
+    /w ore 2
 
 The "/w tp" command can teleport to the next deposit in the sequence (starting at one), the previous one, or the deposit with a specific number:
 
@@ -242,6 +257,14 @@ To save a file (for Notch's edits the file might be Notch-2012-10-23-17.21.34):
 To list all files:
 
     /w file list
+    
+Or alternatively:
+
+    /w file list *
+    
+If there are multiple pages of files (50 to a page) then you may need to specify a page number:
+
+    /w file list * 3
 
 To list all files for players whose names begin with the specified text (case insensitive); the example below would list Notch's edit files, possibly among others:
 
@@ -341,7 +364,16 @@ Watson's main configuration settings are stored in ".minecraft/mods/watson/confi
     <td>debug</td> <td>on / off</td> <td>off</td> <td>Enable/disable all debug messages in the log file.</td> <td>/w config debug</td>
   </tr>
   <tr>
-    <td>auto_page</td> <td>on / off</td> <td>off</td> <td>(Experimental) Enable/disable automatic paging through "/w pre" results (up to 3 pages).</td> <td>/w config auto_page on</td>
+    <td>auto_page</td> <td>on / off</td> <td>off</td> <td>Enable/disable automatic paging through "/lb cooords" results (up to max_auto_pages pages).</td> <td>/w config auto_page on</td>
+  </tr>
+  <tr>
+    <td>max_auto_pages</td> <td>integer</td> <td>3</td> <td>The number of pages of "/lb coords" results to step through automatically.</td> <td>/w config max_auto_pages 4</td>
+  </tr>
+  <tr>
+    <td>pre_count</td> <td>integer</td> <td>45</td> <td>The number of "/lb coords" results that will be returned by "/w pre", by default.</td> <td>/w config pre_count 60</td>
+  </tr>
+  <tr>
+    <td>post_count</td> <td>integer</td> <td>45</td> <td>The number of "/lb coords" results that will be returned by "/w post", by default.</td> <td>/w config post_count 60</td>
   </tr>
   <tr>
     <td>region_info_timeout</td> <td>decimal number of seconds >= 1.0</td> <td>5.0</td> <td>Minimum elapsed time between automatic "/region info" commands when right clicking with the wooden sword.</td> <td>/w config region_info_timeout 3</td>
