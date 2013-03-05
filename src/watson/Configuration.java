@@ -75,6 +75,7 @@ public class Configuration
       _maxAutoPages = (Integer) dom.get("max_auto_pages");
       _preCount = (Integer) dom.get("pre_count");
       _postCount = (Integer) dom.get("post_count");
+      _watsonPrefix = (String) dom.get("watson_prefix");
     }
     catch (FileNotFoundException ex)
     {
@@ -110,6 +111,7 @@ public class Configuration
       dom.put("max_auto_pages", getMaxAutoPages());
       dom.put("pre_count", getPreCount());
       dom.put("post_count", getPostCount());
+      dom.put("watson_prefix", getWatsonPrefix());
 
       DumperOptions options = new DumperOptions();
       options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
@@ -499,6 +501,34 @@ public class Configuration
 
   // --------------------------------------------------------------------------
   /**
+   * Set the start of all Watson commands, without the slash.
+   * 
+   * The caller should ensure that the specified prefix consists entirely of
+   * word characters ([a-zA-Z_0-9]), or it will be rejected.
+   * 
+   * @param watsonPrefix the command prefix.
+   */
+  public void setWatsonPrefix(String watsonPrefix)
+  {
+    _watsonPrefix = watsonPrefix;
+    Controller.instance.localOutput(String.format(Locale.US,
+      "Watson command prefix set to /%s.", _watsonPrefix));
+    save();
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return the start of all Watson commands, without the slash.
+   * 
+   * @return the start of all Watson commands, without the slash.
+   */
+  public String getWatsonPrefix()
+  {
+    return _watsonPrefix;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
    * Perform lazy initialisation of the SnakeValidator used to validate in
    * load().
    */
@@ -535,6 +565,8 @@ public class Configuration
       root.addChild("pre_count", new TypeValidatorNode(Integer.class, true, 45));
       root.addChild("post_count",
         new TypeValidatorNode(Integer.class, true, 45));
+      root.addChild("watson_prefix", new TypeValidatorNode(String.class, true,
+        "w"));
 
       _validator.setRoot(root);
     }
@@ -626,5 +658,10 @@ public class Configuration
    * The number of edits to fetch from LogBlock when "/w post" is run.
    */
   protected int                 _postCount                = 45;
+
+  /**
+   * The start of all Watson commands, without the slash.
+   */
+  protected String              _watsonPrefix             = "w";
 } // class Configuration
 

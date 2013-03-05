@@ -42,7 +42,9 @@ public class ClientCommandManager implements ICommandManager
   {
     String[] tokens = getTokens(commandLine);
     if (tokens.length == 0)
-        return false;
+    {
+      return false;
+    }
     ICommand command = getCommand(tokens[0]);
     if (command != null)
     {
@@ -72,6 +74,28 @@ public class ClientCommandManager implements ICommandManager
       }
     }
   } // registerCommand
+
+  // --------------------------------------------------------------------------
+  /**
+   * De-register the specified ICommand.
+   * 
+   * @param command the command.
+   */
+  public void unregisterCommand(ICommand command)
+  {
+    _commands.remove(command.getCommandName());
+    _canonicalCommands.remove(command);
+
+    // remove all aliases of the command.
+    List<String> aliases = command.getCommandAliases();
+    if (aliases != null)
+    {
+      for (String alias : aliases)
+      {
+        _commands.remove(alias);
+      }
+    }
+  } // unregisterCommand
 
   // --------------------------------------------------------------------------
   /**

@@ -1,12 +1,16 @@
 package watson.cli;
 
+import java.util.regex.Pattern;
+
 import net.minecraft.src.ICommandSender;
 import net.minecraft.src.SyntaxErrorException;
+import net.minecraft.src.mod_ClientCommands;
 import watson.Configuration;
 import watson.Controller;
 import watson.DisplaySettings;
 import watson.analysis.ServerTime;
 import watson.db.OreDB;
+import ClientCommands.ClientCommandManager;
 
 // --------------------------------------------------------------------------
 /**
@@ -21,7 +25,7 @@ public class WatsonCommand extends WatsonCommandBase
   @Override
   public String getCommandName()
   {
-    return "w";
+    return Configuration.instance.getWatsonPrefix();
   }
 
   // --------------------------------------------------------------------------
@@ -298,7 +302,7 @@ public class WatsonCommand extends WatsonCommandBase
           }
           catch (NumberFormatException ex)
           {
-            Controller.instance.localError("The /w tp parameter should be next, prev or an integer.");
+            Controller.instance.localError("The tp argument should be next, prev or an integer.");
           }
           return;
         }
@@ -725,6 +729,34 @@ public class WatsonCommand extends WatsonCommandBase
       } // if
     } // /w config post_count
 
+    // Set the prefix for Watson commands.
+    if (args[1].equals("watson_prefix") && args.length == 3)
+    {
+      String newPrefix = args[2];
+      if (!PREFIX_PATTERN.matcher(newPrefix).matches())
+      {
+        Controller.instance.localError("The command prefix can only contain letters, digits and underscores.");
+      }
+      else
+      {
+        // De-register, set the prefix and re-register this command.
+        ClientCommandManager ccm = mod_ClientCommands.getInstance().getClientCommandManager();
+        try
+        {
+          ccm.unregisterCommand(this);
+        }
+        catch (Exception ex)
+        {
+          // Future proof the inevitable fuck up when a conflicting version of
+          // mod_ClientCommands is released without the unregisterCommand
+          // method.
+        }
+        Configuration.instance.setWatsonPrefix(newPrefix);
+        ccm.registerCommand(this);
+      }
+      return true;
+    } // /w config watson_prefix <prefix>
+
     return false;
   } // handleConfigCommand
 
@@ -734,26 +766,27 @@ public class WatsonCommand extends WatsonCommandBase
    */
   public void help(ICommandSender sender)
   {
+    String w = Configuration.instance.getWatsonPrefix();
     localOutput(sender, "Usage:");
-    localOutput(sender, "  /w help");
-    localOutput(sender, "  /w display [on|off]");
-    localOutput(sender, "  /w outline [on|off]");
-    localOutput(sender, "  /w anno [on|off]");
-    localOutput(sender, "  /w vector [on|off]");
-    localOutput(sender, "  /w vector (creations|destructions) [on|off]");
-    localOutput(sender, "  /w vector length <decimal>");
-    localOutput(sender, "  /w label [on|off]");
-    localOutput(sender, "  /w clear");
-    localOutput(sender, "  /w pre [<count>]");
-    localOutput(sender, "  /w post [<count>]");
-    localOutput(sender, "  /w ore [<page>]");
-    localOutput(sender, "  /w ratio");
-    localOutput(sender, "  /w tp [next|prev|<number>]");
-    localOutput(sender, "  /w servertime");
-    localOutput(sender, "  /w file list [*|<playername>] [<page>]");
-    localOutput(sender, "  /w file load <filename>|<playername>");
-    localOutput(sender, "  /w file save [<filename>]");
-    localOutput(sender, "  /w config <name> <value>");
+    localOutput(sender, "  /" + w + " help");
+    localOutput(sender, "  /" + w + " display [on|off]");
+    localOutput(sender, "  /" + w + " outline [on|off]");
+    localOutput(sender, "  /" + w + " anno [on|off]");
+    localOutput(sender, "  /" + w + " vector [on|off]");
+    localOutput(sender, "  /" + w + " vector (creations|destructions) [on|off]");
+    localOutput(sender, "  /" + w + " vector length <decimal>");
+    localOutput(sender, "  /" + w + " label [on|off]");
+    localOutput(sender, "  /" + w + " clear");
+    localOutput(sender, "  /" + w + " pre [<count>]");
+    localOutput(sender, "  /" + w + " post [<count>]");
+    localOutput(sender, "  /" + w + " ore [<page>]");
+    localOutput(sender, "  /" + w + " ratio");
+    localOutput(sender, "  /" + w + " tp [next|prev|<number>]");
+    localOutput(sender, "  /" + w + " servertime");
+    localOutput(sender, "  /" + w + " file list [*|<playername>] [<page>]");
+    localOutput(sender, "  /" + w + " file load <filename>|<playername>");
+    localOutput(sender, "  /" + w + " file save [<filename>]");
+    localOutput(sender, "  /" + w + " config <name> <value>");
     localOutput(sender, "  /hl help");
     localOutput(sender, "  /anno help");
     localOutput(sender, "  /tag help");
@@ -761,8 +794,13 @@ public class WatsonCommand extends WatsonCommandBase
     if (!Configuration.instance.isEnabled())
     {
       localOutput(sender, "Watson is currently disabled.");
-      localOutput(sender, "To re-enable, use: /w config watson on");
+      localOutput(sender, "To re-enable, use: /" + w + " config watson on");
     }
   } // help
 
+  // --------------------------------------------------------------------------
+  /**
+   * Allowable patterns of command prefixes (setCommandPrefix()).
+   */
+  protected static final Pattern PREFIX_PATTERN = Pattern.compile("\\w+");
 } // class WatsonCommand

@@ -361,6 +361,9 @@ Watson's main configuration settings are stored in ".minecraft/mods/watson/confi
     <td>watson</td> <td>on / off</td> <td>on</td> <td>Enable/disable all Watson functions.</td> <td>/w config watson off</td>
   </tr>
   <tr>
+    <td>watson_prefix</td> <td>string</td> <td>w</td> <td>Set the prefix with which all Watson commands begin.</td> <td>/w config watson_prefix watson<br>/watson help<br>/watson config watson_prefix w</td>
+  </tr>
+  <tr>
     <td>debug</td> <td>on / off</td> <td>off</td> <td>Enable/disable all debug messages in the log file.</td> <td>/w config debug</td>
   </tr>
   <tr>
