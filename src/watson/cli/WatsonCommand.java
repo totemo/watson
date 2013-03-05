@@ -352,6 +352,11 @@ public class WatsonCommand extends WatsonCommandBase
         Controller.instance.deleteBlockEditFiles(args[2]);
         return;
       }
+      else if (args[1].equals("expire") && args.length == 3)
+      {
+        Controller.instance.expireBlockEditFiles(args[2]);
+        return;
+      }
       else if (args[1].equals("load") && args.length == 3)
       {
         // args[2] is either a full file name or a player name.
@@ -791,6 +796,7 @@ public class WatsonCommand extends WatsonCommandBase
     localOutput(sender, "  /" + w + " servertime");
     localOutput(sender, "  /" + w + " file list [*|<playername>] [<page>]");
     localOutput(sender, "  /" + w + " file delete *|<filename>|<playername>");
+    localOutput(sender, "  /" + w + " file expire <YYYY-MM-DD>");
     localOutput(sender, "  /" + w + " file load <filename>|<playername>");
     localOutput(sender, "  /" + w + " file save [<filename>]");
     localOutput(sender, "  /" + w + " config <name> <value>");

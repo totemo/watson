@@ -282,6 +282,10 @@ You can delete all files with the asterisk:
 
     /w file delete *
 
+You can also delete all files older than a specified date, in the form YYYY-MM-DD.  For example, to delete all files that were last modified before 2013:
+
+    /w file expire 2013-01-01
+
 
 ### Built-In Calculator
 

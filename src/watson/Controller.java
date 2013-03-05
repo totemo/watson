@@ -410,8 +410,8 @@ public class Controller
         }
       }
       String message = String.format(Locale.US,
-        "Deleted %d out of %d files matching \"%s\".", (files.length - failed),
-        files.length, prefix);
+        "Deleted %d out of %d save files matching \"%s\".",
+        (files.length - failed), files.length, prefix);
       if (failed == 0)
       {
         localOutput(message);
@@ -424,9 +424,91 @@ public class Controller
     else
     {
       localOutput(String.format(Locale.US,
-        "There are no files matching \"%s\".", prefix));
+        "There are no save files matching \"%s\".", prefix));
     }
   } // deleteBlockEditFiles
+
+  // --------------------------------------------------------------------------
+  /**
+   * Delete any edit save files that were last modified before the specified
+   * date.
+   * 
+   * @param date the expiry date, in the form YYYY-MM-DD.
+   */
+  public void expireBlockEditFiles(String date)
+  {
+    Matcher m = DATE_PATTERN.matcher(date);
+    if (m.matches())
+    {
+      Calendar expiry = Calendar.getInstance();
+      long expiryTime;
+      try
+      {
+        int year = Integer.parseInt(m.group(1));
+        int month = Integer.parseInt(m.group(2));
+        int day = Integer.parseInt(m.group(3));
+
+        // Turn off leniency so that weird dates throw.
+        expiry.setLenient(false);
+        expiry.set(year, month - 1, day, 0, 0);
+
+        // Do a get() to force the error.
+        expiryTime = expiry.getTimeInMillis();
+      }
+      catch (Exception ex)
+      {
+        // If we get to here, the user supplied an invalent date and Calendar
+        // threw.
+        localError(date + " is not a valid date of the form YYYY-MM-DD.");
+        return;
+      }
+
+      // Keep track of total files deleted, and number of failures to delete.
+      int deleted = 0;
+      int failed = 0;
+      File[] files = getBlockEditFileList("*");
+      for (File file : files)
+      {
+        if (file.lastModified() < expiryTime)
+        {
+          if (file.delete())
+          {
+            ++deleted;
+            localOutput("Deleted " + file.getName());
+          }
+          else
+          {
+            ++failed;
+            localError("Could not delete " + file.getName());
+          }
+        }
+      } // for
+
+      if (deleted + failed == 0)
+      {
+        localOutput("There are no save files older than " + date
+                    + " 00:00:00 to delete.");
+      }
+      else
+      {
+        String message = String.format(Locale.US,
+          "Deleted %d out of %d save files older than %s 00:00:00.", deleted,
+          deleted + failed, date);
+        if (failed == 0)
+        {
+          localOutput(message);
+        }
+        else
+        {
+          localError(message);
+        }
+      }
+    }
+    else
+    {
+      localError("The date must take the form YYYY-MM-DD.");
+    }
+  } // expireBlockEditFiles
 
   // --------------------------------------------------------------------------
   /**
@@ -825,6 +907,12 @@ public class Controller
    * Number of chat lines in a page.
    */
   public static final int                 PAGE_LINES       = 50;
+
+  /**
+   * The pattern used to parse expiry dates for "/w file expire <date>".
+   * Tolerate one or two digits each for month and day.
+   */
+  protected static final Pattern          DATE_PATTERN     = Pattern.compile("^(\\d{4})-(\\d{1,2})-(\\d{1,2})$");
 
   /**
    * Cache the version string after it is loaded from a resource.
