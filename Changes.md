@@ -13,6 +13,7 @@ Change History
 * Added paging of "/w file list" output.
 * Added paging of "/w ore" output.
 * Added a configuration option for the Watson command prefix.
+* Added a "/w file delete <prefix>" command to delete save files.
 
 1.4.7 (2013-01-23)
 ------------------

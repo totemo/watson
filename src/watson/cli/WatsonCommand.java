@@ -347,6 +347,11 @@ public class WatsonCommand extends WatsonCommandBase
           return;
         }
       }
+      else if (args[1].equals("delete") && args.length == 3)
+      {
+        Controller.instance.deleteBlockEditFiles(args[2]);
+        return;
+      }
       else if (args[1].equals("load") && args.length == 3)
       {
         // args[2] is either a full file name or a player name.
@@ -379,6 +384,7 @@ public class WatsonCommand extends WatsonCommandBase
 
     throw new SyntaxErrorException("commands.generic.syntax", new Object[0]);
   } // processCommand
+
   // --------------------------------------------------------------------------
   /**
    * Handle the various /w vector subcommands.
@@ -784,6 +790,7 @@ public class WatsonCommand extends WatsonCommandBase
     localOutput(sender, "  /" + w + " tp [next|prev|<number>]");
     localOutput(sender, "  /" + w + " servertime");
     localOutput(sender, "  /" + w + " file list [*|<playername>] [<page>]");
+    localOutput(sender, "  /" + w + " file delete *|<filename>|<playername>");
     localOutput(sender, "  /" + w + " file load <filename>|<playername>");
     localOutput(sender, "  /" + w + " file save [<filename>]");
     localOutput(sender, "  /" + w + " config <name> <value>");

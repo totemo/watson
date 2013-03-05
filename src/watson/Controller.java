@@ -387,6 +387,49 @@ public class Controller
 
   // --------------------------------------------------------------------------
   /**
+   * Delete all save files that match the specified prefix.
+   * 
+   * @param prefix the prefix of the block edit save file to match; use "*" for
+   *          all files.
+   */
+  public void deleteBlockEditFiles(String prefix)
+  {
+    File[] files = getBlockEditFileList(prefix);
+    if (files.length > 0)
+    {
+      int failed = 0;
+      for (File file : files)
+      {
+        if (file.delete())
+        {
+          localOutput("Deleted " + file.getName());
+        }
+        else
+        {
+          ++failed;
+        }
+      }
+      String message = String.format(Locale.US,
+        "Deleted %d out of %d files matching \"%s\".", (files.length - failed),
+        files.length, prefix);
+      if (failed == 0)
+      {
+        localOutput(message);
+      }
+      else
+      {
+        localError(message);
+      }
+    }
+    else
+    {
+      localOutput(String.format(Locale.US,
+        "There are no files matching \"%s\".", prefix));
+    }
+  } // deleteBlockEditFiles
+
+  // --------------------------------------------------------------------------
+  /**
    * Return an array of {@link BlockEditSet} save files whose names begin with
    * the specified prefix, matched case insensitively.
    * 

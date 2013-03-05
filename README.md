@@ -274,6 +274,14 @@ To load the most recently saved file for a given player name (case insensitive):
 
     /w file load notch
 
+Files can be deleted by specifying a pattern for the beginning of the file name:
+
+    /w file delete not
+    
+You can delete all files with the asterisk:
+
+    /w file delete *
+
 
 ### Built-In Calculator
 
