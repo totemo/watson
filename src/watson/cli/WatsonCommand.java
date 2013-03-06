@@ -768,6 +768,68 @@ public class WatsonCommand extends WatsonCommandBase
       return true;
     } // /w config watson_prefix <prefix>
 
+    // Enable or disable per-player screenshot subdirectories.
+    if (args[1].equals("ss_player_directory"))
+    {
+      if (args.length == 2)
+      {
+        Configuration.instance.setSsPlayerDirectory(!Configuration.instance.isSsPlayerDirectory());
+        return true;
+      }
+      else if (args.length == 3)
+      {
+        if (args[2].equals("on"))
+        {
+          Configuration.instance.setSsPlayerDirectory(true);
+          return true;
+        }
+        else if (args[2].equals("off"))
+        {
+          Configuration.instance.setSsPlayerDirectory(false);
+          return true;
+        }
+      }
+    } // /w config ss_player_directory
+
+    // Enable or disable per-player screenshot suffixes.
+    if (args[1].equals("ss_player_suffix"))
+    {
+      if (args.length == 2)
+      {
+        Configuration.instance.setSsPlayerSuffix(!Configuration.instance.isSsPlayerSuffix());
+        return true;
+      }
+      else if (args.length == 3)
+      {
+        if (args[2].equals("on"))
+        {
+          Configuration.instance.setSsPlayerSuffix(true);
+          return true;
+        }
+        else if (args[2].equals("off"))
+        {
+          Configuration.instance.setSsPlayerSuffix(false);
+          return true;
+        }
+      }
+    } // /w config ss_player_directory
+
+    // Set the anonymous screenshot subdirectory format specifier.
+    if (args[1].equals("ss_date_directory"))
+    {
+      if (args.length == 2)
+      {
+        Configuration.instance.setSsDateDirectory("");
+        return true;
+      }
+      else if (args.length >= 3)
+      {
+        String format = concatArgs(args, 2, args.length, " ");
+        Configuration.instance.setSsDateDirectory(format);
+        return true;
+      }
+    } // /w config ss_date_directory
+
     return false;
   } // handleConfigCommand
 
@@ -799,7 +861,7 @@ public class WatsonCommand extends WatsonCommandBase
     localOutput(sender, "  /" + w + " file expire <YYYY-MM-DD>");
     localOutput(sender, "  /" + w + " file load <filename>|<playername>");
     localOutput(sender, "  /" + w + " file save [<filename>]");
-    localOutput(sender, "  /" + w + " config <name> <value>");
+    localOutput(sender, "  /" + w + " config <name> [<value>]");
     localOutput(sender, "  /hl help");
     localOutput(sender, "  /anno help");
     localOutput(sender, "  /tag help");

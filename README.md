@@ -129,7 +129,7 @@ Perhaps, look at the immediate vicinity of an edit:
 
 Check individual blocks using a coal ore block. Watson will draw this query result in 3-D, the same as with a "coords" query.
 
-Possibly take some screenshots. The screenshot filename will include the name of the player whose last edit was selected.
+Possibly take some screenshots. The screenshot filename will include the name of the player whose last edit was selected.  Depending on the Watson settings, the screenshot may also be placed in a subdirectory of the Minecraft .minecraft/screenshots directory.  See the section on Screenshot Management for more information.
 
 When you're done investigating, clear the currently stored edits. This also clears the player name (in screenshot filenames) and information about the coordinates, time and block type of the most recently selected edit.
 
@@ -293,6 +293,7 @@ Watson contains a simple calculator that understands +, -, *, / and parentheses 
 
     /calc 800/(57 - 32)
 
+
 ### Highlighting Chat Content
 
 Watson can highlight text that matches a specified [Java regular expression](http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html) using colour and formatting.  Let's say we'd like to make the "Unknown command." error message stand out a bit more by making it bright red:
@@ -361,6 +362,15 @@ And for help:
     /tag help
 
 
+### Screenshot Management
+
+If you ban players for grief or xray, inevitably you will end up with a large number of screenshots that must be retained until the ban is appealed.  Watson includes features to make it easier to manage many Minecraft screenshots and to find the ones that pertain to a particular player.
+
+When the name of the player is known (because Watson saw an "/lb coords" result for that player since the last "/w clear") the screenshot will be placed in the directory .minecraft/screenshots/<playername>/, and <playername> will be appended to the filename, e.g. ".minecraft/screenshots/Notch/2013-02-21_12.47.50-Notch.png".  Both of these behaviours can be turned on or off using the ss_player_directory and ss_player_suffix configuration settings, respectively.
+
+When the player name is not known, then by default the screenshot just ends up in .minecraft/screenshots/.  But Watson can be configured to place the screenshot in a subdirectory based on the current date and time.  For example, "/w config ss_date_directory yyyy-MM-dd" would put the screenshot in a subdirectory based on the full numeric year, month and day, e.g. 2013-03-15.  Whereas "/w config ss_date_directory MMMM yyyy" would use the long name of the month, e.g. "March 2013".  There are many options and they are described in greater detail in the section on the Configuration File.
+
+
 ### Configuration File
 
 Watson's main configuration settings are stored in ".minecraft/mods/watson/configuration.yml".  They can be changed using the "/w config" command.  If a setting can be either "on" or "off", omitting a value for it in "/w config" will reverse the current value.
@@ -407,6 +417,15 @@ Watson's main configuration settings are stored in ".minecraft/mods/watson/confi
   </tr>
   <tr>
     <td>teleport_command</td> <td>format string</td> <td>/tppos %g %d %g</td> <td>Specifies the formatting of the command used to teleport to specific coordinates in the implementation of "/w tp" and "/anno tp" commands.  Only %d (for integers) and %g (for decimal numbers) are supported as formatting specifiers.</td> <td>/w config teleport_command /tppos %d %d %d</td>
+  </tr>
+  <tr>
+    <td>ss_player_directory</td> <td>on / off</td> <td>on</td> <td>When on, each screenshot is placed in a subdirectory: .minecraft/screenshots/&lt;player&gt;/, where &lt;player&gt; is the player who performed the most recently selected edit.  If there is no currently selected player, then the value of the ss_date_directory setting determines the name of the directory where the screenshot will be stored.</td> <td>/w config ss_player_directory off</td>
+  </tr>
+  <tr>
+    <td>ss_player_suffix</td> <td>on / off</td> <td>on</td> <td>When on, each the name of the player who performed the most recently selected edit is appended as a suffix of each screenshot file name.</td> <td>/w config ss_player_suffix off</td>
+  </tr>
+  <tr>
+    <td>ss_date_directory</td> <td>date format string</td> <td></td> <td>This setting determines the directory to store screenshots when ss_player_directory is off, or when no player is currently selected.  The setting is a format specifier for the Java <a href="http://docs.oracle.com/javase/1.4.2/docs/api/java/text/SimpleDateFormat.html">SimpleDateFormat</a> class, interpreted in the user's locale (language settings), allowing considerable flexibility in the name of the output directory.  If set to the empty string (the default setting), then screenshots without a selected player will end up in .minecraft/screenshots/.  If a format is specified, then a subdirectory of .minecraft/screenshots/ is created to place each screenshot in, based on the time and date when the image was taken.  Recommended settings include "yyyy-MM-dd" (numeric year, month and day, e.g. 2013-03-15), "yyyy-MM" (year and month, e.g. 2013-03) and "MMMM yyyy" (month in long form and year, e.g. March 2013).  The format can be set to the empty string using the command "/w config ss_date_directory".</td> <td>/w config ss_date_directory yyyy-MM-dd</td>
   </tr>
 </table>
 

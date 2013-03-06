@@ -1,16 +1,26 @@
---- vanillasrc/minecraft/net/minecraft/src/ScreenShotHelper.java	2012-12-22 14:13:20.613961628 +1030
-+++ modsrc/minecraft/net/minecraft/src/ScreenShotHelper.java	2012-12-22 14:22:33.427242945 +1030
-@@ -73,9 +73,12 @@
-         String var2 = dateFormat.format(new Date()).toString();
-         int var3 = 1;
+--- vanillasrc/minecraft/net/minecraft/src/ScreenShotHelper.java	2013-03-04 20:07:24.610162467 +1030
++++ modsrc/minecraft/net/minecraft/src/ScreenShotHelper.java	2013-03-07 03:56:27.918858052 +1030
+@@ -70,20 +70,9 @@
  
-+        // Append player name if set.
-+        String player = (String) watson.Controller.instance.getVariables().get("player");
-+        String playerSuffix = (player != null) ? "-" + player : "";
-         while (true)
-         {
+     private static File func_74290_a(File par0File)
+     {
+-        String var2 = dateFormat.format(new Date()).toString();
+-        int var3 = 1;
+-
+-        while (true)
+-        {
 -            File var1 = new File(par0File, var2 + (var3 == 1 ? "" : "_" + var3) + ".png");
-+            File var1 = new File(par0File, var2 + playerSuffix + (var3 == 1 ? "" : "-" + var3) + ".png");
+-
+-            if (!var1.exists())
+-            {
+-                return var1;
+-            }
+-
+-            ++var3;
+-        }
++        Date now = new Date();
++        String basename = dateFormat.format(now).toString();
++        return watson.Controller.instance.getUniqueScreenshotFile(par0File, basename, now);
+     }
  
-             if (!var1.exists())
-             {
+     private static void func_74289_a(int[] par0ArrayOfInteger, int par1, int par2)

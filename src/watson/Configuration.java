@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -76,6 +77,9 @@ public class Configuration
       _preCount = (Integer) dom.get("pre_count");
       _postCount = (Integer) dom.get("post_count");
       _watsonPrefix = (String) dom.get("watson_prefix");
+      _ssPlayerDirectory = (Boolean) dom.get("ss_player_directory");
+      _ssPlayerSuffix = (Boolean) dom.get("ss_player_suffix");
+      setSsDateDirectoryImp((String) dom.get("ss_date_directory"));
     }
     catch (FileNotFoundException ex)
     {
@@ -112,6 +116,9 @@ public class Configuration
       dom.put("pre_count", getPreCount());
       dom.put("post_count", getPostCount());
       dom.put("watson_prefix", getWatsonPrefix());
+      dom.put("ss_player_directory", _ssPlayerDirectory);
+      dom.put("ss_player_suffix", _ssPlayerSuffix);
+      dom.put("ss_date_directory", _ssDateDirectory.toPattern());
 
       DumperOptions options = new DumperOptions();
       options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
@@ -529,6 +536,128 @@ public class Configuration
 
   // --------------------------------------------------------------------------
   /**
+   * If true, a subdirectory named after the currently selected player is
+   * created to hold screenshots of his edits.
+   * 
+   * @param ssPlayerDirectory whether to create the directory.
+   */
+  public void setSsPlayerDirectory(boolean ssPlayerDirectory)
+  {
+    _ssPlayerDirectory = ssPlayerDirectory;
+    Controller.instance.localOutput("Per-player screenshot subdirectories "
+                                    + (ssPlayerDirectory ? "enabled."
+                                      : "disabled."));
+    save();
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return true if a subdirectory named after the currently selected player is
+   * created to hold screenshots of his edits.
+   * 
+   * @return true if a subdirectory named after the currently selected player is
+   *         created to hold screenshots of his edits.
+   */
+  public boolean isSsPlayerDirectory()
+  {
+    return _ssPlayerDirectory;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * If true, a the name of the currently selected player is appended to
+   * screenshot files.
+   * 
+   * @param ssPlayerSuffix whether to append the suffix.
+   */
+  public void setSsPlayerSuffix(boolean ssPlayerSuffix)
+  {
+    _ssPlayerSuffix = ssPlayerSuffix;
+    Controller.instance.localOutput("Per-player screenshot suffixes "
+                                    + (ssPlayerSuffix ? "enabled."
+                                      : "disabled."));
+    save();
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return true if the name of the currently selected player is appended to
+   * screenshot files.
+   * 
+   * @return true if the name of the currently selected player is appended to
+   *         screenshot files.
+   */
+  public boolean isSsPlayerSuffix()
+  {
+    return _ssPlayerSuffix;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * A {@link SimpleDateFormat} format string specifying the name of the
+   * subdirectory to create to store screenshots when there is no currently
+   * selected player, or when isPlayerDirectory() is false.
+   * 
+   * @param ssDateDirectory the format specifier.
+   */
+  public void setSsDateDirectory(String ssDateDirectory)
+  {
+    if (setSsDateDirectoryImp(ssDateDirectory))
+    {
+      Controller.instance.localOutput("Anonymous screenshot subdirectory format specifier set to \""
+                                      + ssDateDirectory + "\".");
+      save();
+    }
+    else
+    {
+      Controller.instance.localError("\"" + ssDateDirectory
+                                     + "\" is not a valid format specifier.");
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Set the form format string specifying the name of the subdirectory to
+   * create to store screenshots when there is no currently selected player, or
+   * when isPlayerDirectory() is false.
+   * 
+   * This is the underlying implementation of setSsDateDirectory(), without the
+   * save() of the configuration or feedback into player chat.
+   * 
+   * @param ssDateDirectory the format specifier.
+   * @return true if successful.
+   */
+  protected boolean setSsDateDirectoryImp(String ssDateDirectory)
+  {
+    try
+    {
+      // TODO: Should this be applyLocalizedPattern()?
+      _ssDateDirectory.applyPattern(ssDateDirectory);
+      return true;
+    }
+    catch (Exception ex)
+    {
+      Log.exception(Level.WARNING,
+        "error setting the screenshot directory format specifier", ex);
+    }
+    return false;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return the format specifier to use to name screenshot subdirectories based
+   * on the current date and/or time.
+   * 
+   * @return the format specifier to use to name screenshot subdirectories based
+   *         on the current date and/or time.
+   */
+  public SimpleDateFormat getSsDateDirectory()
+  {
+    return _ssDateDirectory;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
    * Perform lazy initialisation of the SnakeValidator used to validate in
    * load().
    */
@@ -567,6 +696,12 @@ public class Configuration
         new TypeValidatorNode(Integer.class, true, 45));
       root.addChild("watson_prefix", new TypeValidatorNode(String.class, true,
         "w"));
+      root.addChild("ss_player_directory", new TypeValidatorNode(Boolean.class,
+        true, true));
+      root.addChild("ss_player_suffix", new TypeValidatorNode(Boolean.class,
+        true, true));
+      root.addChild("ss_date_directory", new TypeValidatorNode(String.class,
+        true, ""));
 
       _validator.setRoot(root);
     }
@@ -663,5 +798,27 @@ public class Configuration
    * The start of all Watson commands, without the slash.
    */
   protected String              _watsonPrefix             = "w";
+
+  /**
+   * If true, a subdirectory named after the currently selected player is
+   * created to hold screenshots of his edits.
+   */
+  protected boolean             _ssPlayerDirectory        = true;
+
+  /**
+   * If true, the name of the currently selected player is appended to
+   * screenshot files.
+   */
+  protected boolean             _ssPlayerSuffix           = true;
+
+  /**
+   * A {@link SimpleDateFormat} specifying the name of the subdirectory to
+   * create to store screenshots when there is no currently selected player, or
+   * when isPlayerDirectory() is false.
+   * 
+   * I'm assuming that the empty string is a valid format that won't throw.
+   */
+  protected SimpleDateFormat    _ssDateDirectory          = new SimpleDateFormat(
+                                                            "");
 } // class Configuration
 

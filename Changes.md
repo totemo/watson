@@ -1,6 +1,6 @@
 Change History
 ==============
-1.4.7 (2013-03-04)
+1.4.7 (2013-03-07)
 ------------------
 * Recompiled with JDK 7.
 * Changed all string formatting to use an explicit US locale so that user's language settings don't break file I/O and server teleport commands.
@@ -15,6 +15,7 @@ Change History
 * Added a configuration option for the Watson command prefix.
 * Added a "/w file delete <prefix>" command to delete save files.
 * Added a "/w file expire <YYYY-MM-DD>" to delete files last modified before a specified date.
+* Added configuration settings to customise naming and output directories of screenshots.
 
 1.4.7 (2013-01-23)
 ------------------
