@@ -7,14 +7,14 @@ Change History
 * Added a chat_timeout setting to configure the rate at which all programmatically generated commands are sent to the server via chat.
 * Recognise "piston moving piece" as a type of block.
 * Added optional count parameter to "/w pre" to specify number of edits to fetch.
-* Added "/w post [<count>]" to query up to count edits after the selected edit.
+* Added "/w post [&lt;count&gt;]" to query up to count edits after the selected edit.
 * Added a configuration option for the maximum number of pages to query automatically.
 * Added configuration options for the default count values for "/w pre" and "/w post".
 * Added paging of "/w file list" output.
 * Added paging of "/w ore" output.
 * Added a configuration option for the Watson command prefix.
-* Added a "/w file delete <prefix>" command to delete save files.
-* Added a "/w file expire <YYYY-MM-DD>" to delete files last modified before a specified date.
+* Added a "/w file delete &lt;prefix&gt;" command to delete save files.
+* Added a "/w file expire &lt;YYYY-MM-DD&gt;" to delete files last modified before a specified date.
 * Added configuration settings to customise naming and output directories of screenshots.
 
 1.4.7 (2013-01-23)
