@@ -25,6 +25,22 @@ GitHub has dropped support for uploading files, so downloads will be hosted on G
     <th>Version</th> <th colspan="2">Details</th>
   </tr>
   <tr>
+    <td rowspan="4">1.4.7<br>(2013-03-07)</td> <td>sha256sum -b</td> <td>2b17a38597d8854ed16cea6c49f92aedee8db9e0bb0e3de9a342b434ee53e8c2</td>
+  </tr>
+  <tr>
+    <td>File Name</td> <td>watson-1.4.7-2013-03-07.zip</td>
+  </tr>
+  <tr>
+    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXUXJKZ2M5X2Z6M0k</td>
+  </tr>
+  <tr>
+    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#147-2013-03-07">description</a></td>
+  </tr>
+
+  <tr>
+    <th>Version</th> <th colspan="2">Details</th>
+  </tr>
+  <tr>
     <td rowspan="4">1.4.7<br>(2013-01-23)</td> <td>sha256sum -b</td> <td>e628223bb1870f270965643e41c2fd25e1e1cc7c005ffc961a38a5ad62ace614</td>
   </tr>
   <tr>
@@ -51,32 +67,6 @@ GitHub has dropped support for uploading files, so downloads will be hosted on G
   </tr>
   <tr>
     <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#146-2013-01-07">description</a></td>
-  </tr>
-
-  <tr>
-    <td rowspan="4">1.4.6<br>(2012-12-29)</td> <td>sha256sum -b</td> <td>4b726f1e738cd4799efd35cc15d92a3162c4e299658e79fcc38a7b2f56f6058f</td>
-  </tr>
-  <tr>
-    <td>File Name</td> <td>watson-1.4.6-2012-12-29.zip</td>
-  </tr>
-  <tr>
-    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXNHlMcFpLRDVCd2c</td>
-  </tr>
-  <tr>
-    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#146-2012-12-29">description</a></td>
-  </tr>
-  
-  <tr>
-    <td rowspan="4">1.4.5<br>(2012-12-18)</td> <td>sha256sum -b</td> <td>8a73754dbbcf9f16de807f7eb6b75cef789e2db1698e2176eb7adb112affb9f8</td> 
-  </tr>
-  <tr>
-    <td>File Name</td> <td>watson-1.4.5-2012-12-18.zip</td> 
-  </tr>
-  <tr>    
-    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXb1NJVHZ4MVRzUHM</td>  
-  </tr>
-  <tr>
-    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#145-2012-12-18">description</a></td>
   </tr>
 </table>
 
