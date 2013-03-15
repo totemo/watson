@@ -55,7 +55,7 @@ blocks:
       rgba: [150, 108, 74]
     - id: 4
       names: [cobblestone]
-      rgba: [78, 74, 66]
+      rgba: [100, 100, 100]
     - id: 5
       names: [wood, plank]
       rgba: [188, 152, 98]
@@ -192,7 +192,7 @@ blocks:
       rgba: [243, 193, 42]      
       bounds: [0.0, 0.0, 0.0, 1.0, 0.125, 1.0]
     - id: 28
-      names: [detector rail] 
+      names: [detector rail]
       rgba: [82, 0, 0]      
       bounds: [0.0, 0.0, 0.0, 1.0, 0.125, 1.0]
     - id: 29
@@ -349,7 +349,7 @@ blocks:
     - id: 44
       data: 3
       names: [cobblestone slab, cobblestone step]
-      rgba: [78, 74, 66]
+      rgba: [100, 100, 100]
       bounds: [0.0, 0.0, 0.0, 1.0, 0.5, 1.0]
     - id: 44
       data: 4
@@ -365,6 +365,11 @@ blocks:
       data: 6
       names: [nether brick slab, nether brick step]
       rgba: [48, 24, 28]
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.5, 1.0]
+    - id: 44
+      data: 7
+      names: [quartz slab, quartz step]
+      rgba: [235, 233, 227]
       bounds: [0.0, 0.0, 0.0, 1.0, 0.5, 1.0]
     - id: 45
       names: [brick]
@@ -714,7 +719,7 @@ blocks:
       bounds: [0.1875, 0.1875, 0.1875, 0.8125, 0.875, 0.8125]
     - id: 139
       names: [cobble wall]
-      rgba: [78, 74, 66]
+      rgba: [100, 100, 100]
       bounds: [0.25, 0.0, 0.25, 0.75, 1.0, 0.75]
     - id: 140
       names: [flower pot]
@@ -742,4 +747,62 @@ blocks:
       names: [anvil]
       rgba: [43, 36, 29]      
       bounds: [0.125, 0.0, 0.125, 0.875, 1.0, 0.875]
+
+      # v1.5 blocks
+    - id: 146
+      names: [trapped chest]
+      rgba: [167, 110, 31]
+      lineWidth: 5.0
+      bounds: [0.0625, 0.0, 0.0625, 0.9375, 0.875, 0.9375]
+    - id: 147
+      names: [gold plate]
+      rgba: [254, 251, 105]
+      bounds: [0.0625, 0.0, 0.0625, 0.9375, 0.0625, 0.9375]
+    - id: 148
+      names: [iron plate]
+      rgba: [230, 230, 230]
+      bounds: [0.0625, 0.0, 0.0625, 0.9375, 0.0625, 0.9375]
+    - id: 149
+      names: [redstone comparator off]
+      rgba: [88, 1, 1]
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.125, 1.0]      
+    - id: 150
+      names: [redstone comparator on]
+      rgba: [253, 3, 0]
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.125, 1.0]      
+    - id: 151
+      names: [daylight detector,daylight sensor]
+      rgba: [97, 76, 47]
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.375, 1.0]
+    - id: 152
+      names: [redstone block]
+      rgba: [223, 37, 12]
+    - id: 153
+      names: [quartz ore]
+      rgba: [150, 89, 89]
+    - id: 154
+      names: [hopper]
+      rgba: [56, 56, 56]      
+    - id: 155
+      names: [quartz block]
+      rgba: [235, 233, 227]
+      # LogBlock may not separate 155:1 and 155:2 from 155:0. Futureproofing.
+    - id: 155
+      data: 1 
+      names: [chiselled quartz block,chiseled quartz block]
+      rgba: [235, 233, 227]
+    - id: 155
+      data: 2
+      names: [pillar quartz block]
+      rgba: [235, 233, 227]
+    - id: 156
+      names: [quartz stairs]
+      rgba: [235, 233, 227]
+    - id: 157
+      names: [activator rail]
+      rgba: [82, 0, 0]      
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.125, 1.0]
+    - id: 158
+      names: [dropper]
+      rgba: [157, 157, 157]
 

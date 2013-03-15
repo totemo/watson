@@ -25,6 +25,22 @@ GitHub has dropped support for uploading files, so downloads will be hosted on G
     <th>Version</th> <th colspan="2">Details</th>
   </tr>
   <tr>
+    <td rowspan="4">1.5<br>(2013-03-16)</td> <td>sha256sum -b</td> <td>661a15a42fc363c25dea53c471221e791315ff883d0e0fcfbd4a76f76c0761cd</td>
+  </tr>
+  <tr>
+    <td>File Name</td> <td>watson-1.5-2013-03-16.zip</td>
+  </tr>
+  <tr>
+    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXSnk5YkdyYlFJOUk</td>
+  </tr>
+  <tr>
+    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#15-2013-03-16">description</a></td>
+  </tr>
+
+  <tr>
+    <th>Version</th> <th colspan="2">Details</th>
+  </tr>
+  <tr>
     <td rowspan="4">1.4.7<br>(2013-03-07)</td> <td>sha256sum -b</td> <td>2b17a38597d8854ed16cea6c49f92aedee8db9e0bb0e3de9a342b434ee53e8c2</td>
   </tr>
   <tr>
@@ -51,22 +67,6 @@ GitHub has dropped support for uploading files, so downloads will be hosted on G
   </tr>
   <tr>
     <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#147-2013-01-23">description</a></td>
-  </tr>
-
-  <tr>
-    <th>Version</th> <th colspan="2">Details</th>
-  </tr>
-  <tr>
-    <td rowspan="4">1.4.6<br>(2013-01-07)</td> <td>sha256sum -b</td> <td>690cadc7a1d05804e25c683859d88da3fb902ba8f90455125b1df92a457860eb</td>
-  </tr>
-  <tr>
-    <td>File Name</td> <td>watson-1.4.6-2013-01-07.zip</td>
-  </tr>
-  <tr>
-    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXSDhHX3p0dkZvV2s</td>
-  </tr>
-  <tr>
-    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#146-2013-01-07">description</a></td>
   </tr>
 </table>
 

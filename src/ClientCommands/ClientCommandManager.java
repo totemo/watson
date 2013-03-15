@@ -114,9 +114,17 @@ public class ClientCommandManager implements ICommandManager
   /**
    * @see net.minecraft.src.ICommandManager#executeCommand(net.minecraft.src.ICommandSender,
    *      java.lang.String)
+   * 
+   *      The JavaDocs for the interface don't currently describe the exact
+   *      meaning of the return value. Looking at the code for
+   *      {@link net.minecraft.src.CommandHandler} it contains a loop that
+   *      applies a command for all players who match a particular name pattern.
+   *      The returned value is the number of times that the command was
+   *      successfully executed by that loop. Therefore in the case of this
+   *      class, it returns 1 on success and 0 on error.
    */
   @Override
-  public void executeCommand(ICommandSender sender, String commandLine)
+  public int executeCommand(ICommandSender sender, String commandLine)
   {
     try
     {
@@ -131,6 +139,7 @@ public class ClientCommandManager implements ICommandManager
       if (command.canCommandSenderUseCommand(sender))
       {
         command.processCommand(sender, tokens);
+        return 1;
       }
       else
       {
@@ -158,6 +167,7 @@ public class ClientCommandManager implements ICommandManager
                                 "commands.generic.exception", new Object[0]));
       ex.printStackTrace();
     }
+    return 0;
   } // executeCommand
 
   // --------------------------------------------------------------------------
