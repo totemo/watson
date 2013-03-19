@@ -526,6 +526,7 @@ blocks:
     - id: 87
       names: [netherrack]
       rgba: [143, 84, 84]
+      bounds: [0.01, 0.01, 0.01, 0.99, 0.99, 0.99]
     - id: 88
       names: [soul sand]
       rgba: [72, 52, 40]
@@ -779,7 +780,8 @@ blocks:
       rgba: [223, 37, 12]
     - id: 153
       names: [quartz ore]
-      rgba: [150, 89, 89]
+      rgba: [235, 233, 227]
+      bounds: [0.0, 0.0, 0.0, 1.0, 1.0, 1.0]
     - id: 154
       names: [hopper]
       rgba: [56, 56, 56]      
