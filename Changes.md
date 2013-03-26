@@ -1,5 +1,11 @@
 Change History
 ==============
+1.5.1 (2013-03-26)
+------------------
+* Updated for 1.5.1.
+* Adjusted the colour of nether quartz ore for better contrast with netherrack.
+* Added basic support for displaying results of Prism's inspector and -extended queries.
+
 1.5 (2013-03-16)
 ----------------
 * Updated for 1.5.

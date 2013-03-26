@@ -45,6 +45,30 @@ public class TimeStamp
 
   // --------------------------------------------------------------------------
   /**
+   * Convert a given year, month, day of the month, hour, minute and second into
+   * milliseconds since epoch.
+   * 
+   * Since the time components passed as parameters to this method originate on
+   * the server, in a different time zone, the resulting timestamp is not the
+   * actual local time of the event, but it will convert between the two forms
+   * consistently.
+   * 
+   * @param year the four digit year.
+   * @param month the month, from 1 to 12.
+   * @param dayOfMonth the day of the month, from 1 to 31.
+   * @param hourOfDay the hour of the day, from 0 to 23.
+   * @param minute the minute from 0 to 59.
+   * @param second the second from 0 to 59.
+   */
+  public static long toMillis(int year, int month, int dayOfMonth, int hour,
+                              int minute, int second)
+  {
+    _time.set(year, month - 1, dayOfMonth, hour, minute, second);
+    return _time.getTimeInMillis();
+  }
+
+  // --------------------------------------------------------------------------
+  /**
    * Format a millisecond time into the "MM-DD hh:mm:ss" format typically used
    * in LogBlock query results in chat.
    * 

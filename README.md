@@ -1,7 +1,7 @@
 Watson Overview
 ===============
 
-Watson is a Minecraft mod designed to make the task of moderating on the reddit Minecraft servers a little easier.  The current features of the mod are:
+Watson is a Minecraft mod that displays LogBlock (and to a limited extent Prism) logs in 3-D.  It also has some features to make moderation tasks, such as observing chat and managing screenshots, a little easier.  The current features of the mod are:
 
 *  It reassembles chat lines that were split by Bukkit, so that they can be categorised and parsed with regular expressions. Watson can exclude chat lines from being displayed in the client, based on their category.
 * It displays individual edits as wireframe 3-D boxes.
@@ -418,6 +418,21 @@ Watson's main configuration settings are stored in ".minecraft/mods/watson/confi
     <td>ss_date_directory</td> <td>date format string</td> <td></td> <td>This setting determines the directory to store screenshots when ss_player_directory is off, or when no player is currently selected.  The setting is a format specifier for the Java <a href="http://docs.oracle.com/javase/1.4.2/docs/api/java/text/SimpleDateFormat.html">SimpleDateFormat</a> class, interpreted in the user's locale (language settings), allowing considerable flexibility in the name of the output directory.  If set to the empty string (the default setting), then screenshots without a selected player will end up in .minecraft/screenshots/.  If a format is specified, then a subdirectory of .minecraft/screenshots/ is created to place each screenshot in, based on the time and date when the image was taken.  Recommended settings include "yyyy-MM-dd" (numeric year, month and day, e.g. 2013-03-15), "yyyy-MM" (year and month, e.g. 2013-03) and "MMMM yyyy" (month in long form and year, e.g. March 2013).  The format can be set to the empty string using the command "/w config ss_date_directory".</td> <td>/w config ss_date_directory yyyy-MM-dd</td>
   </tr>
 </table>
+
+
+### Prism Support
+
+Although Watson was originally developed for use with LogBlock, some basic support for Prism has recently been added.  Watson can now display break, place and pour actions for inspector results, or for queries that return extended results (those that contain coordinates).  However, note that the Prism inspector limits the precision of time stamps to a granularity of one minute, and reports them as relative time (e.g. "4h32m ago").  Consequently the Watson vector display for results returned by the inspector may be wildly innacurate.
+
+In order to generate lookup results with coordinates in them, you must explicitly specify the -extended parameter:
+
+    /prism l r:20 p:totemo -extended
+    
+or do a global lookup (r:global), although the usefulness of the latter is minimal.
+
+By default, Prism groups together what it considers to be related edits.  For example, if a player placed red wool 5 minutes ago and just now places green wool, Prism may report that as placing multiple red wool 5 minutes ago.  In order for watson to show individual edits, it is necessary to configure Prism to report each edit separately by setting lookup-auto-group to false in the configuration of the plugin.
+
+At the time of writing, Watson does not support automatically calculating stone:diamond ratios, or automatically paging through results when used with Prism.
 
 
 Files

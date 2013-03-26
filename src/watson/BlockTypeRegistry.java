@@ -17,6 +17,13 @@ import watson.model.BlockModelRegistry;
 /**
  * Allow block types to be looked up by ID, (ID,data) tuple or name (from a
  * LogBlock query result).
+ * 
+ * Where a block is listed with a name containing spaces, synonyms are
+ * automatically generated for the same name:
+ * <ul>
+ * <li>with the spaces removed.</li>
+ * <li>with the spaces replaced by underscores.</li>
+ * </ul>
  */
 public final class BlockTypeRegistry
 {
@@ -318,8 +325,20 @@ public final class BlockTypeRegistry
     _byIndex[blockType.getIndex()] = blockType;
     for (int i = 0; i < blockType.getNameCount(); ++i)
     {
-      _byName.put(blockType.getName(i), blockType);
-    }
+      String name = blockType.getName(i);
+      _byName.put(name, blockType);
+
+      // Where a name contains spaces, add a synonym with the spaces omitted.
+      // Where synonyms are explicitly listed anyway, the map will collapse
+      // duplicates.
+      String noSpaces = name.replaceAll(" ", "");
+      if (!name.equals(noSpaces))
+      {
+        _byName.put(noSpaces, blockType);
+      }
+      String underscores = name.replaceAll(" ", "_");
+      _byName.put(underscores, blockType);
+    } // for
   } // addBlockType
 
   // --------------------------------------------------------------------------

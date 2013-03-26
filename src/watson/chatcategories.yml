@@ -377,3 +377,40 @@ categories:
     - tag: server.obituary
       fullRegex: "^\\w+ was squashed by a falling anvil$"
 
+    # Prism query result patterns.
+    # §f§a + §f§3totemo §fplaced §3birchlog§a x3§f 4m ago §7(a:place)
+    # §f§7 --§7 2192 - §73/25/13 §76:37pm - world @ -5.0 64.0 246.0 
+    # §f§c - §f§3totemo §fbroke §3leaves§a x3§f 5m ago §7(a:break)
+    # §f§7 --§7 2178 - §73/25/13 §76:37pm - world @ 2.0 65.0 238.0 
+
+    # Note: This pattern doesn't handle multi-word actions after the initial
+    # player name, e.g. " - totemo picked up dirt ...".
+    # The sequence "emerald ore x10" is simply parsed as (\\w | )+ and the "x10"
+    # part split out in code.
+    # §f§c - §f§3totemo §fbroke §3leaves§a x3§f 5m ago §7(a:break)
+    - tag: prism.placebreak
+      id: prism.placebreak
+      fullRegex: "^ [+-] (\\w+) (?:placed|broke|poured) ((?:\\w| )+) (\\w+ ago|just now) \\(a:(\\w+)\\).*$"
+    
+    # Date is M/D/YY.  'Murrica.
+    # §f§7 --§7 2178 - §73/25/13 §76:37pm - world @ 2.0 65.0 238.0 
+    - tag: prism.datetimeworldcoords
+      id: prism.datetimeworldcoords
+      fullRegex: "^ -- \\d+ - (\\d+)/(\\d+)/(\\d+) (\\d+):(\\d+):(\\d+)([ap]m) - .+ @ (-?\\d+).0 (\\d+).0 (-?\\d+).0\\s*$"
+
+    # §dPrism // §fShowing 1 results. Page 1 of 1
+    # Someone may one day fix the 's' on "results" for singular results.
+    - tag: prism.lookupheader
+      id: prism.lookupheader
+      fullRegex: "^Prism // Showing (\\d+) result(s)?. Page (\\d+) of (\\d+).*$"
+     
+    # §dPrism // §7Using defaults: t:3d
+    - tag: prism.lookupdefaults
+      id: prism.lookupdefaults
+      fullRegex: "^Prism // Using defaults: .*$"
+
+    # §dPrism // §f§6--- Inspecting jack o lantern at 5 67 282 ---
+    - tag: prism.inspectorheader
+      id: prism.inspectorheader
+      fullRegex: "^Prism // --- Inspecting (?:\\w| )+ at (-?\\d+) (\\d+) (-?\\d+) ---$"
+ 
