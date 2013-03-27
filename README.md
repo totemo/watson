@@ -117,7 +117,7 @@ Troubleshooting
     <td>When I query a particular block it shows up as a smallish bright pink cube.</td>
     <td>Watson scrapes LogBlock/Prism query results out of chat.  If it doesn't recognise the name of a block it just draws the pink cube as a reminder for me to add that name.  Let me know about it and I'll fix it.</td>
   </tr>
-</table
+</table>
 
 
 Contact Details
