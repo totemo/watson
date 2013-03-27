@@ -108,7 +108,7 @@ Troubleshooting
     <td>I still don't see anything.</td> <td>Make sure you turn on the Watson display: /w display on</td>
   </tr>
   <tr>
-    <td>I can't teleport with "/w tp".</td> <td>By default, Watson expects a /tppos command that accepts decimal numbers for coordinates, e.g. "/tppos -120.5 7 345.5".  Most teleport commands don't, however.  Try this: /w config teleport_command /tppos %d %d %d</td>
+    <td>I can't teleport with "/w tp".</td> <td>By default, Watson expects a /tppos command that accepts decimal numbers for coordinates, e.g. "/tppos -120.5 7 345.5".  Many teleport commands don't, however, or they have a different name.  If your teleport command requires integer coordinates, try "/w config teleport_command /tppos %d %d %d".  If you're using the the CraftBukkit /tp command, then you can use: "/w config teleport_command /tp %d %d %d".</td>
   </tr>
   <tr>
     <td>Sometimes, /w ratio doesn't compute the stone:diamond ratio.</td> <td>This is a <a href="https://github.com/totemo/watson/issues/10">known issue</a> to do with LogBlock reporting very recent edits in a different format from what Watson expects.  I hope to fix it soon.</td>
