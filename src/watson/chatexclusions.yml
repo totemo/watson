@@ -4,10 +4,8 @@
 
 exclusions:
     - lb.coord
+    - lb.coordreplaced
     - wg.build
-    - server.announce
-    - server.restart2
-    - server.minus
     - lb.header.timecheck
     - lb.header.noresults
     

@@ -1,6 +1,6 @@
 Change History
 ==============
-1.5.1 (2013-03-26)
+1.5.1 (2013-03-27)
 ------------------
 * Updated for 1.5.1.
 * Adjusted the colour of nether quartz ore for better contrast with netherrack.

@@ -25,6 +25,22 @@ GitHub has dropped support for uploading files, so downloads will be hosted on G
     <th>Version</th> <th colspan="2">Details</th>
   </tr>
   <tr>
+    <td rowspan="4">1.5.1<br>(2013-03-27)</td> <td>sha256sum -b</td> <td>dcb728358e9ef71eb9ff1a778c6cf6fb0d70985e6d936b924fb918e76df28744</td>
+  </tr>
+  <tr>
+    <td>File Name</td> <td>watson-1.5.1-2013-03-27.zip</td>
+  </tr>
+  <tr>
+    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXUV9LNVNReGVoN2c</td>
+  </tr>
+  <tr>
+    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#151-2013-03-27">description</a></td>
+  </tr>
+
+  <tr>
+    <th>Version</th> <th colspan="2">Details</th>
+  </tr>
+  <tr>
     <td rowspan="4">1.5<br>(2013-03-16)</td> <td>sha256sum -b</td> <td>661a15a42fc363c25dea53c471221e791315ff883d0e0fcfbd4a76f76c0761cd</td>
   </tr>
   <tr>
@@ -52,23 +68,28 @@ GitHub has dropped support for uploading files, so downloads will be hosted on G
   <tr>
     <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#147-2013-03-07">description</a></td>
   </tr>
-
-  <tr>
-    <th>Version</th> <th colspan="2">Details</th>
-  </tr>
-  <tr>
-    <td rowspan="4">1.4.7<br>(2013-01-23)</td> <td>sha256sum -b</td> <td>e628223bb1870f270965643e41c2fd25e1e1cc7c005ffc961a38a5ad62ace614</td>
-  </tr>
-  <tr>
-    <td>File Name</td> <td>watson-1.4.7-2013-01-23.zip</td>
-  </tr>
-  <tr>
-    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXSjRGWFBzWjNuU1U</td>
-  </tr>
-  <tr>
-    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#147-2013-01-23">description</a></td>
-  </tr>
 </table>
+
+
+Installation
+------------
+Watson is ModLoader-compatible mod.  It can be installed in either of two ways:
+
+* You can install MagicLauncher and configure it to use ModLoader and the Watson ZIP file appropriate to the version of Minecraft that you are using.
+* Alternatively, manually patch the Minecraft JAR file with ModLoader and Watson.
+
+The basic procedure for manually patching Minecraft's JAR file is:
+
+1. Download a version of Watson that matches your current Minecraft version <i>exactly</i>.
+1. Download a version of <a href="http://www.minecraftforum.net/topic/75440-v151-risugamis-mods-updated/">ModLoader</a> that also matches your current Minecraft version <i>exactly</i>.
+1. Locate the Minecraft JAR file.  On Windows, it will be "%APPDATA%\.minecraft\bin\minecraft.jar".  Typical Windows configurations will not show you the ".jar" on the end of that filename.  On UNIX-like systems (Macs and Linux), it will be ~/.minecraft/bin/minecraft.jar
+1. Save a backup copy of your minecraft.jar file (just in case).
+1. Open minecraft.jar with your chosen ZIP file editing program.
+1. Open ModLoader.zip and copy its full contents into minecraft.jar.
+1. If you plan on installing other mods such as Rei's or Optifine, copy and paste the contents of those ZIP files into your modified JAR here.
+1. Open the Watson ZIP file and copy its full contents into minecraft.jar.  Due to a current incompatibility with Rei's Minimap, Watson needs to be the last mod installed.  I will try to fix this in a later version.  Apologies.
+1. Delete the contents of the META-INF/ folder of your modified Minecraft JAR file.
+1. Save the modified Minecraft JAR file.
 
 
 Using Watson
@@ -361,6 +382,22 @@ When the name of the player is known (because Watson saw an "/lb coords" result 
 When the player name is not known, then by default the screenshot just ends up in .minecraft/screenshots/.  But Watson can be configured to place the screenshot in a subdirectory based on the current date and time.  For example, "/w config ss_date_directory yyyy-MM-dd" would put the screenshot in a subdirectory based on the full numeric year, month and day, e.g. 2013-03-15.  Whereas "/w config ss_date_directory MMMM yyyy" would use the long name of the month, e.g. "March 2013".  There are many options and they are described in greater detail in the section on the Configuration File.
 
 
+### Prism Support
+
+Although Watson was originally developed for use with LogBlock, some basic support for Prism has recently been added.  Watson can now display "break", "place" and "pour" actions for any queries that return extended results (i.e. contain coordinates).  In order for Watson to show Prism inspector results, Prism must be configured to <i>always</i> return extended results, as follows:
+
+    messenger:
+      always-show-extended: true
+
+If that configuration setting is not made, it is still possible to get extended results from <i>lookups</i> using the -extended parameter:
+
+    /prism l r:20 p:totemo -extended
+    
+By default, Prism groups together what it considers to be related edits.  For example, if a player placed red wool 5 minutes ago and just now places green wool, Prism may report that as placing multiple red wool 5 minutes ago.  In order for watson to show individual edits, it is necessary to configure Prism to report each edit separately by setting lookup-auto-group to false in the configuration of the plugin.
+
+At the time of writing, Watson does not support automatically calculating stone:diamond ratios, or automatically paging through results when used with Prism.
+
+
 ### Configuration File
 
 Watson's main configuration settings are stored in ".minecraft/mods/watson/configuration.yml".  They can be changed using the "/w config" command.  If a setting can be either "on" or "off", omitting a value for it in "/w config" will reverse the current value.
@@ -420,21 +457,6 @@ Watson's main configuration settings are stored in ".minecraft/mods/watson/confi
 </table>
 
 
-### Prism Support
-
-Although Watson was originally developed for use with LogBlock, some basic support for Prism has recently been added.  Watson can now display break, place and pour actions for inspector results, or for queries that return extended results (those that contain coordinates).  However, note that the Prism inspector limits the precision of time stamps to a granularity of one minute, and reports them as relative time (e.g. "4h32m ago").  Consequently the Watson vector display for results returned by the inspector may be wildly innacurate.
-
-In order to generate lookup results with coordinates in them, you must explicitly specify the -extended parameter:
-
-    /prism l r:20 p:totemo -extended
-    
-or do a global lookup (r:global), although the usefulness of the latter is minimal.
-
-By default, Prism groups together what it considers to be related edits.  For example, if a player placed red wool 5 minutes ago and just now places green wool, Prism may report that as placing multiple red wool 5 minutes ago.  In order for watson to show individual edits, it is necessary to configure Prism to report each edit separately by setting lookup-auto-group to false in the configuration of the plugin.
-
-At the time of writing, Watson does not support automatically calculating stone:diamond ratios, or automatically paging through results when used with Prism.
-
-
 Files
 -----
 
@@ -452,12 +474,13 @@ Compatibility
 
 Watson has been tested for compatibility with:
 
-* Minecraft 1.4.5 with ModLoader 1.4.5
-* WorldEditCUI for 1.4.5
-* Rei's Minimap for 1.4.5, version 3.2_05
-* Optifine 1.4.5_HD_U_D3
-* LiteLoader for Minecraft 1.4.2
-* Macro/Keybind Mod 0.9.6.1 - but note that commands originating here bypass the Watson command interpreter and go direct to the server.
+* Minecraft with ModLoader
+* WorldEditCUI
+* Rei's Minimap
+  * However, there is a slight compatibility issue that prevents Rei's player/entity radar from working, and Watson must be installed after Rei's in order to function correctly.
+* Optifine
+* LiteLoader for Minecraft
+* Macro/Keybind Mod - but note that commands originating here bypass the Watson command interpreter and go direct to the server.
 * MagicLauncher
 
 
