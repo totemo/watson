@@ -73,7 +73,7 @@ GitHub has dropped support for uploading files, so downloads will be hosted on G
 
 Installation
 ------------
-Watson is ModLoader-compatible mod.  It can be installed in either of two ways:
+Watson is a ModLoader-compatible mod.  It can be installed in either of two ways:
 
 * You can install MagicLauncher and configure it to use ModLoader and the Watson ZIP file appropriate to the version of Minecraft that you are using.
 * Alternatively, manually patch the Minecraft JAR file with ModLoader and Watson.
@@ -90,6 +90,41 @@ The basic procedure for manually patching Minecraft's JAR file is:
 1. Open the Watson ZIP file and copy its full contents into minecraft.jar.  Due to a current incompatibility with Rei's Minimap, Watson needs to be the last mod installed.  I will try to fix this in a later version.  Apologies.
 1. Delete the contents of the META-INF/ folder of your modified Minecraft JAR file.
 1. Save the modified Minecraft JAR file.
+
+
+Troubleshooting
+---------------
+<table>
+  <tr>
+    <th>Problem</th> <th>Resolution</th>
+  </tr>
+  <tr>
+    <td>Minecraft crashes on startup.</td> <td>Make sure you've followed the installation instructions exactly.  In particular, make sure you add Watson to the Minecraft JAR <i>last</i> and that you delete the contents of the META-INF/ folder of the JAR.</td>
+  </tr>
+  <tr>
+    <td>I don't see anything.</td> <td>Make sure you put "coords" in your /lb query.  Watson needs coordinates to know where to draw things.</td>
+  </tr>
+  <tr>
+    <td>I still don't see anything.</td> <td>Make sure you turn on the Watson display: /w display on</td>
+  </tr>
+  <tr>
+    <td>I can't teleport with "/w tp".</td> <td>By default, Watson expects a /tppos command that accepts decimal numbers for coordinates, e.g. "/tppos -120.5 7 345.5".  Most teleport commands don't, however.  Try this: /w config teleport_command /tppos %d %d %d</td>
+  </tr>
+  <tr>
+    <td>Sometimes, /w ratio doesn't compute the stone:diamond ratio.</td> <td>This is a <a href="https://github.com/totemo/watson/issues/10">known issue</a> to do with LogBlock reporting very recent edits in a different format from what Watson expects.  I hope to fix it soon.</td>
+  </tr>
+  <tr>
+    <td>When I query a particular block it shows up as a smallish bright pink cube.</td>
+    <td>Watson scrapes LogBlock/Prism query results out of chat.  If it doesn't recognise the name of a block it just draws the pink cube as a reminder for me to add that name.  Let me know about it and I'll fix it.</td>
+  </tr>
+</table
+
+
+Contact Details
+---------------
+
+* On http://reddit.com and the http://nerd.nu forums, I have the same user name.
+* On gmail.com, append the word "research" to my name to get my address.
 
 
 Using Watson
@@ -119,7 +154,7 @@ To teleport to an edit of interest:
 
     /lb tp 25
 
-Perhaps, look at what happened immediately before that edit.  The Watson "pre" command displays the edits immediately before the most recently "selected" block. Just teleporting to an edit selects it for this purpose. Alternatively, when you check a block using the LogBlock toolblock (coal ore), that also selects it.
+Perhaps, look at what happened immediately before that edit.  The Watson "pre" command displays the edits immediately before the most recently "selected" block. Just teleporting to an edit selects it for this purpose. Alternatively, when you check a block using the LogBlock toolblock (it defaults to bedrock, but on the nerd.nu servers it's coal ore), that also selects it.
 
     /w pre
     
@@ -138,7 +173,7 @@ Perhaps, look at the immediate vicinity of an edit:
 
     /lb area 3 player playername time 12h coords
 
-Check individual blocks using a coal ore block. Watson will draw this query result in 3-D, the same as with a "coords" query.
+Check individual blocks using the LogBlock tool block. Watson will draw this query result in 3-D, the same as with a "coords" query.
 
 Possibly take some screenshots. The screenshot filename will include the name of the player whose last edit was selected.  Depending on the Watson settings, the screenshot may also be placed in a subdirectory of the Minecraft .minecraft/screenshots directory.  See the section on Screenshot Management for more information.
 
@@ -228,7 +263,7 @@ To hide, show or toggle the outlines of blocks:
 
 Annotations are text associated with a particular location and displayed in 3-D space.  They are similar to waypoints in the Rei's Minimap mod.
 
-To create an annotation, first get a location, either with /lb coords query, or by simply using the LogBlock toolblock (coal ore) to mark a position.  When using the LogBlock toolblock, it is not necessary for the LogBlock database to contain any edits for that location.  The coordinates will be noted by Watson, regardless.
+To create an annotation, first get a location, either with /lb coords query, or by simply using the LogBlock toolblock to mark a position.  When using the LogBlock toolblock, it is not necessary for the LogBlock database to contain any edits for that location.  The coordinates will be noted by Watson, regardless.
 
 To add an annotation:
 
@@ -512,7 +547,7 @@ Planned Features
 * A simple keybinding facility, since the Macro/Keybind mod bypasses the Watson CLI.
 * Parsing of fields out of LogBlock results is currently hard-coded. This can and should be driven by a description of the fields in chatcategories.yml.
 * A 3-D cursor that can highlight edits and step through them in the sequence that they occurred.
-* The ability to filter edits and coalblock results by player, distance, time etc.
+* The ability to filter edits and tool block query results by player, distance, time etc.
 * Some automatic queries to hone in on probable grief and xray patterns.
 * The ability to customise the re-echoing of coordinate lines.
 
@@ -520,7 +555,6 @@ Planned Features
 Bugs
 ----
 
-* If you see a block drawn as bright magenta and somewhat smaller than 1 cubic meter, it means that the name for that block in blocks.yml doesn't match what LogBlock calls it. Let me know.
 * Re-echoed coordinate lines are currently hard coded to not echo stone at all. This should be customisable.
 * The calculator should probably use a custom lexer (rather than JDK class) so that extra spaces in mathematical expressions can be removed.
 * Command line help is ugly because of the variable width font.
