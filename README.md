@@ -82,7 +82,7 @@ The basic procedure for manually patching Minecraft's JAR file is:
 
 1. Download a version of Watson that matches your current Minecraft version <i>exactly</i>.
 1. Download a version of <a href="http://www.minecraftforum.net/topic/75440-v151-risugamis-mods-updated/">ModLoader</a> that also matches your current Minecraft version <i>exactly</i>.
-1. Locate the Minecraft JAR file.  On Windows, it will be "%APPDATA%\.minecraft\bin\minecraft.jar".  Typical Windows configurations will not show you the ".jar" on the end of that filename.  On UNIX-like systems (Macs and Linux), it will be ~/.minecraft/bin/minecraft.jar
+1. Locate the Minecraft JAR file.  On Windows, it will be "%APPDATA%\\.minecraft\bin\minecraft.jar".  Typical Windows configurations will not show you the ".jar" on the end of that filename.  On UNIX-like systems (Macs and Linux), it will be ~/.minecraft/bin/minecraft.jar
 1. Save a backup copy of your minecraft.jar file (just in case).
 1. Open minecraft.jar with your chosen ZIP file editing program.
 1. Open ModLoader.zip and copy its full contents into minecraft.jar.
@@ -131,7 +131,7 @@ Using Watson
 ------------
 ### Viewing Edits
 
-Turn on the Watson display. This display is turned on and off automatically when switching in and out of modmode on S and P:
+Turn on the Watson display. On survival servers that use [the nerd.nu ModMode plugin](https://github.com/NerdNu/ModMode), the display is turned on and off automatically when switching in and out of ModMode:
 
     /w display on
 
@@ -154,7 +154,7 @@ To teleport to an edit of interest:
 
     /lb tp 25
 
-Perhaps, look at what happened immediately before that edit.  The Watson "pre" command displays the edits immediately before the most recently "selected" block. Just teleporting to an edit selects it for this purpose. Alternatively, when you check a block using the LogBlock toolblock (it defaults to bedrock, but on the nerd.nu servers it's coal ore), that also selects it.
+Perhaps, look at what happened immediately before that edit.  The Watson "/w pre" command displays the edits immediately before the most recently "selected" block. Just teleporting to an edit selects it for this purpose. Alternatively, when you check a block using the LogBlock toolblock (it defaults to bedrock, but on the nerd.nu servers it's coal ore), that also selects it.
 
     /w pre
     
@@ -190,7 +190,7 @@ If you forget any of the above commands:
 
 Watson groups adjacent destructions of ore blocks into ore deposits.  Here, "adjacent" includes blocks up to 1 block away along all three cardinal axes simultaneously.  Ore deposits are assigned numeric labels starting at 1 and increasing in time.  All diamonds are numbered first, then emeralds, then iron, gold, lapis, redstone and finally coal.  Thus, if the coordinates of 5 diamond deposits and 10 iron deposits have been retrieved from the LogBlock database, the diamond deposits will be numbered from 1 to 5, with 1 being the oldest diamond, and the iron deposits will be numbered from 6 to 15, with 6 being the oldest iron deposit.
 
-![Vector length 1.](https://raw.github.com/totemo/watson/master/wiki/images/screenshot2.png)
+![Ore deposits.](https://raw.github.com/totemo/watson/master/wiki/images/screenshot2.png)
 
 Ore deposits are colour-coded according to ore type, with diamonds listed in light blue, emerald in light green, iron orange, gold yellow, lapis blue, redstone red and coal listed in dark grey.
 
