@@ -330,7 +330,7 @@ public class BlockEditSet
               // If the vector is colinear with the Y axis, use the X axis for
               // the cross products to derive the fin directions.
               Vec3 fin1;
-              if (unitY.dotProduct(diff) > 0.9 * length)
+              if (Math.abs(unitY.dotProduct(diff)) > 0.9 * length)
               {
                 fin1 = unitX.crossProduct(diff).normalize();
               }
