@@ -2,7 +2,6 @@ package watson.debug;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,7 +13,9 @@ import watson.Controller;
  * A simple facade over the Java logging facilities that coordinates all of
  * Watson's logging.
  * 
- * Messages are logged to the console and to ".minecraft/mods/watson/log.txt".
+ * Messages are logged to ".minecraft/mods/watson/log.txt". Since the vanilla
+ * client now logs chat to the console, Watson no longer logs there to avoid
+ * duplication.
  */
 public class Log
 {
@@ -145,10 +146,6 @@ public class Log
     _logger = Logger.getLogger("watson");;
     _logger.setUseParentHandlers(false);
     Log.setDebug(false);
-
-    ConsoleHandler consoleHandler = new ConsoleHandler();
-    consoleHandler.setFormatter(formatter);
-    _logger.addHandler(consoleHandler);
 
     try
     {
