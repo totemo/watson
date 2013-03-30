@@ -92,7 +92,7 @@ public final class BlockTypeRegistry
         unknown = new BlockType();
         unknown.setIndex(MAX_INDEX);
         unknown.addName("unknown");
-        unknown.setRGBA(255, 0, 255, 255);
+        unknown.setARGB(new ARGB(255, 255, 0, 255));
         unknown.setBlockModel(BlockModelRegistry.instance.getBlockModel("cuboid"));
         addBlockType(unknown);
       }
@@ -187,7 +187,7 @@ public final class BlockTypeRegistry
       int green = rgba.get(1);
       int blue = rgba.get(2);
       int alpha = rgba.size() == 4 ? rgba.get(3) : DEFAULT_ALPHA;
-      blockType.setRGBA(red, green, blue, alpha);
+      blockType.setARGB(new ARGB(alpha, red, green, blue));
     }
 
     String modelName = loadScalar(map, "model", String.class, "cuboid");
@@ -226,7 +226,6 @@ public final class BlockTypeRegistry
 
     addBlockType(blockType);
   } // loadBlockType
-
   // --------------------------------------------------------------------------
   /**
    * A helper method for extracting scalar attributes from a map loaded by

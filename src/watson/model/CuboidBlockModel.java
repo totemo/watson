@@ -48,8 +48,9 @@ public class CuboidBlockModel extends BlockModel
 
     // Bottom face.
     tess.startDrawing(GL11.GL_LINE_LOOP);
-    tess.setColorRGBA(blockType.getRed(), blockType.getGreen(),
-      blockType.getBlue(), blockType.getAlpha());
+    tess.setColorRGBA(blockType.getARGB().getRed(),
+      blockType.getARGB().getGreen(), blockType.getARGB().getBlue(),
+      blockType.getARGB().getAlpha());
     GL11.glLineWidth(blockType.getLineWidth());
     tess.addVertex(x1, y1, z1);
     tess.addVertex(x2, y1, z1);
@@ -59,8 +60,9 @@ public class CuboidBlockModel extends BlockModel
 
     // Top face.
     tess.startDrawing(GL11.GL_LINE_LOOP);
-    tess.setColorRGBA(blockType.getRed(), blockType.getGreen(),
-      blockType.getBlue(), blockType.getAlpha());
+    tess.setColorRGBA(blockType.getARGB().getRed(),
+      blockType.getARGB().getGreen(), blockType.getARGB().getBlue(),
+      blockType.getARGB().getAlpha());
     GL11.glLineWidth(blockType.getLineWidth());
     tess.addVertex(x1, y2, z1);
     tess.addVertex(x2, y2, z1);
@@ -70,8 +72,9 @@ public class CuboidBlockModel extends BlockModel
 
     // Vertical lines joining top and bottom.
     tess.startDrawing(GL11.GL_LINES);
-    tess.setColorRGBA(blockType.getRed(), blockType.getGreen(),
-      blockType.getBlue(), blockType.getAlpha());
+    tess.setColorRGBA(blockType.getARGB().getRed(),
+      blockType.getARGB().getGreen(), blockType.getARGB().getBlue(),
+      blockType.getARGB().getAlpha());
     GL11.glLineWidth(blockType.getLineWidth());
 
     tess.addVertex(x1, y1, z1);

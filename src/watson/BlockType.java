@@ -119,64 +119,24 @@ public final class BlockType
 
   // --------------------------------------------------------------------------
   /**
-   * Set the red, green, blue and alpha components of the wireframe colour in
-   * the range [0,255].
+   * Set the colour of this BlockType as an ARGB quad.
    * 
-   * @param red the red component, in the range [0,255].
-   * @param green the green component, in the range [0,255].
-   * @param blue the blue component, in the range [0,255].
-   * @param alpha the alpha component, in the range [0,255].
+   * @param argb the ARGB (alpha, red, green, blue) value.
    */
-  public void setRGBA(int red, int green, int blue, int alpha)
+  public void setARGB(ARGB argb)
   {
-    _red = red;
-    _green = green;
-    _blue = blue;
-    _alpha = alpha;
+    _argb = argb;
   }
 
   // --------------------------------------------------------------------------
   /**
-   * Return the red colour component, in the range [0,255].
+   * Return the colour of this BlockType as an ARGB quad.
    * 
-   * @return the red colour component, in the range [0,255].
+   * @return the colour of this BlockType as an ARGB quad.
    */
-  public int getRed()
+  public ARGB getARGB()
   {
-    return _red;
-  }
-
-  // --------------------------------------------------------------------------
-  /**
-   * Return the green colour component, in the range [0,255].
-   * 
-   * @return the green colour component, in the range [0,255].
-   */
-  public int getGreen()
-  {
-    return _green;
-  }
-
-  // --------------------------------------------------------------------------
-  /**
-   * Return the blue colour component, in the range [0,255].
-   * 
-   * @return the blue colour component, in the range [0,255].
-   */
-  public int getBlue()
-  {
-    return _blue;
-  }
-
-  // --------------------------------------------------------------------------
-  /**
-   * Return the alpha colour component, in the range [0,255].
-   * 
-   * @return the alpha colour component, in the range [0,255].
-   */
-  public int getAlpha()
-  {
-    return _alpha;
+    return _argb;
   }
 
   // --------------------------------------------------------------------------
@@ -333,13 +293,13 @@ public final class BlockType
       }
     }
     builder.append("} [");
-    builder.append(getRed());
+    builder.append(getARGB().getRed());
     builder.append(',');
-    builder.append(getGreen());
+    builder.append(getARGB().getGreen());
     builder.append(',');
-    builder.append(getBlue());
+    builder.append(getARGB().getBlue());
     builder.append(',');
-    builder.append(getAlpha());
+    builder.append(getARGB().getAlpha());
     builder.append("] ");
     builder.append(getLineWidth());
     builder.append(", ");
@@ -385,24 +345,9 @@ public final class BlockType
   private BlockModel        _blockModel;
 
   /**
-   * The red component of the wireframe colour in the range [0,255].
+   * ARGB colour to draw blocks of this type.
    */
-  private int               _red       = 255;
-
-  /**
-   * The green component of the wireframe colour in the range [0,255].
-   */
-  private int               _green     = 255;
-
-  /**
-   * The blue component of the wireframe colour in the range [0,255].
-   */
-  private int               _blue      = 255;
-
-  /**
-   * The blue component of the wireframe colour in the range [0,255].
-   */
-  private int               _alpha     = 255;
+  private ARGB              _argb;
 
   /**
    * The width of wireframe lines used to draw the block.
