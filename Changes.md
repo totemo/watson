@@ -1,5 +1,11 @@
 Change History
 ==============
+1.5.1 (2013-03-30)
+------------------
+* Drop logging of chat to console; the vanilla client now does that.
+* Fixed rendering of upward pointing vectors.
+* Render vectors for each player separately.
+
 1.5.1 (2013-03-27)
 ------------------
 * Updated for 1.5.1.

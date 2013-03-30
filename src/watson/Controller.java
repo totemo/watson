@@ -90,13 +90,8 @@ public class Controller
 
   // --------------------------------------------------------------------------
   /**
-   * Return the full version string, in the form:
-   * 
-   * <pre>
-   * version-YYYY-MM-DD)
-   * </pre>
-   * 
-   * where version should match the Minecraft version number.
+   * Return the full version string, in the form <version>-YYYY-MM-DD, where
+   * <version> should match the Minecraft version number.
    * 
    * The version text is loaded from the watson/version resource.
    * 
