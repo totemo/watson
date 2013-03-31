@@ -83,21 +83,25 @@ blocks:
       names: [sapling]
       rgba: [87, 173, 63]
       bounds: [0.1, 0.0, 0.1, 0.9, 0.8, 0.9]
+      model: plant
     - id: 6
       data: 1
       names: [redwood sapling, spruce sapling, pine sapling]
       rgba: [57, 90, 57]
       bounds: [0.1, 0.0, 0.1, 0.9, 0.8, 0.9]
+      model: plant
     - id: 6
       data: 2
       names: [birch sapling]
       rgba: [207, 227, 186]
       bounds: [0.1, 0.0, 0.1, 0.9, 0.8, 0.9]
+      model: plant
     - id: 6
       data: 3
       names: [jungle sapling]
       rgba: [44, 108, 24]
       bounds: [0.1, 0.0, 0.1, 0.9, 0.8, 0.9]
+      model: plant
 
 
     - id: 7
@@ -235,21 +239,25 @@ blocks:
       names: [dead shrub]
       rgba: [148, 100, 40]
       bounds: [0.1, 0.0, 0.1, 0.9, 0.8, 0.9]
+      model: plant
     - id: 31
       data: 1
       names: [long grass, wild grass]
       rgba: [23, 121, 9]
       bounds: [0.1, 0.0, 0.1, 0.9, 0.8, 0.9]
+      model: plant
     - id: 31
       data: 2
       names: [fern, live shrub]
       rgba: [23, 121, 9]
       bounds: [0.1, 0.0, 0.1, 0.9, 0.8, 0.9]
+      model: plant
     - id: 32
       data: 0
       names: [dead bush]
       rgba: [148, 100, 40]
       bounds: [0.1, 0.0, 0.1, 0.9, 0.8, 0.9]
+      model: plant
       
     - id: 33
       names: [piston base, piston]
@@ -331,18 +339,22 @@ blocks:
       names: [yellow flower]
       rgba: [241, 249, 2]
       bounds: [0.3, 0.0, 0.3, 0.7, 0.6, 0.7]
+      model: plant
     - id: 38
       names: [red rose, red flower]
       rgba: [247, 7, 15]
       bounds: [0.3, 0.0, 0.3, 0.7, 0.6, 0.7]
+      model: plant
     - id: 39
       names: [brown mushroom]
       rgba: [204, 153, 120]
       bounds: [0.3, 0.0, 0.3, 0.7, 0.4, 0.7]
+      model: plant
     - id: 40
       names: [red mushroom]
       rgba: [254, 42, 42]
       bounds: [0.3, 0.0, 0.3, 0.7, 0.4, 0.7]
+      model: plant
     - id: 41
       names: [gold block]
       rgba: [254, 251, 105]
@@ -425,6 +437,7 @@ blocks:
       data: 0
       names: [wood stairs]
       rgba: [188, 152, 98]
+      model: stair
     - id: 54
       names: [chest]
       rgba: [167, 110, 31]
@@ -477,6 +490,7 @@ blocks:
     - id: 67
       names: [stairs, cobblestone stairs, cobble stairs]
       rgba: [78, 74, 66]
+      model: stair      
     - id: 68
       names: [wall sign]
       rgba: [171, 140, 85]
@@ -538,6 +552,7 @@ blocks:
     - id: 83
       names: [sugar cane block,sugarcane]
       rgba: [170, 219, 116]
+      model: plant      
     - id: 84
       names: [jukebox]
       rgba: [102, 56, 33]
@@ -640,9 +655,11 @@ blocks:
     - id: 108
       names: [brick stairs]
       rgba: [155, 86, 67]
+      model: stair      
     - id: 109
       names: [smooth stairs, stone brick stairs]
       rgba: [136, 136, 136]
+      model: stair      
     - id: 110
       names: [mycel,mycelium]
       rgba: [128, 107, 111]
@@ -660,6 +677,7 @@ blocks:
     - id: 114
       names: [nether brick stairs, nbrickstairs]
       rgba: [48, 24, 28]
+      model: stair
     - id: 115
       names: [nether warts,nether wart]
       rgba: [143, 23, 25]
@@ -726,6 +744,7 @@ blocks:
     - id: 128
       names: [sandstone stairs]
       rgba: [236, 227, 180]
+      model: stair      
     - id: 129
       names: [emerald ore]
       lineWidth: 5.0
@@ -748,12 +767,15 @@ blocks:
     - id: 134
       names: [spruce wood stairs, redwood stairs]
       rgba: [69, 53, 31]
+      model: stair
     - id: 135
       names: [birch wood stairs]
       rgba: [157, 145, 97]
+      model: stair
     - id: 136
       names: [jungle wood stairs]
       rgba: [137, 98, 70]
+      model: stair
     - id: 137
       names: [command,command block]
       rgba: [195, 124, 77]
@@ -795,7 +817,7 @@ blocks:
     - id: 145
       names: [anvil]
       rgba: [43, 36, 29]      
-      bounds: [0.125, 0.0, 0.125, 0.875, 1.0, 0.875]
+      model: anvil
 
       # v1.5 blocks
     - id: 146
@@ -833,6 +855,7 @@ blocks:
     - id: 154
       names: [hopper]
       rgba: [56, 56, 56]      
+      model: hopper
     - id: 155
       names: [quartz block]
       rgba: [235, 233, 227]
@@ -848,6 +871,7 @@ blocks:
     - id: 156
       names: [quartz stairs]
       rgba: [235, 233, 227]
+      model: stair
     - id: 157
       names: [activator rail]
       rgba: [82, 0, 0]      

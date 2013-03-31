@@ -1,10 +1,11 @@
 Change History
 ==============
-1.5.1 (2013-03-30)
+1.5.1 (2013-04-01)
 ------------------
 * Drop logging of chat to console; the vanilla client now does that.
 * Fixed rendering of upward pointing vectors.
 * Render vectors for each player separately.
+* Added new models for plants, stairs, hoppers and anvils.
 
 1.5.1 (2013-03-27)
 ------------------
