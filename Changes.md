@@ -6,6 +6,7 @@ Change History
 * Fixed rendering of upward pointing vectors.
 * Render vectors for each player separately.
 * Added new models for plants, stairs, hoppers and anvils.
+* Made patterns for save and restart chats more generic.
 
 1.5.1 (2013-03-27)
 ------------------

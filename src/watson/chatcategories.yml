@@ -32,13 +32,9 @@ categories:
     - tag: server.minus
       fullRegex: "^-$"
     - tag: server.restart
-      fullRegex: "^\\[Server\\] PLANNED RESTART IN 60 SECONDS\\.$" 
-    - tag: server.restart2
-      fullRegex: "^\\[Server\\] ALL PROGRESS WILL BE SAVED\\.\\.\\.\\.$" 
-    - tag: server.saving30
-      fullRegex: "^\\[Server\\] SAVING IN 30 SECONDS$" 
+      fullRegex: "^\\[Server\\] .*(RESTART|restart).*" 
     - tag: server.saving
-      fullRegex: "^\\[Server\\] MAP IS SAVING\\. PREPARE FOR A LITTLE LAG\\.$" 
+      fullRegex: "^\\[Server\\] .*(SAVING|saving|save|SAVE).*" 
     - tag: server.announce
       fullRegex: "^\\[Server\\] .*$" 
     - tag: server.broadcast
