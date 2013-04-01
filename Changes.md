@@ -1,7 +1,8 @@
 Change History
 ==============
-1.5.1 (2013-04-01)
+1.5.1 (2013-04-02)
 ------------------
+* Basic support for the Prism plugin.
 * Drop logging of chat to console; the vanilla client now does that.
 * Fixed rendering of upward pointing vectors.
 * Render vectors for each player separately.

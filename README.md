@@ -25,6 +25,22 @@ GitHub has dropped support for uploading files, so downloads will be hosted on G
     <th>Version</th> <th colspan="2">Details</th>
   </tr>
   <tr>
+    <td rowspan="4">1.5.1<br>(2013-04-02)</td> <td>sha256sum -b</td> <td>1d8571a9e139e4b6ee09285263a12711b5f6a523542e7ab5376800d1bd166fbd</td>
+  </tr>
+  <tr>
+    <td>File Name</td> <td>watson-1.5.1-2013-04-02.zip</td>
+  </tr>
+  <tr>
+    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXa05hRVVlaHVSZ0k</td>
+  </tr>
+  <tr>
+    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#151-2013-04-02">description</a></td>
+  </tr>
+
+  <tr>
+    <th>Version</th> <th colspan="2">Details</th>
+  </tr>
+  <tr>
     <td rowspan="4">1.5.1<br>(2013-03-27)</td> <td>sha256sum -b</td> <td>dcb728358e9ef71eb9ff1a778c6cf6fb0d70985e6d936b924fb918e76df28744</td>
   </tr>
   <tr>
@@ -368,8 +384,10 @@ Also, note that clearing the Watson display with "/w clear" also clears the list
 To hide only the edits (outlines, vectors and ore deposit labels) belonging to a specific player:
 
     /w edits hide Notch
-    
-To show them again:
+
+When edits are hidden, the corresponding ore deposits will be listed as strikeout text in the output of the "/w ore" command.
+
+To show the edits again:
 
     /w edits show Notch
     
@@ -599,7 +617,6 @@ Planned Features
 * A simple keybinding facility, since the Macro/Keybind mod bypasses the Watson CLI.
 * Parsing of fields out of LogBlock results is currently hard-coded. This can and should be driven by a description of the fields in chatcategories.yml.
 * A 3-D cursor that can highlight edits and step through them in the sequence that they occurred.
-* The ability to filter edits and tool block query results by player, distance, time etc.
 * Some automatic queries to hone in on probable grief and xray patterns.
 * The ability to customise the re-echoing of coordinate lines.
 
