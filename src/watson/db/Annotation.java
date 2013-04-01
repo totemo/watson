@@ -1,4 +1,4 @@
-package watson;
+package watson.db;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.FontRenderer;
@@ -7,6 +7,8 @@ import net.minecraft.src.RenderManager;
 import net.minecraft.src.Tessellator;
 
 import org.lwjgl.opengl.GL11;
+
+import watson.Configuration;
 
 // ----------------------------------------------------------------------------
 /**

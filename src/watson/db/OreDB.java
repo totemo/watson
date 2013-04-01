@@ -10,14 +10,9 @@ import net.minecraft.src.ModLoader;
 
 import org.lwjgl.opengl.GL11;
 
-import watson.BlockEdit;
-import watson.BlockEditSet;
-import watson.BlockType;
-import watson.BlockTypeRegistry;
 import watson.Configuration;
 import watson.Controller;
 import watson.DisplaySettings;
-import watson.TimeStamp;
 import watson.analysis.ServerTime;
 import watson.chat.Colour;
 import watson.debug.Log;
@@ -29,8 +24,13 @@ import watson.debug.Log;
  * {@link OreDeposit} that was there.
  * 
  * This class currently only stores the coordinates of ores (block IDs 14, 15,
- * 16, 21, 56, 73, 74, 129). The complete editing history retrieved by LogBlock
- * is instead stored in {@link BlockEditSet}.
+ * 16, 21, 56, 73, 74, 129 and 153). The complete editing history retrieved by
+ * LogBlock is instead stored in {@link BlockEditSet}.
+ * 
+ * Note that an ore is considered an ore irrespective of whether ut normally
+ * spawns in a given dimension with the vanilla Minecraft generator. So, for
+ * example, quartz ore counts as an ore in the overworld. This allows the ore
+ * indexing to work with custom terrain generators.
  */
 public class OreDB
 {
@@ -51,6 +51,7 @@ public class OreDB
     // Merge redstone ore (73) and glowing redstone ore (74)
     _db.put(types.getBlockTypeById(74), new TypedOreDB(200));
     _db.put(types.getBlockTypeById(16), new TypedOreDB(800));
+    _db.put(types.getBlockTypeById(153), new TypedOreDB(400));
 
     _chatColours.put(types.getBlockTypeById(56), Colour.lightblue);
     _chatColours.put(types.getBlockTypeById(129), Colour.lightgreen);
@@ -59,6 +60,7 @@ public class OreDB
     _chatColours.put(types.getBlockTypeById(21), Colour.blue);
     _chatColours.put(types.getBlockTypeById(74), Colour.red);
     _chatColours.put(types.getBlockTypeById(16), Colour.grey);
+    _chatColours.put(types.getBlockTypeById(153), Colour.white);
   } // OreDB
 
   // --------------------------------------------------------------------------
@@ -125,11 +127,13 @@ public class OreDB
             {
               long time = deposit.getTimeStamp();
               OreBlock block = deposit.getKeyOreBlock();
-              BlockType type = block.getEdit().type;
-              String player = block.getEdit().player;
+              BlockEdit edit = block.getEdit();
+              BlockType type = edit.type;
+              String player = edit.player;
+              String strike = edit.playerEditSet.isVisible() ? "" : "\247m";
               String line = String.format(Locale.US,
-                "\247%c(%3d) %s (% 5d % 3d % 5d) %2d [%2d] %s",
-                _chatColours.get(type).getCode(), id,
+                "\247%c%s(%3d) %s (% 5d % 3d % 5d) %2d [%2d] %s",
+                _chatColours.get(type).getCode(), strike, id,
                 TimeStamp.formatMonthDayTime(time), block.getLocation().getX(),
                 block.getLocation().getY(), block.getLocation().getZ(),
                 type.getId(), deposit.getBlockCount(), player);
@@ -199,6 +203,22 @@ public class OreDB
     } // for
     throw new IllegalStateException("shouldn't happen");
   } // getOreDeposit
+
+  // --------------------------------------------------------------------------
+  /**
+   * Remove all ore deposits mined by the specified player.
+   * 
+   * This method is called when "/w edits remove <player>" is executed.
+   * 
+   * @param player the case-insensitive player name.
+   */
+  public void removeDeposits(String player)
+  {
+    for (TypedOreDB db : _db.values())
+    {
+      db.removeDeposits(player);
+    }
+  }
 
   // --------------------------------------------------------------------------
   /**
@@ -393,18 +413,21 @@ public class OreDB
       {
         for (OreDeposit deposit : db.getOreDeposits())
         {
-          label.setLength(0);
-          label.ensureCapacity(4);
-          label.append(id);
           OreBlock block = deposit.getKeyOreBlock();
-          watson.Annotation.drawBillboard(block.getLocation().getX(),
-            block.getLocation().getY(), block.getLocation().getZ(),
-            Configuration.instance.getBillboardBackground(),
-            Configuration.instance.getBillboardForeground(), 0.03,
-            label.toString());
+          if (block.getEdit().playerEditSet.isVisible())
+          {
+            label.setLength(0);
+            label.ensureCapacity(4);
+            label.append(id);
+            watson.db.Annotation.drawBillboard(block.getLocation().getX(),
+              block.getLocation().getY(), block.getLocation().getZ(),
+              Configuration.instance.getBillboardBackground(),
+              Configuration.instance.getBillboardForeground(), 0.03,
+              label.toString());
+          }
           ++id;
-        }
-      }
+        } // for all deposits
+      } // for all ore types
 
       GL11.glEnable(GL11.GL_FOG);
       GL11.glEnable(GL11.GL_LIGHTING);

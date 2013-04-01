@@ -4,8 +4,7 @@ import net.minecraft.src.Tessellator;
 
 import org.lwjgl.opengl.GL11;
 
-import watson.ARGB;
-import watson.BlockType;
+import watson.db.BlockType;
 
 // ----------------------------------------------------------------------------
 /**

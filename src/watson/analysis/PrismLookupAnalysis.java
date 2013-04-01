@@ -3,14 +3,14 @@ package watson.analysis;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import watson.BlockEdit;
-import watson.BlockType;
-import watson.BlockTypeRegistry;
 import watson.Controller;
-import watson.TimeStamp;
 import watson.chat.ChatProcessor;
 import watson.chat.MethodChatHandler;
 import watson.chat.TagDispatchChatHandler;
+import watson.db.BlockEdit;
+import watson.db.BlockType;
+import watson.db.BlockTypeRegistry;
+import watson.db.TimeStamp;
 
 // ----------------------------------------------------------------------------
 /**

@@ -8,6 +8,8 @@ import net.minecraft.src.RenderHelper;
 
 import org.lwjgl.opengl.GL11;
 
+import watson.db.BlockEditSet;
+
 // --------------------------------------------------------------------------
 /**
  * A Render implementation that draws all of the 3-D objects known to Watson.

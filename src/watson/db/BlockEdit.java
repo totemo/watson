@@ -1,4 +1,4 @@
-package watson;
+package watson.db;
 
 // ----------------------------------------------------------------------------
 /**
@@ -10,43 +10,43 @@ public class BlockEdit
   /**
    * Time stamp of the edit as returned by LogBlock.
    */
-  public long      time;
+  public long          time;
 
   /**
    * The name of the player who performed the edit.
    */
-  public String    player;
+  public String        player;
 
   /**
    * True if the edit was creation of a block, false if destruction.
    */
-  public boolean   creation;
+  public boolean       creation;
 
   /**
    * X coordinate of the block.
    */
-  public int       x;
+  public int           x;
 
   /**
    * Y coordinate of the block.
    */
-  public int       y;
+  public int           y;
 
   /**
    * Z coordinate of the block.
    */
-  public int       z;
+  public int           z;
 
   /**
    * A reference to the BlockType denoting the type of the block that was the
    * subject of this edit (whether constructed or destroyed).
    */
-  public BlockType type;
+  public BlockType     type;
 
   /**
-   * Could add an edit type (creation or destruction enumeration value too.
+   * The {@link PlayerEditSet} that contains these edits.
    */
-  // EditAction action;
+  public PlayerEditSet playerEditSet;
 
   // --------------------------------------------------------------------------
   /**

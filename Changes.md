@@ -7,6 +7,9 @@ Change History
 * Render vectors for each player separately.
 * Added new models for plants, stairs, hoppers and anvils.
 * Made patterns for save and restart chats more generic.
+* Allow control over filtering of parsed edits on a per-player basis.
+* Allow control of visibility of edits and removal of edits on a per-player basis.
+* Label quartz ore deposits.
 
 1.5.1 (2013-03-27)
 ------------------

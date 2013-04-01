@@ -3,12 +3,12 @@ package watson.analysis;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import watson.BlockEdit;
 import watson.Controller;
 import watson.chat.ChatClassifier;
 import watson.chat.ChatProcessor;
 import watson.chat.MethodChatHandler;
 import watson.chat.TagDispatchChatHandler;
+import watson.db.BlockEdit;
 
 // --------------------------------------------------------------------------
 /**

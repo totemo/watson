@@ -1,4 +1,4 @@
-package watson;
+package watson.db;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,8 +20,10 @@ import net.minecraft.src.ScaledResolution;
 
 import org.lwjgl.opengl.GL11;
 
-import watson.db.OreDB;
-import watson.db.PlayerEditSet;
+import watson.Configuration;
+import watson.Controller;
+import watson.DisplaySettings;
+import watson.model.ARGB;
 
 // ----------------------------------------------------------------------------
 /**
@@ -183,7 +186,7 @@ public class BlockEditSet
   {
     if (player != null)
     {
-      PlayerEditSet editsForPlayer = _playerEdits.get(player);
+      PlayerEditSet editsForPlayer = _playerEdits.get(player.toLowerCase());
       return (editsForPlayer != null) ? editsForPlayer.findEdit(x, y, z) : null;
     }
     else
@@ -209,25 +212,103 @@ public class BlockEditSet
    */
   public void addBlockEdit(BlockEdit edit)
   {
-    // Add a new PlayerEditSet if there isn't one for this player.
-    PlayerEditSet editsForPlayer = _playerEdits.get(edit.player);
-    if (editsForPlayer == null)
+    if (Controller.instance.getFilters().isAcceptedPlayer(edit.player))
     {
-      editsForPlayer = new PlayerEditSet();
-      _playerEdits.put(edit.player, editsForPlayer);
-    }
-    editsForPlayer.addBlockEdit(edit);
+      String lowerName = edit.player.toLowerCase();
 
-    // Only cluster edits into ore deposits on non-creative (survival,
-    // adventure) games. I assume this will not stuff up for admins etc whose
-    // gamemode is creative, but just in case, allow a configuration override.
-    Minecraft mc = ModLoader.getMinecraftInstance();
-    if (!mc.theWorld.getWorldInfo().getGameType().isCreative()
-        || Configuration.instance.isGroupingOresInCreative())
-    {
-      _oreDB.addBlockEdit(edit);
+      // Add a new PlayerEditSet if there isn't one for this player.
+      PlayerEditSet editsForPlayer = _playerEdits.get(lowerName);
+      if (editsForPlayer == null)
+      {
+        editsForPlayer = new PlayerEditSet(edit.player);
+        _playerEdits.put(lowerName, editsForPlayer);
+      }
+      editsForPlayer.addBlockEdit(edit);
+
+      // Only cluster edits into ore deposits on non-creative (survival,
+      // adventure) games. I assume this will not stuff up for admins etc whose
+      // gamemode is creative, but just in case, allow a configuration override.
+      Minecraft mc = ModLoader.getMinecraftInstance();
+      if (!mc.theWorld.getWorldInfo().getGameType().isCreative()
+          || Configuration.instance.isGroupingOresInCreative())
+      {
+        _oreDB.addBlockEdit(edit);
+      }
     }
   } // addBlockEdit
+
+  // --------------------------------------------------------------------------
+  /**
+   * List the number and visibility of stored edits on a per player basis in the
+   * dimension to which this BlockEditSet applies.
+   */
+  public void listEdits()
+  {
+    if (_playerEdits.size() == 0)
+    {
+      Controller.instance.localOutput("There are no stored edits for this world.");
+    }
+    else
+    {
+      Controller.instance.localOutput("Listing number and visibility of edits in this world:");
+      for (PlayerEditSet editsByPlayer : _playerEdits.values())
+      {
+        Controller.instance.localOutput(String.format(Locale.US,
+          "  %s - %d edits %s", editsByPlayer.getPlayer(),
+          editsByPlayer.getBlockEditCount(),
+          (editsByPlayer.isVisible() ? "shown" : "hidden")));
+      }
+    }
+  } // listEdits
+
+  // --------------------------------------------------------------------------
+  /**
+   * Set the visibility of the edits for the specified player.
+   * 
+   * @param player the name of the player.
+   * @param visible if true, edits are shown.
+   */
+  public void setEditVisibility(String player, boolean visible)
+  {
+    player = player.toLowerCase();
+    PlayerEditSet editsByPlayer = _playerEdits.get(player);
+    if (editsByPlayer != null)
+    {
+      editsByPlayer.setVisible(visible);
+      Controller.instance.localOutput(String.format(Locale.US,
+        "%d edits by %s are now %s.", editsByPlayer.getBlockEditCount(),
+        editsByPlayer.getPlayer(), (editsByPlayer.isVisible() ? "shown"
+          : "hidden")));
+    }
+    else
+    {
+      Controller.instance.localError(String.format(Locale.US,
+        "There are no stored edits for %s.", player));
+    }
+  } // setEditVisibility
+
+  // --------------------------------------------------------------------------
+  /**
+   * @param player the name of the player.
+   */
+  public void removeEdits(String player)
+  {
+    player = player.toLowerCase();
+    PlayerEditSet editsByPlayer = _playerEdits.get(player);
+    if (editsByPlayer != null)
+    {
+      _playerEdits.remove(player.toLowerCase());
+      getOreDB().removeDeposits(player);
+      Controller.instance.localOutput(String.format(Locale.US,
+        "%d edits by %s were removed.", editsByPlayer.getBlockEditCount(),
+        editsByPlayer.getPlayer()));
+    }
+    else
+    {
+      Controller.instance.localError(String.format(Locale.US,
+        "There are no stored edits for %s.", player));
+    }
+  } // removeEdits
 
   // --------------------------------------------------------------------------
   /**
@@ -342,9 +423,9 @@ public class BlockEditSet
 
   // --------------------------------------------------------------------------
   /**
-   * A map from player name to {@link PlayerEditSet} containing that player's
-   * edits, iterated in the order that the individual players were first
-   * encountered in query results.
+   * A map from lowercase player name to {@link PlayerEditSet} containing that
+   * player's edits, iterated in the order that the individual players were
+   * first encountered in query results.
    */
   protected LinkedHashMap<String, PlayerEditSet> _playerEdits   = new LinkedHashMap<String, PlayerEditSet>();
 
@@ -362,7 +443,11 @@ public class BlockEditSet
    * The cycle of colours used to draw vectors for different players.
    */
   protected static final ARGB[]                  _vectorColours = {
-    new ARGB(204, 192, 192, 192), new ARGB(204, 255, 255, 152),
-    new ARGB(204, 255, 177, 177), new ARGB(204, 177, 255, 255),
-    new ARGB(204, 255, 205, 255)                                };
+    new ARGB(204, 255, 255, 140), // Pale yellow.
+    new ARGB(204, 140, 158, 255), // Light blue.
+    new ARGB(204, 255, 140, 140), // Salmon.
+    new ARGB(204, 121, 255, 140), // Mint.
+    new ARGB(204, 255, 140, 255), // Pink.
+    new ARGB(204, 192, 192, 192), // Old fashioned grey.
+                                                                };
 } // class BlockEditList

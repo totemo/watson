@@ -2,8 +2,6 @@ package watson.db;
 
 import java.util.TreeSet;
 
-import watson.BlockEdit;
-import watson.BlockType;
 
 // --------------------------------------------------------------------------
 /**

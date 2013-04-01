@@ -1,7 +1,5 @@
 package watson.db;
 
-import watson.BlockEdit;
-
 // ----------------------------------------------------------------------------
 /**
  * Associates the block at a given {@link IntCoord} with the earliest
@@ -16,7 +14,12 @@ import watson.BlockEdit;
 public class OreBlock implements Comparable<OreBlock>
 {
   // --------------------------------------------------------------------------
-
+  /**
+   * Constructor.
+   * 
+   * @param location the coordinates of the block.
+   * @param edit the specific destruction edit when this ore was harvested.
+   */
   public OreBlock(IntCoord location, BlockEdit edit)
   {
     _location = location;

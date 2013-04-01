@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeSet;
 
-import watson.BlockEdit;
-
 // ----------------------------------------------------------------------------
 /**
  * A spatial (3-D) database of ores of the same type.
@@ -183,6 +181,37 @@ public class TypedOreDB
 
   // --------------------------------------------------------------------------
   /**
+   * Remove all ore deposits mined by the specified player.
+   * 
+   * This method is called when "/w edits remove <player>" is executed.
+   * 
+   * @param player the case-insensitive player name.
+   */
+  public void removeDeposits(String player)
+  {
+    // To keep it simple we simply make a list of all edits not by player,
+    // remove everything and reindex only those.
+    ArrayList<BlockEdit> retainedEdits = new ArrayList<BlockEdit>();
+    for (OreBlock block : _oreBlocks.values())
+    {
+      if (!block.getEdit().player.equalsIgnoreCase(player))
+      {
+        retainedEdits.add(block.getEdit());
+      }
+    }
+
+    _oreBlocks.clear();
+    _oreDeposits.clear();
+
+    // Re-index edits not by player.
+    for (BlockEdit edit : retainedEdits)
+    {
+      addBlockEdit(edit);
+    }
+  } // removeDeposits
+
+  // --------------------------------------------------------------------------
+  /**
    * Return the {@link OreBlock} at the specified location, or null if there is
    * none.
    * 
@@ -244,5 +273,4 @@ public class TypedOreDB
    * The set of all OreDeposits, in ascending order by timestamp (oldest first).
    */
   protected TreeSet<OreDeposit>         _oreDeposits = new TreeSet<OreDeposit>();
-
 } // class TypedOreDB

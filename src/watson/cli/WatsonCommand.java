@@ -9,6 +9,7 @@ import watson.Configuration;
 import watson.Controller;
 import watson.DisplaySettings;
 import watson.analysis.ServerTime;
+import watson.db.Filters;
 import watson.db.OreDB;
 import ClientCommands.ClientCommandManager;
 
@@ -309,6 +310,64 @@ public class WatsonCommand extends WatsonCommandBase
       }
     } // /w tp
 
+    // "/w edits" command.
+    if (args[0].equals("edits"))
+    {
+      if (args.length == 1 || (args.length == 2 && args[1].equals("list")))
+      {
+        Controller.instance.getBlockEditSet().listEdits();
+        return;
+      }
+      else if (args.length == 3)
+      {
+        if (args[1].equals("hide"))
+        {
+          Controller.instance.getBlockEditSet().setEditVisibility(args[2],
+            false);
+          return;
+        }
+        else if (args[1].equals("show"))
+        {
+          Controller.instance.getBlockEditSet().setEditVisibility(args[2], true);
+          return;
+        }
+        else if (args[1].equals("remove"))
+        {
+          Controller.instance.getBlockEditSet().removeEdits(args[2]);
+          return;
+        }
+      }
+    } // "/w edits"
+
+    // "/w filter" command.
+    if (args[0].equals("filter"))
+    {
+      Filters filters = Controller.instance.getFilters();
+      if (args.length == 1 || (args.length == 2 && args[1].equals("list")))
+      {
+        filters.list();
+        return;
+      }
+      else if (args.length == 2 && args[1].equals("clear"))
+      {
+        filters.clear();
+        return;
+      }
+      else if (args.length == 3)
+      {
+        if (args[1].equals("add"))
+        {
+          filters.addPlayer(args[2]);
+          return;
+        }
+        else if (args[1].equals("remove"))
+        {
+          filters.removePlayer(args[2]);
+          return;
+        }
+      }
+    } // "/w filter"
+
     // File commands.
     if (args.length >= 2 && args[0].equals("file"))
     {
@@ -388,7 +447,7 @@ public class WatsonCommand extends WatsonCommandBase
     } // config
 
     throw new SyntaxErrorException("commands.generic.syntax", new Object[0]);
-  } // processCommand
+  }// processCommand
 
   // --------------------------------------------------------------------------
   /**
@@ -855,6 +914,10 @@ public class WatsonCommand extends WatsonCommandBase
     localOutput(sender, "  /" + w + " ore [<page>]");
     localOutput(sender, "  /" + w + " ratio");
     localOutput(sender, "  /" + w + " tp [next|prev|<number>]");
+    localOutput(sender, "  /" + w + " edits [list]");
+    localOutput(sender, "  /" + w + " edits (hide|show|remove) <player>");
+    localOutput(sender, "  /" + w + " filter [list|clear]");
+    localOutput(sender, "  /" + w + " filter (add|remove) <player>");
     localOutput(sender, "  /" + w + " servertime");
     localOutput(sender, "  /" + w + " file list [*|<playername>] [<page>]");
     localOutput(sender, "  /" + w + " file delete *|<filename>|<playername>");

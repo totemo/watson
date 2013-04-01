@@ -1,6 +1,6 @@
 package watson.model;
 
-import watson.BlockType;
+import watson.db.BlockType;
 
 // --------------------------------------------------------------------------
 /**

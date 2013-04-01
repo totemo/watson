@@ -333,6 +333,58 @@ You can also delete all files older than a specified date, in the form YYYY-MM-D
     /w file expire 2013-01-01
 
 
+### Filters
+
+Filters are used to ignore query results that don't belong to specific players of interest.  Results for other players only appear in chat and are never added to the 3-D display.  By default, no filters are set, meaning that any log query result, will be added to the display.
+
+To set a filter, use "/w filter add <playername>":
+
+    /w filter add totemo
+    
+This filter ignores all results except those describing edits made by totemo.  If you add a second filter:
+
+    /w filter add Notch
+    
+then edits by both totemo and Notch will be added to the display as they are encountered in chat.  Setting a filter also sets the current player of interest.  So after "/w filter add Notch", subsequent screenshots will have the name Notch added to them (see Screenshot Management), even when no edits by Notch have been listed in chat.  This feature can be used to tag a screenshot with the name of any player, irrespective of whether that player has made any edits.  Note, however, that the next query result that passes the filter will change the currently selected player.
+    
+To list the current set of filters, use either of:
+
+    /w filter list
+    /w filter
+
+To remove a filter:
+
+    /w filter remove Notch
+
+To remove all filters:
+
+    /w filter clear
+
+Also, note that clearing the Watson display with "/w clear" also clears the list of filters.
+
+
+### Managing Edits By Specific Players
+
+To hide only the edits (outlines, vectors and ore deposit labels) belonging to a specific player:
+
+    /w edits hide Notch
+    
+To show them again:
+
+    /w edits show Notch
+    
+To completely remove all record of them from the client's memory (note however that they will still exist as log entries on the server, as well as potentially in Watson save files):
+
+    /w edits remove Notch
+    
+To list the players who have made edits that are currently in Watson's memory, use either of:
+
+    /w edits list
+    /w edits
+    
+These commands list the number of edits by each player and say whether the edits are currently shown or hidden.
+
+
 ### Built-In Calculator
 
 Watson contains a simple calculator that understands +, -, *, / and parentheses ().  Currently, the calculator considers '-' to bind to any digits that immediately follow (making a negative number), so when subtracting, use spaces.  Example:

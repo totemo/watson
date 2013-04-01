@@ -35,6 +35,10 @@ import watson.cli.CaseInsensitivePrefixFileFilter;
 import watson.cli.HighlightCommand;
 import watson.cli.TagCommand;
 import watson.cli.WatsonCommand;
+import watson.db.BlockEdit;
+import watson.db.BlockEditSet;
+import watson.db.BlockTypeRegistry;
+import watson.db.Filters;
 import watson.debug.Log;
 
 // ----------------------------------------------------------------------------
@@ -533,6 +537,7 @@ public class Controller
     getBlockEditSet().clear();
     _variables.clear();
     localOutput("Watson edits cleared.");
+    getFilters().clear();
   }
 
   // --------------------------------------------------------------------------
@@ -638,6 +643,19 @@ public class Controller
       _variables.put("z", edit.z);
     }
   } // selectBlockEdit
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return the {@link Filters} instance that determines which edits are stored
+   * (in a {@link BlocKEditSet}) and which are ignored.
+   * 
+   * @return the {@link Filters} instance that determines which edits are stored
+   *         (in a {@link BlocKEditSet}) and which are ignored.
+   */
+  public Filters getFilters()
+  {
+    return _filters;
+  }
 
   // --------------------------------------------------------------------------
   /**
@@ -771,40 +789,6 @@ public class Controller
       }
     }
   } // processServerChatQueue
-
-  // --------------------------------------------------------------------------
-  /**
-   * Private constructor to enforce Singleton pattern.
-   */
-  private Controller()
-  {
-    // Nothing.
-  }
-
-  // --------------------------------------------------------------------------
-  /**
-   * Return the cached reference to the Minecraft GuiNewChat instance that draws
-   * the chat GUI, or null if not yet available.
-   * 
-   * @return the cached reference to the Minecraft GuiNewChat instance that
-   *         draws the chat GUI, or null if not yet available.
-   */
-  private GuiNewChat getChatGui()
-  {
-    if (_chatGui == null)
-    {
-      Minecraft mc = ModLoader.getMinecraftInstance();
-      if (mc != null)
-      {
-        GuiIngame ingame = mc.ingameGUI;
-        if (ingame != null)
-        {
-          _chatGui = ingame.getChatGUI();
-        }
-      }
-    }
-    return _chatGui;
-  } // getChatGui
 
   // --------------------------------------------------------------------------
   /**
@@ -975,6 +959,40 @@ public class Controller
 
   // --------------------------------------------------------------------------
   /**
+   * Private constructor to enforce Singleton pattern.
+   */
+  private Controller()
+  {
+    // Nothing.
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return the cached reference to the Minecraft GuiNewChat instance that draws
+   * the chat GUI, or null if not yet available.
+   * 
+   * @return the cached reference to the Minecraft GuiNewChat instance that
+   *         draws the chat GUI, or null if not yet available.
+   */
+  private GuiNewChat getChatGui()
+  {
+    if (_chatGui == null)
+    {
+      Minecraft mc = ModLoader.getMinecraftInstance();
+      if (mc != null)
+      {
+        GuiIngame ingame = mc.ingameGUI;
+        if (ingame != null)
+        {
+          _chatGui = ingame.getChatGUI();
+        }
+      }
+    }
+    return _chatGui;
+  } // getChatGui
+
+  // --------------------------------------------------------------------------
+  /**
    * Number of chat lines in a page.
    */
   public static final int                 PAGE_LINES       = 50;
@@ -1006,6 +1024,12 @@ public class Controller
    * {@link RenderWatson}.
    */
   protected HashMap<String, BlockEditSet> _edits           = new HashMap<String, BlockEditSet>();
+
+  /**
+   * Determines which edits are stored (in a {@link BlocKEditSet}) and which are
+   * ignored.
+   */
+  protected Filters                       _filters         = new Filters();
 
   /**
    * A cached reference to the GuiNewChat instance, set up as soon as it becomes

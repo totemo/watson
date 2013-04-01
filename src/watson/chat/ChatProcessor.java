@@ -7,10 +7,10 @@ import java.util.logging.Level;
 
 import net.minecraft.src.GuiNewChat;
 import net.minecraft.src.ModLoader;
-import watson.BlockEdit;
-import watson.BlockEditSet;
 import watson.Configuration;
 import watson.Controller;
+import watson.db.BlockEdit;
+import watson.db.BlockEditSet;
 import watson.debug.Log;
 
 // ----------------------------------------------------------------------------

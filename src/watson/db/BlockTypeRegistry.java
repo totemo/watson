@@ -1,4 +1,4 @@
-package watson;
+package watson.db;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -9,7 +9,9 @@ import java.util.logging.Level;
 
 import org.yaml.snakeyaml.Yaml;
 
+import watson.Controller;
 import watson.debug.Log;
+import watson.model.ARGB;
 import watson.model.BlockModel;
 import watson.model.BlockModelRegistry;
 
@@ -238,6 +240,7 @@ public final class BlockTypeRegistry
    * @return the attribute value, the default value if unspecified, or null if
    *         there is an error.
    */
+  @SuppressWarnings("unchecked")
   private <T> T loadScalar(Map<String, Object> map, String name, Class<T> cls,
                            T defaultValue)
   {

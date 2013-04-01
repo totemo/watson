@@ -12,11 +12,9 @@ import net.minecraft.src.Vec3Pool;
 
 import org.lwjgl.opengl.GL11;
 
-import watson.ARGB;
-import watson.BlockEdit;
-import watson.BlockEditComparator;
 import watson.Controller;
 import watson.DisplaySettings;
+import watson.model.ARGB;
 
 // ----------------------------------------------------------------------------
 /**
@@ -25,6 +23,28 @@ import watson.DisplaySettings;
  */
 public class PlayerEditSet
 {
+  // --------------------------------------------------------------------------
+  /**
+   * Constructor.
+   * 
+   * @param player name of the player who did these edits.
+   */
+  public PlayerEditSet(String player)
+  {
+    _player = player;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return the name of the player who did these edits.
+   * 
+   * @return the name of the player who did these edits.
+   */
+  public String getPlayer()
+  {
+    return _player;
+  }
+
   // --------------------------------------------------------------------------
   /**
    * Find an edit with the specified coordinates.
@@ -62,6 +82,45 @@ public class PlayerEditSet
   public void addBlockEdit(BlockEdit edit)
   {
     _edits.add(edit);
+
+    // Reference container for fast visibility toggling of ore deposit labels.
+    edit.playerEditSet = this;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return the number of edits stored.
+   * 
+   * @return the number of edits stored.
+   */
+  int getBlockEditCount()
+  {
+    return _edits.size();
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Set the visibility of this player's edits in the dimension to which this
+   * PlayerEditSet applies.
+   * 
+   * @param visible if true, edits are visible.
+   */
+  public void setVisible(boolean visible)
+  {
+    _visible = visible;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return the visibility of this player's edits in the dimension to which this
+   * PlayerEditSet applies.
+   * 
+   * @return the visibility of this player's edits in the dimension to which
+   *         this PlayerEditSet applies.
+   */
+  public boolean isVisible()
+  {
+    return _visible;
   }
 
   // --------------------------------------------------------------------------
@@ -70,11 +129,14 @@ public class PlayerEditSet
    */
   public void drawOutlines()
   {
-    if (Controller.instance.getDisplaySettings().isOutlineShown())
+    if (isVisible())
     {
-      for (BlockEdit edit : _edits)
+      if (Controller.instance.getDisplaySettings().isOutlineShown())
       {
-        edit.drawOutline();
+        for (BlockEdit edit : _edits)
+        {
+          edit.drawOutline();
+        }
       }
     }
   }
@@ -88,7 +150,7 @@ public class PlayerEditSet
   public void drawVectors(ARGB colour)
   {
     DisplaySettings settings = Controller.instance.getDisplaySettings();
-    if (settings.areVectorsShown() && !_edits.isEmpty())
+    if (settings.areVectorsShown() && isVisible() && !_edits.isEmpty())
     {
       final Vec3Pool pool = ModLoader.getMinecraftInstance().theWorld.getWorldVec3Pool();
       final Tessellator tess = Tessellator.instance;
@@ -235,11 +297,21 @@ public class PlayerEditSet
 
   // --------------------------------------------------------------------------
   /**
+   * The name of the player who did these edits.
+   */
+  protected String              _player;
+
+  /**
    * A set of BlockEdit instances, ordered from oldest (lowest time value) to
    * most recent.
    */
   protected TreeSet<BlockEdit>  _edits                 = new TreeSet<BlockEdit>(
                                                          new BlockEditComparator());
+
+  /**
+   * True if this player's edits are visible.
+   */
+  protected boolean             _visible               = true;
 
   /**
    * Size of the arrow on a unit length vector.

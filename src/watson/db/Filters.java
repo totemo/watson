@@ -43,7 +43,7 @@ public class Filters
    */
   public void clear()
   {
-    Controller.instance.localOutput("All filters cleared.");
+    Controller.instance.localOutput("Watson filters cleared.");
     _filters.clear();
   }
 

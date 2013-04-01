@@ -1,7 +1,8 @@
-package watson;
+package watson.db;
 
 import java.util.ArrayList;
 
+import watson.model.ARGB;
 import watson.model.BlockModel;
 
 // --------------------------------------------------------------------------

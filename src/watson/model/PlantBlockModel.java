@@ -4,7 +4,7 @@ import net.minecraft.src.Tessellator;
 
 import org.lwjgl.opengl.GL11;
 
-import watson.BlockType;
+import watson.db.BlockType;
 
 // ----------------------------------------------------------------------------
 /**
@@ -27,7 +27,7 @@ public class PlantBlockModel extends BlockModel
 
   // --------------------------------------------------------------------------
   /**
-   * @see watson.model.BlockModel#render(watson.BlockType, int, int, int)
+   * @see watson.model.BlockModel#render(watson.db.BlockType, int, int, int)
    */
   @Override
   public void render(BlockType blockType, int x, int y, int z)

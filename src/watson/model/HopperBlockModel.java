@@ -1,6 +1,6 @@
 package watson.model;
 
-import watson.BlockType;
+import watson.db.BlockType;
 
 // --------------------------------------------------------------------------
 /**
@@ -19,7 +19,7 @@ public class HopperBlockModel extends BlockModel
 
   // --------------------------------------------------------------------------
   /**
-   * @see watson.model.BlockModel#render(watson.BlockType, int, int, int)
+   * @see watson.model.BlockModel#render(watson.db.BlockType, int, int, int)
    */
   @Override
   public void render(BlockType blockType, int x, int y, int z)

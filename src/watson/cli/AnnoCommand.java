@@ -6,9 +6,9 @@ import java.util.Locale;
 
 import net.minecraft.src.ICommandSender;
 import net.minecraft.src.SyntaxErrorException;
-import watson.Annotation;
-import watson.BlockEditSet;
 import watson.Controller;
+import watson.db.Annotation;
+import watson.db.BlockEditSet;
 
 // --------------------------------------------------------------------------
 /**

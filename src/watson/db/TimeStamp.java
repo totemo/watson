@@ -1,4 +1,4 @@
-package watson;
+package watson.db;
 
 import java.util.Calendar;
 import java.util.Locale;
