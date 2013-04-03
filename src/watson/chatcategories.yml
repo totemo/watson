@@ -329,7 +329,13 @@ categories:
     # A specialisation of ID lb.header.block, below, to match the query issued when /w ratio is done.
     - tag: lb.header.ratio
       id: lb.header.ratio
-      fullRegex: "Stone and diamond ore changes from player \\w+ between (\\d+) and (\\d+) minutes ago in .+ summed up by blocks:"
+      fullRegex: "^Stone and diamond ore changes from player \\w+ between (\\d+) and (\\d+) minutes ago in .+ summed up by blocks:$"
+    
+    # When the /w ratio query includes edits that are very recent, LogBlock changes the format of
+    # its output to the following, which must also be parsed:
+    - tag: lb.header.ratiocurrent
+      id: lb.header.ratiocurrent
+      fullRegex: "^Stone and diamond ore changes from player \\w+ in the last (\\d+) minutes in .+ summed up by blocks:$"
 
     # A specialisation of ID lb.header.block for the query used to infer the local time on the server.
     - tag: lb.header.timecheck

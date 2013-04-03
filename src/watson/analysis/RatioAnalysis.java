@@ -37,10 +37,14 @@ public class RatioAnalysis extends Analysis
       this, "lbHeader"));
     tagDispatchChatHandler.addChatHandler("lb.header.ratio",
       new MethodChatHandler(this, "lbHeaderRatio"));
+    tagDispatchChatHandler.addChatHandler("lb.header.ratiocurrent",
+      new MethodChatHandler(this, "lbHeaderRatio"));
     tagDispatchChatHandler.addChatHandler("lb.sum", new MethodChatHandler(this,
       "lbSum"));
     _lbHeaderRatio = ChatProcessor.getInstance().getChatClassifier().getChatCategoryById(
       "lb.header.ratio").getFullPattern();
+    _lbHeaderRatioCurrent = ChatProcessor.getInstance().getChatClassifier().getChatCategoryById(
+      "lb.header.ratiocurrent").getFullPattern();
     _lbSum = ChatProcessor.getInstance().getChatClassifier().getChatCategoryById(
       "lb.sum").getFullPattern();
   }
@@ -61,7 +65,7 @@ public class RatioAnalysis extends Analysis
   // --------------------------------------------------------------------------
   /**
    * This method is called by the {@link ChatClassifier} when a chat line is
-   * assigned the "lb.header.ratio" category. We respond by resetting to
+   * assigned the "lb.header.ratio" category.
    */
   @SuppressWarnings("unused")
   private void lbHeaderRatio(watson.chat.ChatLine line)
@@ -75,7 +79,17 @@ public class RatioAnalysis extends Analysis
       _sinceMinutes = Integer.parseInt(m.group(1));
       _beforeMinutes = Integer.parseInt(m.group(2));
     }
-  }
+    else
+    {
+      // Try matching the pattern for very recent mining.
+      m = _lbHeaderRatioCurrent.matcher(line.getUnformatted());
+      if (m.matches())
+      {
+        _sinceMinutes = Integer.parseInt(m.group(1));
+        _beforeMinutes = 0;
+      }
+    }
+  } // lbHeaderRatio
 
   // --------------------------------------------------------------------------
   /**
@@ -184,6 +198,11 @@ public class RatioAnalysis extends Analysis
    * The pattern of full lb.header.ratio lines.
    */
   protected Pattern     _lbHeaderRatio;
+
+  /**
+   * The pattern of full lb.header.ratiocurrent lines.
+   */
+  protected Pattern     _lbHeaderRatioCurrent;
 
   /**
    * The pattern of full lb.sum lines.

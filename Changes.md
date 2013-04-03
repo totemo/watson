@@ -3,6 +3,7 @@ Change History
 1.5.1 (2013-04-03)
 ------------------
 * Fixed a bug in mod_ClientCommands allowing commands to omit the leading '/'.
+* Fixed '/w ratio' not calculating for very recent mining.
 
 1.5.1 (2013-04-02)
 ------------------
