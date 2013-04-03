@@ -40,6 +40,11 @@ public class ClientCommandManager implements ICommandManager
    */
   public boolean handleClientCommand(String commandLine)
   {
+    if (!commandLine.startsWith("/"))
+    {
+      return false;
+    }
+
     String[] tokens = getTokens(commandLine);
     if (tokens.length == 0)
     {

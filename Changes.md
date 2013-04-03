@@ -1,5 +1,9 @@
 Change History
 ==============
+1.5.1 (2013-04-03)
+------------------
+* Fixed a bug in mod_ClientCommands allowing commands to omit the leading '/'.
+
 1.5.1 (2013-04-02)
 ------------------
 * Basic support for the Prism plugin.
