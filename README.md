@@ -16,148 +16,15 @@ Watson is a Minecraft mod that displays LogBlock (and to a limited extent Prism)
 * In order to shorten coordinate displays and make them easier to read, Watson also hides the LogBlock coords lines from chat and re-echoes them in a custom, brief format, where block IDs are numeric rather than words.  Re-echoed coordinates are assigned colours based on their physical proximity.  This makes separate ore deposits easy to distinguish in the coordinate listing.
 
 
-Downloads
----------
-GitHub has dropped support for uploading files, so downloads will be hosted on Google Drive from now on.
+Downloads, Installation and Help When Things Go Wrong
+-----------------------------------------------------
 
-<table>
-  <tr>
-    <th>Version</th> <th colspan="2">Details</th>
-  </tr>
-  <tr>
-    <td rowspan="4">1.5.1<br>(2013-04-05)</td> <td>sha256sum -b</td> <td>2221be2210b68a65d7eee83b19f197ca3cc31d8acbdf2ab29156bf8e147ccb04</td>
-  </tr>
-  <tr>
-    <td>File Name</td> <td>watson-1.5.1-2013-04-05.zip</td>
-  </tr>
-  <tr>
-    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXRE5uWHdWRWNSS0E</td>
-  </tr>
-  <tr>
-    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#151-2013-04-05">description</a></td>
-  </tr>
-
-  <tr>
-    <th>Version</th> <th colspan="2">Details</th>
-  </tr>
-  <tr>
-    <td rowspan="4">1.5.1<br>(2013-04-02)</td> <td>sha256sum -b</td> <td>1d8571a9e139e4b6ee09285263a12711b5f6a523542e7ab5376800d1bd166fbd</td>
-  </tr>
-  <tr>
-    <td>File Name</td> <td>watson-1.5.1-2013-04-02.zip</td>
-  </tr>
-  <tr>
-    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXa05hRVVlaHVSZ0k</td>
-  </tr>
-  <tr>
-    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#151-2013-04-02">description</a></td>
-  </tr>
-
-  <tr>
-    <th>Version</th> <th colspan="2">Details</th>
-  </tr>
-  <tr>
-    <td rowspan="4">1.5.1<br>(2013-03-27)</td> <td>sha256sum -b</td> <td>dcb728358e9ef71eb9ff1a778c6cf6fb0d70985e6d936b924fb918e76df28744</td>
-  </tr>
-  <tr>
-    <td>File Name</td> <td>watson-1.5.1-2013-03-27.zip</td>
-  </tr>
-  <tr>
-    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXUV9LNVNReGVoN2c</td>
-  </tr>
-  <tr>
-    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#151-2013-03-27">description</a></td>
-  </tr>
-
-  <tr>
-    <th>Version</th> <th colspan="2">Details</th>
-  </tr>
-  <tr>
-    <td rowspan="4">1.5<br>(2013-03-16)</td> <td>sha256sum -b</td> <td>661a15a42fc363c25dea53c471221e791315ff883d0e0fcfbd4a76f76c0761cd</td>
-  </tr>
-  <tr>
-    <td>File Name</td> <td>watson-1.5-2013-03-16.zip</td>
-  </tr>
-  <tr>
-    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXSnk5YkdyYlFJOUk</td>
-  </tr>
-  <tr>
-    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#15-2013-03-16">description</a></td>
-  </tr>
-
-  <tr>
-    <th>Version</th> <th colspan="2">Details</th>
-  </tr>
-  <tr>
-    <td rowspan="4">1.4.7<br>(2013-03-07)</td> <td>sha256sum -b</td> <td>2b17a38597d8854ed16cea6c49f92aedee8db9e0bb0e3de9a342b434ee53e8c2</td>
-  </tr>
-  <tr>
-    <td>File Name</td> <td>watson-1.4.7-2013-03-07.zip</td>
-  </tr>
-  <tr>
-    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXUXJKZ2M5X2Z6M0k</td>
-  </tr>
-  <tr>
-    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#147-2013-03-07">description</a></td>
-  </tr>
-</table>
-
-
-Installation
-------------
-Watson is a ModLoader-compatible mod.  It can be installed in either of two ways:
-
-* You can install MagicLauncher and configure it to use ModLoader and the Watson ZIP file appropriate to the version of Minecraft that you are using.
-* Alternatively, manually patch the Minecraft JAR file with ModLoader and Watson.
-
-The basic procedure for manually patching Minecraft's JAR file is:
-
-1. Download a version of Watson that matches your current Minecraft version <i>exactly</i>.
-1. Download a version of <a href="http://www.minecraftforum.net/topic/75440-v151-risugamis-mods-updated/">ModLoader</a> that also matches your current Minecraft version <i>exactly</i>.
-1. Locate the Minecraft JAR file.  On Windows, it will be "%APPDATA%\\.minecraft\bin\minecraft.jar".  Typical Windows configurations will not show you the ".jar" on the end of that filename.  On UNIX-like systems (Macs and Linux), it will be ~/.minecraft/bin/minecraft.jar
-1. Save a backup copy of your minecraft.jar file (just in case).
-1. Open minecraft.jar with your chosen ZIP file editing program.
-1. Open ModLoader.zip and copy its full contents into minecraft.jar.
-1. If you plan on installing other mods such as Rei's or Optifine, copy and paste the contents of those ZIP files into your modified JAR here.
-1. Open the Watson ZIP file and copy its full contents into minecraft.jar.
-1. Delete the contents of the META-INF/ folder of your modified Minecraft JAR file.
-1. Save the modified Minecraft JAR file.
-
-
-Troubleshooting
----------------
-<table>
-  <tr>
-    <th>Problem</th> <th>Resolution</th>
-  </tr>
-  <tr>
-    <td>Minecraft crashes on startup.</td> <td>Make sure you've followed the installation instructions exactly.  In particular, make sure you add Watson to the Minecraft JAR <i>last</i> and that you delete the contents of the META-INF/ folder of the JAR.</td>
-  </tr>
-  <tr>
-    <td>I don't see anything.</td> <td>Make sure you put "coords" in your /lb query.  Watson needs coordinates to know where to draw things.</td>
-  </tr>
-  <tr>
-    <td>I still don't see anything.</td> <td>Make sure you turn on the Watson display: /w display on</td>
-  </tr>
-  <tr>
-    <td>I can't teleport with "/w tp".</td> <td>By default, Watson expects a /tppos command that accepts decimal numbers for coordinates, e.g. "/tppos -120.5 7 345.5".  Many teleport commands don't, however, or they have a different name.  If your teleport command requires integer coordinates, try "/w config teleport_command /tppos %d %d %d".  If you're using the the CraftBukkit /tp command, then you can use: "/w config teleport_command /tp %d %d %d".</td>
-  </tr>
-  <tr>
-    <td>When I query a particular block it shows up as a smallish bright pink cube.</td>
-    <td>Watson scrapes LogBlock/Prism query results out of chat.  If it doesn't recognise the name of a block it just draws the pink cube as a reminder for me to add that name.  Let me know about it and I'll fix it.</td>
-  </tr>
-</table>
-
-
-Contact Details
----------------
-
-* On http://reddit.com and the http://nerd.nu forums, I have the same user name.
-* On gmail.com, append the word "research" to my name to get my address.
+See [INSTALL.md](https://github.com/totemo/watson/blob/master/INSTALL.md).
 
 
 Using Watson
 ------------
+
 ### Viewing Edits
 
 Turn on the Watson display. On survival servers that use [the nerd.nu ModMode plugin](https://github.com/NerdNu/ModMode), the display is turned on and off automatically when switching in and out of ModMode:
@@ -593,56 +460,8 @@ Files
 * **.minecraft/mods/watson/saves/** - Directory of save files containing records of edited blocks and annotations.
 
 
-Compatibility
--------------
+Bugs and Planned Features
+-------------------------
 
-Watson has been tested for compatibility with:
-
-* Minecraft with ModLoader
-* WorldEditCUI
-* Rei's Minimap
-* Optifine
-* LiteLoader for Minecraft
-* Macro/Keybind Mod - but note that commands originating here bypass the Watson command interpreter and go direct to the server.
-* MagicLauncher
-
-
-Building
---------
-
-### Notes
-
-* The build scripts use variables set in scripts/watson_common.sh to customise the paths to inputs and outputs.
-* scripts/watson_binaries.sh outputs a ZIP file of the mod classes and resources in ~/.minecraft/versions/.  The ZIP can be loaded with MagicLauncher or applied to minecraft.jar as a patch.
-* A copy of src/watson/*.yml is placed in the ZIP under watson/.  These serve as defaults for configuration files.
-* A simple text file, watson/version is stored as a resource in the ZIP and displayed as the current Watson version at startup.
-* The SnakeYAML classes are also built into the ZIP.
-
-### Procedure
-
-1. Ensure that scripts/watson_common.sh is correct for your environment.  In particular, check that the MCP_DIR variable matches the location of your MCP installation.
-2. Patch minecraft.jar with ModLoader.
-3. Decompile with MCP.
-4. Copy in the Watson sources.
-5. Patch the Mojang sources with src/net/minecraft/src/*.java.patch.
-6. Put snakeyaml-1.10.jar in the mcp<version>/lib/ directory.
-7. Run scripts/watson_binaries.sh.
-
-
-Planned Features
-----------------
-
-* A simple keybinding facility, since the Macro/Keybind mod bypasses the Watson CLI.
-* Parsing of fields out of LogBlock results is currently hard-coded. This can and should be driven by a description of the fields in chatcategories.yml.
-* A 3-D cursor that can highlight edits and step through them in the sequence that they occurred.
-* Some automatic queries to hone in on probable grief and xray patterns.
-* The ability to customise the re-echoing of coordinate lines.
-
-
-Bugs
-----
-
-* Re-echoed coordinate lines are currently hard coded to not echo stone at all. This should be customisable.
-* The calculator should probably use a custom lexer (rather than JDK class) so that extra spaces in mathematical expressions can be removed.
-* Command line help is ugly because of the variable width font.
+I keep track of these using [the GitHub issues page for this project](https://github.com/totemo/watson/issues).
 
