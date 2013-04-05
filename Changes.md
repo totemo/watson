@@ -1,9 +1,12 @@
 Change History
 ==============
-1.5.1 (2013-04-03)
+1.5.1 (2013-04-05)
 ------------------
 * Fixed a bug in mod_ClientCommands allowing commands to omit the leading '/'.
 * Fixed '/w ratio' not calculating for very recent mining.
+* Fixed disabling of Rei's Minimap entities radar.  Added support for other similar mechanisms.
+* Fixed a bug where player name for screenshots would be set even for edits excluded by the filter.
+* Change '/w edits (hide|show|remove)' and '/w filter (add|remove)' to work with lists of player names.
 
 1.5.1 (2013-04-02)
 ------------------

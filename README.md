@@ -25,6 +25,22 @@ GitHub has dropped support for uploading files, so downloads will be hosted on G
     <th>Version</th> <th colspan="2">Details</th>
   </tr>
   <tr>
+    <td rowspan="4">1.5.1<br>(2013-04-05)</td> <td>sha256sum -b</td> <td>2221be2210b68a65d7eee83b19f197ca3cc31d8acbdf2ab29156bf8e147ccb04</td>
+  </tr>
+  <tr>
+    <td>File Name</td> <td>watson-1.5.1-2013-04-05.zip</td>
+  </tr>
+  <tr>
+    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXRE5uWHdWRWNSS0E</td>
+  </tr>
+  <tr>
+    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#151-2013-04-05">description</a></td>
+  </tr>
+
+  <tr>
+    <th>Version</th> <th colspan="2">Details</th>
+  </tr>
+  <tr>
     <td rowspan="4">1.5.1<br>(2013-04-02)</td> <td>sha256sum -b</td> <td>1d8571a9e139e4b6ee09285263a12711b5f6a523542e7ab5376800d1bd166fbd</td>
   </tr>
   <tr>
@@ -350,7 +366,7 @@ You can also delete all files older than a specified date, in the form YYYY-MM-D
 
 Filters are used to ignore query results that don't belong to specific players of interest.  Results for other players only appear in chat and are never added to the 3-D display.  By default, no filters are set, meaning that any log query result, will be added to the display.
 
-To set a filter, use "/w filter add <playername>":
+To set a filter, use "/w filter add" followed by a list of player names:
 
     /w filter add totemo
     
@@ -358,14 +374,18 @@ This filter ignores all results except those describing edits made by totemo.  I
 
     /w filter add Notch
     
-then edits by both totemo and Notch will be added to the display as they are encountered in chat.  Setting a filter also sets the current player of interest.  So after "/w filter add Notch", subsequent screenshots will have the name Notch added to them (see Screenshot Management), even when no edits by Notch have been listed in chat.  This feature can be used to tag a screenshot with the name of any player, irrespective of whether that player has made any edits.  Note, however, that the next query result that passes the filter will change the currently selected player.
+then edits by both totemo and Notch will be added to the display as they are encountered in chat.  Of course, it's not necessary to type two add commands.  You can just use:
+
+    /w filter add Notch totemo
+
+Setting a filter also sets the current player of interest.  So after "/w filter add Notch", subsequent screenshots will have the name Notch added to them (see Screenshot Management), even when no edits by Notch have been listed in chat.  This feature can be used to tag a screenshot with the name of any player, irrespective of whether that player has made any edits.  Note, however, that the next query result that passes the filter will change the currently selected player.
     
 To list the current set of filters, use either of:
 
     /w filter list
     /w filter
 
-To remove a filter:
+To remove one or more filters, use "/w filter remove" with a list of player names:
 
     /w filter remove Notch
 
@@ -378,7 +398,7 @@ Also, note that clearing the Watson display with "/w clear" also clears the list
 
 ### Managing Edits By Specific Players
 
-To hide only the edits (outlines, vectors and ore deposit labels) belonging to a specific player:
+To hide only the edits (outlines, vectors and ore deposit labels) belonging to specific player or list of player names:
 
     /w edits hide Notch
 
@@ -388,10 +408,12 @@ To show the edits again:
 
     /w edits show Notch
     
-To completely remove all record of them from the client's memory (note however that they will still exist as log entries on the server, as well as potentially in Watson save files):
+To completely remove all record of edits by specific players from the client's memory (note however that they will still exist as log entries on the server, as well as potentially in Watson save files):
 
-    /w edits remove Notch
-    
+    /w edits remove Notch totemo
+
+There's also a "/w edits clear" command, which removes all edits by all players.  
+
 To list the players who have made edits that are currently in Watson's memory, use either of:
 
     /w edits list
