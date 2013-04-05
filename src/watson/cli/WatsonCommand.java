@@ -318,22 +318,23 @@ public class WatsonCommand extends WatsonCommandBase
         Controller.instance.getBlockEditSet().listEdits();
         return;
       }
-      else if (args.length == 3)
+      else if (args.length >= 3)
       {
-        if (args[1].equals("hide"))
+        if (args[1].equals("hide") || args[1].equals("show"))
         {
-          Controller.instance.getBlockEditSet().setEditVisibility(args[2],
-            false);
-          return;
-        }
-        else if (args[1].equals("show"))
-        {
-          Controller.instance.getBlockEditSet().setEditVisibility(args[2], true);
+          for (int i = 2; i < args.length; ++i)
+          {
+            Controller.instance.getBlockEditSet().setEditVisibility(args[i],
+              args[1].equals("show"));
+          }
           return;
         }
         else if (args[1].equals("remove"))
         {
-          Controller.instance.getBlockEditSet().removeEdits(args[2]);
+          for (int i = 2; i < args.length; ++i)
+          {
+            Controller.instance.getBlockEditSet().removeEdits(args[i]);
+          }
           return;
         }
       }
@@ -353,16 +354,22 @@ public class WatsonCommand extends WatsonCommandBase
         filters.clear();
         return;
       }
-      else if (args.length == 3)
+      else if (args.length >= 3)
       {
         if (args[1].equals("add"))
         {
-          filters.addPlayer(args[2]);
+          for (int i = 2; i < args.length; ++i)
+          {
+            filters.addPlayer(args[i]);
+          }
           return;
         }
         else if (args[1].equals("remove"))
         {
-          filters.removePlayer(args[2]);
+          for (int i = 2; i < args.length; ++i)
+          {
+            filters.removePlayer(args[i]);
+          }
           return;
         }
       }
@@ -447,7 +454,7 @@ public class WatsonCommand extends WatsonCommandBase
     } // config
 
     throw new SyntaxErrorException("commands.generic.syntax", new Object[0]);
-  }// processCommand
+  } // processCommand
 
   // --------------------------------------------------------------------------
   /**
@@ -915,9 +922,9 @@ public class WatsonCommand extends WatsonCommandBase
     localOutput(sender, "  /" + w + " ratio");
     localOutput(sender, "  /" + w + " tp [next|prev|<number>]");
     localOutput(sender, "  /" + w + " edits [list]");
-    localOutput(sender, "  /" + w + " edits (hide|show|remove) <player>");
+    localOutput(sender, "  /" + w + " edits (hide|show|remove) <player> ...");
     localOutput(sender, "  /" + w + " filter [list|clear]");
-    localOutput(sender, "  /" + w + " filter (add|remove) <player>");
+    localOutput(sender, "  /" + w + " filter (add|remove) <player> ...");
     localOutput(sender, "  /" + w + " servertime");
     localOutput(sender, "  /" + w + " file list [*|<playername>] [<page>]");
     localOutput(sender, "  /" + w + " file delete *|<filename>|<playername>");
