@@ -103,13 +103,6 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
         }
 
         BlockType type = BlockTypeRegistry.instance.getBlockTypeByName(block);
-        Controller.instance.getVariables().put("time", millis);
-        Controller.instance.getVariables().put("player", player);
-        Controller.instance.getVariables().put("block", type.getId());
-        Controller.instance.getVariables().put("x", x);
-        Controller.instance.getVariables().put("y", y);
-        Controller.instance.getVariables().put("z", z);
-
         boolean created = action.equals("created");
         Controller.instance.getBlockEditSet().addBlockEdit(
           new BlockEdit(millis, player, created, x, y, z, type));
@@ -179,14 +172,7 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
         int x = Integer.parseInt(m.group(10));
         int y = Integer.parseInt(m.group(11));
         int z = Integer.parseInt(m.group(12));
-
         BlockType type = BlockTypeRegistry.instance.getBlockTypeByName(oldBlock);
-        Controller.instance.getVariables().put("time", millis);
-        Controller.instance.getVariables().put("player", player);
-        Controller.instance.getVariables().put("block", type.getId());
-        Controller.instance.getVariables().put("x", x);
-        Controller.instance.getVariables().put("y", y);
-        Controller.instance.getVariables().put("z", z);
 
         // Store the destruction but don't bother with the creation.
         Controller.instance.getBlockEditSet().addBlockEdit(

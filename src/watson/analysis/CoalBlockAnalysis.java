@@ -54,9 +54,9 @@ public class CoalBlockAnalysis extends Analysis
     Matcher m = _lbPosition.matcher(line.getUnformatted());
     if (m.matches())
     {
-      Controller.instance.getVariables().put("x", Integer.parseInt(m.group(1)));
-      Controller.instance.getVariables().put("y", Integer.parseInt(m.group(2)));
-      Controller.instance.getVariables().put("z", Integer.parseInt(m.group(3)));
+      _x = Integer.parseInt(m.group(1));
+      _y = Integer.parseInt(m.group(2));
+      _z = Integer.parseInt(m.group(3));
       _lbPositionTime = System.currentTimeMillis();
       _expectingFirstEdit = true;
     }
@@ -81,29 +81,21 @@ public class CoalBlockAnalysis extends Analysis
       int minute = Integer.parseInt(m.group(4));
       int second = Integer.parseInt(m.group(5));
       long millis = TimeStamp.toMillis(month, day, hour, minute, second);
-
       String player = m.group(6);
       String action = m.group(7);
+      boolean created = action.equals("created");
       String block = m.group(8);
-
       BlockType type = BlockTypeRegistry.instance.getBlockTypeByName(block);
 
-      // Update player, etc, variables on the most recent edit result only.
-      if (_expectingFirstEdit)
+      boolean added = Controller.instance.getBlockEditSet().addBlockEdit(
+        new BlockEdit(millis, player, created, _x, _y, _z, type),
+        _expectingFirstEdit);
+
+      // Once our first edit passes the filter, no need to set variables.
+      if (_expectingFirstEdit && added)
       {
-        Controller.instance.getVariables().put("time", millis);
-        Controller.instance.getVariables().put("player", player);
-        Controller.instance.getVariables().put("block", type.getId());
         _expectingFirstEdit = false;
       }
-
-      int x = (Integer) Controller.instance.getVariables().get("x");
-      int y = (Integer) Controller.instance.getVariables().get("y");
-      int z = (Integer) Controller.instance.getVariables().get("z");
-
-      boolean created = action.equals("created");
-      Controller.instance.getBlockEditSet().addBlockEdit(
-        new BlockEdit(millis, player, created, x, y, z, type));
     }
   } // lbEdit
 
@@ -126,22 +118,19 @@ public class CoalBlockAnalysis extends Analysis
       int minute = Integer.parseInt(m.group(4));
       int second = Integer.parseInt(m.group(5));
       long millis = TimeStamp.toMillis(month, day, hour, minute, second);
-      Controller.instance.getVariables().put("time", millis);
-
       String player = m.group(6);
       String oldBlock = m.group(7);
-
       BlockType type = BlockTypeRegistry.instance.getBlockTypeByName(oldBlock);
-      Controller.instance.getVariables().put("player", player);
-      Controller.instance.getVariables().put("block", type.getId());
-
-      int x = (Integer) Controller.instance.getVariables().get("x");
-      int y = (Integer) Controller.instance.getVariables().get("y");
-      int z = (Integer) Controller.instance.getVariables().get("z");
 
       // Just add the destruction.
-      Controller.instance.getBlockEditSet().addBlockEdit(
-        new BlockEdit(millis, player, false, x, y, z, type));
+      boolean added = Controller.instance.getBlockEditSet().addBlockEdit(
+        new BlockEdit(millis, player, false, _x, _y, _z, type));
+
+      // Once our first edit passes the filter, no need to set variables.
+      if (_expectingFirstEdit && added)
+      {
+        _expectingFirstEdit = false;
+      }
     }
   } // lbEditReplaced
 
@@ -160,6 +149,21 @@ public class CoalBlockAnalysis extends Analysis
    * The pattern of full lb.editreplaced lines.
    */
   protected Pattern         _lbEditReplaced;
+
+  /**
+   * X coordinate parsed from chat.
+   */
+  protected int             _x;
+
+  /**
+   * Y coordinate parsed from chat.
+   */
+  protected int             _y;
+
+  /**
+   * Z coordinate parsed from chat.
+   */
+  protected int             _z;
 
   /**
    * Local time at which lb.position line was parsed. {@see

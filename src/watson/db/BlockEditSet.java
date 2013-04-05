@@ -208,15 +208,41 @@ public class BlockEditSet
   /**
    * Add the specified edit to the list.
    * 
+   * State variables describing the most recent edit (player, time, etc.) are
+   * updated.
+   * 
    * @param edit the BlockEdit describing an edit to add.
+   * @return true if the edit passes the currently set filters.
    */
-  public void addBlockEdit(BlockEdit edit)
+  public boolean addBlockEdit(BlockEdit edit)
+  {
+    return addBlockEdit(edit, true);
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Add the specified edit to the list.
+   * 
+   * @param edit the BlockEdit describing an edit to add.
+   * @param updateVariables update the state variables for the most recent edit.
+   * @return true if the edit passes the currently set filters.
+   */
+  public boolean addBlockEdit(BlockEdit edit, boolean updateVariables)
   {
     if (Controller.instance.getFilters().isAcceptedPlayer(edit.player))
     {
-      String lowerName = edit.player.toLowerCase();
+      if (updateVariables)
+      {
+        Controller.instance.getVariables().put("time", edit.time);
+        Controller.instance.getVariables().put("player", edit.player);
+        Controller.instance.getVariables().put("block", edit.type.getId());
+        Controller.instance.getVariables().put("x", edit.x);
+        Controller.instance.getVariables().put("y", edit.y);
+        Controller.instance.getVariables().put("z", edit.z);
+      }
 
       // Add a new PlayerEditSet if there isn't one for this player.
+      String lowerName = edit.player.toLowerCase();
       PlayerEditSet editsForPlayer = _playerEdits.get(lowerName);
       if (editsForPlayer == null)
       {
@@ -234,6 +260,11 @@ public class BlockEditSet
       {
         _oreDB.addBlockEdit(edit);
       }
+      return true;
+    }
+    else
+    {
+      return false;
     }
   } // addBlockEdit
 
