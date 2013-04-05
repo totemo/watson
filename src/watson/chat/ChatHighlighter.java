@@ -57,13 +57,25 @@ public class ChatHighlighter
    */
   public String highlight(String chat)
   {
-    Text text = new Text(chat);
-    for (Highlight h : _highlights)
+    // Rei's Minimap enables radar features based on a sequence of colour codes
+    // in the server's welcome message (MOTD). Don't mess with those lines or
+    // lines consisting only of colour which may do something similar to Rei's.
+    Matcher reis = REIS_CODE.matcher(chat);
+    Matcher allColour = COLOUR_LINE.matcher(chat);
+    if (reis.find() || allColour.matches())
     {
-      h.highlight(text);
+      return chat;
     }
-    return text.toFormattedString();
-  }
+    else
+    {
+      Text text = new Text(chat);
+      for (Highlight h : _highlights)
+      {
+        h.highlight(text);
+      }
+      return text.toFormattedString();
+    }
+  } // highlight
 
   // --------------------------------------------------------------------------
   /**
@@ -340,6 +352,18 @@ public class ChatHighlighter
   }; // inner class Highlight
 
   // --------------------------------------------------------------------------
+  /**
+   * Regexp describing Rei's radar enabling codes. Note that Rei's does not
+   * require the code to be the entire contents of the line.
+   */
+  protected static final Pattern REIS_CODE   = Pattern.compile("\2470\2470(?:\247[1-9a-d])+\247e\247f");
+
+  /**
+   * Regexp describing lines that consist only of colour codes. Such lines are
+   * presumed to be a Rei's-like mechanism that we should not disrupt.
+   */
+  protected static final Pattern COLOUR_LINE = Pattern.compile("^(?:\247[0-9a-fk-or])+$");
+
   /**
    * Highlight patterns.
    */
