@@ -103,7 +103,7 @@ The basic procedure for manually patching Minecraft's JAR file is:
 1. Open minecraft.jar with your chosen ZIP file editing program.
 1. Open ModLoader.zip and copy its full contents into minecraft.jar.
 1. If you plan on installing other mods such as Rei's or Optifine, copy and paste the contents of those ZIP files into your modified JAR here.
-1. Open the Watson ZIP file and copy its full contents into minecraft.jar.  Due to a current incompatibility with Rei's Minimap, Watson needs to be the last mod installed.  I will try to fix this in a later version.  Apologies.
+1. Open the Watson ZIP file and copy its full contents into minecraft.jar.
 1. Delete the contents of the META-INF/ folder of your modified Minecraft JAR file.
 1. Save the modified Minecraft JAR file.
 
@@ -125,9 +125,6 @@ Troubleshooting
   </tr>
   <tr>
     <td>I can't teleport with "/w tp".</td> <td>By default, Watson expects a /tppos command that accepts decimal numbers for coordinates, e.g. "/tppos -120.5 7 345.5".  Many teleport commands don't, however, or they have a different name.  If your teleport command requires integer coordinates, try "/w config teleport_command /tppos %d %d %d".  If you're using the the CraftBukkit /tp command, then you can use: "/w config teleport_command /tp %d %d %d".</td>
-  </tr>
-  <tr>
-    <td>Sometimes, /w ratio doesn't compute the stone:diamond ratio.</td> <td>This is a <a href="https://github.com/totemo/watson/issues/10">known issue</a> to do with LogBlock reporting very recent edits in a different format from what Watson expects.  I hope to fix it soon.</td>
   </tr>
   <tr>
     <td>When I query a particular block it shows up as a smallish bright pink cube.</td>
@@ -582,7 +579,6 @@ Watson has been tested for compatibility with:
 * Minecraft with ModLoader
 * WorldEditCUI
 * Rei's Minimap
-  * However, there is a slight compatibility issue that prevents Rei's player/entity radar from working, and Watson must be installed after Rei's in order to function correctly.
 * Optifine
 * LiteLoader for Minecraft
 * Macro/Keybind Mod - but note that commands originating here bypass the Watson command interpreter and go direct to the server.
