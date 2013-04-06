@@ -36,7 +36,7 @@ public final class BlockModelRegistry
   private BlockModelRegistry()
   {
     _models.put("cuboid", new CuboidBlockModel());
-    _models.put("billboard", new PlantBlockModel());
+    _models.put("plant", new PlantBlockModel());
     _models.put("stair", new StairBlockModel());
     _models.put("hopper", new HopperBlockModel());
     _models.put("anvil", new AnvilBlockModel());
