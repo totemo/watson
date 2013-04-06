@@ -84,11 +84,11 @@ If you forget any of the above commands:
 
 ### Viewing Ore Deposits
 
-Watson groups adjacent destructions of ore blocks into ore deposits.  Here, "adjacent" includes blocks up to 1 block away along all three cardinal axes simultaneously.  Ore deposits are assigned numeric labels starting at 1 and increasing in time.  All diamonds are numbered first, then emeralds, then iron, gold, lapis, redstone and finally coal.  Thus, if the coordinates of 5 diamond deposits and 10 iron deposits have been retrieved from the LogBlock database, the diamond deposits will be numbered from 1 to 5, with 1 being the oldest diamond, and the iron deposits will be numbered from 6 to 15, with 6 being the oldest iron deposit.
+Watson groups adjacent destructions of ore blocks into ore deposits.  Here, "adjacent" includes blocks up to 1 block away along all three cardinal axes simultaneously.  Ore deposits are assigned numeric labels starting at 1 and increasing in time.  All diamonds are numbered first, then emeralds, then iron, gold, lapis, redstone, coal and finally quartz.  Thus, if the coordinates of 5 diamond deposits and 10 iron deposits have been retrieved from the LogBlock database, the diamond deposits will be numbered from 1 to 5, with 1 being the oldest diamond, and the iron deposits will be numbered from 6 to 15, with 6 being the oldest iron deposit.
 
 ![Ore deposits.](https://raw.github.com/totemo/watson/master/wiki/images/screenshot2.png)
 
-Ore deposits are colour-coded according to ore type, with diamonds listed in light blue, emerald in light green, iron orange, gold yellow, lapis blue, redstone red and coal listed in dark grey.
+Ore deposits are colour-coded according to ore type, with diamonds listed in light blue, emerald in light green, iron orange, gold yellow, lapis blue, redstone red, coal listed in dark grey and quartz in white.
 
 To list all of the deposits:
 
@@ -265,7 +265,7 @@ Also, note that clearing the Watson display with "/w clear" also clears the list
 
 ### Managing Edits By Specific Players
 
-To hide only the edits (outlines, vectors and ore deposit labels) belonging to specific player or list of player names:
+To hide only the edits (outlines, vectors and ore deposit labels) belonging to a specific player or list of player names:
 
     /w edits hide Notch
 
