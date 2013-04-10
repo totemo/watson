@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.yaml.snakeyaml.Yaml;
 
@@ -29,6 +31,7 @@ import watson.model.BlockModelRegistry;
  */
 public final class BlockTypeRegistry
 {
+  // --------------------------------------------------------------------------
   /**
    * The single instance of this class.
    * 
@@ -228,6 +231,7 @@ public final class BlockTypeRegistry
 
     addBlockType(blockType);
   } // loadBlockType
+
   // --------------------------------------------------------------------------
   /**
    * A helper method for extracting scalar attributes from a map loaded by
@@ -349,6 +353,7 @@ public final class BlockTypeRegistry
    * 
    * @param id the ID, which will be in the range [0,255] for Minecraft blocks.
    *          The special ID, 256, is used for the "unknown" block type.
+   * @return the {@link BlockType}.
    */
   public BlockType getBlockTypeById(int id)
   {
@@ -362,6 +367,7 @@ public final class BlockTypeRegistry
    * @param id the ID, which will be in the range [0,255] for Minecraft blocks.
    *          The special ID, 256, is used for the "unknown" block type.
    * @param data the data value in the range [0,15].
+   * @return the {@link BlockType}.
    */
   public BlockType getBlockTypeByIdData(int id, int data)
   {
@@ -376,6 +382,7 @@ public final class BlockTypeRegistry
    * 
    * @param index the index, in the range [0,4095] for Minecraft blocks, or 4096
    *          for the special "unknown" block.
+   * @return the {@link BlockType}.
    */
   public BlockType getBlockTypeByIndex(int index)
   {
@@ -388,6 +395,7 @@ public final class BlockTypeRegistry
    * 
    * @param name the name of the block as returned by LogBlock queries, e.g.
    *          "diamond ore".
+   * @return the {@link BlockType}.
    */
   public BlockType getBlockTypeByName(String name)
   {
@@ -397,8 +405,46 @@ public final class BlockTypeRegistry
       // Return the "unknown" BlockType.
       return getBlockTypeByIndex(MAX_INDEX);
     }
-    return result;
+    else
+    {
+      return result;
+    }
   } // getBlockTypeByName
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return the block type with the numeric ID in the form ## or ##:# as a
+   * String.
+   * 
+   * @param idData the ID number and optional data value as decimal digits in a
+   *          string of the form ## or ##:#.
+   * @return the {@link BlockType}.
+   */
+  public BlockType getBlockTypeByFormattedId(String idData)
+  {
+    // Could it be a numeric type?
+    Matcher m = NUMERIC_BLOCK_TYPE.matcher(idData);
+    if (m.matches())
+    {
+      try
+      {
+        int id = Integer.parseInt(m.group(1));
+        int data = (m.group(2) != null) ? Integer.parseInt(m.group(2)) : 0;
+        if (id >= 0 && id < 256 && data >= 0 && data < 16)
+        {
+          return getBlockTypeByIdData(id, data);
+        }
+        // Fall through if id or data out of range.
+      }
+      catch (NumberFormatException ex)
+      {
+        // Fall through if integer parsing fails.
+        Log.exception(Level.WARNING, "error parsing numeric block id", ex);
+      }
+    }
+    // Return the "unknown" BlockType.
+    return getBlockTypeByIndex(MAX_INDEX);
+  } // getBlockTypeByFormattedId
 
   // --------------------------------------------------------------------------
   /**
@@ -414,8 +460,15 @@ public final class BlockTypeRegistry
    * The basename of the file containing the YAML descriptions of all BlockType
    * instances.
    */
-  private static final String            BLOCK_TYPES_FILE = "blocks.yml";
+  private static final String            BLOCK_TYPES_FILE   = "blocks.yml";
 
+  /**
+   * The pattern of an all-numeric block type (with optional data value) when
+   * parsed by getBlockTypeByName().
+   */
+  private static final Pattern           NUMERIC_BLOCK_TYPE = Pattern.compile("(\\d+)(?::(\\d+))?");
+
+  // --------------------------------------------------------------------------
   /**
    * The maximum allowable index into the _byIndex array.
    * 
@@ -423,29 +476,28 @@ public final class BlockTypeRegistry
    * elements that are still null after reading in "blocks.yml" are set to
    * reference this element.
    */
-  private static final int               MAX_INDEX        = 4096;
+  private static final int               MAX_INDEX          = 4096;
 
   /**
    * Default alpha colour component if not specified in "blocks.yml".
    */
-  private static final int               DEFAULT_ALPHA    = (int) (0.8 * 255);
+  private static final int               DEFAULT_ALPHA      = (int) (0.8 * 255);
 
-  // --------------------------------------------------------------------------
   /**
    * Default cuboid bounds when loaded from "blocks.yml".
    */
-  private static final ArrayList<Double> DEFAULT_BOUNDS   = new ArrayList<Double>(
-                                                            Arrays.asList(0.01,
-                                                              0.01, 0.01, 0.99,
-                                                              0.99, 0.99));
-
+  private static final ArrayList<Double> DEFAULT_BOUNDS     = new ArrayList<Double>(
+                                                              Arrays.asList(
+                                                                0.01, 0.01,
+                                                                0.01, 0.99,
+                                                                0.99, 0.99));
   /**
    * An array of BlockType instances accessed by index.
    */
-  private BlockType[]                    _byIndex         = new BlockType[MAX_INDEX + 1];
+  private BlockType[]                    _byIndex           = new BlockType[MAX_INDEX + 1];
 
   /**
    * A map from name (primary or alias) to BlockType instance.
    */
-  private Map<String, BlockType>         _byName          = new HashMap<String, BlockType>();
+  private Map<String, BlockType>         _byName            = new HashMap<String, BlockType>();
 } // class BlockTypeRegistry

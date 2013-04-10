@@ -1,7 +1,7 @@
 Watson Overview
 ===============
 
-Watson is a Minecraft mod that displays LogBlock (and to a limited extent Prism) logs in 3-D.  It also has some features to make moderation tasks, such as observing chat and managing screenshots, a little easier.  The current features of the mod are:
+Watson is a Minecraft mod that displays LogBlock (and to a limited extent Prism and CoreProtect) logs in 3-D.  It also has some features to make moderation tasks, such as observing chat and managing screenshots, a little easier.  The current features of the mod are:
 
 *  It reassembles chat lines that were split by Bukkit, so that they can be categorised and parsed with regular expressions. Watson can exclude chat lines from being displayed in the client, based on their category.
 * It displays individual edits as wireframe 3-D boxes.
@@ -386,7 +386,14 @@ If that configuration setting is not made, it is still possible to get extended 
     
 By default, Prism groups together what it considers to be related edits.  For example, if a player placed red wool 5 minutes ago and just now places green wool, Prism may report that as placing multiple red wool 5 minutes ago.  In order for watson to show individual edits, it is necessary to configure Prism to report each edit separately by setting lookup-auto-group to false in the configuration of the plugin.
 
-At the time of writing, Watson does not support automatically calculating stone:diamond ratios, or automatically paging through results when used with Prism.
+At the time of writing, Watson does not support automatically calculating stone:diamond ratios ("/w ratio"), querying previous or subsequent edits ("/w pre" and "/w post") or automatically paging through results when used with Prism.
+
+
+### CoreProtect Support
+
+As with Prism, CoreProtect support is currently limited to viewing inspector and lookup results.  When used with CoreProtect, Watson does not currently support automatically calculating stone:diamond ratios ("/w ratio"), querying previous or subsequent edits ("/w pre" and "/w post") or automatically paging through results.
+
+Note also that the parsing of lookup results currently ignores the returned world and assumes the current world instead.  This will be resolved under [Issue #23](https://github.com/totemo/watson/issues/23).
 
 
 ### Configuration File

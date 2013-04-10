@@ -1,5 +1,13 @@
 Change History
 ==============
+1.5.1 (2013-04-10)
+------------------
+* Automatically toggle the Watson display when enabling/disabling Duties Mode (Duties plugin).  If the Duties messages for these events have been customised, you will need to modify .minecraft/mods/watson/chatcategories.yml (or the file in watson-1.5.1-2013-04-10.zip) accordingly.
+* Added basic support for CoreProtect inspector and lookup results.
+* Fixed a bug in removing formatting codes from chat in the chat classifier.
+* Fixed a bug setting screenshot names for replacement edits.
+* Allow the default Duties plugin /dutymode messages to enable/disable the Watson display.
+
 1.5.1 (2013-04-05)
 ------------------
 * Fixed a bug in mod_ClientCommands allowing commands to omit the leading '/'.

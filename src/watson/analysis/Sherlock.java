@@ -37,6 +37,7 @@ public class Sherlock
     _analyses.add(new RatioAnalysis());
     _analyses.add(ServerTime.instance);
     _analyses.add(new PrismLookupAnalysis());
+    _analyses.add(new CoreProtectAnalysis());
 
     for (Analysis analysis : _analyses)
     {

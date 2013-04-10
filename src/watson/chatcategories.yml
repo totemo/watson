@@ -120,6 +120,10 @@ categories:
       fullRegex: "^You are now in ModMode!$"   
     - tag: mod.leavemodmode
       fullRegex: "^You are no longer in ModMode!$"   
+    - tag: mod.enabledutymode
+      fullRegex: "^\\[Duties\\] Duty mode enabled.*"
+    - tag: mod.disabledutymode
+      fullRegex: "^\\[Duties\\] Duty mode disabled.*"
     - tag: mod.warp
       fullRegex: "^Warping to \\w+\\.$"   
     - tag: mod.compass
@@ -416,3 +420,32 @@ categories:
       id: prism.inspectorheader
       fullRegex: "^Prism // --- Inspecting (?:\\w| )+ at (-?\\d+) (\\d+) (-?\\d+) ---$"
  
+    # CoreProtect patterns:
+    # §f----- §3CoreProtect §f----- §7(x2/y63/z-6)
+    # §70.00/h ago §f- §3totemo §fplaced §3#4 (Cobblestone)§f.
+    # §71.36/h ago §f- §3totemo §fremoved §3#4 (Cobblestone)§f.
+    # §f----- §3CoreProtect Lookup Results §f-----
+    # §70.01/h ago §f- §3totemo §fremoved §3#4 (Cobblestone)§f.
+    # §f                 §7^ §o(x3/y63/z-7/world)
+    # §70.01/h ago §f- §3totemo §fplaced §3#4 (Cobblestone)§f.
+    # §f                 §7^ §o(x2/y63/z-7/world)
+    
+    - tag: coreprotect.inspectorcoords
+      id: coreprotect.inspectorcoords
+      fullRegex: "^----- CoreProtect ----- \\(x(-?\\d+)/y(\\d+)/z(-?\\d+)\\)$"
+    
+    # This format may describe either inspector results, or the first line of
+    # each lookup result.  
+    - tag: coreprotect.details
+      id: coreprotect.details
+      fullRegex: "^(\\d+\\.\\d+/h ago|\\d{1,2}-\\d{1,2} \\d{1,2}:\\d{2}:\\d{2}) - (#?\\w+) (\\w+) #(\\d+(?::\\d+)?).+"
+
+    - tag: coreprotect.lookupcoords
+      id: coreprotect.lookupcoords
+      fullRegex: "^ +\\^ \\(x(-?\\d+)\\/y(\\d+)\\/z(-?\\d+)\\/(.+)\\)$"
+
+    - tag: coreprotect.lookupheader
+      id: coreprotect.lookupheader
+      fullRegex: "^----- CoreProtect Lookup Results -----$"
+
+
