@@ -8,7 +8,8 @@ import watson.chat.TagDispatchChatHandler;
 // ----------------------------------------------------------------------------
 /**
  * Use (abuse) the {@link Analysis} mechanism to turn Watson displays on and off
- * when entering and leaving ModMode.
+ * when entering and leaving ModMode or duties mode for the ModMode or Duties
+ * plugins, respectively.
  */
 public class ModModeAnalysis extends Analysis
 {
@@ -24,6 +25,10 @@ public class ModModeAnalysis extends Analysis
       new MethodChatHandler(this, "changeModMode"));
     tagDispatchChatHandler.addChatHandler("mod.leavemodmode",
       new MethodChatHandler(this, "changeModMode"));
+    tagDispatchChatHandler.addChatHandler("mod.enabledutymode",
+      new MethodChatHandler(this, "changeDutyMode"));
+    tagDispatchChatHandler.addChatHandler("mod.disabledutymode",
+      new MethodChatHandler(this, "changeDutyMode"));
   } // registerAnalysis
 
   // --------------------------------------------------------------------------
@@ -36,5 +41,17 @@ public class ModModeAnalysis extends Analysis
   {
     Controller.instance.getDisplaySettings().setDisplayed(
       line.getCategory().getTag().equals("mod.entermodmode"));
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * This method is called by the {@link ChatClassifier} when a chat line is
+   * assigned the "mod.enabledutymode" or "mod.disabledutymode" category.
+   */
+  @SuppressWarnings("unused")
+  private void changeDutyMode(watson.chat.ChatLine line)
+  {
+    Controller.instance.getDisplaySettings().setDisplayed(
+      line.getCategory().getTag().equals("mod.enabledutymode"));
   }
 } // class ModModeAnalysis
