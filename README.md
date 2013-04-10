@@ -393,7 +393,9 @@ At the time of writing, Watson does not support automatically calculating stone:
 
 As with Prism, CoreProtect support is currently limited to viewing inspector and lookup results.  When used with CoreProtect, Watson does not currently support automatically calculating stone:diamond ratios ("/w ratio"), querying previous or subsequent edits ("/w pre" and "/w post") or automatically paging through results.
 
-Note also that the parsing of lookup results currently ignores the returned world and assumes the current world instead.  This will be resolved under [Issue #23](https://github.com/totemo/watson/issues/23).
+Note also that the parsing of lookup results currently ignores the returned world and assumes the current world instead.  This will be resolved under [Issue #23](https://github.com/totemo/watson/issues/23).  For now, the easy way to avoid this problem is to simply specify a radius, e.g.:
+
+    /co l r:10
 
 
 ### Configuration File
