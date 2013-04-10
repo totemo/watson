@@ -24,7 +24,7 @@ public class ChatLine
     // character is possible here.
     // NOTE: § is \247
     _formatted = chatText;
-    _unformatted = chatText.replaceAll("\247[0-9a-fA-F]", "");
+    _unformatted = chatText.replaceAll("\247[0-9a-fk-or]", "");
   }
   // --------------------------------------------------------------------------
   /**
