@@ -83,7 +83,7 @@ public class ChatHighlighter
    * 
    * @param format a format specifier consisting of zero or more of the
    *          punctuation symbols [+/_-?], and/or a colour name or a Minecraft
-   *          colour code character, [0-9]a-fA-F].
+   *          colour code character, [0-9a-fA-F].
    * @param pattern the regular expression describing sequences of characters to
    *          be highlighted.
    */
