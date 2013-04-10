@@ -124,7 +124,8 @@ public class CoalBlockAnalysis extends Analysis
 
       // Just add the destruction.
       boolean added = Controller.instance.getBlockEditSet().addBlockEdit(
-        new BlockEdit(millis, player, false, _x, _y, _z, type));
+        new BlockEdit(millis, player, false, _x, _y, _z, type),
+        _expectingFirstEdit);
 
       // Once our first edit passes the filter, no need to set variables.
       if (_expectingFirstEdit && added)
