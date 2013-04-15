@@ -86,12 +86,15 @@ public class ChatHighlighter
    *          colour code character, [0-9a-fA-F].
    * @param pattern the regular expression describing sequences of characters to
    *          be highlighted.
+   * @param selection if true, only regexp groups in the pattern are
+   *          reformatted.
    */
-  public void addHighlight(String format, String pattern)
+  public void addHighlight(String format, String pattern, boolean selection)
   {
     try
     {
-      Highlight highlight = new Highlight(new Format(format), pattern);
+      Highlight highlight = new Highlight(new Format(format), pattern,
+        selection);
       _highlights.add(highlight);
       Controller.instance.localOutput("Added highlight #" + _highlights.size()
                                       + " " + highlight.toString());
@@ -271,12 +274,15 @@ public class ChatHighlighter
      * 
      * @param format the Format to highlight chat text that matches the Pattern.
      * @param pattern a regular expression to match.
+     * @param selection if true, only regexp groups in the pattern are
+     *          reformatted.
      * @throws PatternSyntaxException if the pattern doesn't compile.
      */
-    public Highlight(Format format, String pattern)
+    public Highlight(Format format, String pattern, boolean selection)
     {
-      this.format = format;
-      this.pattern = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
+      _format = format;
+      _pattern = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
+      _selection = selection;
     }
 
     // ------------------------------------------------------------------------
@@ -293,8 +299,11 @@ public class ChatHighlighter
     public Highlight(HashMap<String, Object> attributes)
     {
       // Let this barf exceptions.
-      this(new Format((String) attributes.get("colourCode")),
-        (String) attributes.get("pattern"));
+      this(
+        new Format((String) attributes.get("colourCode")),
+        (String) attributes.get("pattern"),
+        ((attributes.get("selection") != null) ? (Boolean) attributes.get("selection")
+          : false));
     }
 
     // ------------------------------------------------------------------------
@@ -308,24 +317,43 @@ public class ChatHighlighter
     public HashMap<String, Object> getSaveData()
     {
       HashMap<String, Object> data = new HashMap<String, Object>();
-      data.put("colourCode", format.getCode());
-      data.put("pattern", pattern.pattern());
+      data.put("colourCode", _format.getCode());
+      data.put("pattern", _pattern.pattern());
+      data.put("selection", _selection);
       return data;
     }
 
     // ------------------------------------------------------------------------
     /**
      * Highlight with colour any parts of the specified chat text that match the
-     * pattern.
+     * pattern, or if _selection is true, only highlight the regexp matcher
+     * groups.
      * 
      * @param text the chat text to highlight, modified in place.
      */
     public void highlight(Text text)
     {
-      Matcher m = pattern.matcher(text.toUnformattedString());
-      while (m.find())
+      Matcher m = _pattern.matcher(text.toUnformattedString());
+      if (_selection)
       {
-        text.setFormat(m.start(), m.end(), format);
+        if (m.matches())
+        {
+          for (int i = 1; i <= m.groupCount(); ++i)
+          {
+            // If the group matches nothing, m.start(i) is -1.
+            if (m.start(i) >= 0 && m.end(i) > m.start(i))
+            {
+              text.setFormat(m.start(i), m.end(i), _format);
+            }
+          }
+        }
+      }
+      else
+      {
+        while (m.find())
+        {
+          text.setFormat(m.start(), m.end(), _format);
+        }
       }
     } // highlight
 
@@ -335,19 +363,25 @@ public class ChatHighlighter
      */
     public String toString()
     {
-      return format.toString() + ' ' + pattern.pattern();
+      return (_selection ? "select " : "") + _format.toString() + ' '
+             + _pattern.pattern();
     }
 
     // ------------------------------------------------------------------------
     /**
      * The chat colour to assign.
      */
-    public Format  format;
+    protected Format  _format;
 
     /**
      * The regular expression which describes what should be highlighted.
      */
-    public Pattern pattern;
+    protected Pattern _pattern;
+
+    /**
+     * If true, only regexp groups in the pattern are reformatted.
+     */
+    protected boolean _selection;
 
   }; // inner class Highlight
 

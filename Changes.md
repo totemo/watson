@@ -1,5 +1,10 @@
 Change History
 ==============
+1.5.1 (2013-04-xx)
+------------------
+* Added an option to highlight just selected portions of a chat line.
+
+
 1.5.1 (2013-04-10)
 ------------------
 * Automatically toggle the Watson display when enabling/disabling Duties Mode (Duties plugin).  If the Duties messages for these events have been customised, you will need to modify .minecraft/mods/watson/chatcategories.yml (or the file in watson-1.5.1-2013-04-10.zip) accordingly.

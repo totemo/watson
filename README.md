@@ -298,15 +298,20 @@ Watson contains a simple calculator that understands +, -, *, / and parentheses 
 
 ### Highlighting Chat Content
 
-Watson can highlight text that matches a specified [Java regular expression](http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html) using colour and formatting.  Let's say we'd like to make the "Unknown command." error message stand out a bit more by making it bright red:
+Watson can highlight text that matches a specified [Java regular expression](http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html) using colour and formatting.  All currently defined highlights are applied to a line of chat in the order that they were defined.  Later highlights can override all or part of those that were defined earlier.
+
+Let's say we'd like to make the "Unknown command." error message stand out a bit more by making it red:
 
     /hl add red ^Unknown\scommand.*
 
-All currently defined highlights are applied to a line of chat in the order that they were defined.
+The above command will highlight the whole chat line if it matches the pattern.  Watson can also highlight selected parts of a chat line, using the "/hl select" command.  To use it, specify a pattern that matches the whole line and put parentheses around the parts of the line that should be highlighted.  For example, the following two commands will make player names in chat messages appear in orange italics with blue angle brackets around them:
 
-Valid colour names are: black, darkblue/navy, darkgreen/green, cyan, darkred/red, purple, orange/gold/brown, lightgrey/lightgray, darkgrey/darkgray/grey/gray, blue, lightgreen, lightblue, lightred/brightred/rose, pink/lightpurple/magenta, yellow, white
+    /hl select blue ^(<\w+>).*$
+    /hl select /orange ^<(\w+)>.*$
 
-The /hl add command allows a style instead of a colour, or preceding the colour.
+The first command above highlights the name and the angle brackets in blue.  The second command reformats just the name.  This example also illustrates the fact that highlights are applied in the order that they were defined.
+
+Valid colour names are: black, darkblue/navy, darkgreen/green, cyan, darkred/red, purple, orange/gold/brown, lightgrey/lightgray, darkgrey/darkgray/grey/gray, blue, lightgreen, lightblue, lightred/brightred/rose, pink/lightpurple/magenta, yellow and white.  The "/hl add" and "/hl select" commands also allow a style either instead of a colour, or preceding the colour.
 
 <table>
   <tr>

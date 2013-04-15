@@ -59,7 +59,7 @@ public class HighlightCommand extends WatsonCommandBase
     }
     else if (args.length >= 3)
     {
-      if (args[0].equals("add"))
+      if (args[0].equals("add") || args[0].equals("select"))
       {
         // Allow patterns to contain spaces, rather than requiring \s.
         StringBuilder pattern = new StringBuilder();
@@ -71,7 +71,8 @@ public class HighlightCommand extends WatsonCommandBase
             pattern.append(' ');
           }
         }
-        highlighter.addHighlight(args[1], pattern.toString());
+        highlighter.addHighlight(args[1], pattern.toString(),
+          args[0].equals("select"));
         return;
       }
     }
