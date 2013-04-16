@@ -30,7 +30,7 @@ public class ServerTime extends Analysis
   /**
    * The single instance of this class.
    */
-  public static ServerTime instance = new ServerTime();
+  public static final ServerTime instance = new ServerTime();
 
   // --------------------------------------------------------------------------
   /**
