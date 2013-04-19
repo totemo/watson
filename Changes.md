@@ -3,6 +3,7 @@ Change History
 1.5.1 (2013-04-xx)
 ------------------
 * Added an option to highlight just selected portions of a chat line.
+* Fixed a crash in the ChatClassifier.
 
 
 1.5.1 (2013-04-10)

@@ -278,7 +278,7 @@ public class ChatClassifier
           && _incompleteLine.getLastColour() == thisLine.getStartColour()
           && (_incompleteLine.getCategory().matchesFully(_incompleteLine,
             thisLine) || (_incompleteLine.getCategory().isExtensible() && _incompleteLine.getCategory().matchesStart(
-            _previousLine, thisLine))))
+            _incompleteLine, thisLine))))
       {
         ChatLine fullLine = new ChatLine(_incompleteLine.getFormatted()
                                          + thisLine.getFormatted());
