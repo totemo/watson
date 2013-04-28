@@ -293,7 +293,7 @@ Macro[263].Macro=/vanish
 Macro[264].Macro=/unvanish
 
 # BUTTON_KICKBUTTON
-Macro[265].Macro=/kick $$u $$[reason[chat spam,no homophobic language]]
+Macro[265].Macro=/kick $$u $$[reason[chat spam,homophobic language]]
 
 # BUTTON_MUTEBUTTON
 Macro[266].Macro=/mute $$u
@@ -324,7 +324,7 @@ Macro[274].Macro=/lb block 56 world "world" time $$[time[1d,12h,6h,3h]] sum p
 
 # BUTTON_QUERYDIAMONDSTIMEBUTTON
 Macro[275].Macro=/lb world "world" player $$[player] time $$[time[28d,1d,12h,6h,3h]] block 56 coords
-Macro[275].NamedParam[player]=norami
+Macro[275].NamedParam[player]=
 
 # BUTTON_SETHOMEBUTTON
 Macro[276].Macro=/sethome watson
@@ -412,7 +412,4 @@ Macro[1017].Condition=TRUE
 # EVENT_ONCONFIGCHANGE
 Macro[1018].Macro=
 Macro[1018].Condition=TRUE
-
-# EVENT_ONWATSONVARIABLESCHANGED
-Macro[1251].Macro=$${ Set(&coords,%WATSON_X%\, %WATSON_Y%\, %WATSON_Z%); SetLabel(XYZLabel,%&coords%); }$$
 

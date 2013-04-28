@@ -191,10 +191,10 @@
             <gc:label id="283" name="XYZLabel" x="4" y="5">
                 <align>middle centre</align>
                 <background>#64000000</background>
-                <binding/>
+                <binding>WATSON_XYZ</binding>
                 <colour>#FFFFFF</colour>
                 <shadow>1</shadow>
-                <text>726, 72, 927</text>
+                <text>%%</text>
             </gc:label>
             <gc:label id="284" name="TimeLabel" x="6" y="5">
                 <align>middle centre</align>
