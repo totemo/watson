@@ -1,6 +1,7 @@
 package watson;
 
 import net.minecraft.src.EnumGameType;
+import watson.macro.MacroIntegration;
 
 // --------------------------------------------------------------------------
 /**
@@ -32,6 +33,7 @@ public class DisplaySettings
     _displayed = displayed;
     Controller.instance.localOutput("Watson display "
                                     + (displayed ? "enabled." : "disabled."));
+    MacroIntegration.sendEvent(MacroIntegration.ON_WATSON_DISPLAY);
   }
 
   // --------------------------------------------------------------------------

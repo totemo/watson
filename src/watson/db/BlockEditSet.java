@@ -233,12 +233,7 @@ public class BlockEditSet
     {
       if (updateVariables)
       {
-        Controller.instance.getVariables().put("time", edit.time);
-        Controller.instance.getVariables().put("player", edit.player);
-        Controller.instance.getVariables().put("block", edit.type.getId());
-        Controller.instance.getVariables().put("x", edit.x);
-        Controller.instance.getVariables().put("y", edit.y);
-        Controller.instance.getVariables().put("z", edit.z);
+        Controller.instance.selectBlockEdit(edit);
       }
 
       // Add a new PlayerEditSet if there isn't one for this player.

@@ -40,6 +40,7 @@ import watson.db.BlockEditSet;
 import watson.db.BlockTypeRegistry;
 import watson.db.Filters;
 import watson.debug.Log;
+import watson.macro.MacroIntegration;
 
 // ----------------------------------------------------------------------------
 /**
@@ -535,7 +536,7 @@ public class Controller
   public void clearBlockEditSet()
   {
     getBlockEditSet().clear();
-    _variables.clear();
+    clearVariables();
     localOutput("Watson edits cleared.");
     getFilters().clear();
   }
@@ -624,6 +625,16 @@ public class Controller
 
   // --------------------------------------------------------------------------
   /**
+   * Clear all currently set state variables..
+   */
+  public void clearVariables()
+  {
+    _variables.clear();
+    MacroIntegration.sendEvent(MacroIntegration.ON_WATSON_SELECTION);
+  }
+
+  // --------------------------------------------------------------------------
+  /**
    * Set the current state variables from a {@link BlockEdit}, the same as they
    * would be set if they were set from a LogBlock toolblock (coal ore) query.
    * 
@@ -637,12 +648,31 @@ public class Controller
     {
       _variables.put("time", edit.time);
       _variables.put("player", edit.player);
-      _variables.put("block", edit.type.getId());
-      _variables.put("x", edit.x);
-      _variables.put("y", edit.y);
-      _variables.put("z", edit.z);
+      _variables.put("id", edit.type.getId());
+      _variables.put("data", edit.type.getData());
+      _variables.put("block", edit.type.getName(0));
+      _variables.put("creation", edit.creation);
+
+      // Will also dispatch the onWatsonSelection Macro/Keybind event:
+      selectPosition(edit.x, edit.y, edit.z);
     }
   } // selectBlockEdit
+
+  // --------------------------------------------------------------------------
+  /**
+   * Set the coordinate variables x, y and z.
+   * 
+   * @param x the x.
+   * @param y the y.
+   * @param z the z.
+   */
+  public void selectPosition(int x, int y, int z)
+  {
+    _variables.put("x", x);
+    _variables.put("y", y);
+    _variables.put("z", z);
+    MacroIntegration.sendEvent(MacroIntegration.ON_WATSON_SELECTION);
+  }
 
   // --------------------------------------------------------------------------
   /**

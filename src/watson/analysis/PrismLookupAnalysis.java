@@ -102,20 +102,6 @@ public class PrismLookupAnalysis extends Analysis
 
       // Actions include place and break for blocks and bucket for liquids.
       _created = !action.equals("break");
-
-      // if (_inspectorResult)
-      // {
-      // long millis = getTimeFromRelativeExpression(time);
-      // Controller.instance.getVariables().put("time", millis);
-      //
-      // int x = (Integer) Controller.instance.getVariables().get("x");
-      // int y = (Integer) Controller.instance.getVariables().get("y");
-      // int z = (Integer) Controller.instance.getVariables().get("z");
-      //
-      // Controller.instance.getBlockEditSet().addBlockEdit(
-      // new BlockEdit(millis, _player, _created, x, y, z, _type));
-      // _inspectorResult = false;
-      // }
     }
   } // placeBreak
 
@@ -145,25 +131,20 @@ public class PrismLookupAnalysis extends Analysis
       int x = Integer.parseInt(m.group(8));
       int y = Integer.parseInt(m.group(9));
       int z = Integer.parseInt(m.group(10));
-
-      // Update variables only on the first (most recent) result after an
-      // inspector header, but update it on every result from a lookup.
-      if (!_inspectorResult || _awaitingFirstResult)
-      {
-        Controller.instance.getVariables().put("player", _player);
-        Controller.instance.getVariables().put("block", _type.getId());
-        Controller.instance.getVariables().put("time", millis);
-        Controller.instance.getVariables().put("x", x);
-        Controller.instance.getVariables().put("y", y);
-        Controller.instance.getVariables().put("z", z);
-        _awaitingFirstResult = false;
-      }
+      Controller.instance.selectPosition(x, y, z);
 
       if (_player != null && _type != null)
       {
+        // Update variables only on the first (most recent) result after an
+        // inspector header, but update it on every result from a lookup.
+        boolean updateVariables = (!_inspectorResult || _awaitingFirstResult);
         Controller.instance.getBlockEditSet().addBlockEdit(
-          new BlockEdit(millis, _player, _created, x, y, z, _type));
-        _inspectorResult = false;
+          new BlockEdit(millis, _player, _created, x, y, z, _type),
+          updateVariables);
+        if (_awaitingFirstResult)
+        {
+          _awaitingFirstResult = false;
+        }
       }
     }
   } // dateTimeWorldCoords
@@ -193,16 +174,10 @@ public class PrismLookupAnalysis extends Analysis
       _inspectorResult = true;
       _awaitingFirstResult = true;
 
-      // This code only applies when the inspector is returning non-extended
-      // results.
-      //
-      // int x = Integer.parseInt(m.group(1));
-      // int y = Integer.parseInt(m.group(2));
-      // int z = Integer.parseInt(m.group(3));
-      //
-      // Controller.instance.getVariables().put("x", x);
-      // Controller.instance.getVariables().put("y", y);
-      // Controller.instance.getVariables().put("z", z);
+      int x = Integer.parseInt(m.group(1));
+      int y = Integer.parseInt(m.group(2));
+      int z = Integer.parseInt(m.group(3));
+      Controller.instance.selectPosition(x, y, z);
     }
   } // inspectorHeader
 

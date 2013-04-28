@@ -57,10 +57,12 @@ public class CoalBlockAnalysis extends Analysis
       _x = Integer.parseInt(m.group(1));
       _y = Integer.parseInt(m.group(2));
       _z = Integer.parseInt(m.group(3));
+      Controller.instance.selectPosition(_x, _y, _z);
+
       _lbPositionTime = System.currentTimeMillis();
       _expectingFirstEdit = true;
     }
-  }
+  } // lbPosition
 
   // --------------------------------------------------------------------------
   /**

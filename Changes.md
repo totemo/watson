@@ -1,10 +1,10 @@
 Change History
 ==============
-1.5.1 (2013-04-xx)
+1.5.1 (2013-04-28)
 ------------------
 * Added an option to highlight just selected portions of a chat line.
 * Fixed a crash in the ChatClassifier.
-
+* Added basic integration with the Macro/Keybind Mod, in the form of a WATSON(<string>) script action, %WATSON_*% variables, and events "onWatsonDisplay" and "onWatsonSelection".
 
 1.5.1 (2013-04-10)
 ------------------

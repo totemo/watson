@@ -12,6 +12,7 @@ import watson.EntityWatson;
 import watson.RenderWatson;
 import watson.chat.ChatProcessor;
 import watson.debug.Log;
+import watson.macro.MacroIntegration;
 
 // --------------------------------------------------------------------------
 /**
@@ -79,6 +80,7 @@ public class mod_Watson extends BaseMod
     // The second true signifies that onTickInGame() should only be called
     // if the world clock has advanced.
     ModLoader.setInGameHook(this, true, true);
+    MacroIntegration.initialiseMacroKeybind();
   } // load
 
   // --------------------------------------------------------------------------
