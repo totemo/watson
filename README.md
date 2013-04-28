@@ -9,7 +9,7 @@ Watson is a Minecraft mod that displays LogBlock (and to a limited extent Prism 
 * It draws vectors between edits indicating the time sequence of edits.
 * It draws text annotations in 3-D space. These can act as teleport targets.
 * Edits and annotations can be saved to files and loaded at a later date.
-* If the Macro/Keybind Mod is installed, Watson can be controlled and queried by that.
+* If the [Macro/Keybind Mod](http://www.minecraftforum.net/topic/467504-151-macro-keybind-mod-0982-and-liteloader-for-151/) is installed, Watson can be controlled and queried by that.
 * There's a simple built-in calculator for working out stone:diamond ratios.
 * It uses colour to highlight parts of chat that match regular expressions. This can be used to draw attention to banned words. It can also be used to highlight the names of people, acting as a rudimentary friends list.
 * It adds player names to screenshots automatically.
@@ -310,21 +310,53 @@ Watson defines the following global, read-only variables for interrogating its c
   </tr>
   <tr>
     <td>%WATSON_DISPLAY%</td> <td>True if the Watson display is currently enabled.  False if not.</td>
+  </tr>
+  <tr>
     <td>%WATSON_OUTLINE%</td> <td>True if the Watson outline display is currently enabled.  False if not.</td>
+  </tr>
+  <tr>
     <td>%WATSON_VECTOR%</td> <td>True if the Watson vector display is currently enabled.  False if not.</td>
+  </tr>
+  <tr>
     <td>%WATSON_LABEL%</td> <td>True if the Watson ore label display is currently enabled.  False if not.</td>
+  </tr>
+  <tr>
     <td>%WATSON_ANNOTATION%</td> <td>True if the Watson annotation display is currently enabled.  False if not.</td>
+  </tr>
+  <tr>
     <td>%WATSON_PLAYER%</td> <td>The name of the player who performed the most recently selected edit.</td>
+  </tr>
+  <tr>
     <td>%WATSON_ACTION%</td> <td>The action performed on the block (either "created" or "destroyed").</td>
+  </tr>
+  <tr>
     <td>%WATSON_BLOCK%</td> <td>The name of the type of block that was edited.</td>
+  </tr>
+  <tr>
     <td>%WATSON_ID%</td> <td>The numeric ID of the block type.</td>
+  </tr>
+  <tr>
     <td>%WATSON_DATA%</td> <td>The numeric data value of the block type, most often 0.</td>
+  </tr>
+  <tr>
     <td>%WATSON_X%</td> <td>The X coordinate of the edit.</td>
+  </tr>
+  <tr>
     <td>%WATSON_Y%</td> <td>The Y coordinate of the edit.</td>
+  </tr>
+  <tr>
     <td>%WATSON_Z%</td> <td>The Z coordinate of the edit.</td>
+  </tr>
+  <tr>
     <td>%WATSON_XYZ%</td> <td>The 3-D coordinates of the edit, of the form "X, Y, Z".</td>
+  </tr>
+  <tr>
     <td>%WATSON_DATE%</td> <td>The date of the edit, of the form YYYY-MM-DD.</td>
+  </tr>
+  <tr>
     <td>%WATSON_TIME%</td> <td>The time of the edit, of the form hh:mm:ss (24 hour clock).</td>
+  </tr>
+  <tr>
     <td>%WATSON_DATETIME%</td> <td>The concatenation of %WATSON_DATE% and %WATSON_TIME%, separated by a single space.</td>
   </tr>
 </table>
@@ -349,7 +381,7 @@ Watson provides two custom events to the Macro/Keybind Mod.
 
 #### Sample Configuration
 
-A sample Macro/Keybind Mod configuration is provided as two text configuration files, [.minecraft/mods/macros/.macros.txt](https://raw.github.com/totemo/watson/master/config/.macros.txt) and [.minecraft/mods/macros/.gui.xml](https://raw.github.com/totemo/watson/master/config/.gui.xml).  These should either replace your existing Macro/Keybind Mod configuration files, or if you already have custom keybinds or on-screen elements that you want to preserve, you will need to merge these files into your existing configuration with a text editor.  If merging, take particular care to include the changes to the events.layout setting, since without it, the controls to edit the custom Watson events will not be displayed.
+A sample Macro/Keybind Mod configuration is provided as two text configuration files, [.minecraft/mods/macros/.macros.txt](https://raw.github.com/totemo/watson/master/config/macros/.macros.txt) and [.minecraft/mods/macros/.gui.xml](https://raw.github.com/totemo/watson/master/config/macros/.gui.xml).  These should either replace your existing Macro/Keybind Mod configuration files, or if you already have custom keybinds or on-screen elements that you want to preserve, you will need to merge these files into your existing configuration with a text editor.  If merging, take particular care to include the changes to the events.layout setting, since without it, the controls to edit the custom Watson events will not be displayed.
 
 The provided configuration includes an on-screen display with custom buttons.  To display it, press the Macro key, which by default is the backwards quote character (` - the key above Tab).  This is what the display looks like:
 
@@ -365,10 +397,20 @@ The sample configuration also binds the following key combinations:
   </tr>
   <tr>
     <td>Ctrl-w</td> <td>Toggle the Watson display on or off.</td>
+  </tr>
+  <tr>
     <td>Ctrl-Mouse-Scroll-Down</td> <td>Teleport to the next ore deposit (/w tp).</td>
+  </tr>
+  <tr>
     <td>Ctrl-Mouse-Scroll-Up</td> <td>Teleport to the previous ore deposit (/w tp prev).</td>
+  </tr>
+  <tr>
     <td>Ctrl-Right-Mouse-Button</td> <td>Query previous edits (/w pre).</td>
+  </tr>
+  <tr>
     <td>F4</td> <td>Toggle ModMode (issue the /modmode command).</td>
+  </tr>
+  <tr>
     <td>Ctrl-1 through Ctrl-9</td> <td>Issue the commands /check p:1 through /check p:9, for use with the ModReq plugin.</td>
   </tr>
 </table>
