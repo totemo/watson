@@ -1,8 +1,8 @@
 #------------------------------------------------------------------------------
 # These lines need to change with the Minecraft and MCP versions.
 
-MCP_VER=744
-MC_VER=1.5.1
+MCP_VER=751
+MC_VER=1.5.2
 
 #------------------------------------------------------------------------------
 # These lines only change if your directory setup is different to mine.
