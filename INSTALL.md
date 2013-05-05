@@ -30,7 +30,7 @@ GitHub has dropped support for uploading files, so downloads will be hosted on G
     <th>Version</th> <th colspan="2">Details</th>
   </tr>
   <tr>
-    <td rowspan="4">1.5.2<br>(2013-05-05)</td> <td>sha256sum -b</td> <td>d1602cb32d8822231e8a22fb99c57ed8f12dad3b3f3aab777ffee9f9363da2ea</td>
+    <td rowspan="5">1.5.2<br>(2013-05-05)</td> <td>sha256sum -b</td> <td>d1602cb32d8822231e8a22fb99c57ed8f12dad3b3f3aab777ffee9f9363da2ea</td>
   </tr>
   <tr>
     <td>File Name</td> <td>watson-1.5.2-2013-05-05.zip</td>
@@ -49,7 +49,7 @@ GitHub has dropped support for uploading files, so downloads will be hosted on G
     <th>Version</th> <th colspan="2">Details</th>
   </tr>
   <tr>
-    <td rowspan="4">1.5.1<br>(2013-04-28)</td> <td>sha256sum -b</td> <td>bf7637920de44e8c78a088064a3a5b5126deb353461aaf8e7ace15be345a7055</td>
+    <td rowspan="5">1.5.1<br>(2013-04-28)</td> <td>sha256sum -b</td> <td>bf7637920de44e8c78a088064a3a5b5126deb353461aaf8e7ace15be345a7055</td>
   </tr>
   <tr>
     <td>File Name</td> <td>watson-1.5.1-2013-04-28.zip</td>
