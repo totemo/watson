@@ -30,6 +30,25 @@ GitHub has dropped support for uploading files, so downloads will be hosted on G
     <th>Version</th> <th colspan="2">Details</th>
   </tr>
   <tr>
+    <td rowspan="4">1.5.2<br>(2013-05-05)</td> <td>sha256sum -b</td> <td>d1602cb32d8822231e8a22fb99c57ed8f12dad3b3f3aab777ffee9f9363da2ea</td>
+  </tr>
+  <tr>
+    <td>File Name</td> <td>watson-1.5.2-2013-05-05.zip</td>
+  </tr>
+  <tr>
+    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXR2x0Sk5CRmZPR0E</td>
+  </tr>
+  <tr>
+    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#152-2013-05-05">description</a></td>
+  </tr>
+  <tr>
+    <td>Compatibility</td> <td>Macro/Keybind Mod 0.9.9 for Minecraft 1.5.2</td>
+  </tr>
+
+  <tr>
+    <th>Version</th> <th colspan="2">Details</th>
+  </tr>
+  <tr>
     <td rowspan="4">1.5.1<br>(2013-04-28)</td> <td>sha256sum -b</td> <td>bf7637920de44e8c78a088064a3a5b5126deb353461aaf8e7ace15be345a7055</td>
   </tr>
   <tr>
@@ -40,6 +59,9 @@ GitHub has dropped support for uploading files, so downloads will be hosted on G
   </tr>
   <tr>
     <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#151-2013-04-28">description</a></td>
+  </tr>
+  <tr>
+    <td>Compatibility</td> <td>Macro/Keybind Mod 0.9.8.2 for Minecraft 1.5.1</td>
   </tr>
 
   <tr>
@@ -150,7 +172,7 @@ Watson has been tested for compatibility with:
 * Rei's Minimap
 * Optifine
 * LiteLoader for Minecraft
-* Macro/Keybind Mod - but note that commands originating here bypass the Watson command interpreter and go direct to the server.
+* Macro/Keybind Mod
 * MagicLauncher
 
 

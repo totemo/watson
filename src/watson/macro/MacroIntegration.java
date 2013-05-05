@@ -16,7 +16,7 @@ import watson.debug.Log;
 // ----------------------------------------------------------------------------
 /**
  * Manages script interface objects and isolates and protects the rest of Watson
- * from {@link NoClassFoundDefError} in the event that the Macro/Keybind mod is
+ * from {@link NoClassFoundDefError} in the event that the Macro/Keybind Mod is
  * not loaded.
  */
 public class MacroIntegration
@@ -72,12 +72,12 @@ public class MacroIntegration
     try
     {
       // Get a reference to the MacroEventManager.
-      Macros macros = MacroModCore.GetMacroManager();
-      MacroEventManager eventManager = macros.GetEventManager();
+      Macros macros = MacroModCore.getMacroManager();
+      MacroEventManager eventManager = macros.getEventManager();
 
       // Immediate dispatch (priority 100) results in the event handler getting
       // called before variables are updated.
-      eventManager.SendEvent(eventName, 0, eventArgs);
+      eventManager.sendEvent(eventName, 0, eventArgs);
     }
     catch (Throwable ex)
     {
@@ -125,12 +125,12 @@ public class MacroIntegration
     try
     {
       // Get a reference to the MacroEventManager.
-      Macros macros = MacroModCore.GetMacroManager();
-      MacroEventManager eventManager = macros.GetEventManager();
+      Macros macros = MacroModCore.getMacroManager();
+      MacroEventManager eventManager = macros.getEventManager();
 
       // Find an unused event ID, starting at suggestedID.
       int id = suggestedID;
-      while (eventManager.GetEvent(id) != null && id < 2000)
+      while (eventManager.getEvent(id) != null && id < 2000)
       {
         ++id;
       }
@@ -141,13 +141,13 @@ public class MacroIntegration
       }
 
       // Make MacroEventManager.AddEvent() callable and call it.
-      Method addEvent = eventManager.getClass().getDeclaredMethod("AddEvent",
+      Method addEvent = eventManager.getClass().getDeclaredMethod("addEvent",
         Integer.TYPE, String.class, Boolean.TYPE, String.class);
       addEvent.setAccessible(true);
       addEvent.invoke(eventManager, id, name, false, null);
       Log.debug(String.format("Defined event %s with ID %d.", name, id));
 
-      return fixEventsGUI(name, id);
+      return true; // fixEventsGUI(name, id);
     }
     catch (Throwable ex)
     {
@@ -164,12 +164,16 @@ public class MacroIntegration
    * 
    * By default, MacroType.GetMacroName() gives these a generic name based on
    * the ID number minus 1000, e.g. "onEvent250".
+   * 
+   * As of Macro/Keybind Mod 0.9.9 for 1.5.2, this code is apparently no-longer
+   * necessary. I'll keep it around until I'm satisfied that the events API is
+   * finalised.
    */
   protected static boolean fixEventsGUI(String name, int id)
     throws Exception
   {
     // Get the LayoutPanelEvents instance.
-    MacroModCore core = MacroModCore.GetInstance();
+    MacroModCore core = MacroModCore.getInstance();
     Field eventLayoutField = core.getClass().getDeclaredField("eventLayout");
     eventLayoutField.setAccessible(true);
     LayoutPanelEvents panel = (LayoutPanelEvents) eventLayoutField.get(core);
@@ -189,4 +193,3 @@ public class MacroIntegration
     return true;
   } // fixEventsGUI
 } // class MacroIntegration
-

@@ -4,18 +4,16 @@
 #
 
 # Version number of the mod which saved this file. ***Do not alter this value!***
-version=982
+version=990
 
 #
 # Settings
 #
 
+autocraft.failed.popup=1
 
 # True to enable custom (designable) GUI in the chat screen
 chatgui.enabled=1
-
-# Hide the minecraft chat
-chathidden=0
 
 # Set this to the colour code format used by your server
 colourcodeformat=&%s
@@ -75,7 +73,7 @@ editor.minimiseprompt=
 editor.syntax.enabled=1
 
 # Serialised version of the event layout, each param is {MappingID,X,Y}
-events.layout={1000,6,4}{1001,6,24}{1002,6,44}{1003,6,64}{1004,6,84}{1005,6,104}{1006,6,124}{1007,6,144}{1008,145,4}{1009,145,24}{1010,145,44}{1011,145,64}{1012,145,84}{1013,145,104}{1014,145,124}{1015,145,144}{1016,6,164}{1017,145,164}{1018,284,4}{1250,284,144}{1251,284,164}
+events.layout={1000,6,4}{1001,6,24}{1002,6,44}{1003,6,64}{1004,6,84}{1005,6,104}{1006,6,124}{1007,6,144}{1008,6,164}{1009,145,4}{1010,145,24}{1011,145,44}{1012,145,64}{1013,145,84}{1014,145,104}{1015,145,124}{1016,145,144}{1017,145,164}{1018,284,4}{1250,284,24}{1251,284,44}
 
 # Flood protection settings
 floodprotection.behaviour.tickslimit=180
@@ -155,6 +153,9 @@ keyboard.layout={1,20,4}{2,36,24}{3,56,24}{4,76,24}{5,96,24}{6,116,24}{7,136,24}
 # Overrides for some keys in the display, show an ASCII symbol instead of text
 keyboard.symbols={42,30}{54,30}{156,17}{200,24}{203,27}{205,26}{208,25}{248,24}{249,25}
 
+# If true, then the custom GUI -> slot mappings are loaded from the config at startup, otherwise the defaults are always applied
+layout.bindings.loadatstartup=1
+
 # Item ID/damage values to include in the items list that aren't automatically enumerated, use {id} for base items and {id:damage} for specific damage values
 list.items.include={18:2}{80}
 
@@ -200,6 +201,7 @@ runstatus.enabled=1
 # Limit the number of instructions that can be processed per macro per tick
 script.run.limitpertick=100
 
+script.run.maxtimesharems=100
 script.trace=0
 
 # True if the script engine should generate warnings for blocked script actions
@@ -248,6 +250,10 @@ Macro[10].Control=1
 # KEY_W
 Macro[17].Macro=$${WATSON("/w display")}$$
 
+# KEY_O
+Macro[24].Macro=$${ Toggle(@show_watson_overlay); IF(@show_watson_overlay && WATSON_DISPLAY); BindGUI("ingame","watson_overlay"); Log("Watson overlay enabled."); ELSE; BindGUI("ingame","ingame"); IF(@show_watson_overlay); Log("Turn on the Watson display to see the overlay."); ELSE; Log("Watson overlay disabled."); ENDIF; ENDIF; }$$
+Macro[24].Control=1
+
 # KEY_M
 Macro[50].Macro=/modmode
 Macro[50].Control=1
@@ -268,82 +274,87 @@ Macro[251].Macro=$${WATSON("/w pre")}$$
 Macro[251].Condition=TRUE
 Macro[251].Control=1
 
-# BUTTON_RATIOBUTTON
+# CONTROL_RATIOBUTTON
 Macro[257].Macro=$${WATSON("/w ratio")}$$
 
-# BUTTON_OREBUTTON
+# CONTROL_OREBUTTON
 Macro[258].Macro=$${WATSON("/w ore")}$$
 
-# BUTTON_PREBUTTON
+# CONTROL_PREBUTTON
 Macro[259].Macro=$${WATSON("/w pre")}$$
 
-# BUTTON_POST BUTTON
+# CONTROL_POST BUTTON
 Macro[260].Macro=$${WATSON("/w post")}$$
 
-# BUTTON_PREVOREBUTTON
+# CONTROL_PREVOREBUTTON
 Macro[261].Macro=$${WATSON("/w tp prev")}$$
 
-# BUTTON_NEXTOREBUTTON
+# CONTROL_NEXTOREBUTTON
 Macro[262].Macro=$${WATSON("/w tp")}$$
 
-# BUTTON_VANISHBUTTON
+# CONTROL_VANISHBUTTON
 Macro[263].Macro=/vanish
 
-# BUTTON_UNVANISHBUTTON
+# CONTROL_UNVANISHBUTTON
 Macro[264].Macro=/unvanish
 
-# BUTTON_KICKBUTTON
+# CONTROL_KICKBUTTON
 Macro[265].Macro=/kick $$u $$[reason[chat spam,homophobic language]]
 
-# BUTTON_MUTEBUTTON
+# CONTROL_MUTEBUTTON
 Macro[266].Macro=/mute $$u
 
-# BUTTON_BANBUTTON
+# CONTROL_BANBUTTON
 Macro[267].Macro=/ban $$u $$[reason[chat spam,racism,homophobia,grief]]
 
-# BUTTON_CLEARBUTTON
+# CONTROL_CLEARBUTTON
 Macro[268].Macro=$${WATSON("/w clear")}$$
 
-# BUTTON_TOGGLEVECTORSBUTTON
+# CONTROL_TOGGLEVECTORSBUTTON
 Macro[269].Macro=$${WATSON("/w vector")}$$
 
-# BUTTON_SHORTVECTORSBUTTON
+# CONTROL_SHORTVECTORSBUTTON
 Macro[270].Macro=$${WATSON("/w vector length 0")}$$
 
-# BUTTON_LONGVECTORSBUTTON
+# CONTROL_LONGVECTORSBUTTON
 Macro[271].Macro=$${WATSON("/w vector length 4")}$$
 
-# BUTTON_TOGGLEDISPLAYBUTTON
+# CONTROL_TOGGLEDISPLAYBUTTON
 Macro[272].Macro=$${WATSON("/w display")}$$
 
-# BUTTON_LBNEXTBUTTON
+# CONTROL_LBNEXTBUTTON
 Macro[273].Macro=/lb next
 
-# BUTTON_TOPMINERSBUTTON
+# CONTROL_TOPMINERSBUTTON
 Macro[274].Macro=/lb block 56 world "world" time $$[time[1d,12h,6h,3h]] sum p
 
-# BUTTON_QUERYDIAMONDSTIMEBUTTON
+# CONTROL_QUERYDIAMONDSTIMEBUTTON
 Macro[275].Macro=/lb world "world" player $$[player] time $$[time[28d,1d,12h,6h,3h]] block 56 coords
 Macro[275].NamedParam[player]=
 
-# BUTTON_SETHOMEBUTTON
+# CONTROL_SETHOMEBUTTON
 Macro[276].Macro=/sethome watson
 
-# BUTTON_HOMEBUTTON
+# CONTROL_HOMEBUTTON
 Macro[277].Macro=/home watson
 
-# BUTTON_MOODYBRIGHTBUTTON
+# CONTROL_MOODYBRIGHTBUTTON
 Macro[278].Macro=$${GAMMA(0)}$$
 
-# BUTTON_MAXBRIGHTBUTTON
+# CONTROL_MAXBRIGHTBUTTON
 Macro[279].Macro=$${GAMMA(100)}$$
 
-# BUTTON_MODMODEBUTTON
+# CONTROL_TOGGLEOVERLAYBUTTON
+Macro[280].Macro=$${ Toggle(@show_watson_overlay); IF(@show_watson_overlay && WATSON_DISPLAY); BindGUI("ingame","watson_overlay"); Log("Watson overlay enabled."); ELSE; BindGUI("ingame","ingame"); IF(@show_watson_overlay); Log("Turn on the Watson display to see the overlay."); ELSE; Log("Watson overlay disabled."); ENDIF; ENDIF; }$$
+
+# CONTROL_MODMODEBUTTON
 Macro[285].Macro=/modmode
 
+# CONTROL_LISTBUTTON
+Macro[287].Macro=/list
+
 # EVENT_ONJOINGAME
-Macro[1000].Macro=
-Macro[1000].Condition=TRUE
+Macro[1000].Macro=$${BINDGUI("ingame","ingame");}$$
 
 # EVENT_ONHEALTHCHANGE
 Macro[1002].Macro=
@@ -412,4 +423,7 @@ Macro[1017].Condition=TRUE
 # EVENT_ONCONFIGCHANGE
 Macro[1018].Macro=
 Macro[1018].Condition=TRUE
+
+# EVENT_ONWATSONDISPLAY
+Macro[1250].Macro=$${ CHATWIDTH(1000); IF(WATSON_DISPLAY); Echo(/we cui); ENDIF; IF(@show_watson_overlay && WATSON_DISPLAY); BindGUI("ingame","watson_overlay"); ELSE; BindGUI("ingame","ingame"); ENDIF; }$$
 

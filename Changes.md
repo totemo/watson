@@ -1,5 +1,10 @@
 Change History
 ==============
+1.5.2 (2013-05-05)
+------------------
+* Updated for Minecraft 1.5.2 and Macro/Keybind Mod 0.9.9 for Minecraft 1.5.2.
+* Added an information overlay GUI to the sample Macro/Keybind Mod configuration (Ctrl-O to toggle).
+
 1.5.1 (2013-04-28)
 ------------------
 * Added an option to highlight just selected portions of a chat line.

@@ -9,7 +9,7 @@ Watson is a Minecraft mod that displays LogBlock (and to a limited extent Prism 
 * It draws vectors between edits indicating the time sequence of edits.
 * It draws text annotations in 3-D space. These can act as teleport targets.
 * Edits and annotations can be saved to files and loaded at a later date.
-* If the [Macro/Keybind Mod](http://www.minecraftforum.net/topic/467504-151-macro-keybind-mod-0982-and-liteloader-for-151/) is installed, Watson can be controlled and queried by that.
+* If the [Macro/Keybind Mod](http://www.minecraftforum.net/topic/467504-152-macro-keybind-mod-099-and-liteloader-for-152/) is installed, Watson can be controlled and queried by that.
 * There's a simple built-in calculator for working out stone:diamond ratios.
 * It uses colour to highlight parts of chat that match regular expressions. This can be used to draw attention to banned words. It can also be used to highlight the names of people, acting as a rudimentary friends list.
 * It adds player names to screenshots automatically.
@@ -309,55 +309,55 @@ Watson defines the following global, read-only variables for interrogating its c
     <th>Variable</th> <th>Description</th>
   </tr>
   <tr>
-    <td>%WATSON_DISPLAY%</td> <td>True if the Watson display is currently enabled.  False if not.</td>
+    <td>WATSON_DISPLAY</td> <td>True if the Watson display is currently enabled.  False if not.</td>
   </tr>
   <tr>
-    <td>%WATSON_OUTLINE%</td> <td>True if the Watson outline display is currently enabled.  False if not.</td>
+    <td>WATSON_OUTLINE</td> <td>True if the Watson outline display is currently enabled.  False if not.</td>
   </tr>
   <tr>
-    <td>%WATSON_VECTOR%</td> <td>True if the Watson vector display is currently enabled.  False if not.</td>
+    <td>WATSON_VECTOR</td> <td>True if the Watson vector display is currently enabled.  False if not.</td>
   </tr>
   <tr>
-    <td>%WATSON_LABEL%</td> <td>True if the Watson ore label display is currently enabled.  False if not.</td>
+    <td>WATSON_LABEL</td> <td>True if the Watson ore label display is currently enabled.  False if not.</td>
   </tr>
   <tr>
-    <td>%WATSON_ANNOTATION%</td> <td>True if the Watson annotation display is currently enabled.  False if not.</td>
+    <td>WATSON_ANNOTATION</td> <td>True if the Watson annotation display is currently enabled.  False if not.</td>
   </tr>
   <tr>
-    <td>%WATSON_PLAYER%</td> <td>The name of the player who performed the most recently selected edit.</td>
+    <td>WATSON_PLAYER</td> <td>The name of the player who performed the most recently selected edit.</td>
   </tr>
   <tr>
-    <td>%WATSON_ACTION%</td> <td>The action performed on the block (either "created" or "destroyed").</td>
+    <td>WATSON_ACTION</td> <td>The action performed on the block (either "created" or "destroyed").</td>
   </tr>
   <tr>
-    <td>%WATSON_BLOCK%</td> <td>The name of the type of block that was edited.</td>
+    <td>WATSON_BLOCK</td> <td>The name of the type of block that was edited.</td>
   </tr>
   <tr>
-    <td>%WATSON_ID%</td> <td>The numeric ID of the block type.</td>
+    <td>WATSON_ID</td> <td>The numeric ID of the block type.</td>
   </tr>
   <tr>
-    <td>%WATSON_DATA%</td> <td>The numeric data value of the block type, most often 0.</td>
+    <td>WATSON_DATA</td> <td>The numeric data value of the block type, most often 0.</td>
   </tr>
   <tr>
-    <td>%WATSON_X%</td> <td>The X coordinate of the edit.</td>
+    <td>WATSON_X</td> <td>The X coordinate of the edit.</td>
   </tr>
   <tr>
-    <td>%WATSON_Y%</td> <td>The Y coordinate of the edit.</td>
+    <td>WATSON_Y</td> <td>The Y coordinate of the edit.</td>
   </tr>
   <tr>
-    <td>%WATSON_Z%</td> <td>The Z coordinate of the edit.</td>
+    <td>WATSON_Z</td> <td>The Z coordinate of the edit.</td>
   </tr>
   <tr>
-    <td>%WATSON_XYZ%</td> <td>The 3-D coordinates of the edit, of the form "X, Y, Z".</td>
+    <td>WATSON_XYZ</td> <td>The 3-D coordinates of the edit, of the form "X, Y, Z".</td>
   </tr>
   <tr>
-    <td>%WATSON_DATE%</td> <td>The date of the edit, of the form YYYY-MM-DD.</td>
+    <td>WATSON_DATE</td> <td>The date of the edit, of the form YYYY-MM-DD.</td>
   </tr>
   <tr>
-    <td>%WATSON_TIME%</td> <td>The time of the edit, of the form hh:mm:ss (24 hour clock).</td>
+    <td>WATSON_TIME</td> <td>The time of the edit, of the form hh:mm:ss (24 hour clock).</td>
   </tr>
   <tr>
-    <td>%WATSON_DATETIME%</td> <td>The concatenation of %WATSON_DATE% and %WATSON_TIME%, separated by a single space.</td>
+    <td>WATSON_DATETIME</td> <td>The concatenation of WATSON_DATE and WATSON_TIME, separated by a single space.</td>
   </tr>
 </table>
 
@@ -370,10 +370,10 @@ Watson provides two custom events to the Macro/Keybind Mod.
     <th>Event</th> <th>Description</th>
   </tr>
   <tr>
-    <td>onWatsonDisplay</td> <td>Sent whenever the Watson display is hidden or shown, either by command (/w display) or when Watson enables the display automatically (when entering ModMode).  Use the value of the %WATSON_DISPLAY% variable to ascertain whether the display is currently visible in scripts bound to these events.</td>
+    <td>onWatsonDisplay</td> <td>Sent whenever the Watson display is hidden or shown, either by command (/w display) or when Watson enables the display automatically (when entering ModMode).  Use the value of the WATSON_DISPLAY variable to ascertain whether the display is currently visible in scripts bound to these events.</td>
   </tr>
   <tr>
-    <td>onWatsonSelection</td> <td>Sent whenever the currently selected position (%WATSON_X%, %WATSON_Y%, %WATSON_Z%) or edit (position plus %WATSON_PLAYER%, %WATSON_ACTION%, %WATSON_BLOCK%, %WATSON_DATETIME%, etc.) is changed or cleared.  This may occur either as a result of inspecting a block or performing a query, or as a result of the "/w clear" command.</td> 
+    <td>onWatsonSelection</td> <td>Sent whenever the currently selected position (WATSON_X, WATSON_Y, WATSON_Z) or edit (position plus WATSON_PLAYER, WATSON_ACTION, WATSON_BLOCK, WATSON_DATETIME, etc.) is changed or cleared.  This may occur either as a result of inspecting a block or performing a query, or as a result of the "/w clear" command.</td> 
   </tr>
 </table>
 
@@ -397,6 +397,9 @@ The sample configuration also binds the following key combinations:
   </tr>
   <tr>
     <td>Ctrl-w</td> <td>Toggle the Watson display on or off.</td>
+  </tr>
+  <tr>
+    <td>Ctrl-o</td> <td>Toggle the Watson overlay on or off.</td>
   </tr>
   <tr>
     <td>Ctrl-Mouse-Scroll-Down</td> <td>Teleport to the next ore deposit (/w tp).</td>

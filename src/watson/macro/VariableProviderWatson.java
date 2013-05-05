@@ -7,7 +7,6 @@ import java.util.logging.Level;
 
 import net.eq2online.macros.scripting.ScriptCore;
 import net.eq2online.macros.scripting.VariableCache;
-import net.eq2online.macros.scripting.api.APIVersion;
 import net.eq2online.macros.scripting.api.IVariableListener;
 import net.eq2online.macros.scripting.api.IVariableProvider;
 import watson.Configuration;
@@ -20,7 +19,8 @@ import watson.debug.Log;
  * An IVariableProvider implementation that provides variables reflecting
  * Watson's current state.
  */
-@APIVersion(9)
+// I think the APIVersion annotation is only needed in a module.
+// @APIVersion(10)
 public class VariableProviderWatson extends VariableCache
   implements
     IVariableProvider
@@ -34,7 +34,7 @@ public class VariableProviderWatson extends VariableCache
    */
   public static void initialise()
   {
-    new VariableProviderWatson().OnInit();
+    new VariableProviderWatson().onInit();
   }
 
   // --------------------------------------------------------------------------
@@ -42,9 +42,9 @@ public class VariableProviderWatson extends VariableCache
    * @see net.eq2online.macros.scripting.api.IMacrosAPIModule#OnInit()
    */
   @Override
-  public void OnInit()
+  public void onInit()
   {
-    ScriptCore.RegisterVariableProvider(this);
+    ScriptCore.registerVariableProvider(this);
   }
 
   // --------------------------------------------------------------------------
@@ -52,7 +52,7 @@ public class VariableProviderWatson extends VariableCache
    * @see net.eq2online.macros.scripting.api.IVariableProvider#UpdateVariables(boolean)
    */
   @Override
-  public void UpdateVariables(boolean clock)
+  public void updateVariables(boolean clock)
   {
     try
     {
@@ -124,9 +124,9 @@ public class VariableProviderWatson extends VariableCache
    * @see net.eq2online.macros.scripting.api.IVariableProvider#ProvideVariables(net.eq2online.macros.scripting.api.IVariableListener)
    */
   @Override
-  public void ProvideVariables(IVariableListener variableListener)
+  public void provideVariables(IVariableListener variableListener)
   {
-    ProvideCachedVariables(variableListener);
+    provideCachedVariables(variableListener);
   }
 
   // --------------------------------------------------------------------------
@@ -134,9 +134,9 @@ public class VariableProviderWatson extends VariableCache
    * @see net.eq2online.macros.scripting.api.IVariableProvider#GetVariable(java.lang.String)
    */
   @Override
-  public Object GetVariable(String variableName)
+  public Object getVariable(String variableName)
   {
-    return GetCachedValue(variableName);
+    return getCachedValue(variableName);
   }
 
   // --------------------------------------------------------------------------
@@ -148,7 +148,7 @@ public class VariableProviderWatson extends VariableCache
    */
   protected void updateVariable(String name, String value)
   {
-    SetCachedVariable(name, value == null ? "" : value);
+    setCachedVariable(name, value == null ? "" : value);
   }
 
   // --------------------------------------------------------------------------
@@ -160,7 +160,7 @@ public class VariableProviderWatson extends VariableCache
    */
   protected void updateVariable(String name, Integer value)
   {
-    SetCachedVariable(name, value == null ? 0 : value);
+    setCachedVariable(name, value == null ? 0 : value);
   }
 
   // --------------------------------------------------------------------------
@@ -172,7 +172,7 @@ public class VariableProviderWatson extends VariableCache
    */
   protected void updateVariable(String name, Boolean value)
   {
-    SetCachedVariable(name, value == null ? false : value);
+    setCachedVariable(name, value == null ? false : value);
   }
 
   // --------------------------------------------------------------------------

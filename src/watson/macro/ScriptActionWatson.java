@@ -2,9 +2,9 @@ package watson.macro;
 
 import net.eq2online.macros.scripting.ScriptAction;
 import net.eq2online.macros.scripting.ScriptCore;
-import net.eq2online.macros.scripting.api.APIVersion;
 import net.eq2online.macros.scripting.api.IMacro;
 import net.eq2online.macros.scripting.api.IMacroAction;
+import net.eq2online.macros.scripting.api.IReturnValue;
 import net.eq2online.macros.scripting.api.IScriptActionProvider;
 import net.minecraft.src.mod_ClientCommands;
 
@@ -12,7 +12,8 @@ import net.minecraft.src.mod_ClientCommands;
 /**
  * A Macro/Keybind Mod script action for a WATSON(&lt;string&gt;) command.
  */
-@APIVersion(9)
+// I think the APIVersion annotation is only needed in a module.
+// @APIVersion(10)
 public class ScriptActionWatson extends ScriptAction
 {
   // --------------------------------------------------------------------------
@@ -24,7 +25,7 @@ public class ScriptActionWatson extends ScriptAction
    */
   public static void initialise()
   {
-    new ScriptActionWatson().OnInit();
+    new ScriptActionWatson().onInit();
   }
 
   // --------------------------------------------------------------------------
@@ -41,9 +42,9 @@ public class ScriptActionWatson extends ScriptAction
    * @see net.eq2online.macros.scripting.api.IMacrosAPIModule#OnInit()
    */
   @Override
-  public void OnInit()
+  public void onInit()
   {
-    ScriptCore.RegisterScriptAction(this);
+    ScriptCore.registerScriptAction(this);
   }
 
   // --------------------------------------------------------------------------
@@ -54,8 +55,8 @@ public class ScriptActionWatson extends ScriptAction
    *      java.lang.String[])
    */
   @Override
-  public String Execute(IScriptActionProvider provider, IMacro macro,
-                        IMacroAction action, String command, String[] args)
+  public IReturnValue execute(IScriptActionProvider provider, IMacro macro,
+                              IMacroAction action, String command, String[] args)
   {
     mod_ClientCommands.getInstance().handleClientCommand(command);
     return null;

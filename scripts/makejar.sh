@@ -89,6 +89,7 @@ THIS_SCRIPT=$(basename "$0")
 MCPSETUP_DIR=~/bin/mcpsetup/$MC_VER
 MC_JAR=$MCPSETUP_DIR/minecraft.jar
 MODLOADER_ZIP=$MCPSETUP_DIR/ModLoader.zip
+LITELOADER_ZIP=$(ls $MCPSETUP_DIR/mods/liteloader_*.zip | head -1)
 REIS_ZIP=$(ls $MCPSETUP_DIR/mods/\[*\]ReiMinimap_*.zip | head -1)
 WECUI_ZIP=$(ls $MCPSETUP_DIR/mods/CUI-*.zip 2>/dev/null | head -1)
 WATSON_ZIP=$(ls $MCPSETUP_DIR/mods/watson-$MC_VER-????-??-??.zip 2>/dev/null | head -1)
@@ -107,6 +108,7 @@ mkdir -p "$TMP_DIR" || fn_error "could not make temporary directory"
 # Parse command line.
 
 DO_MODLOADER=false
+DO_LITELOADER=false
 DO_REIS=false
 DO_WECUI=false
 DO_WATSON=false
@@ -130,6 +132,7 @@ elif [ $# -eq 1 ]; then
   elif [ "$1" = "chaos" ]; then
     JAR_TYPE="chaos"
     DO_MODLOADER=true
+    DO_LITELOADER=true
     DO_WATSON=true
     DO_REIS=true
     DO_OPTIFINE=true
@@ -150,6 +153,7 @@ fi
 #   Basic or moderator:
 #     ModLoader - always first
 #   All:
+#     LiteLoader
 #     Rei's Minimap
 #   Moderator:
 #     Watson
@@ -161,19 +165,22 @@ fi
 
 PREREQUISITES=true
 if $DO_MODLOADER; then
-  fn_check   "ModLoader"       "$MODLOADER_ZIP" || PREREQUISITES=false
+  fn_check   "ModLoader"       "$MODLOADER_ZIP"  || PREREQUISITES=false
+fi
+if $DO_LITELOADER; then
+  fn_check   "LiteLoader"      "$LITELOADER_ZIP" || PREREQUISITES=false
 fi
 if $DO_REIS; then
-  fn_check   "Rei's Minimap"   "$REIS_ZIP"      || PREREQUISITES=false
+  fn_check   "Rei's Minimap"   "$REIS_ZIP"       || PREREQUISITES=false
 fi
 if $DO_WECUI; then
- fn_check    "WorldEdit CUI"   "$WECUI_ZIP"     || PREREQUISITES=false
+ fn_check    "WorldEdit CUI"   "$WECUI_ZIP"      || PREREQUISITES=false
 fi
 if $DO_OPTIFINE; then
-  fn_check   "Optifine"        "$OPTIFINE_ZIP"  || PREREQUISITES=false
+  fn_check   "Optifine"        "$OPTIFINE_ZIP"   || PREREQUISITES=false
 fi
 if $DO_WATSON; then
-  fn_check   "Watson"          "$WATSON_ZIP"    || PREREQUISITES=false
+  fn_check   "Watson"          "$WATSON_ZIP"     || PREREQUISITES=false
 fi
 
 if ! $PREREQUISITES; then
@@ -192,6 +199,9 @@ echo "DONE."
 
 if $DO_MODLOADER; then
   fn_unzip           "ModLoader"      "$MODLOADER_ZIP"
+fi
+if $DO_LITELOADER; then
+  fn_unzip           "LiteLoader"     "$LITELOADER_ZIP"
 fi
 if $DO_REIS; then
   fn_unzip           "Rei's Minimap"  "$REIS_ZIP"
