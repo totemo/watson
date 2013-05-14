@@ -809,9 +809,10 @@ blocks:
       rgba: [188, 152, 98]
       bounds: [0.3125, 0.375, 0.0, 0.6875, 0.625, 0.125]
       
-      # Are there data values to set textures?
+      # 0 = skeleton, 1 = wither skeleton, 2 = zombie, 3 = player, 4 = creeper
+      # Prism makes a distinction on names but only on breaks, not placement.
     - id: 144
-      names: [skull]
+      names: [skull, skeleton skull, wither skull, zombie skull, player skull, creeper skull]
       rgba: [161, 161, 161]      
       bounds: [0.25, 0.0, 0.25, 0.75, 0.5, 0.75]
     - id: 145
