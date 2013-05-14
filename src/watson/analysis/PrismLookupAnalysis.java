@@ -102,6 +102,7 @@ public class PrismLookupAnalysis extends Analysis
 
       // Actions include place and break for blocks and bucket for liquids.
       _created = !action.equals("break");
+      _expectingDateTimeCoords = true;
     }
   } // placeBreak
 
@@ -113,8 +114,9 @@ public class PrismLookupAnalysis extends Analysis
   private void dateTimeWorldCoords(watson.chat.ChatLine line)
   {
     Matcher m = _dateTimeWorldCoords.matcher(line.getUnformatted());
-    if (m.matches())
+    if (m.matches() && _expectingDateTimeCoords)
     {
+      _expectingDateTimeCoords = false;
       int month = Integer.parseInt(m.group(1));
       int day = Integer.parseInt(m.group(2));
       int year = 2000 + Integer.parseInt(m.group(3));
@@ -241,13 +243,13 @@ public class PrismLookupAnalysis extends Analysis
   /**
    * The regexp describing the count of edits grouped together, e.g. "x10".
    */
-  protected static final Pattern COUNT_PATTERN         = Pattern.compile(" x\\d+");
+  protected static final Pattern COUNT_PATTERN            = Pattern.compile(" x\\d+");
 
   /**
    * The regexp describing relative time as formatted by Prism, class
    * me.botsko.prism.actions.GenericAction, e.g "1d13h4m ago"
    */
-  protected static final Pattern RELATIVE_TIME_PATTERN = Pattern.compile("(\\d+d)?(\\d+h)?(\\d+m)? ago");
+  protected static final Pattern RELATIVE_TIME_PATTERN    = Pattern.compile("(\\d+d)?(\\d+h)?(\\d+m)? ago");
 
   /**
    * The pattern of the initial prism.playerblockaction lines.
@@ -287,11 +289,20 @@ public class PrismLookupAnalysis extends Analysis
   /**
    * Set to true when we know we are parsing an inspector (/prism i) result.
    */
-  protected boolean              _inspectorResult      = false;
+  protected boolean              _inspectorResult         = false;
 
   /**
    * Set to true when we are waiting for the first result after the inspector
    * header. Set to false after that result is parsed.
    */
-  protected boolean              _awaitingFirstResult  = false;
+  protected boolean              _awaitingFirstResult     = false;
+
+  /**
+   * This flag is set true when a prism.placebreak line is parsed to indicate
+   * that the subsequent prism.datetimeworldcoords line should be parsed to make
+   * a {@link BlockEdit}. If there are lines corresponding to other actions,
+   * e.g. dropping times, grass spread, these won't match prism.placebreak,
+   * which could lead to false edits being added without this flag.
+   */
+  protected boolean              _expectingDateTimeCoords = false;
 } // class PrismLookupAnalysis
