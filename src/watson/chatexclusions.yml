@@ -5,7 +5,6 @@
 exclusions:
     - lb.coord
     - lb.coordreplaced
-    - wg.build
     - lb.header.timecheck
     - lb.header.noresults
     
