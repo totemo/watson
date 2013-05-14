@@ -1,5 +1,12 @@
 Change History
 ==============
+1.5.2 (2013-05-15)
+------------------
+* Compatibility fix for newer Prism versions (including 1.6.1) that number each query result in square brackets.
+* Added aliases for various skull types (for Prism).
+* Bug fix for Prism when parsing query results that are not place, break or pour.
+* Remove the WorldGuard 'Can you build?' message from the default set of chat exclusions.
+
 1.5.2 (2013-05-05)
 ------------------
 * Updated for Minecraft 1.5.2 and Macro/Keybind Mod 0.9.9 for Minecraft 1.5.2.
