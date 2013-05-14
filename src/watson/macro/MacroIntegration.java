@@ -66,6 +66,9 @@ public class MacroIntegration
   // --------------------------------------------------------------------------
   /**
    * Send the specified event, with optional arguments array.
+   * 
+   * @param eventName the event name.
+   * @param eventArgs the affected argument variables.
    */
   public static void sendEvent(String eventName, String... eventArgs)
   {
@@ -90,6 +93,7 @@ public class MacroIntegration
   /**
    * Call the static initialise() method of the specified class.
    * 
+   * @param className the name of the class with the initialise() method.
    * @return true if the method was called; false should indicate that the
    *         Macro/Keybind Mod was not loaded.
    */
@@ -119,6 +123,7 @@ public class MacroIntegration
    * @param suggestedID the suggested integer ID of the event; if it is already
    *          in use, higher numbers will be tried successively until an unused
    *          one is found or the maximum ID is reached.
+   * @return true if the event was defined successfully.
    */
   protected static boolean defineEvent(String name, int suggestedID)
   {
@@ -168,6 +173,10 @@ public class MacroIntegration
    * As of Macro/Keybind Mod 0.9.9 for 1.5.2, this code is apparently no-longer
    * necessary. I'll keep it around until I'm satisfied that the events API is
    * finalised.
+   * 
+   * @param name the name of the event.
+   * @param id the actual id of the event assigned by Macro/Keybind Mod.
+   * @return true if button label was fixed successfully.
    */
   protected static boolean fixEventsGUI(String name, int id)
     throws Exception
