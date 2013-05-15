@@ -342,7 +342,7 @@ Macro[277].Macro=/home watson
 Macro[278].Macro=$${GAMMA(0)}$$
 
 # CONTROL_MAXBRIGHTBUTTON
-Macro[279].Macro=$${GAMMA(100)}$$
+Macro[279].Macro=$${GAMMA(200)}$$
 
 # CONTROL_TOGGLEOVERLAYBUTTON
 Macro[280].Macro=$${ Toggle(@show_watson_overlay); IF(@show_watson_overlay && WATSON_DISPLAY); BindGUI("ingame","watson_overlay"); Log("Watson overlay enabled."); ELSE; BindGUI("ingame","ingame"); IF(@show_watson_overlay); Log("Turn on the Watson display to see the overlay."); ELSE; Log("Watson overlay disabled."); ENDIF; ENDIF; }$$
