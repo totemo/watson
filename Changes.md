@@ -1,5 +1,9 @@
 Change History
 ==============
+1.5.2 (2013-06-01)
+------------------
+* Remove the ability to rejoin lines split by the server. It's not necessary and can go wrong whenever Watson doesn't recognise a particular message.
+
 1.5.2 (2013-05-15)
 ------------------
 * Compatibility fix for newer Prism versions (including 1.6.1) that number each query result in square brackets.

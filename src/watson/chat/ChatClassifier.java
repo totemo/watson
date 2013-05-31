@@ -12,40 +12,14 @@ import java.util.HashMap;
 
 import watson.debug.Log;
 
-// --------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 /**
- * Examines chat messages one line at a time and assigns them to categories.
- * Where the server (Bukkit) has split a line, the ChatClassifier rejoins the
- * parts.
+ * Classifies incoming chat lines by matching them against regular expressions
+ * and dispatches them to handlers.
  * 
- * The ChatClassifier has to be future-proof in the sense that if the server
- * starts outputting new messages that don't fit any of the existing defined
- * categories of chat messages, the new messages should be categorised as
- * "unknown", rather than as the overflow of the previous chat message.
- * Unfortunately, it is not possible to be 100% certain of correct
- * classification in such a situation. I consider it better to falsely classify
- * split lines as "unknown", rather than to join new server messages into
- * players' global chat messages.
- * 
- * The various heuristics that might be employed by the ChatClassifier are
- * discussed below:
- * <ul>
- * <li><b>Colour: only join a line to the previous if the colours match at the
- * line break.</b> This fails because the server can use colour to highlight key
- * information within a line. For example, the server has started highlighting
- * players' names in global chat messages.</li>
- * <li><b>Temporal Proximity: only join a line to the previous if they are close
- * together in time (i.e. timeout).</b> Unfortunately, a lag spike could ruin
- * this.</li>
- * <li><b>Line Length: don't append to the previous line if that line is too
- * short to have been split.</b> This is pretty solid. The difficulty comes in
- * determining how short a line must be in order to be unambiguously
- * "not split". Lines are split according to their width in pixels, computed
- * using a variable-width font, so there are a range of lengths (in characters)
- * where a line may be split, or not, depending on the widths of the characters
- * themselves. But a minimum length where splitting won't happen can be
- * determined empirically.</li>
- * </ul>
+ * Functionality to rejoin chat lines split at the server has been removed on
+ * the basis that it can break every time a new server message is added, if the
+ * message doesn't match any of the existing regular expressions.
  */
 public class ChatClassifier
 {
@@ -60,35 +34,6 @@ public class ChatClassifier
    * colour escape sequence. ('f' == white)
    */
   public static final char DEFAULT_COLOUR = 'f';
-
-  // --------------------------------------------------------------------------
-  /**
-   * Return the last (rightmost) colour code in a chat line, or the default
-   * colour if no code is present.
-   * 
-   * @param chat the chat line to search for a colour code.
-   * @return a two-character colour code sequence consisting of the paragraph
-   *         marker, '\247', followed by a hex digit.
-   */
-  public static String getLastColourCode(String chat)
-  {
-    int index = chat.lastIndexOf(COLOUR_CHAR);
-
-    StringBuilder result = new StringBuilder();
-    result.append(COLOUR_CHAR);
-
-    // It is possible that (index+1) could be out of bounds, if the line was
-    // split between § and the colour code.
-    if (index < 0 || index + 1 >= chat.length())
-    {
-      result.append(DEFAULT_COLOUR);
-    }
-    else
-    {
-      result.append(chat.charAt(index + 1));
-    }
-    return result.toString();
-  } // getLastColourCode
 
   // --------------------------------------------------------------------------
   /**
@@ -191,11 +136,6 @@ public class ChatClassifier
   /**
    * Classify the next line of chat input.
    * 
-   * TODO: Do we really need to separate out those Categories that can lead to
-   * split lines from those that always match unsplit lines because the pattern
-   * is short? It would be something like ChatCategory.isShort(), signifying
-   * that there is no potential for splitting.
-   * 
    * @param line the line of chat.
    */
   public void classify(String line)
@@ -203,128 +143,20 @@ public class ChatClassifier
     Log.info(line);
 
     ChatLine thisLine = new ChatLine(line);
-    // Match this line in isolation.
-    boolean matched = false;
+
+    // Simplified implementation. Don't attempt ANY rejoining of lines.
     for (ChatCategory category : _categories)
     {
-      if (category.matchesStart(thisLine))
+      if (category.matchesFully(thisLine, null))
       {
-        matched = true;
         thisLine.setCategory(category);
-        break;
+        notify(thisLine);
+        return;
       }
     } // for
 
-    // Did we match the start of the line?
-    if (matched)
-    {
-      ChatCategory matchingCategory = thisLine.getCategory();
-
-      // Is the pattern for a full line different from that for a split line?
-      if (matchingCategory.isPedantic())
-      {
-        // Is the line unsplit and therefore complete?
-        if (matchingCategory.matchesFully(thisLine, null))
-        {
-          notify(thisLine);
-
-          // Is it possible that this line, though complete-looking, might be
-          // extended yet?
-          if (matchingCategory.isExtensible())
-          {
-            _incompleteLine = thisLine;
-          }
-        }
-        else
-        {
-          if (_incompleteLine != null)
-          {
-            // Discard the previous incomplete line.
-            // TODO: shouldn't really happen, so need to adjust algorithm if it
-            // does.
-            Log.warning("Discarding incomplete line: <"
-                        + _incompleteLine.getCategory().getTag() + "> "
-                        + _incompleteLine.getFormatted());
-          }
-
-          // Save the partially matched line.
-          _incompleteLine = thisLine;
-        }
-      }
-      else
-      {
-        // Matching category is not pedantic. The line makes sense on its own.
-        notify(thisLine);
-
-        // Based on length, could this line have been split?
-        // Empirically, the shortest split line I have seen is 57 characters,
-        // including colour codes. Let's say that if a line is 56 characters
-        // or less, it was not split.
-        if (thisLine.getFormatted().length() > MIN_SPLIT_POSITION)
-        {
-          // Save this line away, separately from the known incomplete lines.
-          _previousLine = thisLine;
-        }
-      }
-    }
-    else
-    {
-      // The line didn't match any of our line start patterns. It is therefore
-      // either a new category of server output, or the split remainder of one
-      // of the preceding lines.
-
-      // Give incomplete lines with exacting match requirements precedence.
-      if (_incompleteLine != null
-          && _incompleteLine.getLastColour() == thisLine.getStartColour()
-          && (_incompleteLine.getCategory().matchesFully(_incompleteLine,
-            thisLine) || (_incompleteLine.getCategory().isExtensible() && _incompleteLine.getCategory().matchesStart(
-            _incompleteLine, thisLine))))
-      {
-        ChatLine fullLine = new ChatLine(_incompleteLine.getFormatted()
-                                         + thisLine.getFormatted());
-        fullLine.setCategory(_incompleteLine.getCategory());
-
-        // Is it a simple two-line concatenation job?
-        if (!_incompleteLine.getCategory().isExtensible())
-        {
-          notify(fullLine);
-          _incompleteLine = null;
-        }
-        else
-        {
-          // notify() may not have previously been called. Problem?
-          revise(_incompleteLine, fullLine);
-
-          // Set up for another round of extension of the line.
-          _incompleteLine = fullLine;
-        }
-      }
-      else if (_previousLine != null
-               && _previousLine.getLastColour() == thisLine.getStartColour()
-               && _previousLine.getCategory().matchesFully(_previousLine,
-                 thisLine))
-      {
-        // TODO: timeout requirements?
-
-        ChatLine fullLine = new ChatLine(_previousLine.getFormatted()
-                                         + thisLine.getFormatted());
-        fullLine.setCategory(_previousLine.getCategory());
-
-        // Since the previous line was passed to notify() revise it.
-        revise(_previousLine, fullLine);
-
-        // Also to account for lines split more than once, as with /list,
-        // keep appending to _previousLine.
-        _previousLine = fullLine;
-      }
-      else
-      {
-        // Couldn't put thisLine with _incompleteLine or _previousLine. Call it
-        // "unknown".
-        thisLine.setCategory(UNKNOWN);
-        notify(thisLine);
-      }
-    }
+    thisLine.setCategory(UNKNOWN);
+    notify(thisLine);
   } // classify
 
   // --------------------------------------------------------------------------
@@ -344,77 +176,28 @@ public class ChatClassifier
 
   // --------------------------------------------------------------------------
   /**
-   * If a line is found to have been split and has previously been passed to
-   * notify(), this method is called to replace the old version of the line with
-   * the new, unsplit version.
-   * 
-   * @param partLine the part of the line before the line break, previously
-   *          passed to notify().
-   * @param fullLine the complete, reconstituted line.
-   */
-  private void revise(ChatLine partLine, ChatLine fullLine)
-  {
-    for (IChatHandler handler : _handlers)
-    {
-      handler.revise(partLine, fullLine);
-    }
-  }
-
-  // --------------------------------------------------------------------------
-  /**
-   * The minimum character index at which the server might split a line,
-   * determined empirically.
-   */
-  private static final int              MIN_SPLIT_POSITION = 56;
-
-  /**
    * A list of categories to check against in classify.
    */
-  private ArrayList<ChatCategory>       _categories        = new ArrayList<ChatCategory>();
+  private ArrayList<ChatCategory>       _categories     = new ArrayList<ChatCategory>();
 
   /**
    * A map from string {#link {@link ChatCategory#getId()} to corresponding
    * {@link ChatCategory}.
    */
-  private HashMap<String, ChatCategory> _categoriesById    = new HashMap<String, ChatCategory>();
+  private HashMap<String, ChatCategory> _categoriesById = new HashMap<String, ChatCategory>();
 
   /**
    * An array of IChatHandlers to dispatch callbacks to.
    */
-  private ArrayList<IChatHandler>       _handlers          = new ArrayList<IChatHandler>();
-
-  /**
-   * The previous line process by classify. If no concatenation of lines is
-   * possible, this field is null.
-   * 
-   * TODO: This is probably wrong: may need a priority list to match the tail
-   * ends of lines in the case where line broken /lb coords output interleaves
-   * with line broken global chat. Essentially, there are two threads
-   * interleaving their split lines to a single stream. e.g.
-   * 
-   * <pre>
-   * §6(27) 04-16 15:39:42 robisONE destroyed diamond ore at 631:12
-   * §7[me§7 -> coggas§7] §fPOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-   * §6:1210
-   * OOOOOOOOOOOOOOOOOOOOOP!!!!
-   * </pre>
-   */
-  private ChatLine                      _previousLine;
-
-  /**
-   * If a line was unambiguously matched as "incomplete" (requiring a subsequent
-   * line to match the full pattern), then that line is saved here.
-   */
-  private ChatLine                      _incompleteLine;
+  private ArrayList<IChatHandler>       _handlers       = new ArrayList<IChatHandler>();
 
   /**
    * The ChatCategory of lines that don't match any known patterns, even after
    * having been given a chance to match previous lines.
    */
-  private final ChatCategory            UNKNOWN            = new ChatCategory(
-                                                             "unknown",
-                                                             "unknown", "^.*$",
-                                                             "^.*$", false);
+  private final ChatCategory            UNKNOWN         = new ChatCategory(
+                                                          "unknown", "unknown",
+                                                          "^.*$", "^.*$", false);
 
   // --------------------------------------------------------------------------
   /**

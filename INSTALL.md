@@ -30,6 +30,25 @@ GitHub has dropped support for uploading files, so downloads will be hosted on G
     <th>Version</th> <th colspan="2">Details</th>
   </tr>
   <tr>
+    <td rowspan="5">1.5.2<br>(2013-06-01)</td> <td>sha256sum -b</td> <td>1641005e002831d23b9f709c030fedfb1f509b6a47ecb691675d368f5af599ef</td>
+  </tr>
+  <tr>
+    <td>File Name</td> <td>watson-1.5.2-2013-06-01.zip</td>
+  </tr>
+  <tr>
+    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXeGJkYlFMSEZ4cVU</td>
+  </tr>
+  <tr>
+    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#152-2013-06-01">description</a></td>
+  </tr>
+  <tr>
+    <td>Compatibility</td> <td>Macro/Keybind Mod 0.9.9 for Minecraft 1.5.2</td>
+  </tr>
+
+  <tr>
+    <th>Version</th> <th colspan="2">Details</th>
+  </tr>
+  <tr>
     <td rowspan="5">1.5.2<br>(2013-05-15)</td> <td>sha256sum -b</td> <td>ecd0a05332cd699db9c8860a6b0fe4897e90fd62736f4bb46d8c8af756f60f2c</td>
   </tr>
   <tr>
