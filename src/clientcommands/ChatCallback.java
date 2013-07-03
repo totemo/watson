@@ -1,4 +1,4 @@
-package ClientCommands;
+package clientcommands;
 
 public interface ChatCallback
 {

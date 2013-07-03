@@ -88,7 +88,7 @@ fn_unzip_subdir()
 THIS_SCRIPT=$(basename "$0")
 MCPSETUP_DIR=~/bin/mcpsetup/$MC_VER
 MC_JAR=$MCPSETUP_DIR/minecraft.jar
-MODLOADER_ZIP=$MCPSETUP_DIR/ModLoader.zip
+MODLOADER_ZIP=$MCPSETUP_DIR/minecraftforge-universal-1.5.2-7.8.1.738.zip 
 LITELOADER_ZIP=$(ls $MCPSETUP_DIR/mods/liteloader_*.zip | head -1)
 REIS_ZIP=$(ls $MCPSETUP_DIR/mods/\[*\]ReiMinimap_*.zip | head -1)
 WECUI_ZIP=$(ls $MCPSETUP_DIR/mods/CUI-*.zip 2>/dev/null | head -1)

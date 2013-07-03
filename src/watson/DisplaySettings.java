@@ -1,6 +1,6 @@
 package watson;
 
-import net.minecraft.src.EnumGameType;
+import net.minecraft.world.EnumGameType;
 import watson.macro.MacroIntegration;
 
 // --------------------------------------------------------------------------

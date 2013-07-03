@@ -1,4 +1,4 @@
-package ClientCommands;
+package clientcommands;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,12 +11,12 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.minecraft.src.CommandException;
-import net.minecraft.src.CommandNotFoundException;
-import net.minecraft.src.ICommand;
-import net.minecraft.src.ICommandManager;
-import net.minecraft.src.ICommandSender;
-import net.minecraft.src.WrongUsageException;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.CommandNotFoundException;
+import net.minecraft.command.ICommand;
+import net.minecraft.command.ICommandManager;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 
 // ----------------------------------------------------------------------------
 /**

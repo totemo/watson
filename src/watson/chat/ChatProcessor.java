@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 
-import net.minecraft.src.GuiNewChat;
+import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.src.ModLoader;
 import watson.Configuration;
 import watson.Controller;
@@ -170,7 +170,7 @@ public class ChatProcessor
     _excludeTagChatHandler.setExcluded(tag, !visible);
 
     File exclusionsFile = new File(Controller.getModDirectory(),
-      CHAT_EXCLUSIONS_FILE);
+                                   CHAT_EXCLUSIONS_FILE);
     _excludeTagChatHandler.saveExclusions(exclusionsFile);
 
     Controller.instance.localOutput((visible ? "Show " : "Hide ") + tag

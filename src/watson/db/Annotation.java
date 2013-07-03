@@ -1,10 +1,10 @@
 package watson.db;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.FontRenderer;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.src.ModLoader;
-import net.minecraft.src.RenderManager;
-import net.minecraft.src.Tessellator;
 
 import org.lwjgl.opengl.GL11;
 

@@ -5,7 +5,7 @@ set -o nounset
 
 THIS_SCRIPT=$(basename "$0")
 VERSIONS_DIR=~/.minecraft/versions
-MODLOADER_TMP_DIR=/tmp/mcpsetup_modloader
+FORGE_TMP_DIR=/tmp/mcpsetup_modloader
 
 #------------------------------------------------------------------------------
 # Echo the message in $* to stderr and exit with error status 1.
@@ -65,7 +65,7 @@ REQUIREMENTS=true
 fn_requirement "$MCPSETUP_DIR/mcp$MCP_VER.zip"      || REQUIREMENTS=false
 fn_requirement "$MCPSETUP_DIR/minecraft.jar"        || REQUIREMENTS=false
 fn_requirement "$MCPSETUP_DIR/minecraft_server.jar" || REQUIREMENTS=false
-fn_requirement "$MCPSETUP_DIR/ModLoader.zip"        || REQUIREMENTS=false
+fn_requirement "$MCPSETUP_DIR/minecraftforge-universal-$MC_VER-*.zip" || REQUIREMENTS=false
 fn_requirement "$MCPSETUP_DIR/snakeyaml-1.10.jar"   || REQUIREMENTS=false
 
 #------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ if ! $REQUIREMENTS; then
 fi
 
 #------------------------------------------------------------------------------
-# Unpack MCP and copy in required JARs and ModLoader.
+# Unpack MCP and copy in required JARs and Minecraft Forge.
 
 mkdir -p "$MCP_DIR" && cd "$MCP_DIR" && unzip -qq "$MCPSETUP_DIR/mcp$MCP_VER.zip" || \
   fn_error "failed to unpack mvp$MC_VER.zip"
@@ -83,10 +83,11 @@ mkdir -p "$MCP_DIR" && cd "$MCP_DIR" && unzip -qq "$MCPSETUP_DIR/mcp$MCP_VER.zip
 cp "$MCPSETUP_DIR/minecraft.jar" "$VERSIONS_DIR/minecraft-$MC_VER.jar" || \
   fn_error "failed to copy minecraft-$MC_VER.jar to $VERSIONS_DIR"
 
-rm -rf "$MODLOADER_TMP_DIR" && mkdir -p "$MODLOADER_TMP_DIR" && cd "$MODLOADER_TMP_DIR" && \
-jar xf "$MCPSETUP_DIR/minecraft.jar" && rm META-INF/* && unzip -o -qq "$MCPSETUP_DIR/ModLoader.zip" && \
-jar cf "$VERSIONS_DIR/minecraft-$MC_VER-ModLoader.jar" . || \
-  fn_error "failed to create $VERSIONS_DIR/minecraft-$MC_VER-ModLoader.jar"
+rm -rf "$FORGE_TMP_DIR" && mkdir -p "$FORGE_TMP_DIR" && cd "$FORGE_TMP_DIR" && \
+jar xf "$MCPSETUP_DIR/minecraft.jar" && rm META-INF/* && \
+unzip -o -qq "$MCPSETUP_DIR/minecraftforge-universal-$MC_VER-*.zip" && \
+jar cf "$VERSIONS_DIR/minecraft-$MC_VER-Forge.jar" . || \
+  fn_error "failed to create $VERSIONS_DIR/minecraft-$MC_VER-Forge.jar"
   
 cp "$MCPSETUP_DIR/minecraft_server.jar" "$MCP_DIR"/jars/ && \
 cp -r ~/.minecraft/resources/           "$MCP_DIR"/jars/ && \
@@ -94,8 +95,8 @@ cp -r ~/.minecraft/bin                  "$MCP_DIR"/jars/ || \
   fn_error "could not copy stock Minecraft binaries"
 
 rm -f "$MCP_DIR"/jars/bin/minecraft.jar && \
-cp "$VERSIONS_DIR/minecraft-$MC_VER-ModLoader.jar" "$MCP_DIR"/jars/bin/minecraft.jar || \
-  fn_error "could not copy minecraft-$MC_VER-ModLoader.jar into MCP installation"
+cp "$VERSIONS_DIR/minecraft-$MC_VER-Forge.jar" "$MCP_DIR"/jars/bin/minecraft.jar || \
+  fn_error "could not copy minecraft-$MC_VER-Forge.jar into MCP installation"
 
 mkdir -p "$MCP_DIR/lib" && cp "$MCPSETUP_DIR/snakeyaml-1.10.jar" "$MCP_DIR/lib" || \
   fn_error "failed to add $MCPSETUP_DIR/snakeyaml-1.10.jar to lib/ subdirectory"
@@ -113,7 +114,7 @@ while [ ! -d "$MCP_DIR"/src/minecraft/net/minecraft/src/ ]; do
   ./decompile.sh || fn_error "could not do initial decompilation"
 done
 
-# Save a copy of the Minecraft + ModLoader sources for later patch generation.
+# Save a copy of the Minecraft + Forge sources for later patch generation.
 mkdir -p "$MCP_DIR"/vanillasrc && cp -r "$MCP_DIR"/src/minecraft "$MCP_DIR"/vanillasrc || \
   fn_error "could not save vanilla Minecraft + ModLoader sources"
 

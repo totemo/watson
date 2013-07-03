@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
-import net.minecraft.src.ICommandSender;
-import net.minecraft.src.SyntaxErrorException;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.command.SyntaxErrorException;
 import watson.Controller;
 import watson.db.Annotation;
 import watson.db.BlockEditSet;

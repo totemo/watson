@@ -1,7 +1,7 @@
 package watson.cli;
 
-import net.minecraft.src.CommandBase;
-import net.minecraft.src.ICommandSender;
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.ICommandSender;
 import watson.Controller;
 
 // ----------------------------------------------------------------------------

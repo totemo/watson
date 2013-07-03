@@ -1,17 +1,17 @@
-package net.minecraft.src;
+package clientcommands;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ClientCommands.ChatCallback;
-import ClientCommands.ClientCommandManager;
+import net.minecraft.command.ICommand;
+import net.minecraft.src.BaseMod;
 
 public class mod_ClientCommands extends BaseMod
 {
   private static mod_ClientCommands instance             = null;
-  private ClientCommandManager      clientCommandManager = new ClientCommandManager();
+  private ClientCommandManager  clientCommandManager = new ClientCommandManager();
   // private ClientCommandSender commandSender;
-  private List<ChatCallback>        chatCallbacks        = new ArrayList<ChatCallback>();
+  private List<ChatCallback>    chatCallbacks        = new ArrayList<ChatCallback>();
 
   public Boolean handleClientCommand(String commandLine)
   {
@@ -67,14 +67,17 @@ public class mod_ClientCommands extends BaseMod
   {
     return clientCommandManager;
   }
+
   public void addChatCallback(ChatCallback callback)
   {
     chatCallbacks.add(callback);
   }
+
   public void registerCommand(ICommand par1ICommand)
   {
     clientCommandManager.registerCommand(par1ICommand);
   }
+
   public List<ChatCallback> getChatCallbacks()
   {
     return chatCallbacks;

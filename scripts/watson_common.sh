@@ -3,11 +3,12 @@
 
 MCP_VER=751
 MC_VER=1.5.2
+FML_VER=7
 
 #------------------------------------------------------------------------------
 # These lines only change if your directory setup is different to mine.
 
-MCP_DIR=~/bin/mcp$MCP_VER
+MCP_DIR=~/bin/forge/mcp
 GIT_DIR=~/projects/watson
 JAR_DIR=~/.minecraft/versions
 

@@ -1,6 +1,6 @@
 package watson.model;
 
-import net.minecraft.src.Tessellator;
+import net.minecraft.client.renderer.Tessellator;
 
 import org.lwjgl.opengl.GL11;
 

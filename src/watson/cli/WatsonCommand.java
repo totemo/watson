@@ -2,16 +2,16 @@ package watson.cli;
 
 import java.util.regex.Pattern;
 
-import net.minecraft.src.ICommandSender;
-import net.minecraft.src.SyntaxErrorException;
-import net.minecraft.src.mod_ClientCommands;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.command.SyntaxErrorException;
 import watson.Configuration;
 import watson.Controller;
 import watson.DisplaySettings;
 import watson.analysis.ServerTime;
 import watson.db.Filters;
 import watson.db.OreDB;
-import ClientCommands.ClientCommandManager;
+import clientcommands.ClientCommandManager;
+import clientcommands.mod_ClientCommands;
 
 // --------------------------------------------------------------------------
 /**

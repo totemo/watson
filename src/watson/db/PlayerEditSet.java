@@ -5,10 +5,10 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.TreeSet;
 
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.src.ModLoader;
-import net.minecraft.src.Tessellator;
-import net.minecraft.src.Vec3;
-import net.minecraft.src.Vec3Pool;
+import net.minecraft.util.Vec3;
+import net.minecraft.util.Vec3Pool;
 
 import org.lwjgl.opengl.GL11;
 
@@ -306,7 +306,7 @@ public class PlayerEditSet
    * most recent.
    */
   protected TreeSet<BlockEdit>  _edits                 = new TreeSet<BlockEdit>(
-                                                         new BlockEditComparator());
+                                                                                new BlockEditComparator());
 
   /**
    * True if this player's edits are visible.

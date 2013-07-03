@@ -1,7 +1,7 @@
 package watson.cli;
 
-import net.minecraft.src.ICommandSender;
-import net.minecraft.src.SyntaxErrorException;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.command.SyntaxErrorException;
 import watson.chat.ChatProcessor;
 
 // --------------------------------------------------------------------------

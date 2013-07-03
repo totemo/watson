@@ -15,8 +15,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.src.ModLoader;
-import net.minecraft.src.ScaledResolution;
 
 import org.lwjgl.opengl.GL11;
 
@@ -85,7 +85,7 @@ public class BlockEditSet
           BlockType type = BlockTypeRegistry.instance.getBlockTypeByIdData(id,
             data);
           blockEdit = new BlockEdit(time.getTimeInMillis(), player, created, x,
-            y, z, type);
+                                    y, z, type);
           addBlockEdit(blockEdit);
           ++edits;
         } // if
@@ -137,7 +137,7 @@ public class BlockEditSet
     throws IOException
   {
     PrintWriter writer = new PrintWriter(new BufferedWriter(
-      new FileWriter(file)));
+                                                            new FileWriter(file)));
     try
     {
       // Save edits.
@@ -406,7 +406,7 @@ public class BlockEditSet
 
       Minecraft mc = ModLoader.getMinecraftInstance();
       ScaledResolution scaledResolution = new ScaledResolution(mc.gameSettings,
-        mc.displayWidth, mc.displayHeight);
+                                                               mc.displayWidth, mc.displayHeight);
 
     }
     finally
@@ -469,7 +469,8 @@ public class BlockEditSet
    * The cycle of colours used to draw vectors for different players.
    */
   protected static final ARGB[]                  _vectorColours = {
-    new ARGB(204, 255, 255, 140), // Pale yellow.
+                                                                new ARGB(204, 255, 255, 140), // Pale
+                                                                                              // yellow.
     new ARGB(204, 140, 158, 255), // Light blue.
     new ARGB(204, 255, 140, 140), // Salmon.
     new ARGB(204, 121, 255, 140), // Mint.

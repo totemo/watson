@@ -1,15 +1,20 @@
-package net.minecraft.src;
+package watson;
 
+import java.lang.reflect.Field;
+import java.nio.ByteBuffer;
 import java.util.Locale;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import net.minecraft.client.Minecraft;
-import watson.Configuration;
-import watson.Controller;
-import watson.EntityWatson;
-import watson.RenderWatson;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.src.BaseMod;
+import net.minecraft.src.ModLoader;
+import net.minecraft.util.ScreenShotHelper;
+import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
+
+import org.lwjgl.input.Keyboard;
+
 import watson.chat.ChatProcessor;
 import watson.debug.Log;
 import watson.macro.MacroIntegration;
@@ -81,6 +86,9 @@ public class mod_Watson extends BaseMod
     // if the world clock has advanced.
     ModLoader.setInGameHook(this, true, true);
     MacroIntegration.initialiseMacroKeybind();
+    
+    // Set up to intercept chat events.
+    MinecraftForge.EVENT_BUS.register(Controller.instance);
   } // load
 
   // --------------------------------------------------------------------------
@@ -140,6 +148,12 @@ public class mod_Watson extends BaseMod
 
     ChatProcessor.getInstance().processChatQueue();
     Controller.instance.processServerChatQueue();
+
+    // Intercept the screenshot key, checked by Minecraft.screenshotListener().
+    if (Keyboard.isKeyDown(Keyboard.KEY_F2))
+    {
+      Controller.instance.saveScreenshot();
+    }
     return true;
   } // onTickInGame
 
@@ -155,9 +169,12 @@ public class mod_Watson extends BaseMod
    */
   public String getModLoaderVersion()
   {
-    final Pattern PATTERN = Pattern.compile("\\d+(\\.\\d+)+$");
-    Matcher matcher = PATTERN.matcher(ModLoader.VERSION);
-    return (matcher.find()) ? matcher.group() : "";
+    // final Pattern PATTERN = Pattern.compile("\\d+(\\.\\d+)+$");
+    // Matcher matcher = PATTERN.matcher(ModLoader.VERSION);
+    // return (matcher.find()) ? matcher.group() : "";
+
+    // The way I do versioning checks will have to adjust to FML. FML.
+    return "1.5.2";
   }
 
   // --------------------------------------------------------------------------
@@ -178,4 +195,4 @@ public class mod_Watson extends BaseMod
    */
   protected EntityWatson   _watsonEntity;
 
-} // class mod_Watson
+} // class Watson

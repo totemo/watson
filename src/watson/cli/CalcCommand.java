@@ -5,8 +5,8 @@ import java.io.StreamTokenizer;
 import java.io.StringReader;
 import java.util.Locale;
 
-import net.minecraft.src.ICommandSender;
-import net.minecraft.src.SyntaxErrorException;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.command.SyntaxErrorException;
 
 // --------------------------------------------------------------------------
 /**

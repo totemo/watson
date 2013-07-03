@@ -1,14 +1,18 @@
 package watson;
 
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityPlayerSP;
+import java.lang.reflect.Field;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.entity.Entity;
 import net.minecraft.src.ModLoader;
-import net.minecraft.src.Render;
-import net.minecraft.src.RenderHelper;
 
 import org.lwjgl.opengl.GL11;
 
 import watson.db.BlockEditSet;
+import watson.debug.Log;
 
 // --------------------------------------------------------------------------
 /**
@@ -38,6 +42,7 @@ public class RenderWatson extends Render
                        float unknownParameter, float tick)
   {
     renderEntityWatson((EntityWatson) entity, tick);
+    disableVanillaScreenshot();
   }
 
   // --------------------------------------------------------------------------
@@ -128,4 +133,35 @@ public class RenderWatson extends Render
       // edits.drawHUD();
     } // if Watson is enabled and drawing
   } // renderEntityWatson
+
+  // --------------------------------------------------------------------------
+  /**
+   * Disable the vanilla Minecraft screenshot-taking code (detecting F2 down) by
+   * forcing Minecraft.isTakingScreenshot true.
+   * 
+   * That needs to happen every time the keyboard is polled - every rendered
+   * frame.
+   */
+  private void disableVanillaScreenshot()
+  {
+    try
+    {
+      Field isTakingScreenshot = Minecraft.class.getDeclaredField("isTakingScreenshot");
+      isTakingScreenshot.setAccessible(true);
+      isTakingScreenshot.set(ModLoader.getMinecraftInstance(), true);
+    }
+    catch (NoSuchFieldException ex)
+    {
+    }
+    catch (SecurityException ex)
+    {
+    }
+    catch (IllegalArgumentException ex)
+    {
+    }
+    catch (IllegalAccessException ex)
+    {
+    }
+  } // disableVanillaScreenshot
+
 } // class RenderWatson

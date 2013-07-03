@@ -1,11 +1,11 @@
 package watson;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityPlayerSP;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.src.ModLoader;
-import net.minecraft.src.NBTTagCompound;
-import net.minecraft.src.Vec3;
+import net.minecraft.util.Vec3;
 import watson.debug.Log;
 
 // --------------------------------------------------------------------------

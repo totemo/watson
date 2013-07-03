@@ -1,8 +1,8 @@
-package ClientCommands;
+package clientcommands;
 
-import net.minecraft.src.ChunkCoordinates;
-import net.minecraft.src.ICommandSender;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.src.ModLoader;
+import net.minecraft.util.ChunkCoordinates;
 
 /*
  * ----------------------------------------------------------------------------
