@@ -3,7 +3,7 @@
 set -o nounset
 . ~/bin/watson_common.sh
 
-PACKAGE_DIR=net/minecraft/client/gui
+PACKAGE_DIR=net/minecraft
 
 #------------------------------------------------------------------------------
 
@@ -24,8 +24,8 @@ cd "$MCP_DIR" && ./getchangedsrc.sh || fn_error "could not get changed sources"
 # Get a list of changed Mojang sources to generate patches for.
 
 if [ -d "$MCP_DIR/modsrc/minecraft/$PACKAGE_DIR" ]; then
-  cd $MCP_DIR/modsrc/minecraft/$PACKAGE_DIR
-  SOURCES=$(ls *.java | egrep -v 'mod_' 2>/dev/null)
+  cd "$MCP_DIR/modsrc/minecraft/$PACKAGE_DIR"
+  SOURCES=$(find "." -name '*.java' | egrep -v 'mod_' 2>/dev/null)
   cd $MCP_DIR
   for SOURCE in $SOURCES; do
     echo "Generating patch for $PACKAGE_DIR/$SOURCE"
@@ -57,9 +57,9 @@ cd "$MCP_DIR/modsrc/minecraft/" && cp -r * "$GIT_DIR"/src || fn_error "could not
 # Clear out any Mojang sources. Any changes should be covered by .patch files.
 # There are probably more elegant ways to do this.
 
-if [ -d "$MCP_DIR/modsrc/minecraft/$PACKAGE_DIR" ]; then
-  cd "$GIT_DIR/src/$PACKAGE_DIR"
-  for FILE in *.java; do 
+if [ -d "$GIT_DIR/src/$PACKAGE_DIR" ]; then
+  SOURCES=$(find "$GIT_DIR/src/$PACKAGE_DIR" -name '*.java' | egrep -v 'mod_' 2>/dev/null)
+  for FILE in $SOURCES; do 
     if ! expr match "$FILE" 'mod_.*java' >&/dev/null; then 
       rm "$FILE" 
     fi

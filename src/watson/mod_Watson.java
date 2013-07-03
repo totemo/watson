@@ -1,7 +1,5 @@
 package watson;
 
-import java.lang.reflect.Field;
-import java.nio.ByteBuffer;
 import java.util.Locale;
 import java.util.Map;
 
@@ -9,12 +7,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.src.BaseMod;
 import net.minecraft.src.ModLoader;
-import net.minecraft.util.ScreenShotHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-
-import org.lwjgl.input.Keyboard;
-
 import watson.chat.ChatProcessor;
 import watson.debug.Log;
 import watson.macro.MacroIntegration;
@@ -86,7 +80,7 @@ public class mod_Watson extends BaseMod
     // if the world clock has advanced.
     ModLoader.setInGameHook(this, true, true);
     MacroIntegration.initialiseMacroKeybind();
-    
+
     // Set up to intercept chat events.
     MinecraftForge.EVENT_BUS.register(Controller.instance);
   } // load
@@ -148,12 +142,6 @@ public class mod_Watson extends BaseMod
 
     ChatProcessor.getInstance().processChatQueue();
     Controller.instance.processServerChatQueue();
-
-    // Intercept the screenshot key, checked by Minecraft.screenshotListener().
-    if (Keyboard.isKeyDown(Keyboard.KEY_F2))
-    {
-      Controller.instance.saveScreenshot();
-    }
     return true;
   } // onTickInGame
 
