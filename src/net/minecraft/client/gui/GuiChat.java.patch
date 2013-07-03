@@ -1,21 +1,21 @@
---- vanillasrc/minecraft/net/minecraft/src/GuiChat.java	2013-05-03 14:27:32.225063870 +0930
-+++ modsrc/minecraft/net/minecraft/src/GuiChat.java	2013-05-03 14:53:56.272948950 +0930
-@@ -99,9 +99,9 @@
+--- vanillasrc/minecraft/net/minecraft/client/gui/GuiChat.java	2013-07-03 12:13:31.317342739 +0930
++++ modsrc/minecraft/net/minecraft/client/gui/GuiChat.java	2013-07-03 12:13:37.594340615 +0930
+@@ -103,9 +103,9 @@
              {
-                 this.mc.ingameGUI.getChatGUI().addToSentMessages(var3);
+                 this.mc.ingameGUI.getChatGUI().addToSentMessages(s);
  
--                if (!this.mc.handleClientCommand(var3))
-+                if (!mod_ClientCommands.getInstance().handleClientCommand(var3))
+-                if (!this.mc.handleClientCommand(s))
++                if (!clientcommands.mod_ClientCommands.getInstance().handleClientCommand(s))
                  {
--                    this.mc.thePlayer.sendChatMessage(var3);
-+                    this.mc.thePlayer.sendChatMessage(mod_ClientCommands.getInstance().executeChatCallbacks(var3));
+-                    this.mc.thePlayer.sendChatMessage(s);
++                    this.mc.thePlayer.sendChatMessage(clientcommands.mod_ClientCommands.getInstance().executeChatCallbacks(s));
                  }
              }
  
-@@ -365,4 +365,6 @@
+@@ -369,4 +369,6 @@
      {
          return false;
      }
-+
-+    public GuiTextField getInputField() { return this.inputField; }
++    
++    public GuiTextField getInputField() { return this.inputField; }    
  }
