@@ -3,7 +3,7 @@
 set -o nounset
 . ~/bin/watson_common.sh
 
-PACKAGE_DIR=net/minecraft/src
+PACKAGE_DIR=net/minecraft/client/gui
 
 #------------------------------------------------------------------------------
 
@@ -23,29 +23,29 @@ cd "$MCP_DIR" && ./getchangedsrc.sh || fn_error "could not get changed sources"
 #------------------------------------------------------------------------------
 # Get a list of changed Mojang sources to generate patches for.
 
-# Skip patch generation for now.
-
-#cd $MCP_DIR/modsrc/minecraft/$PACKAGE_DIR
-#SOURCES=$(ls *.java | egrep -v 'mod_')
-#cd $MCP_DIR
-#for SOURCE in $SOURCES; do
-#  echo "Generating patch for $PACKAGE_DIR/$SOURCE"
-#  diff -Nu vanillasrc/minecraft/$PACKAGE_DIR/$SOURCE modsrc/minecraft/$PACKAGE_DIR/$SOURCE > modsrc/minecraft/$PACKAGE_DIR/$SOURCE.patch
-#  
-#  # For pre-existing patch files, ignore the changes to the timestamp line.
-#  if [ -f "$GIT_DIR/src/$PACKAGE_DIR/$SOURCE.patch" ]; then
-#    grep -v "$SOURCE" "$GIT_DIR/src/$PACKAGE_DIR/$SOURCE.patch"     > /tmp/watson_patch.old && \
-#    grep -v "$SOURCE" "modsrc/minecraft/$PACKAGE_DIR/$SOURCE.patch" > /tmp/watson_patch.new || \
-#      fn_error "could not prepare patches for comparison."
-#  
-#    if ! diff /tmp/watson_patch.old /tmp/watson_patch.new; then
-#      echo "Patch updated."
-#    else
-#      rm "modsrc/minecraft/$PACKAGE_DIR/$SOURCE.patch"
-#      echo "Patch has not changed."
-#    fi
-#  fi
-#done
+if [ -d "$MCP_DIR/modsrc/minecraft/$PACKAGE_DIR" ]; then
+  cd $MCP_DIR/modsrc/minecraft/$PACKAGE_DIR
+  SOURCES=$(ls *.java | egrep -v 'mod_' 2>/dev/null)
+  cd $MCP_DIR
+  for SOURCE in $SOURCES; do
+    echo "Generating patch for $PACKAGE_DIR/$SOURCE"
+    diff -Nu vanillasrc/minecraft/$PACKAGE_DIR/$SOURCE modsrc/minecraft/$PACKAGE_DIR/$SOURCE > modsrc/minecraft/$PACKAGE_DIR/$SOURCE.patch
+  
+    # For pre-existing patch files, ignore the changes to the timestamp line.
+    if [ -f "$GIT_DIR/src/$PACKAGE_DIR/$SOURCE.patch" ]; then
+      grep -v "$SOURCE" "$GIT_DIR/src/$PACKAGE_DIR/$SOURCE.patch"     > /tmp/watson_patch.old && \
+      grep -v "$SOURCE" "modsrc/minecraft/$PACKAGE_DIR/$SOURCE.patch" > /tmp/watson_patch.new || \
+        fn_error "could not prepare patches for comparison."
+  
+      if ! diff /tmp/watson_patch.old /tmp/watson_patch.new; then
+        echo "Patch updated."
+      else
+        rm "modsrc/minecraft/$PACKAGE_DIR/$SOURCE.patch"
+        echo "Patch has not changed."
+      fi
+    fi
+  done
+fi
 
 #------------------------------------------------------------------------------
 
@@ -57,10 +57,12 @@ cd "$MCP_DIR/modsrc/minecraft/" && cp -r * "$GIT_DIR"/src || fn_error "could not
 # Clear out any Mojang sources. Any changes should be covered by .patch files.
 # There are probably more elegant ways to do this.
 
-#cd "$GIT_DIR/src/$PACKAGE_DIR"
-#for FILE in *.java; do 
-#  if ! expr match "$FILE" 'mod_.*java' >&/dev/null; then 
-#    rm "$FILE" 
-#  fi
-#done
+if [ -d "$MCP_DIR/modsrc/minecraft/$PACKAGE_DIR" ]; then
+  cd "$GIT_DIR/src/$PACKAGE_DIR"
+  for FILE in *.java; do 
+    if ! expr match "$FILE" 'mod_.*java' >&/dev/null; then 
+      rm "$FILE" 
+    fi
+  done
+fi
 
