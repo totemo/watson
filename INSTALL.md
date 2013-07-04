@@ -2,7 +2,6 @@ Installation
 ------------
 
 Prior to the 1.5.2 (2013-07-03) version, Watson was a ModLoader-compatible mod.  From that version onwards, it requires Minecraft Forge to work.
-Watson is a ModLoader-compatible mod.  It can be installed in either of two ways:
 
 With either the older versions of Watson or the latest Forge versions, you will need to install the modding API (ModLoader or Forge) into your Minecraft JAR and then copy in the Watson classes as well.
 
