@@ -1,5 +1,11 @@
 Change History
 ==============
+1.5.2 (2013-07-03)
+------------------
+* Modified to work with the Minecraft Forge mod API (7.8.1.737) instead of ModLoader.
+* Removed one dependency on core Minecraft classes (NetClientHandler), but it's still necessary to patch your Minecraft JAR.
+* Requests made to the Forge developers to add Forge APIs for screenshots and client-side commands.
+
 1.5.2 (2013-06-01)
 ------------------
 * Remove the ability to rejoin lines split by the server. It's not necessary and can go wrong whenever Watson doesn't recognise a particular message.

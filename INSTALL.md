@@ -1,19 +1,19 @@
 Installation
 ------------
 
+Prior to the 1.5.2 (2013-07-03) version, Watson was a ModLoader-compatible mod.  From that version onwards, it requires Minecraft Forge to work.
 Watson is a ModLoader-compatible mod.  It can be installed in either of two ways:
 
-* You can install MagicLauncher and configure it to use ModLoader and the Watson ZIP file appropriate to the version of Minecraft that you are using.
-* Alternatively, manually patch the Minecraft JAR file with ModLoader and Watson.
+With either the older versions of Watson or the latest Forge versions, you will need to install the modding API (ModLoader or Forge) into your Minecraft JAR and then copy in the Watson classes as well.
 
 The basic procedure for manually patching Minecraft's JAR file is:
 
 1. Download a version of Watson that matches your current Minecraft version <i>exactly</i>.
-1. Download a version of <a href="http://www.minecraftforum.net/topic/75440-v151-risugamis-mods-updated/">ModLoader</a> that also matches your current Minecraft version <i>exactly</i>.
+1. Download a version of <a href="http://www.minecraftforum.net/topic/75440-v151-risugamis-mods-updated/">ModLoader</a> or <a href="http://files.minecraftforge.net/">Minecraft Forge (universal)</a> that also matches your current Minecraft version and the version of Watson you intend to run.
 1. Locate the Minecraft JAR file.  On Windows, it will be "%APPDATA%\\.minecraft\bin\minecraft.jar".  Typical Windows configurations will not show you the ".jar" on the end of that filename.  On UNIX-like systems (Macs and Linux), it will be ~/.minecraft/bin/minecraft.jar
 1. Save a backup copy of your minecraft.jar file (just in case).
 1. Open minecraft.jar with your chosen ZIP file editing program.
-1. Open ModLoader.zip and copy its full contents into minecraft.jar.
+1. Open ModLoader.zip or minecraftforge-universal-&lt;version&gt;.zip and copy its full contents into minecraft.jar.
 1. If you plan on installing other mods such as Rei's or Optifine, copy and paste the contents of those ZIP files into your modified JAR here.
 1. Open the Watson ZIP file and copy its full contents into minecraft.jar.
 1. Delete the contents of the META-INF/ folder of your modified Minecraft JAR file.
@@ -26,6 +26,25 @@ Downloads
 GitHub has dropped support for uploading files, so downloads will be hosted on Google Drive from now on.
 
 <table>
+  <tr>
+    <th>Version</th> <th colspan="2">Details</th>
+  </tr>
+  <tr>
+    <td rowspan="5">1.5.2<br>(2013-07-03)</td> <td>sha256sum -b</td> <td>cefb5bc28a9ec0fb113b54617c5a134bd0d72a71b69c79caf594e491ae2157bc</td>
+  </tr>
+  <tr>
+    <td>File Name</td> <td>watson-1.5.2-2013-07-03.zip</td>
+  </tr>
+  <tr>
+    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXblZVRTlucC1PNnc</td>
+  </tr>
+  <tr>
+    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#152-2013-07-03">description</a></td>
+  </tr>
+  <tr>
+    <td>Compatibility</td> <td><ul><li>Minecraft Forge 1.5.2-7.8.1.737</li><li>Macro/Keybind Mod 0.9.9 for Minecraft 1.5.2</li></ul></td>
+  </tr>
+
   <tr>
     <th>Version</th> <th colspan="2">Details</th>
   </tr>
@@ -206,6 +225,7 @@ Compatibility
 Watson has been tested for compatibility with:
 
 * Minecraft with ModLoader
+* Minecraft with Minecraft Forge
 * WorldEditCUI
 * Rei's Minimap
 * Optifine
