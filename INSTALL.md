@@ -34,9 +34,10 @@ As of Minecraft version 1.6, the Minecraft launcher enables mods to inject modif
 1. Open %APPDATA%/.minecraft/versions/1.6.2-Forge9.10.0.804/1.6.2-Forge9.10.0.804.jar with your chosen ZIP file editing program.
 1. Paste in the full contents of the Watson ZIP file.
 1. Delete the contents of the META-INF/ folder of your modified JAR file.
-1. Save the modified JAR file.
+1. Save the modified JAR file over the original 1.6.2-Forge9.10.0.804.jar.
 1. Start the Minecraft launcher, select Forge in the list of Profiles and click the Edit Profile button.
-1. Check the box marked JVM Arguments and add the following text: -Xmx1G -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true
+1. Check the box marked JVM Arguments and add the following text:<br>
+  -Xmx1G -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true
 1. Click Save Profile.
 
 
