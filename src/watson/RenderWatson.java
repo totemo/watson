@@ -1,18 +1,15 @@
 package watson;
 
-import java.lang.reflect.Field;
-
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.src.ModLoader;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
 import watson.db.BlockEditSet;
-import watson.debug.Log;
 
 // --------------------------------------------------------------------------
 /**
@@ -132,4 +129,14 @@ public class RenderWatson extends Render
       // edits.drawHUD();
     } // if Watson is enabled and drawing
   } // renderEntityWatson
+
+  // --------------------------------------------------------------------------
+  /**
+   * @see net.minecraft.client.renderer.entity.Render#func_110775_a(net.minecraft.entity.Entity)
+   */
+  @Override
+  protected ResourceLocation func_110775_a(Entity entity)
+  {
+    return null;
+  }
 } // class RenderWatson

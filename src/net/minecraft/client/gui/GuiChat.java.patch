@@ -1,6 +1,6 @@
---- vanillasrc/minecraft/net/minecraft/client/gui/GuiChat.java	2013-07-03 12:13:31.317342739 +0930
-+++ modsrc/minecraft/net/minecraft/client/gui/GuiChat.java	2013-07-03 12:13:37.594340615 +0930
-@@ -103,9 +103,9 @@
+--- vanillasrc/minecraft/net/minecraft/./client/gui/GuiChat.java	2013-08-04 09:13:43.692469714 +0930
++++ modsrc/minecraft/net/minecraft/./client/gui/GuiChat.java	2013-08-04 12:02:48.766033167 +0930
+@@ -126,9 +126,9 @@
              {
                  this.mc.ingameGUI.getChatGUI().addToSentMessages(s);
  
@@ -12,10 +12,10 @@
                  }
              }
  
-@@ -369,4 +369,6 @@
+@@ -372,4 +372,6 @@
      {
          return false;
      }
-+    
++
 +    public GuiTextField getInputField() { return this.inputField; }    
  }

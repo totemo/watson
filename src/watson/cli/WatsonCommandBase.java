@@ -2,7 +2,8 @@ package watson.cli;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
-import watson.Controller;
+import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.EnumChatFormatting;
 
 // ----------------------------------------------------------------------------
 /**
@@ -15,13 +16,27 @@ public abstract class WatsonCommandBase extends CommandBase
 {
   // --------------------------------------------------------------------------
   /**
+   * Return the usage message for the command.
+   * 
+   * @return the usage message for the command.
+   */
+  public String getCommandUsage(ICommandSender icommandsender)
+  {
+    return "";
+  }
+
+  // --------------------------------------------------------------------------
+  /**
    * Show successful command output.
    * 
    * @param message the output to show.
    */
   public void localOutput(ICommandSender sender, String message)
   {
-    sender.sendChatToPlayer(Controller.OUTPUT_COLOUR + message);
+    ChatMessageComponent chat = new ChatMessageComponent();
+    chat.func_111059_a(EnumChatFormatting.AQUA);
+    chat.func_111072_b(message);
+    sender.sendChatToPlayer(chat);
   }
 
   // --------------------------------------------------------------------------
@@ -32,7 +47,10 @@ public abstract class WatsonCommandBase extends CommandBase
    */
   public void localError(ICommandSender sender, String message)
   {
-    sender.sendChatToPlayer(Controller.ERROR_COLOUR + message);
+    ChatMessageComponent chat = new ChatMessageComponent();
+    chat.func_111059_a(EnumChatFormatting.DARK_RED);
+    chat.func_111072_b(message);
+    sender.sendChatToPlayer(chat);
   }
 
   // --------------------------------------------------------------------------

@@ -103,7 +103,6 @@ blocks:
       bounds: [0.1, 0.0, 0.1, 0.9, 0.8, 0.9]
       model: plant
 
-
     - id: 7
       names: [bedrock]
       rgba: [0, 0, 0]
@@ -880,6 +879,161 @@ blocks:
     - id: 158
       names: [dropper]
       rgba: [157, 157, 157]
+
+    - id: 159
+      names: [stained clay, white stained clay]
+      data: 0
+      rgba: [209, 175, 159]
+    - id: 159
+      names: [orange stained clay]
+      data: 1
+      rgba: [163, 86, 39]
+    - id: 159
+      names: [magenta stained clay]
+      data: 2
+      rgba: [150, 90, 109]
+    - id: 159
+      names: [light blue stained clay]
+      data: 3
+      rgba: [116, 109, 137]
+    - id: 159
+      names: [yellow stained clay]
+      data: 4
+      rgba: [190, 135, 38]
+    - id: 159
+      names: [lime stained clay, light green stained clay]
+      data: 5
+      rgba: [108, 120, 55]
+    - id: 159
+      names: [pink stained clay]
+      data: 6
+      rgba: [166, 81, 81]
+    - id: 159
+      names: [gray stained clay]
+      data: 7
+      rgba: [59, 44, 37]
+    - id: 159
+      data: 8
+      names: [silver stained clay, light gray stained clay]
+      rgba: [136, 108, 97]
+    - id: 159
+      data: 9
+      names: [cyan stained clay]
+      rgba: [90, 94, 93]
+    - id: 159
+      names: [purple stained clay]
+      data: 10
+      rgba: [124, 73, 88]
+    - id: 159
+      names: [blue stained clay]
+      data: 11
+      rgba: [76, 62, 91]
+    - id: 159
+      names: [brown clay]
+      data: 12
+      rgba: [79, 53, 37]
+    - id: 159
+      names: [green stained clay, dark green stained clay]
+      data: 13
+      rgba: [78, 85, 44]
+    - id: 159
+      names: [red stained clay]
+      data: 14
+      rgba: [148, 64, 50]
+    - id: 159
+      names: [black stained clay]
+      data: 15
+      rgba: [39, 25, 18]
+
+    - id: 170
+      names: [hay block]
+      rgba: [203, 169, 15]
+    - id: 171
+      data: 0
+      names: [carpet, white carpet]
+      rgba: [255, 255, 255]
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.0625, 1.0]
+    - id: 171
+      data: 1
+      names: [orange carpet]
+      rgba: [219, 123, 59]
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.0625, 1.0]
+    - id: 171
+      data: 2
+      names: [magenta carpet]
+      rgba: [180, 75, 189]
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.0625, 1.0]
+    - id: 171
+      data: 3
+      names: [light blue carpet]
+      rgba: [93, 127, 197]
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.0625, 1.0]
+    - id: 171
+      data: 4
+      names: [yellow carpet]
+      rgba: [194, 182, 46]
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.0625, 1.0]
+    - id: 171
+      data: 5
+      names: [lime carpet,light green carpet]
+      rgba: [73, 189, 61]
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.0625, 1.0]
+    - id: 171
+      data: 6
+      names: [pink carpet]
+      rgba: [222, 166, 182]
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.0625, 1.0]
+    - id: 171
+      data: 7
+      names: [gray carpet]
+      rgba: [65, 65, 65]
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.0625, 1.0]
+    - id: 171
+      data: 8
+      names: [silver carpet, light gray carpet]
+      rgba: [168, 174, 174]
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.0625, 1.0]
+    - id: 171
+      data: 9
+      names: [cyan carpet]
+      rgba: [54, 128, 158]
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.0625, 1.0]
+    - id: 171
+      data: 10
+      names: [purple carpet]
+      rgba: [129, 60, 188]
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.0625, 1.0]
+    - id: 171
+      data: 11
+      names: [blue carpet]
+      rgba: [45, 56, 139]
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.0625, 1.0]
+    - id: 171
+      data: 12
+      names: [brown carpet]
+      rgba: [72, 46, 28]
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.0625, 1.0]
+    - id: 171
+      data: 13
+      names: [green carpet,dark green carpet]
+      rgba: [53, 71, 27]
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.0625, 1.0]
+    - id: 171
+      data: 14
+      names: [red carpet]
+      rgba: [159, 54, 51]
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.0625, 1.0]
+    - id: 171
+      data: 15
+      names: [black carpet]
+      rgba: [34, 32, 32]
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.0625, 1.0]
+    - id: 172
+      names: [hard clay]
+      rgba: [152, 97, 68]
+    - id: 173
+      names: [coal block]
+      rgba: [13, 13, 13]
           
     # A minor concession to Prism's logging of paintings, frames and minecarts.
     # Since these IDs are currently unused, abuse them to represent those.

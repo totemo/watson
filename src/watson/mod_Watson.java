@@ -162,7 +162,7 @@ public class mod_Watson extends BaseMod
     // return (matcher.find()) ? matcher.group() : "";
 
     // The way I do versioning checks will have to adjust to FML. FML.
-    return "1.5.2";
+    return "1.6.2";
   }
 
   // --------------------------------------------------------------------------

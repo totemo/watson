@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.SocketAddress;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -45,6 +46,11 @@ import watson.debug.Log;
 import watson.macro.MacroIntegration;
 import clientcommands.mod_ClientCommands;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
+
 // ----------------------------------------------------------------------------
 /**
  * Provides a centralised Facade to control the facilities of this mod.
@@ -77,10 +83,21 @@ public class Controller
   @ForgeSubscribe
   public void onClientChatReceived(ClientChatReceivedEvent event)
   {
-    ChatProcessor.getInstance().addChatToQueue(event.message);
-    event.setCanceled(true);
-  }
+    // So chat is now JSON encoded. -_-
+    try
+    {
+      JsonElement element = _jsonParser.parse(event.message);
+      JsonObject object = element.getAsJsonObject();
+      JsonPrimitive text = object.getAsJsonPrimitive("text");
+      ChatProcessor.getInstance().addChatToQueue(text.getAsString());
 
+      event.setCanceled(true);
+    }
+    catch (Exception ex)
+    {
+      // If it fails the event is not cancelled.
+    }
+  }
   // --------------------------------------------------------------------------
   /**
    * Mod-wide initialisation tasks, including loading configuration files and
@@ -204,8 +221,16 @@ public class Controller
   public String getServerIP()
   {
     Minecraft mc = ModLoader.getMinecraftInstance();
-    return (!mc.isSingleplayer() && mc.getServerData() != null) ? mc.getServerData().serverIP
-      : null;
+    if (!mc.isSingleplayer() && mc.getNetHandler() != null
+        && mc.getNetHandler().getNetManager() != null)
+    {
+      SocketAddress address = mc.getNetHandler().getNetManager().getSocketAddress();
+      return address != null ? address.toString() : null;
+    }
+    else
+    {
+      return null;
+    }
   }
 
   // --------------------------------------------------------------------------
@@ -886,8 +911,8 @@ public class Controller
    */
   public static File getModDirectory()
   {
-    File minecraftDir = Minecraft.getMinecraftDir();
-    return new File(minecraftDir, MOD_SUBDIR);
+    Minecraft mc = Minecraft.getMinecraft();
+    return new File(mc.mcDataDir, MOD_SUBDIR);
   }
 
   // --------------------------------------------------------------------------
@@ -1130,6 +1155,11 @@ public class Controller
   /**
    * The vanilla Minecraft screenshot filename date format.
    */
-  protected static final DateFormat       _dateFormat      = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
+  protected static final DateFormat       _dateFormat      = new SimpleDateFormat(
+                                                             "yyyy-MM-dd_HH.mm.ss");
 
+  /**
+   * 
+   */
+  protected JsonParser                    _jsonParser      = new JsonParser();
 } // class Controller

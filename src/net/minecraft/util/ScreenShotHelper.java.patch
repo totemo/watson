@@ -1,5 +1,5 @@
---- vanillasrc/minecraft/net/minecraft/./util/ScreenShotHelper.java	2013-07-03 12:13:29.507343350 +0930
-+++ modsrc/minecraft/net/minecraft/./util/ScreenShotHelper.java	2013-07-03 16:13:22.016821721 +0930
+--- vanillasrc/minecraft/net/minecraft/./util/ScreenShotHelper.java	2013-08-04 09:13:43.607480164 +0930
++++ modsrc/minecraft/net/minecraft/./util/ScreenShotHelper.java	2013-08-04 12:02:48.761033786 +0930
 @@ -73,20 +73,9 @@
  
      private static File func_74290_a(File par0File)

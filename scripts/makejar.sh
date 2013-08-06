@@ -8,7 +8,7 @@ set -o nounset
 
 fn_usage()
 {
-  echo Usage: "$THIS_SCRIPT [basic|chaos|mod|moderator|watson]"
+  echo Usage: "$THIS_SCRIPT [watson|full]"
   exit 1
 }
 
@@ -84,16 +84,17 @@ fn_unzip_subdir()
 }
 
 #------------------------------------------------------------------------------
+# Let the Forge installer set up the directory structure under 
+# .minecraft/versions/$FORGE_VERSION/ and then match that JAR.
 
 THIS_SCRIPT=$(basename "$0")
 MCPSETUP_DIR=~/bin/mcpsetup/$MC_VER
-MC_JAR=$MCPSETUP_DIR/minecraft.jar
-FORGE_ZIP=$(ls $MCPSETUP_DIR/minecraftforge-universal-$MC_VER-*.zip | head -1)
-LITELOADER_ZIP=$(ls $MCPSETUP_DIR/mods/liteloader_*.zip | head -1)
-REIS_ZIP=$(ls $MCPSETUP_DIR/mods/\[*\]ReiMinimap_*.zip | head -1)
-WECUI_ZIP=$(ls $MCPSETUP_DIR/mods/CUI-*.zip 2>/dev/null | head -1)
+FORGE_VERSION=1.6.2-Forge9.10.0.804
+INPUT_JAR=~/.minecraft/versions/$FORGE_VERSION/$FORGE_VERSION.jar.orig
+OUTPUT_JAR=~/.minecraft/versions/$FORGE_VERSION/$FORGE_VERSION.jar
+REIS_ZIP=$(ls $MCPSETUP_DIR/mods/\[*\]ReiMinimap_*.zip 2>/dev/null | head -1)
 WATSON_ZIP=$(ls $MCPSETUP_DIR/mods/watson-$MC_VER-????-??-??.zip 2>/dev/null | head -1)
-OPTIFINE_ZIP=$(ls $MCPSETUP_DIR/mods/OptiFine_*.zip | head -1)
+OPTIFINE_ZIP=$(ls $MCPSETUP_DIR/mods/OptiFine_*.zip 2>/dev/null | head -1)
 TMP_DIR=$MCPSETUP_DIR/mods/tmp
 
 #------------------------------------------------------------------------------
@@ -107,74 +108,57 @@ mkdir -p "$TMP_DIR" || fn_error "could not make temporary directory"
 #------------------------------------------------------------------------------
 # Parse command line.
 
-DO_FORGE=false
-DO_LITELOADER=false
 DO_REIS=false
-DO_WECUI=false
 DO_WATSON=false
 DO_OPTIFINE=false
 if [ $# -eq 0 ]; then
-  JAR_TYPE="basic"
-  DO_REIS=true
-  DO_OPTIFINE=true
+  JAR_TYPE="watson"
 elif [ $# -eq 1 ]; then
-  if [ "$1" = "basic" ]; then
-    JAR_TYPE="basic"
-    DO_REIS=true
-    DO_OPTIFINE=true
-  elif [ "$1" = "mod" -o "$1" = "moderator" ]; then
-    JAR_TYPE="moderator"
-    DO_FORGE=true
-    DO_REIS=true
-    DO_WECUI=true
-    DO_WATSON=true
-    DO_OPTIFINE=true
-  elif [ "$1" = "chaos" ]; then
-    JAR_TYPE="chaos"
-    DO_FORGE=true
-    DO_LITELOADER=true
-    DO_WATSON=true
-    DO_REIS=true
-    DO_OPTIFINE=true
-  elif [ "$1" = "watson" ]; then
-    JAR_TYPE="watson"
-    DO_FORGE=true
-    DO_WATSON=true
-  else
-    echo "$1: unsupported argument"JAR_TYPE
-    fn_usage
-  fi
+  case "$1" in
+    watson|full) 
+      JAR_TYPE="$1" 
+      ;;
+    *)
+      echo "$1: unsupported argument"JAR_TYPE
+      fn_usage
+      ;;
+  esac
 else
   fn_usage
 fi
 
 #------------------------------------------------------------------------------
+
+case "$JAR_TYPE" in
+  watson)
+    DO_WATSON=true
+    ;;
+  full)
+    DO_WATSON=true
+    DO_REIS=true
+    DO_OPTIFINE=true
+    ;;    
+esac
+
+#------------------------------------------------------------------------------
+# As of 1.6, LiteLoader installs itself using the tweaks mechanism and I 
+# configure it to chain to FML with cascaded tweaks.  I simply allow the Forge
+# installer to set up the basic structure under ~/.minecraft/versions and then
+# modify the JSON configuration per the instructions for LiteLoader.
+#
 # Order of mods:
-#   Basic or moderator:
-#     Forge - always first
 #   All:
-#     LiteLoader
 #     Rei's Minimap
 #   Moderator:
 #     Watson
-#     WorldEdit CUI
 #   All:
 #     OptiFine - always last
 #------------------------------------------------------------------------------
 # Check pre-requisites exist.
 
 PREREQUISITES=true
-if $DO_FORGE; then
-  fn_check   "Forge"           "$FORGE_ZIP"      || PREREQUISITES=false
-fi
-if $DO_LITELOADER; then
-  fn_check   "LiteLoader"      "$LITELOADER_ZIP" || PREREQUISITES=false
-fi
 if $DO_REIS; then
   fn_check   "Rei's Minimap"   "$REIS_ZIP"       || PREREQUISITES=false
-fi
-if $DO_WECUI; then
- fn_check    "WorldEdit CUI"   "$WECUI_ZIP"      || PREREQUISITES=false
 fi
 if $DO_OPTIFINE; then
   fn_check   "Optifine"        "$OPTIFINE_ZIP"   || PREREQUISITES=false
@@ -191,24 +175,15 @@ fi
 # Extract into staging area.
 
 echo -n "Extracting Minecraft JAR... "
-cd "$TMP_DIR" && jar xf "$MC_JAR" >&/dev/null || \
+cd "$TMP_DIR" && jar xf "$INPUT_JAR" >&/dev/null || \
   { echo "FAILED." && fn_error "could not extract Minecraft JAR."; }
 echo "DONE."
 
-if $DO_FORGE; then
-  fn_unzip           "Forge"          "$FORGE_ZIP"
-fi
-if $DO_LITELOADER; then
-  fn_unzip           "LiteLoader"     "$LITELOADER_ZIP"
-fi
 if $DO_REIS; then
   fn_unzip           "Rei's Minimap"  "$REIS_ZIP"
 fi
 if $DO_WATSON; then
   fn_unzip           "Watson"         "$WATSON_ZIP"
-fi
-if $DO_WECUI; then
-  fn_unzip_subdir    "WorldEdit CUI"  "$WECUI_ZIP"  $(basename "$WECUI_ZIP" .zip)
 fi
 if $DO_OPTIFINE; then
   fn_unzip           "Optifine"       "$OPTIFINE_ZIP"
@@ -222,9 +197,8 @@ rm "$TMP_DIR/META-INF/"*          >&/dev/null || \
 #------------------------------------------------------------------------------
 # Construct the JAR.
 
-JAR_FILE="$JAR_DIR/minecraft-$MC_VER-$JAR_TYPE.jar"
 echo -n "Building $JAR_TYPE JAR..."
-jar -cf "$JAR_FILE" -C "$TMP_DIR" . >&/dev/null || \
+jar -cf "$OUTPUT_JAR" -C "$TMP_DIR" . >&/dev/null || \
   { echo "FAILED." && fn_error "failed to build output JAR."; }
 echo "DONE."
 

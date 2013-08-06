@@ -3,20 +3,41 @@ Installation
 
 Prior to the 1.5.2 (2013-07-03) version, Watson was a ModLoader-compatible mod.  From that version onwards, it requires Minecraft Forge to work.
 
-With either the older versions of Watson or the latest Forge versions, you will need to install the modding API (ModLoader or Forge) into your Minecraft JAR and then copy in the Watson classes as well.
+With either the older versions of Watson or the latest Forge versions, you will need to install the modding API (ModLoader or Forge) and then copy the Watson classes into your Minecraft JAR.
 
-The basic procedure for manually patching Minecraft's JAR file is:
+As of Minecraft version 1.6, the Minecraft launcher enables mods to inject modifications into Minecraft without changing the contents of the Minecraft JAR file.  I'm excited by the prospect, but the documentation on doing what Forge refers to as "CoreMod"s is scant and I haven't had the time to reverse-engineer it.  So for now, you must patch your JAR file the old fashioned way.
 
 1. Download a version of Watson that matches your current Minecraft version <i>exactly</i>.
-1. Download a version of <a href="http://www.minecraftforum.net/topic/75440-v151-risugamis-mods-updated/">ModLoader</a> or <a href="http://files.minecraftforge.net/">Minecraft Forge (universal)</a> that also matches your current Minecraft version and the version of Watson you intend to run.
-1. Locate the Minecraft JAR file.  On Windows, it will be "%APPDATA%\\.minecraft\bin\minecraft.jar".  Typical Windows configurations will not show you the ".jar" on the end of that filename.  On UNIX-like systems (Macs and Linux), it will be ~/.minecraft/bin/minecraft.jar
-1. Save a backup copy of your minecraft.jar file (just in case).
-1. Open minecraft.jar with your chosen ZIP file editing program.
-1. Open ModLoader.zip or minecraftforge-universal-&lt;version&gt;.zip and copy its full contents into minecraft.jar.
-1. If you plan on installing other mods such as Rei's or Optifine, copy and paste the contents of those ZIP files into your modified JAR here.
-1. Open the Watson ZIP file and copy its full contents into minecraft.jar.
-1. Delete the contents of the META-INF/ folder of your modified Minecraft JAR file.
-1. Save the modified Minecraft JAR file.
+1. Download the recommended <i>installer</i> for Minecraft Forge from <a href"http://files.minecraftforge.net/">the Forge downloads site</a> and run that.  It will create a profile in a directory like %APPDATA%/.minecraft/versions/1.6.2-Forge9.10.0.804/ containing files called 1.6.2-Forge9.10.0.804.json and 1.6.2-Forge9.10.0.804.jar.  The names will vary according to what version of Forge you install.
+1. Run the Forge profile from the Minecraft launcher at least once.
+1. If you want to use the Macro/Keybind integration in Watson, you'll want to install LiteLoader as the start of the tweak chain, according to the <a href="http://www.minecraftforum.net/topic/1868280-162api-liteloader-for-minecraft-162/"><i>Manual Installation [advanced]</i> procedure in the LiteLoader forum post.</a>.  This requires editing the JSON file that describes the profile: %APPDATA%/.minecraft/versions/1.6.2-Forge9.10.0.804/1.6.2-Forge9.10.0.804.json.  After this, you will have both LiteLoader and Forge installed.  The start of the 1.6.2-Forge9.10.0.804.json file will look something like this (without the line wrapping of the minecraftArguments value):
+<pre>
+{
+	"minecraftArguments": "--username ${auth_player_name} --session ${auth_session} --version ${version_name} 
+	--gameDir ${game_directory} --assetsDir ${game_assets} 
+	--tweakClass com.mumfrey.liteloader.launch.LiteLoaderTweaker 
+	--cascadedTweaks cpw.mods.fml.common.launcher.FMLTweaker",
+	"libraries": [
+		{
+			"name": "com.mumfrey:liteloader:1.6.2",
+			"url": "http://dl.liteloader.com/versions/"
+		},
+		{
+			"name": "net.minecraft:launchwrapper:1.3"
+		},
+		{
+			"url": "http://files.minecraftforge.net/maven/",
+			"name": "net.minecraftforge:minecraftforge:9.10.0.804"
+		},
+</pre>
+1. Now you can patch the corresponding JAR file with the Watson classes.  It's at this point that you would add in other mods that also (at the time of writing) patch the JAR file, such as Rei's minimap or Optifine.
+1. Open %APPDATA%/.minecraft/versions/1.6.2-Forge9.10.0.804/1.6.2-Forge9.10.0.804.jar with your chosen ZIP file editing program.
+1. Paste in the full contents of the Watson ZIP file.
+1. Delete the contents of the META-INF/ folder of your modified JAR file.
+1. Save the modified JAR file.
+1. Start the Minecraft launcher, select Forge in the list of Profiles and click the Edit Profile button.
+1. Check the box marked JVM Arguments and add the following text: -Xmx1G -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true
+1. Click Save Profile.
 
 
 Downloads
@@ -25,6 +46,25 @@ Downloads
 GitHub has dropped support for uploading files, so downloads will be hosted on Google Drive from now on.
 
 <table>
+  <tr>
+    <th>Version</th> <th colspan="2">Details</th>
+  </tr>
+  <tr>
+    <td rowspan="5">1.6.2<br>(2013-07-03)</td> <td>sha256sum -b</td> <td>392b1b2e0ba8c316f3f3c6c3c6fc36e68fa8a61313dffcf7ddead4d6dbcd54b2</td>
+  </tr>
+  <tr>
+    <td>File Name</td> <td>watson-1.6.2-2013-08-06.zip</td>
+  </tr>
+  <tr>
+    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXeTZWaTAxZm1oNDQ</td>
+  </tr>
+  <tr>
+    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#152-2013-08-06">description</a></td>
+  </tr>
+  <tr>
+    <td>Compatibility</td> <td><ul><li>Minecraft Forge 1.6.2-9.10.0.804</li><li>LiteLoader for 1.6.2</li><li>Macro/Keybind Mod 0.9.10 for Minecraft 1.6.2</li></ul></td>
+  </tr>
+
   <tr>
     <th>Version</th> <th colspan="2">Details</th>
   </tr>

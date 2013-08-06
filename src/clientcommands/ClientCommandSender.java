@@ -2,7 +2,9 @@ package clientcommands;
 
 import net.minecraft.command.ICommandSender;
 import net.minecraft.src.ModLoader;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.world.World;
 
 /*
  * ----------------------------------------------------------------------------
@@ -39,12 +41,12 @@ public class ClientCommandSender implements ICommandSender
 
   // --------------------------------------------------------------------------
   /**
-   * @see net.minecraft.src.ICommandSender#sendChatToPlayer(java.lang.String)
+   * @see net.minecraft.command.ICommandSender#sendChatToPlayer(net.minecraft.util.ChatMessageComponent)
    */
   @Override
-  public void sendChatToPlayer(String chat)
+  public void sendChatToPlayer(ChatMessageComponent chatmessagecomponent)
   {
-    _sender.sendChatToPlayer(chat);
+    _sender.sendChatToPlayer(chatmessagecomponent);
   }
 
   // --------------------------------------------------------------------------
@@ -59,13 +61,24 @@ public class ClientCommandSender implements ICommandSender
 
   // --------------------------------------------------------------------------
   /**
-   * @see net.minecraft.src.ICommandSender#translateString(java.lang.String,
-   *      java.lang.Object[])
+   * @see net.minecraft.src.ICommandSender#getPlayerCoordinates()
    */
   @Override
-  public String translateString(String key, Object... values)
+  public ChunkCoordinates getPlayerCoordinates()
   {
-    return _sender.translateString(key, values);
+    return ModLoader.getMinecraftInstance().thePlayer.getPlayerCoordinates();
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Not documented in the deobfuscated sources yet.
+   * 
+   * Presumed to be the natural compliment to getPlayerCoordinates().
+   */
+  @Override
+  public World func_130014_f_()
+  {
+    return ModLoader.getMinecraftInstance().thePlayer.worldObj;
   }
 
   // --------------------------------------------------------------------------
@@ -79,13 +92,4 @@ public class ClientCommandSender implements ICommandSender
    */
   protected ClientCommandManager _ccm;
 
-  // --------------------------------------------------------------------------
-  /**
-   * @see net.minecraft.src.ICommandSender#getPlayerCoordinates()
-   */
-  @Override
-  public ChunkCoordinates getPlayerCoordinates()
-  {
-    return ModLoader.getMinecraftInstance().thePlayer.getPlayerCoordinates();
-  }
 } // class ClientCommandSender

@@ -17,6 +17,8 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
+import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.EnumChatFormatting;
 
 // ----------------------------------------------------------------------------
 /**
@@ -26,6 +28,10 @@ import net.minecraft.command.WrongUsageException;
  * Even in single player mode, Minecraft processes commands at the built in
  * server by default. However, I want commands to be processed at the client,
  * particularly in the case of multiplayer mode.
+ * 
+ * TODO: See if all this can be replaced with
+ * net.minecraft.command.CommandHandler.
+ * 
  */
 public class ClientCommandManager implements ICommandManager
 {
@@ -148,30 +154,31 @@ public class ClientCommandManager implements ICommandManager
       }
       else
       {
-        sender.sendChatToPlayer("\u00a7cYou do not have permission to use this command.");
+        ChatMessageComponent chat = ChatMessageComponent.func_111077_e("commands.generic.permission");
+        sender.sendChatToPlayer(chat.func_111059_a(EnumChatFormatting.RED));
       }
     }
     catch (WrongUsageException ex)
     {
-      sender.sendChatToPlayer("\u00a7c"
-                              + sender.translateString(
-                                "commands.generic.usage",
-                                new Object[]{sender.translateString(
-                                  ex.getMessage(), ex.getErrorOjbects())}));
+      ChatMessageComponent chat = ChatMessageComponent.func_111082_b(
+        "commands.generic.usage",
+        new Object[]{ChatMessageComponent.func_111082_b(ex.getMessage(),
+          ex.getErrorOjbects())});
+      sender.sendChatToPlayer(chat.func_111059_a(EnumChatFormatting.RED));
     }
     catch (CommandException ex)
     {
-      sender.sendChatToPlayer("\u00a7c"
-                              + sender.translateString(ex.getMessage(),
-                                ex.getErrorOjbects()));
+      ChatMessageComponent chat = ChatMessageComponent.func_111082_b(
+        ex.getMessage(), ex.getErrorOjbects());
+      sender.sendChatToPlayer(chat.func_111059_a(EnumChatFormatting.RED));
     }
-    catch (Throwable ex)
+    catch (Throwable throwable)
     {
-      sender.sendChatToPlayer("\u00a7c"
-                              + sender.translateString(
-                                "commands.generic.exception", new Object[0]));
-      ex.printStackTrace();
+      ChatMessageComponent chat = ChatMessageComponent.func_111077_e("commands.generic.exception");
+      sender.sendChatToPlayer(chat.func_111059_a(EnumChatFormatting.RED));
+      throwable.printStackTrace();
     }
+
     return 0;
   } // executeCommand
 
