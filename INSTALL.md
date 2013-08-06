@@ -30,7 +30,7 @@ As of Minecraft version 1.6, the Minecraft launcher enables mods to inject modif
 			"name": "net.minecraftforge:minecraftforge:9.10.0.804"
 		},
 </pre>
-1. Now you can patch the corresponding JAR file with the Watson classes.  It's at this point that you would add in other mods that also (at the time of writing) patch the JAR file, such as Rei's minimap or Optifine.
+1. Now you can patch the corresponding JAR file with the Watson classes.  It's at this point that you would add in other mods that also (at the time of writing) patch the JAR file, such as Rei's Minimap or Optifine.
 1. Open %APPDATA%/.minecraft/versions/1.6.2-Forge9.10.0.804/1.6.2-Forge9.10.0.804.jar with your chosen ZIP file editing program.
 1. Paste in the full contents of the Watson ZIP file.
 1. Delete the contents of the META-INF/ folder of your modified JAR file.
@@ -50,7 +50,7 @@ GitHub has dropped support for uploading files, so downloads will be hosted on G
     <th>Version</th> <th colspan="2">Details</th>
   </tr>
   <tr>
-    <td rowspan="5">1.6.2<br>(2013-07-03)</td> <td>sha256sum -b</td> <td>392b1b2e0ba8c316f3f3c6c3c6fc36e68fa8a61313dffcf7ddead4d6dbcd54b2</td>
+    <td rowspan="5">1.6.2<br>(2013-08-06)</td> <td>sha256sum -b</td> <td>392b1b2e0ba8c316f3f3c6c3c6fc36e68fa8a61313dffcf7ddead4d6dbcd54b2</td>
   </tr>
   <tr>
     <td>File Name</td> <td>watson-1.6.2-2013-08-06.zip</td>
