@@ -1,5 +1,7 @@
 package watson.cli;
 
+import java.util.Arrays;
+
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatMessageComponent;
@@ -27,6 +29,45 @@ public abstract class WatsonCommandBase extends CommandBase
 
   // --------------------------------------------------------------------------
   /**
+   * Override the default permissions mechanism so that all Watson commands are
+   * usable client-side.
+   * 
+   * @param sender the command sender.
+   * @returns true if the given command sender is allowed to use this command.
+   */
+  public boolean canCommandSenderUseCommand(ICommandSender sender)
+  {
+    return true;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * With reference to my remarks at
+   * https://github.com/MinecraftForge/MinecraftForge/issues/809, Forge doubles
+   * up the final argument passed to ICommand implementations and tells lies
+   * about how many arguments are in that array (increases the size by one).
+   * 
+   * This method fixes the args array when it is clear that the last arg is
+   * repeated.
+   * 
+   * @param args the args array passed to ICommand.processCommand().
+   * @return the args array that should have been passed in.
+   */
+  public String[] fixArgs(String[] args)
+  {
+    int lastIndex = args.length - 1;
+    if (lastIndex >= 1 && args[lastIndex - 1] == args[lastIndex])
+    {
+      return Arrays.copyOfRange(args, 0, lastIndex);
+    }
+    else
+    {
+      return args;
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  /**
    * Show successful command output.
    * 
    * @param message the output to show.
@@ -34,8 +75,8 @@ public abstract class WatsonCommandBase extends CommandBase
   public void localOutput(ICommandSender sender, String message)
   {
     ChatMessageComponent chat = new ChatMessageComponent();
-    chat.func_111059_a(EnumChatFormatting.AQUA);
-    chat.func_111072_b(message);
+    chat.setColor(EnumChatFormatting.AQUA);
+    chat.addText(message);
     sender.sendChatToPlayer(chat);
   }
 
@@ -48,8 +89,8 @@ public abstract class WatsonCommandBase extends CommandBase
   public void localError(ICommandSender sender, String message)
   {
     ChatMessageComponent chat = new ChatMessageComponent();
-    chat.func_111059_a(EnumChatFormatting.DARK_RED);
-    chat.func_111072_b(message);
+    chat.setColor(EnumChatFormatting.DARK_RED);
+    chat.addText(message);
     sender.sendChatToPlayer(chat);
   }
 

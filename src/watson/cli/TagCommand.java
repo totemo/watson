@@ -1,7 +1,6 @@
 package watson.cli;
 
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.SyntaxErrorException;
 import watson.chat.ChatProcessor;
 
 // --------------------------------------------------------------------------
@@ -28,6 +27,7 @@ public class TagCommand extends WatsonCommandBase
   @Override
   public void processCommand(ICommandSender sender, String[] args)
   {
+    args = fixArgs(args);
     if (args.length == 0)
     {
       help(sender);
@@ -56,7 +56,7 @@ public class TagCommand extends WatsonCommandBase
       }
     }
 
-    throw new SyntaxErrorException("commands.generic.syntax", new Object[0]);
+    localError(sender, "Invalid command syntax.");
   } // processCommand
 
   // --------------------------------------------------------------------------

@@ -1,7 +1,6 @@
 package watson.cli;
 
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.SyntaxErrorException;
 import watson.Controller;
 import watson.chat.ChatHighlighter;
 
@@ -29,6 +28,7 @@ public class HighlightCommand extends WatsonCommandBase
   @Override
   public void processCommand(ICommandSender sender, String[] args)
   {
+    args = fixArgs(args);
     ChatHighlighter highlighter = Controller.instance.getChatHighlighter();
     if (args.length == 0)
     {
@@ -77,7 +77,7 @@ public class HighlightCommand extends WatsonCommandBase
       }
     }
 
-    throw new SyntaxErrorException("commands.generic.syntax", new Object[0]);
+    localError(sender, "Invalid command syntax.");
   } // processCommand
 
   // --------------------------------------------------------------------------

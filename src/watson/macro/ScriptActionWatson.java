@@ -6,7 +6,8 @@ import net.eq2online.macros.scripting.api.IMacro;
 import net.eq2online.macros.scripting.api.IMacroAction;
 import net.eq2online.macros.scripting.api.IReturnValue;
 import net.eq2online.macros.scripting.api.IScriptActionProvider;
-import clientcommands.mod_ClientCommands;
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.client.ClientCommandHandler;
 
 // ----------------------------------------------------------------------------
 /**
@@ -58,7 +59,8 @@ public class ScriptActionWatson extends ScriptAction
   public IReturnValue execute(IScriptActionProvider provider, IMacro macro,
                               IMacroAction action, String command, String[] args)
   {
-    mod_ClientCommands.getInstance().handleClientCommand(command);
+    ClientCommandHandler.instance.executeCommand(
+      Minecraft.getMinecraft().thePlayer, command);
     return null;
   }
 } // class ScriptSctionWatsonCommand

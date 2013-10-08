@@ -1,9 +1,9 @@
 #------------------------------------------------------------------------------
 # These lines need to change with the Minecraft and MCP versions.
 
-MCP_VER=804
-MC_VER=1.6.2
-FML_VER=7
+MCP_VER=811
+MC_VER=1.6.4
+FML_VER=9
 
 #------------------------------------------------------------------------------
 # These lines only change if your directory setup is different to mine.

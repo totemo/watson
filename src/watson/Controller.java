@@ -26,6 +26,7 @@ import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.network.packet.Packet3Chat;
 import net.minecraft.src.ModLoader;
+import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.event.ForgeSubscribe;
 import watson.analysis.Sherlock;
@@ -44,7 +45,6 @@ import watson.db.BlockTypeRegistry;
 import watson.db.Filters;
 import watson.debug.Log;
 import watson.macro.MacroIntegration;
-import clientcommands.mod_ClientCommands;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -119,11 +119,11 @@ public class Controller
     ChatProcessor.getInstance().setChatTagVisible("lb.header.noresults", false);
 
     // Initialise the commands.
-    mod_ClientCommands.getInstance().registerCommand(new WatsonCommand());
-    mod_ClientCommands.getInstance().registerCommand(new AnnoCommand());
-    mod_ClientCommands.getInstance().registerCommand(new TagCommand());
-    mod_ClientCommands.getInstance().registerCommand(new HighlightCommand());
-    mod_ClientCommands.getInstance().registerCommand(new CalcCommand());
+    ClientCommandHandler.instance.registerCommand(new WatsonCommand());
+    ClientCommandHandler.instance.registerCommand(new AnnoCommand());
+    ClientCommandHandler.instance.registerCommand(new TagCommand());
+    ClientCommandHandler.instance.registerCommand(new HighlightCommand());
+    ClientCommandHandler.instance.registerCommand(new CalcCommand());
   }
 
   // --------------------------------------------------------------------------

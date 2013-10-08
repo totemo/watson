@@ -7,7 +7,6 @@ import java.util.logging.Level;
 
 import net.eq2online.macros.scripting.ScriptCore;
 import net.eq2online.macros.scripting.VariableCache;
-import net.eq2online.macros.scripting.api.IVariableListener;
 import net.eq2online.macros.scripting.api.IVariableProvider;
 import watson.Configuration;
 import watson.Controller;
@@ -118,16 +117,6 @@ public class VariableProviderWatson extends VariableCache
         "exception updating WATSON_... macro variables", ex);
     }
   } // UpdateVariables
-
-  // --------------------------------------------------------------------------
-  /**
-   * @see net.eq2online.macros.scripting.api.IVariableProvider#ProvideVariables(net.eq2online.macros.scripting.api.IVariableListener)
-   */
-  @Override
-  public void provideVariables(IVariableListener variableListener)
-  {
-    provideCachedVariables(variableListener);
-  }
 
   // --------------------------------------------------------------------------
   /**

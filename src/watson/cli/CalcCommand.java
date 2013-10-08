@@ -6,7 +6,6 @@ import java.io.StringReader;
 import java.util.Locale;
 
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.SyntaxErrorException;
 
 // --------------------------------------------------------------------------
 /**
@@ -51,6 +50,7 @@ public class CalcCommand extends WatsonCommandBase
   @Override
   public void processCommand(ICommandSender sender, String[] args)
   {
+    args = fixArgs(args);
     if (args.length == 0)
     {
       help(sender);
@@ -73,7 +73,7 @@ public class CalcCommand extends WatsonCommandBase
       }
       catch (IOException ex)
       {
-        throw new SyntaxErrorException("commands.generic.syntax", new Object[0]);
+        localError(sender, "Invalid command syntax.");
       }
     }
   } // processCommand

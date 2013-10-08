@@ -1,17 +1,17 @@
 package watson.cli;
 
+import java.util.Map;
 import java.util.regex.Pattern;
 
+import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.SyntaxErrorException;
+import net.minecraftforge.client.ClientCommandHandler;
 import watson.Configuration;
 import watson.Controller;
 import watson.DisplaySettings;
 import watson.analysis.ServerTime;
 import watson.db.Filters;
 import watson.db.OreDB;
-import clientcommands.ClientCommandManager;
-import clientcommands.mod_ClientCommands;
 
 // --------------------------------------------------------------------------
 /**
@@ -37,6 +37,7 @@ public class WatsonCommand extends WatsonCommandBase
   @Override
   public void processCommand(ICommandSender sender, String[] args)
   {
+    args = fixArgs(args);
     DisplaySettings display = Controller.instance.getDisplaySettings();
     if (args.length == 0)
     {
@@ -187,7 +188,6 @@ public class WatsonCommand extends WatsonCommandBase
           return;
         }
       }
-      // Other args.length and args[1] values will throw.
     } // display
 
     // "outline" command.
@@ -212,7 +212,6 @@ public class WatsonCommand extends WatsonCommandBase
           return;
         }
       }
-      // Other args.length and args[1] values will throw.
     } // outline
 
     // "/w anno" command.
@@ -237,7 +236,6 @@ public class WatsonCommand extends WatsonCommandBase
           return;
         }
       }
-      // Other args.length and args[1] values will throw.
     } // anno
 
     // "vector" command.
@@ -271,7 +269,6 @@ public class WatsonCommand extends WatsonCommandBase
           return;
         }
       }
-      // Other args.length and args[1] values will throw.
     } // "/w label"
 
     // Ore teleport commands: /w tp [next|prev|<number>]
@@ -453,7 +450,7 @@ public class WatsonCommand extends WatsonCommandBase
       }
     } // config
 
-    throw new SyntaxErrorException("commands.generic.syntax", new Object[0]);
+    localError(sender, "Invalid command syntax.");
   } // processCommand
 
   // --------------------------------------------------------------------------
@@ -817,19 +814,11 @@ public class WatsonCommand extends WatsonCommandBase
       else
       {
         // De-register, set the prefix and re-register this command.
-        ClientCommandManager ccm = mod_ClientCommands.getInstance().getClientCommandManager();
-        try
-        {
-          ccm.unregisterCommand(this);
-        }
-        catch (Exception ex)
-        {
-          // Future proof the inevitable fuck up when a conflicting version of
-          // mod_ClientCommands is released without the unregisterCommand
-          // method.
-        }
+        @SuppressWarnings("unchecked")
+        Map<String, ICommand> commands = ClientCommandHandler.instance.getCommands();
+        commands.remove(Configuration.instance.getWatsonPrefix());
         Configuration.instance.setWatsonPrefix(newPrefix);
-        ccm.registerCommand(this);
+        ClientCommandHandler.instance.registerCommand(this);
       }
       return true;
     } // /w config watson_prefix <prefix>
@@ -898,7 +887,6 @@ public class WatsonCommand extends WatsonCommandBase
 
     return false;
   } // handleConfigCommand
-
   // --------------------------------------------------------------------------
   /**
    * Show a help message.

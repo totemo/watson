@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.SyntaxErrorException;
 import watson.Controller;
 import watson.db.Annotation;
 import watson.db.BlockEditSet;
@@ -34,6 +33,7 @@ public class AnnoCommand extends WatsonCommandBase
   @Override
   public void processCommand(ICommandSender sender, String[] args)
   {
+    args = fixArgs(args);
     if (args.length == 0)
     {
       help(sender);
@@ -146,7 +146,7 @@ public class AnnoCommand extends WatsonCommandBase
       }
     }
 
-    throw new SyntaxErrorException("commands.generic.syntax", new Object[0]);
+    localError(sender, "Invalid command syntax.");
   } // processCommand
 
   // --------------------------------------------------------------------------

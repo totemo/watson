@@ -132,10 +132,10 @@ public class RenderWatson extends Render
 
   // --------------------------------------------------------------------------
   /**
-   * @see net.minecraft.client.renderer.entity.Render#func_110775_a(net.minecraft.entity.Entity)
+   * @see net.minecraft.client.renderer.entity.Render#getEntityTexture(net.minecraft.entity.Entity)
    */
   @Override
-  protected ResourceLocation func_110775_a(Entity entity)
+  protected ResourceLocation getEntityTexture(Entity entity)
   {
     return null;
   }

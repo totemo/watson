@@ -45,7 +45,7 @@ public class mod_Watson extends BaseMod
    */
   public String getPriorities()
   {
-    return "required-before:mod_ClientCommands";
+    return "";
   }
 
   // --------------------------------------------------------------------------
@@ -162,7 +162,7 @@ public class mod_Watson extends BaseMod
     // return (matcher.find()) ? matcher.group() : "";
 
     // The way I do versioning checks will have to adjust to FML. FML.
-    return "1.6.2";
+    return "1.6.4";
   }
 
   // --------------------------------------------------------------------------
