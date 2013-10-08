@@ -1,5 +1,9 @@
 Change History
 ==============
+1.6.4 (2013-10-08)
+------------------
+* Updated to 1.6.4, Minecraft Forge 1.6.4-9.11.1.916.
+
 1.6.2 (2013-08-06)
 ------------------
 * Updated for Minecraft 1.6.2. Tested against Minecraft Forge 1.6.2-9.10.0.804, LiteLoader for 1.6.2, Macro/Keybind Mod 0.9.10 for Minecraft 1.6.2, Rei's Minimap and Optifine.

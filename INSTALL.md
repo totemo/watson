@@ -1,11 +1,8 @@
 Installation
 ------------
+I hope to have Watson fully compatible with the new Minecraft launcher's tweaks mechanism soon.  As of 1.6.4, you can just put the Watson Zip file in your ~/.minecraft/mods/ directory and everything will work EXCEPT putting the currently selected player's name in screenshot file names.  You will need to download and run the [recommended Minecraft Forge installer for 1.6.4](http://adf.ly/673885/http://files.minecraftforge.net/minecraftforge/minecraftforge-installer-1.6.4-9.11.1.916.jar) from http://files.minecraftforge.net/ and if you want to use the Macro/Keybind Mod with Watson you should also run the [LiteLoader installer](http://www.minecraftforum.net/topic/1868280-164api-liteloader-for-minecraft-164/) after Minecraft Forge is installed, and select the option "Chain to Minecraft Forge 9.11.1.916."
 
-Prior to the 1.5.2 (2013-07-03) version, Watson was a ModLoader-compatible mod.  From that version onwards, it requires Minecraft Forge to work.
-
-With either the older versions of Watson or the latest Forge versions, you will need to install the modding API (ModLoader or Forge) and then copy the Watson classes into your Minecraft JAR.
-
-As of Minecraft version 1.6, the Minecraft launcher enables mods to inject modifications into Minecraft without changing the contents of the Minecraft JAR file.  I'm excited by the prospect, but the documentation on doing what Forge refers to as "CoreMod"s is scant and I haven't had the time to reverse-engineer it.  So for now, you must patch your JAR file the old fashioned way.
+If you need your screenshots named after the currently selected player, then until I have a tweaks class written, please patch your JAR file the old fashioned way:
 
 1. Download a version of Watson that matches your current Minecraft version <i>exactly</i>.
 1. Download the recommended <i>installer</i> for Minecraft Forge from <a href"http://files.minecraftforge.net/">the Forge downloads site</a> and run that.  It will create a profile in a directory like %APPDATA%/.minecraft/versions/1.6.2-Forge9.10.0.804/ containing files called 1.6.2-Forge9.10.0.804.json and 1.6.2-Forge9.10.0.804.jar.  The names will vary according to what version of Forge you install.
@@ -51,6 +48,25 @@ GitHub has dropped support for uploading files, so downloads will be hosted on G
     <th>Version</th> <th colspan="2">Details</th>
   </tr>
   <tr>
+    <td rowspan="5">1.6.4<br>(2013-10-08)</td> <td>sha256sum -b</td> <td>4ea4f85e0a5ccc308151a67b3a631dceff77dcb5f3fa74c7e7cfeb594e15b171</td>
+  </tr>
+  <tr>
+    <td>File Name</td> <td>watson-1.6.4-2013-10-08.zip</td>
+  </tr>
+  <tr>
+    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXZ3JHczJDMWo1T0k</td>
+  </tr>
+  <tr>
+    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#164-2013-10-08">description</a></td>
+  </tr>
+  <tr>
+    <td>Compatibility</td> <td><ul><li>Minecraft Forge 1.6.4-9.11.1.916</li><li>LiteLoader for 1.6.4</li><li>Macro/Keybind Mod 0.9.11 for Minecraft 1.6.4</li></ul></td>
+  </tr>
+
+  <tr>
+    <th>Version</th> <th colspan="2">Details</th>
+  </tr>
+  <tr>
     <td rowspan="5">1.6.2<br>(2013-08-06)</td> <td>sha256sum -b</td> <td>392b1b2e0ba8c316f3f3c6c3c6fc36e68fa8a61313dffcf7ddead4d6dbcd54b2</td>
   </tr>
   <tr>
@@ -60,7 +76,7 @@ GitHub has dropped support for uploading files, so downloads will be hosted on G
     <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXeTZWaTAxZm1oNDQ</td>
   </tr>
   <tr>
-    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#152-2013-08-06">description</a></td>
+    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#162-2013-08-06">description</a></td>
   </tr>
   <tr>
     <td>Compatibility</td> <td><ul><li>Minecraft Forge 1.6.2-9.10.0.804</li><li>LiteLoader for 1.6.2</li><li>Macro/Keybind Mod 0.9.10 for Minecraft 1.6.2</li></ul></td>
