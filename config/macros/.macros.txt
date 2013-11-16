@@ -4,7 +4,7 @@
 #
 
 # Version number of the mod which saved this file. ***Do not alter this value!***
-version=990
+version=993
 
 #
 # Settings
@@ -23,6 +23,9 @@ colourcodehelperkey=0
 
 # Compiler flags, CASE SENSITIVE. Only change this if you know what you're doing
 compiler.flags=
+
+# Maximum number of file includes which can be inserted during a single compiler iteration
+compiler.maxincludes=10
 
 # Enable per-config friends list, setting this to 0 uses a single list for all configurations
 configs.enable.friends=0
@@ -73,7 +76,10 @@ editor.minimiseprompt=
 editor.syntax.enabled=1
 
 # Serialised version of the event layout, each param is {MappingID,X,Y}
-events.layout={1000,6,4}{1001,6,24}{1002,6,44}{1003,6,64}{1004,6,84}{1005,6,104}{1006,6,124}{1007,6,144}{1008,6,164}{1009,145,4}{1010,145,24}{1011,145,44}{1012,145,64}{1013,145,84}{1014,145,104}{1015,145,124}{1016,145,144}{1017,145,164}{1018,284,4}{1250,284,24}{1251,284,44}
+events.layout={1000,6,4}{1001,6,24}{1002,6,44}{1003,6,64}{1004,6,84}{1005,6,104}{1006,6,124}{1007,6,144}{1008,6,164}{1009,145,4}{1010,145,24}{1011,145,44}{1012,145,64}{1013,145,84}{1014,145,104}{1015,145,124}{1016,145,144}{1017,145,164}{1018,284,4}
+
+# True to enable the filterable chat functionality
+filterablechat.enabled=0
 
 # Flood protection settings
 floodprotection.behaviour.tickslimit=180
@@ -247,12 +253,40 @@ Macro[9].Control=1
 Macro[10].Macro=/check p:9
 Macro[10].Control=1
 
+# KEY_EQUALS
+Macro[13].Macro=/count-entities 50 chicken cow sheep pig villager skeleton zombie spider
+Macro[13].Control=1
+
 # KEY_W
 Macro[17].Macro=$${WATSON("/w display")}$$
+
+# KEY_T
+Macro[20].Macro=$${ECHO(/trace-r %WATSON_PLAYER% 30);}$$
+Macro[20].Control=1
+
+# KEY_Y
+Macro[21].Macro=$${ECHO(/trace %WATSON_PLAYER%);}$$
+Macro[21].Control=1
 
 # KEY_O
 Macro[24].Macro=$${ Toggle(@show_watson_overlay); IF(@show_watson_overlay && WATSON_DISPLAY); BindGUI("ingame","watson_overlay"); Log("Watson overlay enabled."); ELSE; BindGUI("ingame","ingame"); IF(@show_watson_overlay); Log("Turn on the Watson display to see the overlay."); ELSE; Log("Watson overlay disabled."); ENDIF; ENDIF; }$$
 Macro[24].Control=1
+
+# KEY_LBRACKET
+Macro[26].Macro=/tpprev
+Macro[26].Control=1
+
+# KEY_RBRACKET
+Macro[27].Macro=/tpnext
+Macro[27].Control=1
+
+# KEY_C
+Macro[46].Macro=$${ECHO(/lb coords player %WATSON_PLAYER% area 30);}$$
+Macro[46].Control=1
+
+# KEY_N
+Macro[49].Macro=/lb next
+Macro[49].Control=1
 
 # KEY_M
 Macro[50].Macro=/modmode
@@ -347,8 +381,23 @@ Macro[279].Macro=$${GAMMA(200)}$$
 # CONTROL_TOGGLEOVERLAYBUTTON
 Macro[280].Macro=$${ Toggle(@show_watson_overlay); IF(@show_watson_overlay && WATSON_DISPLAY); BindGUI("ingame","watson_overlay"); Log("Watson overlay enabled."); ELSE; BindGUI("ingame","ingame"); IF(@show_watson_overlay); Log("Turn on the Watson display to see the overlay."); ELSE; Log("Watson overlay disabled."); ENDIF; ENDIF; }$$
 
+# CONTROL_TOPCROPSBUTTON
+Macro[281].Macro=/lb block crops potato carrot nether_warts world "world" time $$[time[1d,12h,6h,3h]] sum p
+
+# CONTROL_TOPGLASSBUTTON
+Macro[282].Macro=/lb block 20 102 world "world" time $$[time[1d,12h,6h,3h]] sum p
+
+# CONTROL_TOPREDSTONEBUTTON
+Macro[283].Macro=/lb block 29 33 55 75 76 93 94 123 124 world "world" time $$[time[1d,12h,6h,3h]] sum p
+
+# CONTROL_TOPVALUABLESBUTTON
+Macro[284].Macro=/lb block 41 42 47 57 116 skull world "world" time $$[time[1d,12h,6h,3h]] sum p
+
 # CONTROL_MODMODEBUTTON
 Macro[285].Macro=/modmode
+
+# CONTROL_TOPMISCBUTTON
+Macro[286].Macro=/lb block 35 63 68 world "world" time $$[time[1d,12h,6h,3h]] sum p
 
 # CONTROL_LISTBUTTON
 Macro[287].Macro=/list
@@ -424,6 +473,6 @@ Macro[1017].Condition=TRUE
 Macro[1018].Macro=
 Macro[1018].Condition=TRUE
 
-# EVENT_ONWATSONDISPLAY
+# EVENT_ONEVENTID250
 Macro[1250].Macro=$${ CHATWIDTH(1000); IF(WATSON_DISPLAY); Echo(/we cui); ENDIF; IF(@show_watson_overlay && WATSON_DISPLAY); BindGUI("ingame","watson_overlay"); ELSE; BindGUI("ingame","ingame"); ENDIF; }$$
 

@@ -203,12 +203,52 @@
                 <text>Toggle Overlay</text>
                 <visible>1</visible>
             </gc:button>
+            <gc:button id="281" name="TopCropsButton" x="0" y="3">
+                <background>#B0000000</background>
+                <colour>#00FFFF</colour>
+                <hide>0</hide>
+                <sticky>0</sticky>
+                <text>Top Crops</text>
+                <visible>1</visible>
+            </gc:button>
+            <gc:button id="282" name="TopGlassButton" x="1" y="3">
+                <background>#B0000000</background>
+                <colour>#00FFFF</colour>
+                <hide>0</hide>
+                <sticky>0</sticky>
+                <text>Top Glass</text>
+                <visible>1</visible>
+            </gc:button>
+            <gc:button id="283" name="TopRedstoneButton" x="2" y="3">
+                <background>#B0000000</background>
+                <colour>#00FFFF</colour>
+                <hide>0</hide>
+                <sticky>0</sticky>
+                <text>Top Redstone</text>
+                <visible>1</visible>
+            </gc:button>
+            <gc:button id="284" name="TopValuablesButton" x="1" y="4">
+                <background>#B0000000</background>
+                <colour>#00FFFF</colour>
+                <hide>0</hide>
+                <sticky>0</sticky>
+                <text>Top Valuables</text>
+                <visible>1</visible>
+            </gc:button>
             <gc:button id="285" name="ModModeButton" x="4" y="9">
                 <background>#64000000</background>
                 <colour>#00FF00</colour>
                 <hide>0</hide>
                 <sticky>0</sticky>
                 <text>Mod Mode</text>
+                <visible>1</visible>
+            </gc:button>
+            <gc:button id="286" name="TopMiscButton" x="0" y="4">
+                <background>#B0000000</background>
+                <colour>#00FFFF</colour>
+                <hide>0</hide>
+                <sticky>0</sticky>
+                <text>Top Wool, Signs</text>
                 <visible>1</visible>
             </gc:button>
             <gc:button id="287" name="ListButton" x="4" y="10">

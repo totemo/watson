@@ -402,6 +402,18 @@ The sample configuration also binds the following key combinations:
     <td>Ctrl-o</td> <td>Toggle the Watson overlay on or off.</td>
   </tr>
   <tr>
+    <td>Ctrl-n</td> <td>Run "/lb next" to request the next page of LogBlock query results.</td>
+  </tr>
+  <tr>
+    <td>Ctrl-c</td> <td>Query all edits by the most recently selected player in a 30 block radius.  Use the LogBlock inspector tool to select the player by querying a single edit first.</td>
+  </tr>
+  <tr>
+    <td>Ctrl-t</td> <td>Query the total number of constructive and destructive edits by the most recently selected player in a 30 block radius.  Use the LogBlock inspector tool to select the player by querying a single edit first.</td>
+  </tr>
+  <tr>
+    <td>Ctrl-y</td> <td>Query the total number of constructive and destructive edits by the most recently selected player with no distance restriction.  Use the LogBlock inspector tool to select the player by querying a single edit first.</td>
+  </tr>
+  <tr>
     <td>Ctrl-Mouse-Scroll-Down</td> <td>Teleport to the next ore deposit (/w tp).</td>
   </tr>
   <tr>
@@ -412,6 +424,9 @@ The sample configuration also binds the following key combinations:
   </tr>
   <tr>
     <td>F4</td> <td>Toggle ModMode (issue the /modmode command).</td>
+  </tr>
+  <tr>
+    <td>Ctrl-m</td> <td>Toggle ModMode (issue the /modmode command).</td>
   </tr>
   <tr>
     <td>Ctrl-1 through Ctrl-9</td> <td>Issue the commands /check p:1 through /check p:9, for use with the ModReq plugin.</td>
