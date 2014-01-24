@@ -5,7 +5,6 @@ import java.util.regex.Pattern;
 
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraftforge.client.ClientCommandHandler;
 import watson.Configuration;
 import watson.Controller;
 import watson.DisplaySettings;
@@ -37,7 +36,6 @@ public class WatsonCommand extends WatsonCommandBase
   @Override
   public void processCommand(ICommandSender sender, String[] args)
   {
-    args = fixArgs(args);
     DisplaySettings display = Controller.instance.getDisplaySettings();
     if (args.length == 0)
     {
@@ -94,7 +92,7 @@ public class WatsonCommand extends WatsonCommandBase
         }
         if (!validPage)
         {
-          Controller.instance.localError("The page number should be greater than zero.");
+          localError(sender, "The page number should be greater than zero.");
         }
         return;
       }
@@ -127,7 +125,7 @@ public class WatsonCommand extends WatsonCommandBase
 
         if (!validCount)
         {
-          Controller.instance.localError("The count parameter should be a positive number of edits to fetch.");
+          localError(sender, "The count parameter should be a positive number of edits to fetch.");
         }
         return;
       }
@@ -160,7 +158,7 @@ public class WatsonCommand extends WatsonCommandBase
 
         if (!validCount)
         {
-          Controller.instance.localError("The count parameter should be a positive number of edits to fetch.");
+          localError(sender, "The count parameter should be a positive number of edits to fetch.");
         }
         return;
       }
@@ -300,7 +298,7 @@ public class WatsonCommand extends WatsonCommandBase
           }
           catch (NumberFormatException ex)
           {
-            Controller.instance.localError("The tp argument should be next, prev or an integer.");
+            localError(sender, "The tp argument should be next, prev or an integer.");
           }
           return;
         }
@@ -405,7 +403,7 @@ public class WatsonCommand extends WatsonCommandBase
           }
           if (!validPage)
           {
-            Controller.instance.localError("The page number should be greater than zero.");
+            localError(sender, "The page number should be greater than zero.");
           }
           return;
         }
@@ -618,7 +616,7 @@ public class WatsonCommand extends WatsonCommandBase
         }
         catch (NumberFormatException ex)
         {
-          Controller.instance.localError("The timeout should be a decimal number of seconds.");
+          localError(sender, "The timeout should be a decimal number of seconds.");
           return true;
         }
       }
@@ -639,7 +637,7 @@ public class WatsonCommand extends WatsonCommandBase
         }
         catch (NumberFormatException ex)
         {
-          Controller.instance.localError("The colour should be a 32-bit hexadecimal ARGB value.");
+          localError(sender, "The colour should be a 32-bit hexadecimal ARGB value.");
           return true;
         }
       }
@@ -660,7 +658,7 @@ public class WatsonCommand extends WatsonCommandBase
         }
         catch (NumberFormatException ex)
         {
-          Controller.instance.localError("The colour should be a 32-bit hexadecimal ARGB value.");
+          localError(sender, "The colour should be a 32-bit hexadecimal ARGB value.");
           return true;
         }
       }
@@ -710,7 +708,7 @@ public class WatsonCommand extends WatsonCommandBase
         }
         catch (NumberFormatException ex)
         {
-          Controller.instance.localError("The timeout should be a decimal number of seconds.");
+          localError(sender, "The timeout should be a decimal number of seconds.");
           return true;
         }
       }
@@ -739,7 +737,7 @@ public class WatsonCommand extends WatsonCommandBase
 
         if (!validCount)
         {
-          Controller.instance.localError("The minimum number of pages should be at least 1.");
+          localError(sender, "The minimum number of pages should be at least 1.");
         }
         return true;
       } // if
@@ -768,7 +766,7 @@ public class WatsonCommand extends WatsonCommandBase
 
         if (!validCount)
         {
-          Controller.instance.localError("The count should be a positive integer.");
+          localError(sender, "The count should be a positive integer.");
         }
         return true;
       } // if
@@ -797,7 +795,7 @@ public class WatsonCommand extends WatsonCommandBase
 
         if (!validCount)
         {
-          Controller.instance.localError("The count should be a positive integer.");
+          localError(sender, "The count should be a positive integer.");
         }
         return true;
       } // if
@@ -809,16 +807,16 @@ public class WatsonCommand extends WatsonCommandBase
       String newPrefix = args[2];
       if (!PREFIX_PATTERN.matcher(newPrefix).matches())
       {
-        Controller.instance.localError("The command prefix can only contain letters, digits and underscores.");
+        localError(sender, "The command prefix can only contain letters, digits and underscores.");
       }
       else
       {
         // De-register, set the prefix and re-register this command.
         @SuppressWarnings("unchecked")
-        Map<String, ICommand> commands = ClientCommandHandler.instance.getCommands();
+        Map<String, ICommand> commands = ClientCommandManager.instance.getCommands();
         commands.remove(Configuration.instance.getWatsonPrefix());
         Configuration.instance.setWatsonPrefix(newPrefix);
-        ClientCommandHandler.instance.registerCommand(this);
+        ClientCommandManager.instance.registerCommand(this);
       }
       return true;
     } // /w config watson_prefix <prefix>
@@ -887,6 +885,7 @@ public class WatsonCommand extends WatsonCommandBase
 
     return false;
   } // handleConfigCommand
+
   // --------------------------------------------------------------------------
   /**
    * Show a help message.

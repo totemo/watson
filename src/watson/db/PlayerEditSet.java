@@ -5,8 +5,8 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.TreeSet;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.src.ModLoader;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.Vec3Pool;
 
@@ -152,7 +152,7 @@ public class PlayerEditSet
     DisplaySettings settings = Controller.instance.getDisplaySettings();
     if (settings.areVectorsShown() && isVisible() && !_edits.isEmpty())
     {
-      final Vec3Pool pool = ModLoader.getMinecraftInstance().theWorld.getWorldVec3Pool();
+      final Vec3Pool pool = Minecraft.getMinecraft().theWorld.getWorldVec3Pool();
       final Tessellator tess = Tessellator.instance;
       tess.startDrawing(GL11.GL_LINES);
 

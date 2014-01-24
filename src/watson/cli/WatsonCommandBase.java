@@ -1,10 +1,9 @@
 package watson.cli;
 
-import java.util.Arrays;
-
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 
 // ----------------------------------------------------------------------------
@@ -42,42 +41,13 @@ public abstract class WatsonCommandBase extends CommandBase
 
   // --------------------------------------------------------------------------
   /**
-   * With reference to my remarks at
-   * https://github.com/MinecraftForge/MinecraftForge/issues/809, Forge doubles
-   * up the final argument passed to ICommand implementations and tells lies
-   * about how many arguments are in that array (increases the size by one).
-   * 
-   * This method fixes the args array when it is clear that the last arg is
-   * repeated.
-   * 
-   * @param args the args array passed to ICommand.processCommand().
-   * @return the args array that should have been passed in.
-   */
-  public String[] fixArgs(String[] args)
-  {
-    int lastIndex = args.length - 1;
-    if (lastIndex >= 1 && args[lastIndex - 1] == args[lastIndex])
-    {
-      return Arrays.copyOfRange(args, 0, lastIndex);
-    }
-    else
-    {
-      return args;
-    }
-  }
-
-  // --------------------------------------------------------------------------
-  /**
    * Show successful command output.
    * 
    * @param message the output to show.
    */
   public void localOutput(ICommandSender sender, String message)
   {
-    ChatMessageComponent chat = new ChatMessageComponent();
-    chat.setColor(EnumChatFormatting.AQUA);
-    chat.addText(message);
-    sender.sendChatToPlayer(chat);
+    sendColouredText(sender, EnumChatFormatting.AQUA, message);
   }
 
   // --------------------------------------------------------------------------
@@ -88,10 +58,25 @@ public abstract class WatsonCommandBase extends CommandBase
    */
   public void localError(ICommandSender sender, String message)
   {
-    ChatMessageComponent chat = new ChatMessageComponent();
-    chat.setColor(EnumChatFormatting.DARK_RED);
-    chat.addText(message);
-    sender.sendChatToPlayer(chat);
+    sendColouredText(sender, EnumChatFormatting.DARK_RED, message);
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Send a message to the specified command sender in the specified colour.
+   * 
+   * @param sender the command sender who is the message recipient.
+   * @param colour the colour.
+   * @param message the text.
+   */
+  public void sendColouredText(ICommandSender sender, EnumChatFormatting colour, String message)
+  {
+    // TODO: test and tidy.
+    ChatComponentText chat = new ChatComponentText(message);
+    ChatStyle style = new ChatStyle();
+    style.setColor(colour);
+    chat.setChatStyle(style);
+    sender.addChatMessage(chat);
   }
 
   // --------------------------------------------------------------------------

@@ -24,9 +24,8 @@
 # The bounds: setting is an array of 6 doubles. DO NOT USE INTEGERS.  The 
 # elements are [x1, y1, z1, x2, y2, z2] defining opposite corners of a cuboid:
 # (x1,y1,z1) - (x2,y2,z2). [0.0,0.0,0.0,1.0,1.0,1.0] is the unit cube.  The 
-# default value is [0.01, 0.01, 0.01, 0.99, 0.99, 0.99] - just slightly smaller 
-# than the unit cube.
-
+# default value is [0.005, 0.005, 0.005, 0.995, 0.995, 0.995] - just slightly
+# smaller than the unit cube.
 
 blocks:
     # Any block IDs that I have forgotten to add to this file will be rendered
@@ -565,7 +564,6 @@ blocks:
     - id: 87
       names: [netherrack]
       rgba: [143, 84, 84]
-      bounds: [0.01, 0.01, 0.01, 0.99, 0.99, 0.99]
     - id: 88
       names: [soul sand]
       rgba: [72, 52, 40]
@@ -851,7 +849,6 @@ blocks:
     - id: 153
       names: [quartz ore]
       rgba: [235, 233, 227]
-      bounds: [0.0, 0.0, 0.0, 1.0, 1.0, 1.0]
     - id: 154
       names: [hopper]
       rgba: [56, 56, 56]      

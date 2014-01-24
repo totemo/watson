@@ -50,7 +50,6 @@ public class CalcCommand extends WatsonCommandBase
   @Override
   public void processCommand(ICommandSender sender, String[] args)
   {
-    args = fixArgs(args);
     if (args.length == 0)
     {
       help(sender);

@@ -6,7 +6,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 
 import net.minecraft.client.gui.GuiNewChat;
-import net.minecraft.src.ModLoader;
 import watson.Configuration;
 import watson.Controller;
 import watson.db.BlockEdit;
@@ -80,8 +79,7 @@ public class ChatProcessor
     else
     {
       // Watson is disabled. Use default Minecraft processing.
-      ModLoader.getMinecraftInstance().ingameGUI.getChatGUI().printChatMessage(
-        chat);
+      Chat.localChat(chat);
     }
   } // addToChatQueue
 
@@ -173,8 +171,7 @@ public class ChatProcessor
                                    CHAT_EXCLUSIONS_FILE);
     _excludeTagChatHandler.saveExclusions(exclusionsFile);
 
-    Controller.instance.localOutput((visible ? "Show " : "Hide ") + tag
-                                    + " lines.");
+    Chat.localOutput((visible ? "Show " : "Hide ") + tag + " lines.");
   }
 
   // --------------------------------------------------------------------------
@@ -190,7 +187,7 @@ public class ChatProcessor
       message.append(' ');
       message.append(tag);
     }
-    Controller.instance.localOutput(message.toString());
+    Chat.localOutput(message.toString());
   } // listHiddenTags
 
   // --------------------------------------------------------------------------

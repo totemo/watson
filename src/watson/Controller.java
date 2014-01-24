@@ -1,19 +1,13 @@
 package watson;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.SocketAddress;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -22,20 +16,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiIngame;
-import net.minecraft.client.gui.GuiNewChat;
-import net.minecraft.network.packet.Packet3Chat;
-import net.minecraft.src.ModLoader;
-import net.minecraftforge.client.ClientCommandHandler;
-import net.minecraftforge.client.event.ClientChatReceivedEvent;
-import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraft.client.multiplayer.ServerData;
 import watson.analysis.Sherlock;
+import watson.chat.Chat;
 import watson.chat.ChatHighlighter;
 import watson.chat.ChatProcessor;
-import watson.chat.Colour;
 import watson.cli.AnnoCommand;
 import watson.cli.CalcCommand;
 import watson.cli.CaseInsensitivePrefixFileFilter;
+import watson.cli.ClientCommandManager;
 import watson.cli.HighlightCommand;
 import watson.cli.TagCommand;
 import watson.cli.WatsonCommand;
@@ -44,12 +33,9 @@ import watson.db.BlockEditSet;
 import watson.db.BlockTypeRegistry;
 import watson.db.Filters;
 import watson.debug.Log;
-import watson.macro.MacroIntegration;
+// import watson.macro.MacroIntegration;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
 
 // ----------------------------------------------------------------------------
 /**
@@ -61,43 +47,8 @@ public class Controller
   /**
    * Singleton.
    */
-  public static final Controller instance      = new Controller();
+  public static final Controller instance = new Controller();
 
-  // --------------------------------------------------------------------------
-  /**
-   * The colour of the output of Watson commands.
-   */
-  public static final String     OUTPUT_COLOUR = Colour.lightblue.getCodeString();
-
-  /**
-   * The colour of the output of Watson error messages.
-   */
-  public static final String     ERROR_COLOUR  = Colour.red.getCodeString();
-
-  // --------------------------------------------------------------------------
-  /**
-   * Subscribe to incoming chats and pass them through Watson's filters.
-   * 
-   * Cancel the event so that it doesn't hit the GUI.
-   */
-  @ForgeSubscribe
-  public void onClientChatReceived(ClientChatReceivedEvent event)
-  {
-    // So chat is now JSON encoded. -_-
-    try
-    {
-      JsonElement element = _jsonParser.parse(event.message);
-      JsonObject object = element.getAsJsonObject();
-      JsonPrimitive text = object.getAsJsonPrimitive("text");
-      ChatProcessor.getInstance().addChatToQueue(text.getAsString());
-
-      event.setCanceled(true);
-    }
-    catch (Exception ex)
-    {
-      // If it fails the event is not cancelled.
-    }
-  }
   // --------------------------------------------------------------------------
   /**
    * Mod-wide initialisation tasks, including loading configuration files and
@@ -105,6 +56,7 @@ public class Controller
    */
   public void initialise()
   {
+    createBlockEditDirectory();
     ChatProcessor.getInstance().loadChatCategories();
     ChatProcessor.getInstance().loadChatExclusions();
     _sherlock = new Sherlock(ChatProcessor.getInstance().getChatClassifier());
@@ -119,61 +71,11 @@ public class Controller
     ChatProcessor.getInstance().setChatTagVisible("lb.header.noresults", false);
 
     // Initialise the commands.
-    ClientCommandHandler.instance.registerCommand(new WatsonCommand());
-    ClientCommandHandler.instance.registerCommand(new AnnoCommand());
-    ClientCommandHandler.instance.registerCommand(new TagCommand());
-    ClientCommandHandler.instance.registerCommand(new HighlightCommand());
-    ClientCommandHandler.instance.registerCommand(new CalcCommand());
-  }
-
-  // --------------------------------------------------------------------------
-  /**
-   * Return the full version string, in the form <version>-YYYY-MM-DD, where
-   * <version> should match the Minecraft version number.
-   * 
-   * The version text is loaded from the watson/version resource.
-   * 
-   * @return the full version string.
-   */
-  public String getVersion()
-  {
-    if (_version == null)
-    {
-      ClassLoader loader = getClass().getClassLoader();
-      InputStream in = loader.getResourceAsStream(MOD_PACKAGE + "/version");
-      if (in == null)
-      {
-        _version = "unknown";
-      }
-      else
-      {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        try
-        {
-          _version = reader.readLine();
-        }
-        catch (IOException ex)
-        {
-          Log.exception(Level.SEVERE, "error reading version resource", ex);
-          _version = "unknown";
-        }
-      }
-    }
-    return _version;
-  } // getVersion
-
-  // --------------------------------------------------------------------------
-  /**
-   * Return the initial numeric portion of the version, which should be of the
-   * form <major>.<minor>[.<micro>].
-   * 
-   * @return the initial numeric portion of the version.
-   */
-  public String getVersionNumber()
-  {
-    final Pattern PATTERN = Pattern.compile("\\d+(\\.\\d+)+");
-    Matcher matcher = PATTERN.matcher(getVersion());
-    return (matcher.find()) ? matcher.group() : "";
+    ClientCommandManager.instance.registerCommand(new WatsonCommand());
+    ClientCommandManager.instance.registerCommand(new AnnoCommand());
+    ClientCommandManager.instance.registerCommand(new TagCommand());
+    ClientCommandManager.instance.registerCommand(new HighlightCommand());
+    ClientCommandManager.instance.registerCommand(new CalcCommand());
   }
 
   // --------------------------------------------------------------------------
@@ -212,20 +114,23 @@ public class Controller
 
   // --------------------------------------------------------------------------
   /**
-   * Return the IP address of DNS name of the currently connected server, or
+   * Return the IP address or DNS name of the currently connected server, or
    * null if not connected.
    * 
-   * @return the IP address of DNS name of the currently connected server, or
+   * @return the IP address or DNS name of the currently connected server, or
    *         null if not connected.
    */
   public String getServerIP()
   {
-    Minecraft mc = ModLoader.getMinecraftInstance();
-    if (!mc.isSingleplayer() && mc.getNetHandler() != null
-        && mc.getNetHandler().getNetManager() != null)
+    Minecraft mc = Minecraft.getMinecraft();
+    ServerData serverData = mc.func_147104_D();
+    if (!mc.isSingleplayer() && serverData != null)
     {
-      SocketAddress address = mc.getNetHandler().getNetManager().getSocketAddress();
-      return address != null ? address.toString() : null;
+      // TODO: test, tidy.
+      // SocketAddress address =
+      // mc.getNetHandler().getNetManager().getSocketAddress();
+      // return address != null ? address.toString() : null;
+      return serverData.serverIP;
     }
     else
     {
@@ -246,7 +151,7 @@ public class Controller
   {
     // Compute id of the form: address/dimension
     // Note: Minecraft.theWorld.getWorldInfo().getDimension() doesn't update.
-    Minecraft mc = ModLoader.getMinecraftInstance();
+    Minecraft mc = Minecraft.getMinecraft();
     StringBuilder idBuilder = new StringBuilder();
 
     // This code might get referenced at startup when changing display settings
@@ -289,7 +194,7 @@ public class Controller
       String player = (String) getVariables().get("player");
       if (player == null)
       {
-        localError("No current player set, so you must specify a file name.");
+        Chat.localError("No current player set, so you must specify a file name.");
         return;
       }
       else
@@ -312,14 +217,14 @@ public class Controller
       BlockEditSet edits = getBlockEditSet();
       int editCount = edits.save(file);
       int annoCount = edits.getAnnotations().size();
-      localOutput(String.format(Locale.US,
+      Chat.localOutput(String.format(Locale.US,
         "Saved %d edits and %d annotations to %s", editCount, annoCount,
         fileName));
     }
     catch (IOException ex)
     {
       Log.exception(Level.SEVERE, "error saving BlockEditSet to " + file, ex);
-      localError("The file " + fileName + " could not be saved.");
+      Chat.localError("The file " + fileName + " could not be saved.");
     }
   } // saveBlockEditFile
 
@@ -354,7 +259,7 @@ public class Controller
         BlockEditSet edits = getBlockEditSet();
         int editCount = edits.load(file);
         int annoCount = edits.getAnnotations().size();
-        localOutput(String.format(Locale.US,
+        Chat.localOutput(String.format(Locale.US,
           "Loaded %d edits and %d annotations from %s", editCount, annoCount,
           file.getName()));
       }
@@ -362,12 +267,12 @@ public class Controller
       {
         Log.exception(Level.SEVERE, "error loading BlockEditSet from " + file,
           ex);
-        localError("The file " + fileName + " could not be loaded.");
+        Chat.localError("The file " + fileName + " could not be loaded.");
       }
     }
     else
     {
-      localError("Can't open " + fileName + " to read.");
+      Chat.localError("Can't open " + fileName + " to read.");
     }
   } // loadBlockEditFile
 
@@ -384,28 +289,28 @@ public class Controller
     File[] files = getBlockEditFileList(prefix);
     if (files.length == 0)
     {
-      localOutput("No matching files.");
+      Chat.localOutput("No matching files.");
     }
     else
     {
       if (files.length == 1)
       {
-        localOutput("1 matching file:");
+        Chat.localOutput("1 matching file:");
       }
       else
       {
-        localOutput(files.length + " matching files:");
+        Chat.localOutput(files.length + " matching files:");
       }
 
       int pages = (files.length + PAGE_LINES - 1) / PAGE_LINES;
       if (page > pages)
       {
-        localError(String.format(Locale.US, "The highest page number is %d.",
+        Chat.localError(String.format(Locale.US, "The highest page number is %d.",
           pages));
       }
       else
       {
-        localOutput(String.format(Locale.US, "Page %d of %d.", page, pages));
+        Chat.localOutput(String.format(Locale.US, "Page %d of %d.", page, pages));
 
         // page <= pages
         int start = (page - 1) * PAGE_LINES;
@@ -413,13 +318,13 @@ public class Controller
 
         for (int i = start; i < end; ++i)
         {
-          localOutput("    " + files[i].getName());
+          Chat.localOutput("    " + files[i].getName());
         }
 
-        localOutput(String.format(Locale.US, "Page %d of %d.", page, pages));
+        Chat.localOutput(String.format(Locale.US, "Page %d of %d.", page, pages));
         if (page < pages)
         {
-          localOutput(String.format(Locale.US,
+          Chat.localOutput(String.format(Locale.US,
             "Use \"/w file list %s %d\" to see the next page.", prefix,
             (page + 1)));
         }
@@ -444,7 +349,7 @@ public class Controller
       {
         if (file.delete())
         {
-          localOutput("Deleted " + file.getName());
+          Chat.localOutput("Deleted " + file.getName());
         }
         else
         {
@@ -456,16 +361,16 @@ public class Controller
         (files.length - failed), files.length, prefix);
       if (failed == 0)
       {
-        localOutput(message);
+        Chat.localOutput(message);
       }
       else
       {
-        localError(message);
+        Chat.localError(message);
       }
     }
     else
     {
-      localOutput(String.format(Locale.US,
+      Chat.localOutput(String.format(Locale.US,
         "There are no save files matching \"%s\".", prefix));
     }
   } // deleteBlockEditFiles
@@ -501,7 +406,7 @@ public class Controller
       {
         // If we get to here, the user supplied an invalent date and Calendar
         // threw.
-        localError(date + " is not a valid date of the form YYYY-MM-DD.");
+        Chat.localError(date + " is not a valid date of the form YYYY-MM-DD.");
         return;
       }
 
@@ -516,20 +421,20 @@ public class Controller
           if (file.delete())
           {
             ++deleted;
-            localOutput("Deleted " + file.getName());
+            Chat.localOutput("Deleted " + file.getName());
           }
           else
           {
             ++failed;
-            localError("Could not delete " + file.getName());
+            Chat.localError("Could not delete " + file.getName());
           }
         }
       } // for
 
       if (deleted + failed == 0)
       {
-        localOutput("There are no save files older than " + date
-                    + " 00:00:00 to delete.");
+        Chat.localOutput("There are no save files older than " + date
+                         + " 00:00:00 to delete.");
       }
       else
       {
@@ -538,17 +443,17 @@ public class Controller
           deleted + failed, date);
         if (failed == 0)
         {
-          localOutput(message);
+          Chat.localOutput(message);
         }
         else
         {
-          localError(message);
+          Chat.localError(message);
         }
       }
     }
     else
     {
-      localError("The date must take the form YYYY-MM-DD.");
+      Chat.localError("The date must take the form YYYY-MM-DD.");
     }
   } // expireBlockEditFiles
 
@@ -562,6 +467,7 @@ public class Controller
    */
   public File[] getBlockEditFileList(String prefix)
   {
+    createBlockEditDirectory();
     File[] files = getBlockEditDirectory().listFiles(
       new CaseInsensitivePrefixFileFilter(prefix));
     Arrays.sort(files);
@@ -578,7 +484,7 @@ public class Controller
   {
     getBlockEditSet().clear();
     clearVariables();
-    localOutput("Watson edits cleared.");
+    Chat.localOutput("Watson edits cleared.");
     getFilters().clear();
   }
 
@@ -671,7 +577,8 @@ public class Controller
   public void clearVariables()
   {
     _variables.clear();
-    MacroIntegration.sendEvent(MacroIntegration.ON_WATSON_SELECTION);
+    // TODO: Reinstate MacroIntegration.
+    // MacroIntegration.sendEvent(MacroIntegration.ON_WATSON_SELECTION);
   }
 
   // --------------------------------------------------------------------------
@@ -712,7 +619,8 @@ public class Controller
     _variables.put("x", x);
     _variables.put("y", y);
     _variables.put("z", z);
-    MacroIntegration.sendEvent(MacroIntegration.ON_WATSON_SELECTION);
+    // TODO: Reinstate MacroIntegration.
+    // MacroIntegration.sendEvent(MacroIntegration.ON_WATSON_SELECTION);
   }
 
   // --------------------------------------------------------------------------
@@ -769,51 +677,6 @@ public class Controller
 
   // --------------------------------------------------------------------------
   /**
-   * Display the specified chat message in the local client's chat GUI.
-   * 
-   * @param message the chat message to display.
-   */
-  public void localChat(String message)
-  {
-    if (getChatGui() != null)
-    {
-      getChatGui().printChatMessage(_chatHighlighter.highlight(message));
-    }
-  }
-
-  // --------------------------------------------------------------------------
-  /**
-   * Display the specified Watson command output in the local client's chat GUI.
-   * 
-   * Watson command outpus is all displayed in the colour OUTPUT_COLOUR;
-   * 
-   * @param message the message to display.
-   */
-  public void localOutput(String message)
-  {
-    localChat(OUTPUT_COLOUR + message);
-  }
-
-  // --------------------------------------------------------------------------
-  /**
-   * Display the specified error message in bright red in the local client's
-   * chat GUI.
-   * 
-   * TODO: check with people with various types of colour blindness to see if
-   * this is ok by them or causes problems.
-   * 
-   * @param message the chat message to display.
-   */
-  public void localError(String message)
-  {
-    if (getChatGui() != null)
-    {
-      getChatGui().printChatMessage(ERROR_COLOUR + message);
-    }
-  }
-
-  // --------------------------------------------------------------------------
-  /**
    * Queue the specified message in a chat packet for transmission to the
    * server.
    * 
@@ -834,7 +697,7 @@ public class Controller
   {
     if (message != null)
     {
-      ModLoader.clientSendPacket(new Packet3Chat(message));
+      Chat.serverChat(message);
     }
   }
 
@@ -948,85 +811,10 @@ public class Controller
     else
     {
       Log.info("Loading \"" + fileName + "\" from resource in minecraft.jar.");
-      ClassLoader loader = mod_Watson.class.getClassLoader();
+      ClassLoader loader = Controller.class.getClassLoader();
       return loader.getResourceAsStream(Controller.MOD_PACKAGE + '/' + fileName);
     }
   } // getConfigurationStream
-
-  // --------------------------------------------------------------------------
-  /**
-   * Return a unique PNG filename for the next screenshot, based on the Watson
-   * screenshot settings.
-   * 
-   * @param screenshots the Minecraft screenshots directory.
-   * @param basename the base name of the file, generated by the vanilla
-   *          Minecraft code by formatting the current date and time.
-   * @param now the actual timestamp used to format basename.
-   * @return a unique PNG filename for the next screenshot, based on the Watson
-   *         screenshot settings.
-   */
-  public File getUniqueScreenshotFile(File screenshots, String basename,
-                                      Date now)
-  {
-    String player = (String) getVariables().get("player");
-    File subdirectory = getScreenshotSubdirectory(screenshots, player, now);
-
-    int count = 1;
-    boolean useSuffix = (player != null && Configuration.instance.isSsPlayerSuffix());
-    String playerSuffix = useSuffix ? "-" + player : "";
-    while (true)
-    {
-      File result = new File(subdirectory, basename + playerSuffix
-                                           + (count == 1 ? "" : "-" + count)
-                                           + ".png");
-      if (!result.exists())
-      {
-        return result;
-      }
-      ++count;
-    } // while
-  } // getUniqueScreenshotFile
-
-  // --------------------------------------------------------------------------
-  /**
-   * Return the directory where the screenshot should be saved, based on the
-   * player name, the current time and the settings.
-   * 
-   * The subdirectory will be created if it does not exist.
-   * 
-   * @param screenshots the Minecraft screenshots directory.
-   * @param player the player name or null if not known.
-   * @param now the current time.
-   * @return the directory where the screenshot should be saved, based on the
-   *         player name, the current time and the settings.
-   */
-  protected File getScreenshotSubdirectory(File screenshots, String player,
-                                           Date now)
-  {
-    Configuration config = Configuration.instance;
-    String subdirectoryName = (player != null && config.isSsPlayerDirectory()) ? player
-      : config.getSsDateDirectory().format(now).toString();
-
-    // If we can create the subdirectory, use it.
-    File subdirectory = new File(screenshots, subdirectoryName);
-    try
-    {
-      if (!subdirectory.isDirectory())
-      {
-        subdirectory.mkdirs();
-      }
-      if (subdirectory.isDirectory())
-      {
-        return subdirectory;
-      }
-    }
-    catch (Exception ex)
-    {
-      // Fall through.
-      Log.exception(Level.WARNING, "error creating screenshot subdirectory", ex);
-    }
-    return screenshots;
-  } // getScreenshotSubdirectory
 
   // --------------------------------------------------------------------------
   /**
@@ -1036,31 +824,6 @@ public class Controller
   {
     // Nothing.
   }
-
-  // --------------------------------------------------------------------------
-  /**
-   * Return the cached reference to the Minecraft GuiNewChat instance that draws
-   * the chat GUI, or null if not yet available.
-   * 
-   * @return the cached reference to the Minecraft GuiNewChat instance that
-   *         draws the chat GUI, or null if not yet available.
-   */
-  private GuiNewChat getChatGui()
-  {
-    if (_chatGui == null)
-    {
-      Minecraft mc = ModLoader.getMinecraftInstance();
-      if (mc != null)
-      {
-        GuiIngame ingame = mc.ingameGUI;
-        if (ingame != null)
-        {
-          _chatGui = ingame.getChatGUI();
-        }
-      }
-    }
-    return _chatGui;
-  } // getChatGui
 
   // --------------------------------------------------------------------------
   /**
@@ -1103,12 +866,6 @@ public class Controller
   protected Filters                       _filters         = new Filters();
 
   /**
-   * A cached reference to the GuiNewChat instance, set up as soon as it becomes
-   * available.
-   */
-  protected GuiNewChat                    _chatGui;
-
-  /**
    * The chat highlighter.
    */
   protected ChatHighlighter               _chatHighlighter = new ChatHighlighter();
@@ -1143,20 +900,12 @@ public class Controller
   /**
    * Directory where mod files reside, relative to the .minecraft/ directory.
    */
-  protected static final String           MOD_SUBDIR       = "mods"
-                                                             + File.separator
-                                                             + MOD_PACKAGE;
+  protected static final String           MOD_SUBDIR       = "mods" + File.separator + MOD_PACKAGE;
   /**
    * Subdirectory of the mod specific directory where {@link BlockEditSet}s are
    * saved.
    */
   protected static final String           SAVE_SUBDIR      = "saves";
-
-  /**
-   * The vanilla Minecraft screenshot filename date format.
-   */
-  protected static final DateFormat       _dateFormat      = new SimpleDateFormat(
-                                                             "yyyy-MM-dd_HH.mm.ss");
 
   /**
    * 

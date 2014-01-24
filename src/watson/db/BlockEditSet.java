@@ -16,13 +16,13 @@ import java.util.regex.Pattern;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.src.ModLoader;
 
 import org.lwjgl.opengl.GL11;
 
 import watson.Configuration;
 import watson.Controller;
 import watson.DisplaySettings;
+import watson.chat.Chat;
 import watson.model.ARGB;
 
 // ----------------------------------------------------------------------------
@@ -249,7 +249,7 @@ public class BlockEditSet
       // Only cluster edits into ore deposits on non-creative (survival,
       // adventure) games. I assume this will not stuff up for admins etc whose
       // gamemode is creative, but just in case, allow a configuration override.
-      Minecraft mc = ModLoader.getMinecraftInstance();
+      Minecraft mc = Minecraft.getMinecraft();
       if (!mc.theWorld.getWorldInfo().getGameType().isCreative()
           || Configuration.instance.isGroupingOresInCreative())
       {
@@ -272,14 +272,14 @@ public class BlockEditSet
   {
     if (_playerEdits.size() == 0)
     {
-      Controller.instance.localOutput("There are no stored edits for this world.");
+      Chat.localOutput("There are no stored edits for this world.");
     }
     else
     {
-      Controller.instance.localOutput("Listing number and visibility of edits in this world:");
+      Chat.localOutput("Listing number and visibility of edits in this world:");
       for (PlayerEditSet editsByPlayer : _playerEdits.values())
       {
-        Controller.instance.localOutput(String.format(Locale.US,
+        Chat.localOutput(String.format(Locale.US,
           "  %s - %d edits %s", editsByPlayer.getPlayer(),
           editsByPlayer.getBlockEditCount(),
           (editsByPlayer.isVisible() ? "shown" : "hidden")));
@@ -301,14 +301,14 @@ public class BlockEditSet
     if (editsByPlayer != null)
     {
       editsByPlayer.setVisible(visible);
-      Controller.instance.localOutput(String.format(Locale.US,
+      Chat.localOutput(String.format(Locale.US,
         "%d edits by %s are now %s.", editsByPlayer.getBlockEditCount(),
         editsByPlayer.getPlayer(), (editsByPlayer.isVisible() ? "shown"
           : "hidden")));
     }
     else
     {
-      Controller.instance.localError(String.format(Locale.US,
+      Chat.localError(String.format(Locale.US,
         "There are no stored edits for %s.", player));
     }
   } // setEditVisibility
@@ -325,13 +325,13 @@ public class BlockEditSet
     {
       _playerEdits.remove(player.toLowerCase());
       getOreDB().removeDeposits(player);
-      Controller.instance.localOutput(String.format(Locale.US,
+      Chat.localOutput(String.format(Locale.US,
         "%d edits by %s were removed.", editsByPlayer.getBlockEditCount(),
         editsByPlayer.getPlayer()));
     }
     else
     {
-      Controller.instance.localError(String.format(Locale.US,
+      Chat.localError(String.format(Locale.US,
         "There are no stored edits for %s.", player));
     }
   } // removeEdits
@@ -378,7 +378,7 @@ public class BlockEditSet
     DisplaySettings settings = Controller.instance.getDisplaySettings();
     if (settings.areAnnotationsShown() && !_annotations.isEmpty())
     {
-      Minecraft mc = ModLoader.getMinecraftInstance();
+      Minecraft mc = Minecraft.getMinecraft();
       mc.entityRenderer.disableLightmap(0.0);
       GL11.glDisable(GL11.GL_LIGHTING);
       GL11.glDisable(GL11.GL_FOG);
@@ -404,7 +404,7 @@ public class BlockEditSet
     {
       GL11.glPushMatrix();
 
-      Minecraft mc = ModLoader.getMinecraftInstance();
+      Minecraft mc = Minecraft.getMinecraft();
       ScaledResolution scaledResolution = new ScaledResolution(mc.gameSettings,
                                                                mc.displayWidth, mc.displayHeight);
 
@@ -469,8 +469,8 @@ public class BlockEditSet
    * The cycle of colours used to draw vectors for different players.
    */
   protected static final ARGB[]                  _vectorColours = {
-                                                                new ARGB(204, 255, 255, 140), // Pale
-                                                                                              // yellow.
+                                                                // Formatters...
+    new ARGB(204, 255, 255, 140), // Pale yellow.
     new ARGB(204, 140, 158, 255), // Light blue.
     new ARGB(204, 255, 140, 140), // Salmon.
     new ARGB(204, 121, 255, 140), // Mint.

@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -15,6 +14,7 @@ import java.util.logging.Level;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
+import watson.chat.Chat;
 import watson.debug.Log;
 import watson.yaml.MapValidatorNode;
 import watson.yaml.SnakeValidator;
@@ -81,7 +81,7 @@ public class Configuration
       _ssPlayerSuffix = (Boolean) dom.get("ss_player_suffix");
       setSsDateDirectoryImp((String) dom.get("ss_date_directory"));
     }
-    catch (FileNotFoundException ex)
+    catch (Exception ex)
     {
       Log.config("Missing configuration file (" + config + "). Using defaults.");
 
@@ -151,12 +151,12 @@ public class Configuration
     _enabled = enabled;
     if (_enabled)
     {
-      Controller.instance.localOutput("Watson is now enabled.");
+      Chat.localOutput("Watson is now enabled.");
     }
     else
     {
-      Controller.instance.localOutput("Watson is now disabled.");
-      Controller.instance.localOutput("To re-enable, use: /w config watson on");
+      Chat.localOutput("Watson is now disabled.");
+      Chat.localOutput("To re-enable, use: /w config watson on");
     }
     save();
   } // setEnabled
@@ -181,8 +181,8 @@ public class Configuration
   public void setDebug(boolean debug)
   {
     Log.setDebug(debug);
-    Controller.instance.localOutput("Debug level logging "
-                                    + (debug ? "enabled." : "disabled."));
+    Chat.localOutput("Debug level logging "
+                     + (debug ? "enabled." : "disabled."));
     save();
   }
 
@@ -207,8 +207,8 @@ public class Configuration
   public void setAutoPage(boolean enabled)
   {
     _autoPage = enabled;
-    Controller.instance.localOutput("Automatic paging "
-                                    + (enabled ? "enabled." : "disabled."));
+    Chat.localOutput("Automatic paging "
+                     + (enabled ? "enabled." : "disabled."));
     save();
   }
 
@@ -244,7 +244,7 @@ public class Configuration
       seconds = MIN_REGION_INFO_TIMEOUT;
     }
     _regionInfoTimeoutSeconds = seconds;
-    Controller.instance.localOutput(String.format(Locale.US,
+    Chat.localOutput(String.format(Locale.US,
       "Automatic region info timeout set to %.2f seconds.", seconds));
     save();
   }
@@ -293,7 +293,7 @@ public class Configuration
   public void setBillboardBackground(int argb)
   {
     _billboardBackground = argb;
-    Controller.instance.localOutput(String.format(Locale.US,
+    Chat.localOutput(String.format(Locale.US,
       "Billboard background colour set to #%08X.", _billboardBackground));
     save();
   }
@@ -319,7 +319,7 @@ public class Configuration
   public void setBillboardForeground(int argb)
   {
     _billboardForeground = argb;
-    Controller.instance.localOutput(String.format(Locale.US,
+    Chat.localOutput(String.format(Locale.US,
       "Billboard foreground colour set to #%08X.", _billboardForeground));
     save();
   }
@@ -348,7 +348,7 @@ public class Configuration
   public void setGroupingOresInCreative(boolean groupingOresInCreative)
   {
     _groupingOresInCreative = groupingOresInCreative;
-    Controller.instance.localOutput((_groupingOresInCreative ? "Enabled"
+    Chat.localOutput((_groupingOresInCreative ? "Enabled"
       : "Disabled") + " grouping of ores in creative mode.");
     save();
   }
@@ -375,7 +375,7 @@ public class Configuration
   public void setTeleportCommand(String format)
   {
     _teleportCommand = format;
-    Controller.instance.localOutput(String.format(Locale.US,
+    Chat.localOutput(String.format(Locale.US,
       "Teleport command format set to \"%s\".", _teleportCommand));
     save();
   }
@@ -407,7 +407,7 @@ public class Configuration
       seconds = 0.0;
     }
     _chatTimeoutSeconds = seconds;
-    Controller.instance.localOutput(String.format(Locale.US,
+    Chat.localOutput(String.format(Locale.US,
       "Chat command timeout set to %.2f seconds.", seconds));
     save();
   }
@@ -436,7 +436,7 @@ public class Configuration
   public void setMaxAutoPages(int maxAutoPages)
   {
     _maxAutoPages = maxAutoPages;
-    Controller.instance.localOutput(String.format(
+    Chat.localOutput(String.format(
       Locale.US,
       "Up to %d pages of \"/lb coords\" results will be stepped through automatically.",
       maxAutoPages));
@@ -465,7 +465,7 @@ public class Configuration
   public void setPreCount(int preCount)
   {
     _preCount = preCount;
-    Controller.instance.localOutput(String.format(Locale.US,
+    Chat.localOutput(String.format(Locale.US,
       "By default, \"/w pre\" will return %d edits.", _preCount));
     save();
   }
@@ -490,7 +490,7 @@ public class Configuration
   public void setPostCount(int postCount)
   {
     _postCount = postCount;
-    Controller.instance.localOutput(String.format(Locale.US,
+    Chat.localOutput(String.format(Locale.US,
       "By default, \"/w post\" will return %d edits.", _postCount));
     save();
   }
@@ -518,7 +518,7 @@ public class Configuration
   public void setWatsonPrefix(String watsonPrefix)
   {
     _watsonPrefix = watsonPrefix;
-    Controller.instance.localOutput(String.format(Locale.US,
+    Chat.localOutput(String.format(Locale.US,
       "Watson command prefix set to /%s.", _watsonPrefix));
     save();
   }
@@ -544,9 +544,9 @@ public class Configuration
   public void setSsPlayerDirectory(boolean ssPlayerDirectory)
   {
     _ssPlayerDirectory = ssPlayerDirectory;
-    Controller.instance.localOutput("Per-player screenshot subdirectories "
-                                    + (ssPlayerDirectory ? "enabled."
-                                      : "disabled."));
+    Chat.localOutput("Per-player screenshot subdirectories "
+                     + (ssPlayerDirectory ? "enabled."
+                       : "disabled."));
     save();
   }
 
@@ -573,9 +573,9 @@ public class Configuration
   public void setSsPlayerSuffix(boolean ssPlayerSuffix)
   {
     _ssPlayerSuffix = ssPlayerSuffix;
-    Controller.instance.localOutput("Per-player screenshot suffixes "
-                                    + (ssPlayerSuffix ? "enabled."
-                                      : "disabled."));
+    Chat.localOutput("Per-player screenshot suffixes "
+                     + (ssPlayerSuffix ? "enabled."
+                       : "disabled."));
     save();
   }
 
@@ -604,14 +604,12 @@ public class Configuration
   {
     if (setSsDateDirectoryImp(ssDateDirectory))
     {
-      Controller.instance.localOutput("Anonymous screenshot subdirectory format specifier set to \""
-                                      + ssDateDirectory + "\".");
+      Chat.localOutput("Anonymous screenshot subdirectory format specifier set to \"" + ssDateDirectory + "\".");
       save();
     }
     else
     {
-      Controller.instance.localError("\"" + ssDateDirectory
-                                     + "\" is not a valid format specifier.");
+      Chat.localError("\"" + ssDateDirectory + "\" is not a valid format specifier.");
     }
   }
 
@@ -671,37 +669,37 @@ public class Configuration
       root.addChild("enabled", new TypeValidatorNode(Boolean.class, true, true));
       root.addChild("debug", new TypeValidatorNode(Boolean.class, true, false));
       root.addChild("auto_page", new TypeValidatorNode(Boolean.class, true,
-        true));
+                                                       true));
       root.addChild("region_info_timeout", new TypeValidatorNode(Double.class,
-        true, 5.0));
+                                                                 true, 5.0));
       root.addChild("vectors_shown", new TypeValidatorNode(Boolean.class, true,
-        true));
+                                                           true));
       root.addChild("billboard_background", new TypeValidatorNode(
-        Integer.class, true, 0x7F000000));
+                                                                  Integer.class, true, 0x7F000000));
       root.addChild("billboard_foreground", new TypeValidatorNode(
-        Integer.class, true, 0xFFFFFFFF));
+                                                                  Integer.class, true, 0xFFFFFFFF));
 
       // Default to true until we can distinguish server vs player gamemode.
       root.addChild("group_ores_in_creative", new TypeValidatorNode(
-        Boolean.class, true, true));
+                                                                    Boolean.class, true, true));
 
       root.addChild("teleport_command", new TypeValidatorNode(String.class,
-        true, "/tppos %g %d %g"));
+                                                              true, "/tppos %g %d %g"));
       root.addChild("chat_timeout", new TypeValidatorNode(Double.class, true,
-        1.1));
+                                                          0.1));
       root.addChild("max_auto_pages", new TypeValidatorNode(Integer.class,
-        true, 3));
+                                                            true, 10));
       root.addChild("pre_count", new TypeValidatorNode(Integer.class, true, 45));
       root.addChild("post_count",
         new TypeValidatorNode(Integer.class, true, 45));
       root.addChild("watson_prefix", new TypeValidatorNode(String.class, true,
-        "w"));
+                                                           "w"));
       root.addChild("ss_player_directory", new TypeValidatorNode(Boolean.class,
-        true, true));
+                                                                 true, true));
       root.addChild("ss_player_suffix", new TypeValidatorNode(Boolean.class,
-        true, true));
+                                                              true, true));
       root.addChild("ss_date_directory", new TypeValidatorNode(String.class,
-        true, ""));
+                                                               true, ""));
 
       _validator.setRoot(root);
     }
@@ -776,13 +774,13 @@ public class Configuration
    * The minimum number of seconds that must elapse between programmatically
    * sent chat messages (usually commands to the server).
    */
-  protected double              _chatTimeoutSeconds       = 1.1;
+  protected double              _chatTimeoutSeconds       = 0.1;
 
   /**
    * The maximum number of pages of "/lb coords" results that will be
    * automatically stepped through by issuing "/lb page #" commands.
    */
-  protected int                 _maxAutoPages             = 3;
+  protected int                 _maxAutoPages             = 10;
 
   /**
    * The number of edits to fetch from LogBlock when "/w pre" is run.
@@ -819,6 +817,6 @@ public class Configuration
    * I'm assuming that the empty string is a valid format that won't throw.
    */
   protected SimpleDateFormat    _ssDateDirectory          = new SimpleDateFormat(
-                                                            "");
+                                                                                 "");
 } // class Configuration
 

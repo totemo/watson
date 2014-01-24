@@ -1,7 +1,7 @@
 package watson;
 
-import net.minecraft.world.EnumGameType;
-import watson.macro.MacroIntegration;
+import net.minecraft.world.WorldSettings;
+import watson.chat.Chat;
 
 // --------------------------------------------------------------------------
 /**
@@ -14,7 +14,7 @@ public class DisplaySettings
    * This method configures the initial display settings based on the server
    * being connected to and the game type.
    */
-  public void configure(String serverIP, EnumGameType gameType)
+  public void configure(String serverIP, WorldSettings.GameType gameType)
   {
     // The Watson display defaults to on. On survival servers, assume the
     // presence of ModMode and its associated notifications to turn on or off
@@ -31,9 +31,9 @@ public class DisplaySettings
   public void setDisplayed(boolean displayed)
   {
     _displayed = displayed;
-    Controller.instance.localOutput("Watson display "
-                                    + (displayed ? "enabled." : "disabled."));
-    MacroIntegration.sendEvent(MacroIntegration.ON_WATSON_DISPLAY);
+    Chat.localOutput("Watson display " + (displayed ? "enabled." : "disabled."));
+    // TODO: Reinstate MacroIntegration.
+    // MacroIntegration.sendEvent(MacroIntegration.ON_WATSON_DISPLAY);
   }
 
   // --------------------------------------------------------------------------
@@ -56,8 +56,7 @@ public class DisplaySettings
   public void setOutlineShown(boolean outlineShown)
   {
     _outlineShown = outlineShown;
-    Controller.instance.localOutput("Outline display "
-                                    + (outlineShown ? "enabled." : "disabled."));
+    Chat.localOutput("Outline display " + (outlineShown ? "enabled." : "disabled."));
   }
 
   // --------------------------------------------------------------------------
@@ -84,9 +83,8 @@ public class DisplaySettings
   public void setAnnotationsShown(boolean annotationsShown)
   {
     _annotationsShown = annotationsShown;
-    Controller.instance.localOutput("Annotation display "
-                                    + (annotationsShown ? "enabled."
-                                      : "disabled."));
+    Chat.localOutput("Annotation display " + (annotationsShown ? "enabled."
+      : "disabled."));
   }
 
   // --------------------------------------------------------------------------
@@ -109,8 +107,7 @@ public class DisplaySettings
   public void setLabelsShown(boolean labelsShown)
   {
     _labelsShown = labelsShown;
-    Controller.instance.localOutput("Ore deposit label display "
-                                    + (labelsShown ? "enabled." : "disabled."));
+    Chat.localOutput("Ore deposit label display " + (labelsShown ? "enabled." : "disabled."));
   }
 
   // --------------------------------------------------------------------------
@@ -134,8 +131,7 @@ public class DisplaySettings
   public void setVectorsShown(boolean vectorsShown)
   {
     Configuration.instance.setVectorsShown(vectorsShown);
-    Controller.instance.localOutput("Vector display "
-                                    + (vectorsShown ? "enabled." : "disabled."));
+    Chat.localOutput("Vector display " + (vectorsShown ? "enabled." : "disabled."));
   }
 
   // --------------------------------------------------------------------------
@@ -163,8 +159,8 @@ public class DisplaySettings
   public void setLinkedCreations(boolean linkedCreations)
   {
     _linkedCreations = linkedCreations;
-    Controller.instance.localOutput("Vectors between block creations will be "
-                                    + (linkedCreations ? "shown." : "hidden."));
+    Chat.localOutput("Vectors between block creations will be "
+                     + (linkedCreations ? "shown." : "hidden."));
   }
 
   // --------------------------------------------------------------------------
@@ -188,9 +184,8 @@ public class DisplaySettings
   public void setLinkedDestructions(boolean linkedDestructions)
   {
     _linkedDestructions = linkedDestructions;
-    Controller.instance.localOutput("Vectors between block destructions will be "
-                                    + (linkedDestructions ? "shown."
-                                      : "hidden."));
+    Chat.localOutput("Vectors between block destructions will be "
+                     + (linkedDestructions ? "shown." : "hidden."));
   }
 
   // --------------------------------------------------------------------------
@@ -213,8 +208,8 @@ public class DisplaySettings
   public void setMinVectorLength(float minVectorLength)
   {
     _minVectorLength = minVectorLength;
-    Controller.instance.localOutput("Minimum vector length set to "
-                                    + minVectorLength);
+    Chat.localOutput("Minimum vector length set to "
+                     + minVectorLength);
   }
 
   // --------------------------------------------------------------------------

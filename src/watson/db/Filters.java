@@ -3,6 +3,7 @@ package watson.db;
 import java.util.LinkedHashSet;
 
 import watson.Controller;
+import watson.chat.Chat;
 
 // ----------------------------------------------------------------------------
 /**
@@ -22,18 +23,18 @@ public class Filters
   {
     if (_filters.size() == 0)
     {
-      Controller.instance.localOutput("No filters are set. All edits are accepted.");
+      Chat.localOutput("No filters are set. All edits are accepted.");
     }
     else
     {
-      Controller.instance.localOutput("Edits by the following players will be accepted:");
+      Chat.localOutput("Edits by the following players will be accepted:");
       StringBuilder message = new StringBuilder(' ');
       for (String player : _filters)
       {
         message.append(' ');
         message.append(player);
       }
-      Controller.instance.localOutput(message.toString());
+      Chat.localOutput(message.toString());
     }
   } // list
 
@@ -43,7 +44,7 @@ public class Filters
    */
   public void clear()
   {
-    Controller.instance.localOutput("Watson filters cleared.");
+    Chat.localOutput("Watson filters cleared.");
     _filters.clear();
   }
 
@@ -60,8 +61,7 @@ public class Filters
   public void addPlayer(String player)
   {
     player = player.toLowerCase();
-    Controller.instance.localOutput("Added a filter to accept edits by "
-                                    + player + ".");
+    Chat.localOutput("Added a filter to accept edits by " + player + ".");
     _filters.add(player);
     Controller.instance.getVariables().put("player", player);
   }
@@ -77,12 +77,12 @@ public class Filters
     player = player.toLowerCase();
     if (_filters.contains(player))
     {
-      Controller.instance.localOutput("Removed the filter for " + player + ".");
+      Chat.localOutput("Removed the filter for " + player + ".");
       _filters.remove(player);
     }
     else
     {
-      Controller.instance.localError("There is no filter for " + player + ".");
+      Chat.localError("There is no filter for " + player + ".");
     }
   } // removePlayer
 

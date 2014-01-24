@@ -28,7 +28,6 @@ public class HighlightCommand extends WatsonCommandBase
   @Override
   public void processCommand(ICommandSender sender, String[] args)
   {
-    args = fixArgs(args);
     ChatHighlighter highlighter = Controller.instance.getChatHighlighter();
     if (args.length == 0)
     {

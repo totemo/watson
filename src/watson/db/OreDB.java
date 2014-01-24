@@ -6,7 +6,6 @@ import java.util.Locale;
 import java.util.logging.Level;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.ModLoader;
 
 import org.lwjgl.opengl.GL11;
 
@@ -14,6 +13,7 @@ import watson.Configuration;
 import watson.Controller;
 import watson.DisplaySettings;
 import watson.analysis.ServerTime;
+import watson.chat.Chat;
 import watson.chat.Colour;
 import watson.debug.Log;
 
@@ -93,24 +93,24 @@ public class OreDB
 
     if (depositCount == 0)
     {
-      Controller.instance.localOutput("There are no ore deposits.");
+      Chat.localOutput("There are no ore deposits.");
     }
     else
     {
       if (page > pages)
       {
-        Controller.instance.localError(String.format(Locale.US,
+        Chat.localError(String.format(Locale.US,
           "The highest page number is %d.", pages));
       }
       else
       {
         if (depositCount == 1)
         {
-          Controller.instance.localOutput("There is 1 ore deposit.");
+          Chat.localOutput("There is 1 ore deposit.");
         }
         else
         {
-          Controller.instance.localOutput(String.format(Locale.US,
+          Chat.localOutput(String.format(Locale.US,
             "There are %d ore deposits.", depositCount));
         }
 
@@ -137,7 +137,7 @@ public class OreDB
                 TimeStamp.formatMonthDayTime(time), block.getLocation().getX(),
                 block.getLocation().getY(), block.getLocation().getZ(),
                 type.getId(), deposit.getBlockCount(), player);
-              Controller.instance.localChat(line);
+              Chat.localChat(line);
             }
 
             ++id;
@@ -150,9 +150,9 @@ public class OreDB
 
         if (page < pages)
         {
-          Controller.instance.localOutput(String.format(Locale.US,
+          Chat.localOutput(String.format(Locale.US,
             "Page %d of %d.", page, pages));
-          Controller.instance.localOutput(String.format(Locale.US,
+          Chat.localOutput(String.format(Locale.US,
             "Use \"/w ore %d\" to view the next page.", (page + 1)));
         }
 
@@ -248,7 +248,7 @@ public class OreDB
   {
     if (getOreDepositCount() == 0)
     {
-      Controller.instance.localError("There are no ore deposits to teleport to.");
+      Chat.localError("There are no ore deposits to teleport to.");
     }
     else
     {
@@ -256,7 +256,7 @@ public class OreDB
       OreDeposit deposit = getOreDeposit(index);
       IntCoord coord = deposit.getKeyOreBlock().getLocation();
       Controller.instance.teleport(coord.getX(), coord.getY(), coord.getZ());
-      Controller.instance.localOutput(String.format(Locale.US,
+      Chat.localOutput(String.format(Locale.US,
         "Teleporting you to ore #%d", index));
 
       // "Select" the tp target so that /w pre will work.
@@ -336,7 +336,7 @@ public class OreDB
     } // if there are deposits
     else
     {
-      Controller.instance.localOutput("There are no diamond ore deposits.");
+      Chat.localOutput("There are no diamond ore deposits.");
     }
   } // showRatios
 
@@ -402,7 +402,7 @@ public class OreDB
     DisplaySettings settings = Controller.instance.getDisplaySettings();
     if (settings.areLabelsShown())
     {
-      Minecraft mc = ModLoader.getMinecraftInstance();
+      Minecraft mc = Minecraft.getMinecraft();
       mc.entityRenderer.disableLightmap(0.0);
       GL11.glDisable(GL11.GL_LIGHTING);
       GL11.glDisable(GL11.GL_FOG);

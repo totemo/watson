@@ -149,6 +149,7 @@ public class Log
 
     try
     {
+      Controller.createDirectories();
       File logFile = new File(Controller.getModDirectory(), LOG_FILE);
       _fileHandler = new FileHandler(logFile.getAbsolutePath());
       _fileHandler.setFormatter(formatter);

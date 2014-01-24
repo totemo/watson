@@ -57,7 +57,10 @@ public final class BlockTypeRegistry
       }
       finally
       {
-        in.close();
+        if (in != null)
+        {
+          in.close();
+        }
       }
     }
     catch (Exception ex)
@@ -486,11 +489,8 @@ public final class BlockTypeRegistry
   /**
    * Default cuboid bounds when loaded from "blocks.yml".
    */
-  private static final ArrayList<Double> DEFAULT_BOUNDS     = new ArrayList<Double>(
-                                                              Arrays.asList(
-                                                                0.01, 0.01,
-                                                                0.01, 0.99,
-                                                                0.99, 0.99));
+  private static final ArrayList<Double> DEFAULT_BOUNDS     = new ArrayList<Double>(Arrays.asList(
+                                                              0.005, 0.005, 0.005, 0.995, 0.995, 0.995));
   /**
    * An array of BlockType instances accessed by index.
    */

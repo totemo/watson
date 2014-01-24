@@ -5,7 +5,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import watson.Controller;
+import watson.chat.Chat;
 import watson.chat.ChatClassifier;
 import watson.chat.ChatProcessor;
 import watson.chat.MethodChatHandler;
@@ -34,13 +34,13 @@ public class RatioAnalysis extends Analysis
   public void registerAnalysis(TagDispatchChatHandler tagDispatchChatHandler)
   {
     tagDispatchChatHandler.addChatHandler("lb.header", new MethodChatHandler(
-      this, "lbHeader"));
+                                                                             this, "lbHeader"));
     tagDispatchChatHandler.addChatHandler("lb.header.ratio",
       new MethodChatHandler(this, "lbHeaderRatio"));
     tagDispatchChatHandler.addChatHandler("lb.header.ratiocurrent",
       new MethodChatHandler(this, "lbHeaderRatio"));
     tagDispatchChatHandler.addChatHandler("lb.sum", new MethodChatHandler(this,
-      "lbSum"));
+                                                                          "lbSum"));
     _lbHeaderRatio = ChatProcessor.getInstance().getChatClassifier().getChatCategoryById(
       "lb.header.ratio").getFullPattern();
     _lbHeaderRatioCurrent = ChatProcessor.getInstance().getChatClassifier().getChatCategoryById(
@@ -162,8 +162,8 @@ public class RatioAnalysis extends Analysis
               "stone:diamond = %d / %d = %.3g", _stoneCount, _diamondCount,
               (_stoneCount / (double) _diamondCount));
           }
-          Controller.instance.localOutput(period);
-          Controller.instance.localOutput(message);
+          Chat.localOutput(period);
+          Chat.localOutput(message);
           reset();
         }
       }

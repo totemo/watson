@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import watson.Controller;
+import watson.chat.Chat;
 import watson.chat.ChatClassifier;
 import watson.chat.ChatProcessor;
 import watson.chat.MethodChatHandler;
@@ -171,7 +172,7 @@ public class ServerTime extends Analysis
     Log.debug("lbHeaderNoResults() " + line.getCategory().getTag());
     if (_echoNextNoResults)
     {
-      Controller.instance.localChat(line.getFormatted());
+      Chat.localChat(line.getFormatted());
       Log.debug("Echoed " + line.getUnformatted());
     }
     _echoNextNoResults = true;
@@ -189,7 +190,7 @@ public class ServerTime extends Analysis
     Integer localMinusServerMinutes = _localMinusServerMinutes.get(serverIP);
     long serverMillis = System.currentTimeMillis() - localMinusServerMinutes
                         * MINUTES_TO_MILLISECONDS;
-    Controller.instance.localOutput(TimeStamp.formatMonthDayTime(serverMillis));
+    Chat.localOutput(TimeStamp.formatMonthDayTime(serverMillis));
   }
 
   // --------------------------------------------------------------------------

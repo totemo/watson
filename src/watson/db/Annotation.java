@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.src.ModLoader;
 
 import org.lwjgl.opengl.GL11;
 
@@ -109,8 +108,16 @@ public class Annotation
                                    int fgARGB, double scaleFactor, String text)
   {
     RenderManager renderManager = RenderManager.instance;
-    Minecraft mc = ModLoader.getMinecraftInstance();
-    double far = (512 >> mc.gameSettings.renderDistance) * 0.8;
+    FontRenderer fontRenderer = renderManager.getFontRenderer();
+    if (fontRenderer == null)
+    {
+      // Not ready yet.
+      return;
+    }
+
+    Minecraft mc = Minecraft.getMinecraft();
+    // (512 >> mc.gameSettings.renderDistance) * 0.8;
+    double far = mc.gameSettings.renderDistanceChunks * 16;
     double dx = x - RenderManager.renderPosX + 0.5d;
     double dy = y - RenderManager.renderPosY + 0.5d;
     double dz = z - RenderManager.renderPosZ + 0.5d;
@@ -125,7 +132,6 @@ public class Annotation
       dl = far;
     }
 
-    FontRenderer fontrenderer = RenderManager.instance.getFontRenderer();
     GL11.glPushMatrix();
 
     double scale = (0.05 * dl + 1.0) * scaleFactor;
@@ -135,11 +141,12 @@ public class Annotation
       mc.gameSettings.thirdPersonView != 2 ? renderManager.playerViewX
         : -renderManager.playerViewX, 1.0f, 0.0f, 0.0f);
     GL11.glScaled(-scale, -scale, scale);
+    GL11.glDisable(GL11.GL_LIGHTING);
     GL11.glEnable(GL11.GL_BLEND);
     GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
     Tessellator tessellator = Tessellator.instance;
 
-    int textWidth = fontrenderer.getStringWidth(text) >> 1;
+    int textWidth = fontRenderer.getStringWidth(text) >> 1;
     if (textWidth != 0)
     {
       GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -158,7 +165,7 @@ public class Annotation
       // Draw text.
       GL11.glEnable(GL11.GL_TEXTURE_2D);
       GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-      fontrenderer.drawString(text, -textWidth, -5, fgARGB);
+      fontRenderer.drawString(text, -textWidth, -5, fgARGB);
       GL11.glEnable(GL11.GL_DEPTH_TEST);
       GL11.glDepthMask(true);
     }
@@ -166,6 +173,7 @@ public class Annotation
     GL11.glDisable(GL11.GL_BLEND);
     GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
     GL11.glEnable(GL11.GL_TEXTURE_2D);
+    GL11.glEnable(GL11.GL_LIGHTING);
     GL11.glPopMatrix();
   } // drawBillboard
 

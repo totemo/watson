@@ -1,13 +1,13 @@
-package clientcommands;
+package watson.cli;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,8 +17,10 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
+import watson.debug.Log;
 
 // ----------------------------------------------------------------------------
 /**
@@ -35,6 +37,11 @@ import net.minecraft.util.EnumChatFormatting;
  */
 public class ClientCommandManager implements ICommandManager
 {
+  /**
+   * The instance of this class to use.
+   */
+  public static final ClientCommandManager instance = new ClientCommandManager();
+
   // --------------------------------------------------------------------------
   /**
    * Parse and execute the command line if it is a command that has been
@@ -154,29 +161,23 @@ public class ClientCommandManager implements ICommandManager
       }
       else
       {
-        ChatMessageComponent chat = ChatMessageComponent.func_111077_e("commands.generic.permission");
-        sender.sendChatToPlayer(chat.func_111059_a(EnumChatFormatting.RED));
+        sendError(sender, new ChatComponentTranslation("commands.generic.permission", new Object[0]));
       }
     }
     catch (WrongUsageException ex)
     {
-      ChatMessageComponent chat = ChatMessageComponent.func_111082_b(
-        "commands.generic.usage",
-        new Object[]{ChatMessageComponent.func_111082_b(ex.getMessage(),
-          ex.getErrorOjbects())});
-      sender.sendChatToPlayer(chat.func_111059_a(EnumChatFormatting.RED));
+      sendError(sender,
+        new ChatComponentTranslation("commands.generic.usage",
+                                     new Object[]{new ChatComponentTranslation(ex.getMessage(), ex.getErrorOjbects())}));
     }
     catch (CommandException ex)
     {
-      ChatMessageComponent chat = ChatMessageComponent.func_111082_b(
-        ex.getMessage(), ex.getErrorOjbects());
-      sender.sendChatToPlayer(chat.func_111059_a(EnumChatFormatting.RED));
+      sendError(sender, new ChatComponentTranslation(ex.getMessage(), ex.getErrorOjbects()));
     }
     catch (Throwable throwable)
     {
-      ChatMessageComponent chat = ChatMessageComponent.func_111077_e("commands.generic.exception");
-      sender.sendChatToPlayer(chat.func_111059_a(EnumChatFormatting.RED));
-      throwable.printStackTrace();
+      sendError(sender, new ChatComponentTranslation("commands.generic.exception", new Object[0]));
+      Log.exception(Level.WARNING, "error processing command", throwable);
     }
 
     return 0;
@@ -221,7 +222,7 @@ public class ClientCommandManager implements ICommandManager
   @Override
   public Map<String, ICommand> getCommands()
   {
-    return Collections.unmodifiableMap(_commands);
+    return _commands;
   }
 
   // --------------------------------------------------------------------------
@@ -287,6 +288,19 @@ public class ClientCommandManager implements ICommandManager
       _sender = new ClientCommandSender(this);
     }
     return _sender;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Format error messages to the ICommandSender in red.
+   * 
+   * @param sender the player executing the command.
+   * @param chat the error message.
+   */
+  static void sendError(ICommandSender sender, IChatComponent chat)
+  {
+    chat.getChatStyle().setColor(EnumChatFormatting.RED);
+    sender.addChatMessage(chat);
   }
 
   // --------------------------------------------------------------------------

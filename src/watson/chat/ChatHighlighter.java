@@ -96,18 +96,18 @@ public class ChatHighlighter
       Highlight highlight = new Highlight(new Format(format), pattern,
         selection);
       _highlights.add(highlight);
-      Controller.instance.localOutput("Added highlight #" + _highlights.size()
+      Chat.localOutput("Added highlight #" + _highlights.size()
                                       + " " + highlight.toString());
       saveHighlights();
     }
     catch (PatternSyntaxException ex)
     {
-      Controller.instance.localError(pattern
+      Chat.localError(pattern
                                      + " is not a valid regular expression.");
     }
     catch (IllegalArgumentException ex)
     {
-      Controller.instance.localError(format
+      Chat.localError(format
                                      + " is not a valid format specifier.");
     }
   } // addHighlight
@@ -121,7 +121,7 @@ public class ChatHighlighter
   {
     if (_highlights.size() == 0)
     {
-      Controller.instance.localOutput("No highlights set.");
+      Chat.localOutput("No highlights set.");
     }
     else
     {
@@ -133,7 +133,7 @@ public class ChatHighlighter
         builder.append(i + 1);
         builder.append(") ");
         builder.append(highlight.toString());
-        Controller.instance.localOutput(builder.toString());
+        Chat.localOutput(builder.toString());
       } // for
     } // else
   } // listHighlights
@@ -150,12 +150,12 @@ public class ChatHighlighter
       StringBuilder error = new StringBuilder();
       error.append(index);
       error.append(" is out of range.");
-      Controller.instance.localError(error.toString());
+      Chat.localError(error.toString());
     }
     else
     {
       _highlights.remove(index - 1);
-      Controller.instance.localOutput("Removed highlight #" + index);
+      Chat.localOutput("Removed highlight #" + index);
       saveHighlights();
     }
   } // removeHighlight

@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 import watson.Configuration;
 import watson.Controller;
+import watson.chat.Chat;
 import watson.chat.ChatClassifier;
 import watson.chat.ChatProcessor;
 import watson.chat.Colour;
@@ -34,13 +35,13 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
   {
     // Set up some test handling of lb.coord:
     tagDispatchChatHandler.addChatHandler("lb.coord", new MethodChatHandler(
-      this, "lbCoord"));
+                                                                            this, "lbCoord"));
     tagDispatchChatHandler.addChatHandler("lb.coordreplaced",
       new MethodChatHandler(this, "lbCoordReplaced"));
     tagDispatchChatHandler.addChatHandler("lb.page", new MethodChatHandler(
-      this, "lbPage"));
+                                                                           this, "lbPage"));
     tagDispatchChatHandler.addChatHandler("lb.header", new MethodChatHandler(
-      this, "lbHeader"));
+                                                                             this, "lbHeader"));
     tagDispatchChatHandler.addChatHandler("lb.header.noresults",
       new MethodChatHandler(this, "lbHeader"));
 
@@ -129,7 +130,7 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
               second, x, y, z, (created ? '+' : '-'), type.getId(), player,
               sign1, sign2, sign3, sign4);
           }
-          Controller.instance.localChat(output);
+          Chat.localChat(output);
         }
 
         requestNextPage();
@@ -140,6 +141,7 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
       Log.exception(Level.INFO, "error parsing lb coords", ex);
     }
   } // lbCoord
+
   // --------------------------------------------------------------------------
   /**
    * This method is called by the {@link ChatClassifier} when a chat line is
@@ -186,7 +188,7 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
             "\247%c(%2d) %02d-%02d %02d:%02d:%02d (%d,%d,%d) %C%d %s",
             getChatColourChar(x, y, z), index, month, day, hour, minute,
             second, x, y, z, '-', type.getId(), player);
-          Controller.instance.localChat(target);
+          Chat.localChat(target);
         }
 
         requestNextPage();
@@ -306,9 +308,9 @@ public class LbCoordsAnalysis extends watson.analysis.Analysis
    * coordinates are re-echoed.
    */
   protected static final char  _COLOUR_CYCLE[]         = {Colour.red.getCode(),
-    Colour.orange.getCode(), Colour.yellow.getCode(),
-    Colour.lightgreen.getCode(), Colour.lightblue.getCode(),
-    Colour.purple.getCode(), Colour.magenta.getCode()  };
+                                                       Colour.orange.getCode(), Colour.yellow.getCode(),
+                                                       Colour.lightgreen.getCode(), Colour.lightblue.getCode(),
+                                                       Colour.purple.getCode(), Colour.magenta.getCode()};
 
   /**
    * The index into the _COLOUR_CYCLE array referencing the current chat colour.

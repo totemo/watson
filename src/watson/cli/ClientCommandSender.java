@@ -1,13 +1,15 @@
-package clientcommands;
+package watson.cli;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.src.ModLoader;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
+import watson.chat.Chat;
 
-/*
- * ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+/**
  * An ICommandSender implementation for client-side command handling.
  * 
  * Most methods simply defer to Minecraft.thePlayer's handling, but for
@@ -26,7 +28,7 @@ public class ClientCommandSender implements ICommandSender
   public ClientCommandSender(ClientCommandManager ccm)
   {
     _ccm = ccm;
-    _sender = ModLoader.getMinecraftInstance().thePlayer;
+    _sender = Minecraft.getMinecraft().thePlayer;
   }
 
   // --------------------------------------------------------------------------
@@ -41,16 +43,6 @@ public class ClientCommandSender implements ICommandSender
 
   // --------------------------------------------------------------------------
   /**
-   * @see net.minecraft.command.ICommandSender#sendChatToPlayer(net.minecraft.util.ChatMessageComponent)
-   */
-  @Override
-  public void sendChatToPlayer(ChatMessageComponent chatmessagecomponent)
-  {
-    _sender.sendChatToPlayer(chatmessagecomponent);
-  }
-
-  // --------------------------------------------------------------------------
-  /**
    * @see net.minecraft.src.ICommandSender#canCommandSenderUseCommand(java.lang.String)
    */
   @Override
@@ -61,24 +53,48 @@ public class ClientCommandSender implements ICommandSender
 
   // --------------------------------------------------------------------------
   /**
+   * Vanilla class ChatComponentTranslation extracts the ChatStyle out of this
+   * IChatComponent and uses it to set the style of translated text.
+   * 
+   * @see net.minecraft.command.ICommandSender#func_145748_c_()
+   */
+  @Override
+  public IChatComponent func_145748_c_()
+  {
+    // ChatComponentStyle.getChatStyle() creates a default ChatStyle instance on
+    // demand, so a default ChatComponentText instance suffices.
+    // TODO: correct, or should this string be player name?
+    return new ChatComponentText("");
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * @see net.minecraft.command.ICommandSender#addChatMessage(net.minecraft.util.IChatComponent)
+   */
+  @Override
+  public void addChatMessage(IChatComponent chat)
+  {
+    Chat.localChat(chat);
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * @see net.minecraft.command.ICommandSender#getEntityWorld()
+   */
+  @Override
+  public World getEntityWorld()
+  {
+    return Minecraft.getMinecraft().thePlayer.worldObj;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
    * @see net.minecraft.src.ICommandSender#getPlayerCoordinates()
    */
   @Override
   public ChunkCoordinates getPlayerCoordinates()
   {
-    return ModLoader.getMinecraftInstance().thePlayer.getPlayerCoordinates();
-  }
-
-  // --------------------------------------------------------------------------
-  /**
-   * Not documented in the deobfuscated sources yet.
-   * 
-   * Presumed to be the natural compliment to getPlayerCoordinates().
-   */
-  @Override
-  public World func_130014_f_()
-  {
-    return ModLoader.getMinecraftInstance().thePlayer.worldObj;
+    return Minecraft.getMinecraft().thePlayer.getPlayerCoordinates();
   }
 
   // --------------------------------------------------------------------------

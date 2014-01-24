@@ -1,6 +1,5 @@
 package watson.chat;
 
-import watson.Controller;
 
 // ----------------------------------------------------------------------------
 /**
@@ -17,7 +16,7 @@ public class MinecraftChatHandler implements IChatHandler
   @Override
   public void classify(ChatLine line)
   {
-    Controller.instance.localChat(line.getFormatted());
+    Chat.localChat(line.getFormatted());
   }
 
   // --------------------------------------------------------------------------
@@ -35,7 +34,7 @@ public class MinecraftChatHandler implements IChatHandler
     builder.append(ChatClassifier.COLOUR_CHAR);
     builder.append(oldLine.getLastColour());
     builder.append(addedText);
-    Controller.instance.localChat(builder.toString());
+    Chat.localChat(builder.toString());
   } // revise
 } // class MinecraftChatHandler
 
