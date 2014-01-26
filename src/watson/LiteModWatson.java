@@ -214,7 +214,6 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
     {
       _takingScreenshot = false;
     }
-
   }
 
   // --------------------------------------------------------------------------
@@ -234,10 +233,11 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
       GL11.glEnable(GL11.GL_BLEND);
       GL11.glDisable(GL11.GL_TEXTURE_2D);
       GL11.glDisable(GL11.GL_LIGHTING);
-      GL11.glDisable(GL11.GL_FOG);
       GL11.glDepthMask(false);
       GL11.glDisable(GL11.GL_DEPTH_TEST);
-      GL11.glDepthFunc(GL11.GL_ALWAYS);
+
+      boolean foggy = GL11.glIsEnabled(GL11.GL_FOG);
+      GL11.glDisable(GL11.GL_FOG);
 
       GL11.glPushMatrix();
 
@@ -263,20 +263,24 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
 
       GL11.glPopMatrix();
 
-      GL11.glDepthFunc(GL11.GL_LEQUAL);
-      GL11.glEnable(GL11.GL_DEPTH_TEST);
-      GL11.glDepthMask(true);
-      GL11.glEnable(GL11.GL_FOG);
-      GL11.glEnable(GL11.GL_LIGHTING);
-      GL11.glEnable(GL11.GL_TEXTURE_2D);
-      GL11.glDisable(GL11.GL_BLEND);
-
       edits.drawAnnotations();
       edits.getOreDB().drawDepositLabels();
 
       // More test code.
       // drawBillboard(0, 70, 0, 0x80000000, 0xFFFFFFFF, 0.02,
       // "Test Billboard");
+
+      // Only re-enable fog if it was enabled before we messed with it.
+      // Or else, fog is *all* you'll see with Optifine.
+      if (foggy)
+      {
+        GL11.glEnable(GL11.GL_FOG);
+      }
+      GL11.glEnable(GL11.GL_DEPTH_TEST);
+      GL11.glDepthMask(true);
+      GL11.glEnable(GL11.GL_LIGHTING);
+      GL11.glEnable(GL11.GL_TEXTURE_2D);
+      GL11.glDisable(GL11.GL_BLEND);
 
       RenderHelper.enableStandardItemLighting();
     }

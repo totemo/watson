@@ -5,10 +5,6 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.logging.Level;
 
-import net.minecraft.client.Minecraft;
-
-import org.lwjgl.opengl.GL11;
-
 import watson.Configuration;
 import watson.Controller;
 import watson.DisplaySettings;
@@ -402,11 +398,6 @@ public class OreDB
     DisplaySettings settings = Controller.instance.getDisplaySettings();
     if (settings.areLabelsShown())
     {
-      Minecraft mc = Minecraft.getMinecraft();
-      mc.entityRenderer.disableLightmap(0.0);
-      GL11.glDisable(GL11.GL_LIGHTING);
-      GL11.glDisable(GL11.GL_FOG);
-
       int id = 1;
       StringBuilder label = new StringBuilder();
       for (TypedOreDB db : _db.values())
@@ -419,19 +410,18 @@ public class OreDB
             label.setLength(0);
             label.ensureCapacity(4);
             label.append(id);
-            watson.db.Annotation.drawBillboard(block.getLocation().getX(),
-              block.getLocation().getY(), block.getLocation().getZ(),
+            Annotation.drawBillboard(
+              block.getLocation().getX(),
+              block.getLocation().getY(),
+              block.getLocation().getZ(),
               Configuration.instance.getBillboardBackground(),
-              Configuration.instance.getBillboardForeground(), 0.03,
+              Configuration.instance.getBillboardForeground(),
+              0.03,
               label.toString());
           }
           ++id;
         } // for all deposits
       } // for all ore types
-
-      GL11.glEnable(GL11.GL_FOG);
-      GL11.glEnable(GL11.GL_LIGHTING);
-      mc.entityRenderer.enableLightmap(0.0);
     } // if drawing deposit labels
   } // drawDepositLabels
 

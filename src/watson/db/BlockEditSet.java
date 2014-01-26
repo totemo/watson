@@ -378,19 +378,10 @@ public class BlockEditSet
     DisplaySettings settings = Controller.instance.getDisplaySettings();
     if (settings.areAnnotationsShown() && !_annotations.isEmpty())
     {
-      Minecraft mc = Minecraft.getMinecraft();
-      mc.entityRenderer.disableLightmap(0.0);
-      GL11.glDisable(GL11.GL_LIGHTING);
-      GL11.glDisable(GL11.GL_FOG);
-
       for (Annotation annotation : _annotations)
       {
         annotation.draw();
       }
-
-      GL11.glEnable(GL11.GL_FOG);
-      GL11.glEnable(GL11.GL_LIGHTING);
-      mc.entityRenderer.enableLightmap(0.0);
     } // if drawing annotations
   } // drawAnnotations
 
