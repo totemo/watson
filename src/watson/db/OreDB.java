@@ -54,6 +54,7 @@ public class OreDB
     _chatColours.put(types.getBlockTypeById(15), Colour.orange);
     _chatColours.put(types.getBlockTypeById(14), Colour.yellow);
     _chatColours.put(types.getBlockTypeById(21), Colour.blue);
+    _chatColours.put(types.getBlockTypeById(73), Colour.red);
     _chatColours.put(types.getBlockTypeById(74), Colour.red);
     _chatColours.put(types.getBlockTypeById(16), Colour.grey);
     _chatColours.put(types.getBlockTypeById(153), Colour.white);
@@ -374,12 +375,12 @@ public class OreDB
   {
     try
     {
-      // If the edit corresponds to destruction of an ore, then we are
-      // interested.
-      // Otherwise not.
-      if (!edit.creation && isOre(edit.type))
+      // Only interested in edits that correspond to destruction of an ore.
+      // Merge glowing and no-glowing redstone into the same TypedOreDB.
+      BlockType mergedType = OreDB.getMergedBlockType(edit.type);
+      if (!edit.creation && isOre(mergedType))
       {
-        TypedOreDB db = getDB(edit.type);
+        TypedOreDB db = getDB(mergedType);
         db.addBlockEdit(edit);
       }
     }
