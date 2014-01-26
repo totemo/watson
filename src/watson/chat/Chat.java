@@ -8,11 +8,23 @@ import net.minecraft.util.IChatComponent;
 
 // ----------------------------------------------------------------------------
 /**
- * Interfaces to chat methods in vanilla Minecraft code with less-than-ideal
- * de-obfuscation.
+ * Handles local and to-server chat, including highlighting of received chat
+ * messages.
  */
 public class Chat
 {
+  // --------------------------------------------------------------------------
+  /**
+   * Return the (@link ChatHighlighter} that colours naughty words and whatnot
+   * in chat lines.
+   * 
+   * @return the {@link ChatHighlighter}.
+   */
+  public static ChatHighlighter getChatHighlighter()
+  {
+    return _chatHighlighter;
+  }
+
   // --------------------------------------------------------------------------
   /**
    * Send a chat message to the server.
@@ -72,7 +84,9 @@ public class Chat
     Minecraft mc = Minecraft.getMinecraft();
     if (mc.ingameGUI != null && mc.ingameGUI.getChatGUI() != null)
     {
-      mc.ingameGUI.getChatGUI().func_146227_a(chat);
+      // TODO: fix links in chat.
+      String highlighted = getChatHighlighter().highlight(chat.getFormattedText());
+      mc.ingameGUI.getChatGUI().func_146227_a(new ChatComponentText(highlighted));
     }
   }
 
@@ -98,4 +112,9 @@ public class Chat
     localChat(EnumChatFormatting.DARK_RED, message);
   }
 
+  // --------------------------------------------------------------------------
+  /**
+   * The chat highlighter.
+   */
+  protected static ChatHighlighter _chatHighlighter = new ChatHighlighter();
 } // class Chat

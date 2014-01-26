@@ -19,7 +19,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
 import watson.analysis.Sherlock;
 import watson.chat.Chat;
-import watson.chat.ChatHighlighter;
 import watson.chat.ChatProcessor;
 import watson.cli.AnnoCommand;
 import watson.cli.CalcCommand;
@@ -61,7 +60,7 @@ public class Controller
     ChatProcessor.getInstance().loadChatExclusions();
     _sherlock = new Sherlock(ChatProcessor.getInstance().getChatClassifier());
     BlockTypeRegistry.instance.loadBlockTypes();
-    _chatHighlighter.loadHighlights();
+    Chat.getChatHighlighter().loadHighlights();
 
     // Set up some extra chat exclusions that may not yet be in the config file
     // but ought to be. The "No results found." line is suppressed to hide
@@ -87,18 +86,6 @@ public class Controller
   public Sherlock getSherlock()
   {
     return _sherlock;
-  }
-
-  // --------------------------------------------------------------------------
-  /**
-   * Return the (@link ChatHighlighter} that colours naughty words and whatnot
-   * in chat lines.
-   * 
-   * @return the {@link ChatHighlighter}.
-   */
-  public ChatHighlighter getChatHighlighter()
-  {
-    return _chatHighlighter;
   }
 
   // --------------------------------------------------------------------------
@@ -864,11 +851,6 @@ public class Controller
    * ignored.
    */
   protected Filters                       _filters         = new Filters();
-
-  /**
-   * The chat highlighter.
-   */
-  protected ChatHighlighter               _chatHighlighter = new ChatHighlighter();
 
   /**
    * Map from name to value of all of the variables scraped from chat lines.

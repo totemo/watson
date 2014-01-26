@@ -1,7 +1,7 @@
 package watson.cli;
 
 import net.minecraft.command.ICommandSender;
-import watson.Controller;
+import watson.chat.Chat;
 import watson.chat.ChatHighlighter;
 
 // --------------------------------------------------------------------------
@@ -28,7 +28,7 @@ public class HighlightCommand extends WatsonCommandBase
   @Override
   public void processCommand(ICommandSender sender, String[] args)
   {
-    ChatHighlighter highlighter = Controller.instance.getChatHighlighter();
+    ChatHighlighter highlighter = Chat.getChatHighlighter();
     if (args.length == 0)
     {
       help(sender);
