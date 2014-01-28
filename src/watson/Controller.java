@@ -17,15 +17,12 @@ import java.util.regex.Pattern;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
-import watson.analysis.Sherlock;
 import watson.chat.Chat;
-import watson.chat.ChatProcessor;
 import watson.cli.AnnoCommand;
 import watson.cli.CalcCommand;
 import watson.cli.CaseInsensitivePrefixFileFilter;
 import watson.cli.ClientCommandManager;
 import watson.cli.HighlightCommand;
-import watson.cli.TagCommand;
 import watson.cli.WatsonCommand;
 import watson.db.BlockEdit;
 import watson.db.BlockEditSet;
@@ -56,36 +53,14 @@ public class Controller
   public void initialise()
   {
     createBlockEditDirectory();
-    ChatProcessor.getInstance().loadChatCategories();
-    ChatProcessor.getInstance().loadChatExclusions();
-    _sherlock = new Sherlock(ChatProcessor.getInstance().getChatClassifier());
     BlockTypeRegistry.instance.loadBlockTypes();
     Chat.getChatHighlighter().loadHighlights();
-
-    // Set up some extra chat exclusions that may not yet be in the config file
-    // but ought to be. The "No results found." line is suppressed to hide
-    // the LogBlock query that checks server time. The line is manually
-    // re-echoed after that.
-    ChatProcessor.getInstance().setChatTagVisible("lb.header.timecheck", false);
-    ChatProcessor.getInstance().setChatTagVisible("lb.header.noresults", false);
 
     // Initialise the commands.
     ClientCommandManager.instance.registerCommand(new WatsonCommand());
     ClientCommandManager.instance.registerCommand(new AnnoCommand());
-    ClientCommandManager.instance.registerCommand(new TagCommand());
     ClientCommandManager.instance.registerCommand(new HighlightCommand());
     ClientCommandManager.instance.registerCommand(new CalcCommand());
-  }
-
-  // --------------------------------------------------------------------------
-  /**
-   * Return the Sherlock instance.
-   * 
-   * @return the Sherlock instance.
-   */
-  public Sherlock getSherlock()
-  {
-    return _sherlock;
   }
 
   // --------------------------------------------------------------------------
@@ -830,11 +805,6 @@ public class Controller
   protected String                        _version;
 
   /**
-   * Makes inferences based on LogBlock query results.
-   */
-  protected Sherlock                      _sherlock;
-
-  /**
    * The settings affecting what is displayed and how.
    */
   protected DisplaySettings               _displaySettings = new DisplaySettings();
@@ -883,6 +853,7 @@ public class Controller
    * Directory where mod files reside, relative to the .minecraft/ directory.
    */
   protected static final String           MOD_SUBDIR       = "mods" + File.separator + MOD_PACKAGE;
+
   /**
    * Subdirectory of the mod specific directory where {@link BlockEditSet}s are
    * saved.

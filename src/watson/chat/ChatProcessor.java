@@ -1,16 +1,21 @@
 package watson.chat;
 
-import java.io.File;
-import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.logging.Level;
 
-import net.minecraft.client.gui.GuiNewChat;
+import net.minecraft.util.IChatComponent;
 import watson.Configuration;
-import watson.Controller;
+import watson.analysis.CoalBlockAnalysis;
+import watson.analysis.CoreProtectAnalysis;
+import watson.analysis.LbCoordsAnalysis;
+import watson.analysis.ModModeAnalysis;
+import watson.analysis.PrismAnalysis;
+import watson.analysis.RatioAnalysis;
+import watson.analysis.RegionInfoAnalysis;
+import watson.analysis.ServerTime;
+import watson.analysis.TeleportAnalysis;
 import watson.db.BlockEdit;
 import watson.db.BlockEditSet;
-import watson.debug.Log;
 
 // ----------------------------------------------------------------------------
 /**
@@ -35,42 +40,28 @@ import watson.debug.Log;
 public class ChatProcessor
 {
   /**
-   * Return the single instance of this class.
-   * 
-   * Use lazy initialisation to delay construction to a time after class
-   * Minecraft has constructed its {@link GuiNewChat} instance.
+   * The single instance of this class.
    */
-  public static ChatProcessor getInstance()
-  {
-    if (_instance == null)
-    {
-      _instance = new ChatProcessor();
-    }
-    return _instance;
-  }
+  public static ChatProcessor instance = new ChatProcessor();
 
   // --------------------------------------------------------------------------
   /**
-   * Return a reference to the ChatClassifier.
+   * Add the handler to the list of those that are notified of a received chat.
    * 
-   * @return a reference to the ChatClassifier.
+   * @param handler the IChatHandler whose onChat() method is called.
    */
-  public ChatClassifier getChatClassifier()
+  public void addChatHandler(IChatHandler handler)
   {
-    return _chatClassifier;
+    _handlers.add(handler);
   }
 
   // --------------------------------------------------------------------------
   /**
    * Add the specified chat message to the queue.
    * 
-   * This method is called by
-   * {@link net.minecraft.src.NetClientHandler#handleChat()} and supplants the
-   * normal handling of chat messages in Minecraft.
-   * 
    * @param chat the chat message.
    */
-  public void addChatToQueue(String chat)
+  public void addChatToQueue(IChatComponent chat)
   {
     if (Configuration.instance.isEnabled())
     {
@@ -95,100 +86,24 @@ public class ChatProcessor
     // before it was disabled.
     for (;;)
     {
-      String chat = _chatQueue.poll();
+      IChatComponent chat = _chatQueue.poll();
       if (chat == null)
       {
         break;
       }
-      _chatClassifier.classify(chat);
+
+      boolean echo = true;
+      for (IChatHandler handler : _handlers)
+      {
+        echo &= handler.onChat(chat);
+      }
+
+      if (echo)
+      {
+        Chat.localChat(chat);
+      }
     }
   } // processChatQueue
-
-  // --------------------------------------------------------------------------
-  /**
-   * Load the chat categories from a YAML file in the mod's configuration
-   * subdirectory, or from minecraft.jar as a fallback.
-   */
-  public void loadChatCategories()
-  {
-    try
-    {
-      InputStream in = Controller.getConfigurationStream(CHAT_CATEGORIES_FILE);
-      try
-      {
-        _chatClassifier.loadChatCategories(in);
-      }
-      finally
-      {
-        in.close();
-      }
-    }
-    catch (Exception ex)
-    {
-      Log.exception(Level.SEVERE, "error loading chat categories: ", ex);
-    }
-  } // loadChatCategories
-
-  // --------------------------------------------------------------------------
-  /**
-   * Load the chat exclusions from a YAML file in the mod's configuration
-   * subdirectory, or from minecraft.jar as a fallback.
-   */
-  public void loadChatExclusions()
-  {
-    try
-    {
-      InputStream in = Controller.getConfigurationStream(CHAT_EXCLUSIONS_FILE);
-      try
-      {
-        _excludeTagChatHandler.loadExclusions(in);
-      }
-      finally
-      {
-        in.close();
-      }
-    }
-    catch (Exception ex)
-    {
-      Log.exception(Level.SEVERE, "error loading chat exclusions: ", ex);
-    }
-  } // loadChatExclusions
-
-  // --------------------------------------------------------------------------
-  /**
-   * Controls whether chat messages with the specifed tag are visible (displayed
-   * locally in the client) or not.
-   * 
-   * @param tag the tag of the chat messages, assigned by the
-   *          {@link ChatClassifier}.
-   * @param visible if true, messages of that type are displayed.
-   */
-  public void setChatTagVisible(String tag, boolean visible)
-  {
-    _excludeTagChatHandler.setExcluded(tag, !visible);
-
-    File exclusionsFile = new File(Controller.getModDirectory(),
-                                   CHAT_EXCLUSIONS_FILE);
-    _excludeTagChatHandler.saveExclusions(exclusionsFile);
-
-    Chat.localOutput((visible ? "Show " : "Hide ") + tag + " lines.");
-  }
-
-  // --------------------------------------------------------------------------
-  /**
-   * List the currently hidden chat tags.
-   */
-  public void listHiddenTags()
-  {
-    StringBuilder message = new StringBuilder();
-    message.append("Hidden tags:");
-    for (String tag : _excludeTagChatHandler.getExcludedTags())
-    {
-      message.append(' ');
-      message.append(tag);
-    }
-    Chat.localOutput(message.toString());
-  } // listHiddenTags
 
   // --------------------------------------------------------------------------
   /**
@@ -196,44 +111,30 @@ public class ChatProcessor
    */
   private ChatProcessor()
   {
-    _excludeTagChatHandler.setDefaultHandler(new MinecraftChatHandler());
-    _chatClassifier.addChatHandler(_excludeTagChatHandler);
-  } // ChatProcessor
+    addChatHandler(new LbCoordsAnalysis());
+    addChatHandler(new CoalBlockAnalysis());
+    addChatHandler(new TeleportAnalysis());
+    addChatHandler(new RatioAnalysis());
+    addChatHandler(ServerTime.instance);
+
+    addChatHandler(new ModModeAnalysis());
+    addChatHandler(new RegionInfoAnalysis());
+
+    addChatHandler(new PrismAnalysis());
+    addChatHandler(new CoreProtectAnalysis());
+  }
 
   // --------------------------------------------------------------------------
   /**
-   * The basename of the file containing the YAML descriptions of all
-   * ChatCategory instances.
+   * Handlers notified of chat arriving at the client.
    */
-  private static final String             CHAT_CATEGORIES_FILE   = "chatcategories.yml";
-
-  /**
-   * The basename of the file containing the tags of all chat categories that
-   * are exclused from display.
-   */
-  private static final String             CHAT_EXCLUSIONS_FILE   = "chatexclusions.yml";
-
-  /**
-   * Single instance of this class.
-   */
-  protected static ChatProcessor          _instance;
-
-  /**
-   * Classifies incoming chat text and dispatches to an IChatHandler.
-   */
-  protected ChatClassifier                _chatClassifier        = new ChatClassifier();
-
-  /**
-   * One of the {@link IChatHandler}s registered with _chatClasssifier. It
-   * provides control over which chat messages get excluded from chat.
-   */
-  protected ExcludeTagChatHandler         _excludeTagChatHandler = new ExcludeTagChatHandler();
+  protected ArrayList<IChatHandler>               _handlers  = new ArrayList<IChatHandler>();
 
   /**
    * A queue to pass incoming chat messages from the network thread to the game
    * thread. This is necessary to avoid a ConcurrentModificationException while
    * traversing the set of BlockEdit instances and rendering them.
    */
-  protected ConcurrentLinkedQueue<String> _chatQueue             = new ConcurrentLinkedQueue<String>();
+  protected ConcurrentLinkedQueue<IChatComponent> _chatQueue = new ConcurrentLinkedQueue<IChatComponent>();
 
 } // class ChatProcessor

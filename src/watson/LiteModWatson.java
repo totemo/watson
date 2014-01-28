@@ -111,7 +111,7 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
         }
       }
     }
-  }
+  } // getVersion
 
   // --------------------------------------------------------------------------
   /**
@@ -166,7 +166,6 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
       Controller.instance.getDisplaySettings().configure(
         Controller.instance.getServerIP(),
         mc.theWorld.getWorldInfo().getGameType());
-
     }
   }
 
@@ -179,7 +178,7 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
   public boolean onChat(S02PacketChat chatPacket, IChatComponent chat, String message)
   {
     // TODO: reformulate chat processing using IChatComponent; handle URLs etc.
-    ChatProcessor.getInstance().addChatToQueue(chat.getFormattedText());
+    ChatProcessor.instance.addChatToQueue(chat);
     return false;
   }
 
@@ -188,7 +187,7 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
   @Override
   public void onTick(Minecraft minecraft, float partialTicks, boolean inGame, boolean clock)
   {
-    ChatProcessor.getInstance().processChatQueue();
+    ChatProcessor.instance.processChatQueue();
     Controller.instance.processServerChatQueue();
 
     if (_screenShotKeyBinding.isPressed())
@@ -214,7 +213,7 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
     {
       _takingScreenshot = false;
     }
-  }
+  } // onTick
 
   // --------------------------------------------------------------------------
   /**
@@ -335,16 +334,17 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
   }
 
   // --------------------------------------------------------------------------
+
   /**
    * This is a keybinding that we will register with the game and use to toggle
    * the clock
    */
-  private static KeyBinding _screenShotKeyBinding = new KeyBinding("Take Screenshot", Keyboard.KEY_F12, "Watson");
+  private static KeyBinding _screenShotKeyBinding = new KeyBinding("Take Screenshot", Keyboard.KEY_F12,
+                                                                   "Watson");
 
   /**
    * True while the player holds down the Watson screenshot key. Used to detect
    * the initial key-down.
    */
   static boolean            _takingScreenshot     = false;
-
 } // class LiteModWatson

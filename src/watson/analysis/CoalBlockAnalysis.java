@@ -1,13 +1,14 @@
 package watson.analysis;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import static watson.analysis.LogBlockPatterns.LB_EDIT;
+import static watson.analysis.LogBlockPatterns.LB_EDIT_REPLACED;
+import static watson.analysis.LogBlockPatterns.LB_POSITION;
 
+import java.util.regex.Matcher;
+
+import net.minecraft.util.IChatComponent;
 import watson.Controller;
-import watson.chat.ChatClassifier;
-import watson.chat.ChatProcessor;
-import watson.chat.MethodChatHandler;
-import watson.chat.TagDispatchChatHandler;
+import watson.chat.IMatchedChatHandler;
 import watson.db.BlockEdit;
 import watson.db.BlockType;
 import watson.db.BlockTypeRegistry;
@@ -21,61 +22,65 @@ import watson.db.TimeStamp;
  */
 public class CoalBlockAnalysis extends Analysis
 {
-  // --------------------------------------------------------------------------
+  // ----------------------------------------------------------------------------
   /**
-   * Implements inherited method.
+   * Constructor.
    */
-  @Override
-  public void registerAnalysis(TagDispatchChatHandler tagDispatchChatHandler)
+  public CoalBlockAnalysis()
   {
-    tagDispatchChatHandler.addChatHandler("lb.position", new MethodChatHandler(
-      this, "lbPosition"));
-    tagDispatchChatHandler.addChatHandler("lb.edit", new MethodChatHandler(
-      this, "lbEdit"));
-    tagDispatchChatHandler.addChatHandler("lb.editreplaced",
-      new MethodChatHandler(this, "lbEditReplaced"));
-    _lbPosition = ChatProcessor.getInstance().getChatClassifier().getChatCategoryById(
-      "lb.position").getFullPattern();
-    _lbEdit = ChatProcessor.getInstance().getChatClassifier().getChatCategoryById(
-      "lb.edit").getFullPattern();
-    _lbEditReplaced = ChatProcessor.getInstance().getChatClassifier().getChatCategoryById(
-      "lb.editreplaced").getFullPattern();
-  } // registerAnalysis
-
-  // --------------------------------------------------------------------------
-  /**
-   * This method is called by the {@link ChatClassifier} when a chat line is
-   * assigned the "lb.position" category. That category corresponds to the
-   * result header when checking the logs for a single block using coal ore.
-   */
-  @SuppressWarnings("unused")
-  private void lbPosition(watson.chat.ChatLine line)
-  {
-    Matcher m = _lbPosition.matcher(line.getUnformatted());
-    if (m.matches())
+    addMatchedChatHandler(LB_POSITION, new IMatchedChatHandler()
     {
-      _x = Integer.parseInt(m.group(1));
-      _y = Integer.parseInt(m.group(2));
-      _z = Integer.parseInt(m.group(3));
-      Controller.instance.selectPosition(_x, _y, _z);
+      @Override
+      public boolean onMatchedChat(IChatComponent chat, Matcher m)
+      {
+        lbPosition(chat, m);
+        return true;
+      }
+    });
+    addMatchedChatHandler(LB_EDIT, new IMatchedChatHandler()
+    {
+      @Override
+      public boolean onMatchedChat(IChatComponent chat, Matcher m)
+      {
+        lbEdit(chat, m);
+        return true;
+      }
+    });
+    addMatchedChatHandler(LB_EDIT_REPLACED, new IMatchedChatHandler()
+    {
+      @Override
+      public boolean onMatchedChat(IChatComponent chat, Matcher m)
+      {
+        lbEditReplaced(chat, m);
+        return true;
+      }
+    });
+  } // constructor
 
-      _lbPositionTime = System.currentTimeMillis();
-      _expectingFirstEdit = true;
-    }
+  // --------------------------------------------------------------------------
+  /**
+   * Parse the result header when checking the logs for a single block using
+   * coal ore.
+   */
+  void lbPosition(@SuppressWarnings("unused") IChatComponent chat, Matcher m)
+  {
+    _x = Integer.parseInt(m.group(1));
+    _y = Integer.parseInt(m.group(2));
+    _z = Integer.parseInt(m.group(3));
+    Controller.instance.selectPosition(_x, _y, _z);
+
+    _lbPositionTime = System.currentTimeMillis();
+    _expectingFirstEdit = true;
   } // lbPosition
 
   // --------------------------------------------------------------------------
   /**
-   * This method is called by the {@link ChatClassifier} when a chat line is
-   * assigned the "lb.edit" category. That category corresponds to a "created"
-   * or "destroyed" result in the logs for a single block using coal ore.
+   * Parse "created" or "destroyed" result in the logs for a single block using
+   * coal ore.
    */
-  @SuppressWarnings("unused")
-  private void lbEdit(watson.chat.ChatLine line)
+  void lbEdit(@SuppressWarnings("unused") IChatComponent chat, Matcher m)
   {
-    Matcher m = _lbEdit.matcher(line.getUnformatted());
-    if (m.matches()
-        && (System.currentTimeMillis() - _lbPositionTime) < POSITION_TIMEOUT_MILLIS)
+    if ((System.currentTimeMillis() - _lbPositionTime) < POSITION_TIMEOUT_MILLIS)
     {
       int month = Integer.parseInt(m.group(1));
       int day = Integer.parseInt(m.group(2));
@@ -103,16 +108,11 @@ public class CoalBlockAnalysis extends Analysis
 
   // --------------------------------------------------------------------------
   /**
-   * This method is called by the {@link ChatClassifier} when a chat line is
-   * assigned the "lb.edit" category. That category corresponds to a "created"
-   * or "destroyed" result in the logs for a single block using coal ore.
+   * Parse results where the player replaced one block with another.
    */
-  @SuppressWarnings("unused")
-  private void lbEditReplaced(watson.chat.ChatLine line)
+  void lbEditReplaced(@SuppressWarnings("unused") IChatComponent chat, Matcher m)
   {
-    Matcher m = _lbEditReplaced.matcher(line.getUnformatted());
-    if (m.matches()
-        && (System.currentTimeMillis() - _lbPositionTime) < POSITION_TIMEOUT_MILLIS)
+    if ((System.currentTimeMillis() - _lbPositionTime) < POSITION_TIMEOUT_MILLIS)
     {
       int month = Integer.parseInt(m.group(1));
       int day = Integer.parseInt(m.group(2));
@@ -138,21 +138,6 @@ public class CoalBlockAnalysis extends Analysis
   } // lbEditReplaced
 
   // --------------------------------------------------------------------------
-  /**
-   * The pattern of full lb.position lines.
-   */
-  protected Pattern         _lbPosition;
-
-  /**
-   * The pattern of full lb.edit lines.
-   */
-  protected Pattern         _lbEdit;
-
-  /**
-   * The pattern of full lb.editreplaced lines.
-   */
-  protected Pattern         _lbEditReplaced;
-
   /**
    * X coordinate parsed from chat.
    */

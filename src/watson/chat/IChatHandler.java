@@ -1,21 +1,21 @@
 package watson.chat;
 
-// --------------------------------------------------------------------------
+import net.minecraft.util.IChatComponent;
+
+// ----------------------------------------------------------------------------
 /**
- * Contains callback methods invoked by {@link ChatClassifier} when a line of
- * chat has been classified to be of a particular {@link ChatCategory}.
- * 
- * The ChatCategory of a {@link ChatLine} is accessed through the
- * {@link ChatLine#getCategory()} method.
+ * Event handler interface for chat messages received by the client and
+ * processed by {@link ChatProcessor}.
  */
 public interface IChatHandler
 {
+  // --------------------------------------------------------------------------
   /**
-   * This method is called the first time the specified line is assigned a
-   * {@link ChatCategory}.
+   * Called when a chat is received.
    * 
-   * @param line the ChatLine that was categorised.
+   * @param chat the chat.
+   * @return true if the chat should be echoed in the client chat GUI; false if
+   *         it should be filtered out.
    */
-  public void classify(ChatLine line);
-
-} // class IChatHandler
+  public boolean onChat(IChatComponent chat);
+}

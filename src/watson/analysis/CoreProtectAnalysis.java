@@ -1,12 +1,16 @@
 package watson.analysis;
 
+import static watson.analysis.CoreProtectPatterns.DETAILS;
+import static watson.analysis.CoreProtectPatterns.INSPECTOR_COORDS;
+import static watson.analysis.CoreProtectPatterns.LOOKUP_COORDS;
+import static watson.analysis.CoreProtectPatterns.LOOKUP_HEADER;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.minecraft.util.IChatComponent;
 import watson.Controller;
-import watson.chat.ChatProcessor;
-import watson.chat.MethodChatHandler;
-import watson.chat.TagDispatchChatHandler;
+import watson.chat.IMatchedChatHandler;
 import watson.db.BlockEdit;
 import watson.db.BlockType;
 import watson.db.BlockTypeRegistry;
@@ -39,26 +43,47 @@ public class CoreProtectAnalysis extends Analysis
 {
   // --------------------------------------------------------------------------
   /**
-   * @see watson.analysis.Analysis#registerAnalysis(watson.chat.TagDispatchChatHandler)
+   * Constructor.
    */
-  @Override
-  public void registerAnalysis(TagDispatchChatHandler tagDispatchChatHandler)
+  public CoreProtectAnalysis()
   {
-    tagDispatchChatHandler.addChatHandler("coreprotect.inspectorcoords",
-      new MethodChatHandler(this, "inspectorCoords"));
-    tagDispatchChatHandler.addChatHandler("coreprotect.details",
-      new MethodChatHandler(this, "details"));
-    tagDispatchChatHandler.addChatHandler("coreprotect.lookupcoords",
-      new MethodChatHandler(this, "lookupCoords"));
-    tagDispatchChatHandler.addChatHandler("coreprotect.lookupheader",
-      new MethodChatHandler(this, "lookupHeader"));
-    _inspectorCoords = ChatProcessor.getInstance().getChatClassifier().getChatCategoryById(
-      "coreprotect.inspectorcoords").getFullPattern();
-    _details = ChatProcessor.getInstance().getChatClassifier().getChatCategoryById(
-      "coreprotect.details").getFullPattern();
-    _lookupCoords = ChatProcessor.getInstance().getChatClassifier().getChatCategoryById(
-      "coreprotect.lookupcoords").getFullPattern();
-  } // registerAnalysis
+    addMatchedChatHandler(INSPECTOR_COORDS, new IMatchedChatHandler()
+    {
+      @Override
+      public boolean onMatchedChat(IChatComponent chat, Matcher m)
+      {
+        inspectorCoords(chat, m);
+        return true;
+      }
+    });
+    addMatchedChatHandler(DETAILS, new IMatchedChatHandler()
+    {
+      @Override
+      public boolean onMatchedChat(IChatComponent chat, Matcher m)
+      {
+        details(chat, m);
+        return true;
+      }
+    });
+    addMatchedChatHandler(LOOKUP_COORDS, new IMatchedChatHandler()
+    {
+      @Override
+      public boolean onMatchedChat(IChatComponent chat, Matcher m)
+      {
+        lookupCoords(chat, m);
+        return true;
+      }
+    });
+    addMatchedChatHandler(LOOKUP_HEADER, new IMatchedChatHandler()
+    {
+      @Override
+      public boolean onMatchedChat(IChatComponent chat, Matcher m)
+      {
+        lookupHeader(chat, m);
+        return true;
+      }
+    });
+  } // constructor
 
   // --------------------------------------------------------------------------
   /**
@@ -66,18 +91,14 @@ public class CoreProtectAnalysis extends Analysis
    * inspector coordinates line.
    */
   @SuppressWarnings("unused")
-  private void inspectorCoords(watson.chat.ChatLine line)
+  void inspectorCoords(IChatComponent chat, Matcher m)
   {
     _isLookup = false;
-    Matcher m = _inspectorCoords.matcher(line.getUnformatted());
-    if (m.matches())
-    {
-      _x = Integer.parseInt(m.group(1));
-      _y = Integer.parseInt(m.group(2));
-      _z = Integer.parseInt(m.group(3));
-      Controller.instance.selectPosition(_x, _y, _z);
-      _firstInspectorResult = true;
-    }
+    _x = Integer.parseInt(m.group(1));
+    _y = Integer.parseInt(m.group(2));
+    _z = Integer.parseInt(m.group(3));
+    Controller.instance.selectPosition(_x, _y, _z);
+    _firstInspectorResult = true;
   } // inspectorCoords
 
   // --------------------------------------------------------------------------
@@ -86,40 +107,36 @@ public class CoreProtectAnalysis extends Analysis
    * inspector or lookup details line.
    */
   @SuppressWarnings("unused")
-  private void details(watson.chat.ChatLine line)
+  void details(IChatComponent chat, Matcher m)
   {
-    Matcher m = _details.matcher(line.getUnformatted());
-    if (m.matches())
+    _lookupDetails = false;
+    if (m.group(3).equals("placed") || m.group(3).equals("removed"))
     {
-      _lookupDetails = false;
-      if (m.group(3).equals("placed") || m.group(3).equals("removed"))
+      _millis = parseTimeExpression(m.group(1));
+      _player = m.group(2);
+      _creation = m.group(3).equals("placed");
+      _type = BlockTypeRegistry.instance.getBlockTypeByFormattedId(m.group(4));
+
+      if (_isLookup)
       {
-        _millis = parseTimeExpression(m.group(1));
-        _player = m.group(2);
-        _creation = m.group(3).equals("placed");
-        _type = BlockTypeRegistry.instance.getBlockTypeByFormattedId(m.group(4));
-
-        if (_isLookup)
-        {
-          // Record that we can use these details at the next
-          // coreprotect.lookupcoords only.
-          _lookupDetails = true;
-        }
-        else
-        {
-          // An inspector result, so add immediately.
-          BlockEdit edit = new BlockEdit(_millis, _player, _creation, _x, _y,
-            _z, _type);
-          boolean added = Controller.instance.getBlockEditSet().addBlockEdit(
-            edit, _firstInspectorResult);
-
-          // The first inspector result to pass the filter sets variables.
-          if (_firstInspectorResult && added)
-          {
-            _firstInspectorResult = false;
-          }
-        } // if inspector result
+        // Record that we can use these details at the next
+        // coreprotect.lookupcoords only.
+        _lookupDetails = true;
       }
+      else
+      {
+        // An inspector result, so add immediately.
+        BlockEdit edit = new BlockEdit(_millis, _player, _creation, _x, _y,
+                                       _z, _type);
+        boolean added = Controller.instance.getBlockEditSet().addBlockEdit(
+          edit, _firstInspectorResult);
+
+        // The first inspector result to pass the filter sets variables.
+        if (_firstInspectorResult && added)
+        {
+          _firstInspectorResult = false;
+        }
+      } // if inspector result
     }
   } // details
 
@@ -129,10 +146,10 @@ public class CoreProtectAnalysis extends Analysis
    * lookup header line.
    */
   @SuppressWarnings("unused")
-  private void lookupHeader(watson.chat.ChatLine line)
+  void lookupHeader(IChatComponent chat, Matcher m)
   {
     _isLookup = true;
-  } // lookupHeader
+  }
 
   // --------------------------------------------------------------------------
   /**
@@ -140,25 +157,21 @@ public class CoreProtectAnalysis extends Analysis
    * lookup coordinates line.
    */
   @SuppressWarnings("unused")
-  private void lookupCoords(watson.chat.ChatLine line)
+  void lookupCoords(IChatComponent chat, Matcher m)
   {
-    Matcher m = _lookupCoords.matcher(line.getUnformatted());
-    if (m.matches())
+    _isLookup = true;
+    if (_lookupDetails)
     {
-      _isLookup = true;
-      if (_lookupDetails)
-      {
-        _x = Integer.parseInt(m.group(1));
-        _y = Integer.parseInt(m.group(2));
-        _z = Integer.parseInt(m.group(3));
-        // TODO: String world = m.group(4);
-        // https://github.com/totemo/watson/issues/23
+      _x = Integer.parseInt(m.group(1));
+      _y = Integer.parseInt(m.group(2));
+      _z = Integer.parseInt(m.group(3));
+      // TODO: String world = m.group(4);
+      // https://github.com/totemo/watson/issues/23
 
-        BlockEdit edit = new BlockEdit(_millis, _player, _creation, _x, _y, _z,
-          _type);
-        Controller.instance.getBlockEditSet().addBlockEdit(edit, true);
-        _lookupDetails = false;
-      }
+      BlockEdit edit = new BlockEdit(_millis, _player, _creation, _x, _y, _z,
+                                     _type);
+      Controller.instance.getBlockEditSet().addBlockEdit(edit, true);
+      _lookupDetails = false;
     }
   } // lookupCoords
 
@@ -221,21 +234,6 @@ public class CoreProtectAnalysis extends Analysis
   protected static final Pattern HOURS_AGO_TIME        = Pattern.compile("(\\d+.\\d+)/h ago");
 
   // --------------------------------------------------------------------------
-  /**
-   * The pattern of coreprotect.inspectorcoords lines.
-   */
-  protected Pattern              _inspectorCoords;
-
-  /**
-   * The pattern of coreprotect.details lines.
-   */
-  protected Pattern              _details;
-
-  /**
-   * The pattern of coreprotect.lookupcoords lines.
-   */
-  protected Pattern              _lookupCoords;
-
   /**
    * This flag is set to true when we are parsing lookup results (when the
    * lookup header is found), and false when we are parsing inspector results.

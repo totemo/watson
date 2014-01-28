@@ -1,9 +1,15 @@
 package watson.analysis;
 
+import static watson.analysis.MiscPatterns.DUTYMODE_DISABLE;
+import static watson.analysis.MiscPatterns.DUTYMODE_ENABLE;
+import static watson.analysis.MiscPatterns.MODMODE_DISABLE;
+import static watson.analysis.MiscPatterns.MODMODE_ENABLE;
+
+import java.util.regex.Matcher;
+
+import net.minecraft.util.IChatComponent;
 import watson.Controller;
-import watson.chat.ChatClassifier;
-import watson.chat.MethodChatHandler;
-import watson.chat.TagDispatchChatHandler;
+import watson.chat.IMatchedChatHandler;
 
 // ----------------------------------------------------------------------------
 /**
@@ -13,23 +19,38 @@ import watson.chat.TagDispatchChatHandler;
  */
 public class ModModeAnalysis extends Analysis
 {
-  // --------------------------------------------------------------------------
+  // ----------------------------------------------------------------------------
   /**
-   * Watch for mod.entermodmode and mod.leavemodmode and switch on and off
-   * Watson displays.
+   * Constructor.
    */
-  @Override
-  public void registerAnalysis(TagDispatchChatHandler tagDispatchChatHandler)
+  public ModModeAnalysis()
   {
-    tagDispatchChatHandler.addChatHandler("mod.entermodmode",
-      new MethodChatHandler(this, "changeModMode"));
-    tagDispatchChatHandler.addChatHandler("mod.leavemodmode",
-      new MethodChatHandler(this, "changeModMode"));
-    tagDispatchChatHandler.addChatHandler("mod.enabledutymode",
-      new MethodChatHandler(this, "changeDutyMode"));
-    tagDispatchChatHandler.addChatHandler("mod.disabledutymode",
-      new MethodChatHandler(this, "changeDutyMode"));
-  } // registerAnalysis
+    IMatchedChatHandler modmodeHandler = new IMatchedChatHandler()
+    {
+      @Override
+      public boolean onMatchedChat(IChatComponent chat, Matcher m)
+      {
+        changeModMode(chat, m);
+        return true;
+      }
+    };
+
+    addMatchedChatHandler(MODMODE_ENABLE, modmodeHandler);
+    addMatchedChatHandler(MODMODE_DISABLE, modmodeHandler);
+
+    IMatchedChatHandler dutiesHandler = new IMatchedChatHandler()
+    {
+      @Override
+      public boolean onMatchedChat(IChatComponent chat, Matcher m)
+      {
+        changeDutyMode(chat, m);
+        return true;
+      }
+    };
+
+    addMatchedChatHandler(DUTYMODE_ENABLE, dutiesHandler);
+    addMatchedChatHandler(DUTYMODE_DISABLE, dutiesHandler);
+  }
 
   // --------------------------------------------------------------------------
   /**
@@ -37,10 +58,9 @@ public class ModModeAnalysis extends Analysis
    * assigned the "mod.entermodmode" or "mod.leavemodmode" category.
    */
   @SuppressWarnings("unused")
-  private void changeModMode(watson.chat.ChatLine line)
+  void changeModMode(IChatComponent chat, Matcher m)
   {
-    Controller.instance.getDisplaySettings().setDisplayed(
-      line.getCategory().getTag().equals("mod.entermodmode"));
+    Controller.instance.getDisplaySettings().setDisplayed(m.pattern() == MODMODE_ENABLE);
   }
 
   // --------------------------------------------------------------------------
@@ -49,9 +69,8 @@ public class ModModeAnalysis extends Analysis
    * assigned the "mod.enabledutymode" or "mod.disabledutymode" category.
    */
   @SuppressWarnings("unused")
-  private void changeDutyMode(watson.chat.ChatLine line)
+  void changeDutyMode(IChatComponent chat, Matcher m)
   {
-    Controller.instance.getDisplaySettings().setDisplayed(
-      line.getCategory().getTag().equals("mod.enabledutymode"));
+    Controller.instance.getDisplaySettings().setDisplayed(m.pattern() == DUTYMODE_ENABLE);
   }
 } // class ModModeAnalysis

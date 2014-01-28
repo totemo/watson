@@ -1,15 +1,22 @@
 package watson.analysis;
 
+import static watson.analysis.LogBlockPatterns.LB_HEADER_BLOCK;
+import static watson.analysis.LogBlockPatterns.LB_HEADER_BLOCKS;
+import static watson.analysis.LogBlockPatterns.LB_HEADER_CHANGES;
+import static watson.analysis.LogBlockPatterns.LB_HEADER_NO_RESULTS;
+import static watson.analysis.LogBlockPatterns.LB_HEADER_RATIO;
+import static watson.analysis.LogBlockPatterns.LB_HEADER_RATIO_CURRENT;
+import static watson.analysis.LogBlockPatterns.LB_HEADER_SEARCHING;
+import static watson.analysis.LogBlockPatterns.LB_HEADER_TIME_CHECK;
+import static watson.analysis.LogBlockPatterns.LB_SUM;
+
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+import net.minecraft.util.IChatComponent;
 import watson.chat.Chat;
-import watson.chat.ChatClassifier;
-import watson.chat.ChatProcessor;
-import watson.chat.MethodChatHandler;
-import watson.chat.TagDispatchChatHandler;
+import watson.chat.IMatchedChatHandler;
 import watson.db.TimeStamp;
 import watson.debug.Log;
 
@@ -26,28 +33,57 @@ import watson.debug.Log;
  */
 public class RatioAnalysis extends Analysis
 {
-  // --------------------------------------------------------------------------
+  // ----------------------------------------------------------------------------
   /**
-   * @see watson.analysis.Analysis#registerAnalysis(watson.chat.TagDispatchChatHandler)
+   * Constructor.
    */
-  @Override
-  public void registerAnalysis(TagDispatchChatHandler tagDispatchChatHandler)
+  public RatioAnalysis()
   {
-    tagDispatchChatHandler.addChatHandler("lb.header", new MethodChatHandler(
-                                                                             this, "lbHeader"));
-    tagDispatchChatHandler.addChatHandler("lb.header.ratio",
-      new MethodChatHandler(this, "lbHeaderRatio"));
-    tagDispatchChatHandler.addChatHandler("lb.header.ratiocurrent",
-      new MethodChatHandler(this, "lbHeaderRatio"));
-    tagDispatchChatHandler.addChatHandler("lb.sum", new MethodChatHandler(this,
-                                                                          "lbSum"));
-    _lbHeaderRatio = ChatProcessor.getInstance().getChatClassifier().getChatCategoryById(
-      "lb.header.ratio").getFullPattern();
-    _lbHeaderRatioCurrent = ChatProcessor.getInstance().getChatClassifier().getChatCategoryById(
-      "lb.header.ratiocurrent").getFullPattern();
-    _lbSum = ChatProcessor.getInstance().getChatClassifier().getChatCategoryById(
-      "lb.sum").getFullPattern();
-  }
+    addMatchedChatHandler(LB_HEADER_RATIO, new IMatchedChatHandler()
+    {
+      @Override
+      public boolean onMatchedChat(IChatComponent chat, Matcher m)
+      {
+        lbHeaderRatio(chat, m);
+        return true;
+      }
+    });
+    addMatchedChatHandler(LB_HEADER_RATIO_CURRENT, new IMatchedChatHandler()
+    {
+      @Override
+      public boolean onMatchedChat(IChatComponent chat, Matcher m)
+      {
+        lbHeaderRatioCurrent(chat, m);
+        return true;
+      }
+    });
+
+    IMatchedChatHandler headerHandler = new IMatchedChatHandler()
+    {
+      @Override
+      public boolean onMatchedChat(IChatComponent chat, Matcher m)
+      {
+        lbHeader(chat, m);
+        return true;
+      }
+    };
+
+    addMatchedChatHandler(LB_HEADER_NO_RESULTS, headerHandler);
+    addMatchedChatHandler(LB_HEADER_CHANGES, headerHandler);
+    addMatchedChatHandler(LB_HEADER_BLOCKS, headerHandler);
+    addMatchedChatHandler(LB_HEADER_SEARCHING, headerHandler);
+    addMatchedChatHandler(LB_HEADER_TIME_CHECK, headerHandler);
+    addMatchedChatHandler(LB_HEADER_BLOCK, headerHandler);
+
+    addMatchedChatHandler(LB_SUM, new IMatchedChatHandler()
+    {
+      @Override
+      public boolean onMatchedChat(IChatComponent chat, Matcher m)
+      {
+        return lbSum(chat, m);
+      }
+    });
+  } // constructor
 
   // --------------------------------------------------------------------------
   /**
@@ -57,117 +93,116 @@ public class RatioAnalysis extends Analysis
    * until we see an lb.header.ratio line.
    */
   @SuppressWarnings("unused")
-  private void lbHeader(watson.chat.ChatLine line)
+  void lbHeader(IChatComponent chat, Matcher m)
   {
     reset();
   }
 
   // --------------------------------------------------------------------------
   /**
-   * This method is called by the {@link ChatClassifier} when a chat line is
-   * assigned the "lb.header.ratio" category.
+   * Parse lines matching LogBlockPatterns.LB_HEADER_RATIO.
    */
   @SuppressWarnings("unused")
-  private void lbHeaderRatio(watson.chat.ChatLine line)
+  void lbHeaderRatio(IChatComponent chat, Matcher m)
   {
     reset();
     _parsing = true;
-
-    Matcher m = _lbHeaderRatio.matcher(line.getUnformatted());
-    if (m.matches())
-    {
-      _sinceMinutes = Integer.parseInt(m.group(1));
-      _beforeMinutes = Integer.parseInt(m.group(2));
-    }
-    else
-    {
-      // Try matching the pattern for very recent mining.
-      m = _lbHeaderRatioCurrent.matcher(line.getUnformatted());
-      if (m.matches())
-      {
-        _sinceMinutes = Integer.parseInt(m.group(1));
-        _beforeMinutes = 0;
-      }
-    }
-  } // lbHeaderRatio
+    _sinceMinutes = Integer.parseInt(m.group(1));
+    _beforeMinutes = Integer.parseInt(m.group(2));
+  }
 
   // --------------------------------------------------------------------------
   /**
-   * This method is called by the {@link ChatClassifier} when a chat line is
-   * assigned the "lb.sum" category, which consists of counts of created and
-   * destroyed blocks of a particular type.
+   * Parse lines matching LogBlockPatterns.LB_HEADER_RATIO_CURRENT.
    */
   @SuppressWarnings("unused")
-  private void lbSum(watson.chat.ChatLine line)
+  void lbHeaderRatioCurrent(IChatComponent chat, Matcher m)
+  {
+    reset();
+    _parsing = true;
+    _sinceMinutes = Integer.parseInt(m.group(1));
+    _beforeMinutes = 0;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Parse lines containing sums of creations and destructions of stone and
+   * diamond.
+   */
+  boolean lbSum(IChatComponent chat, Matcher m)
   {
     if (_parsing)
     {
-      Matcher m = _lbSum.matcher(line.getUnformatted());
-      if (m.matches())
+      int created = Integer.parseInt(m.group(1));
+      int destroyed = Integer.parseInt(m.group(2));
+      String block = m.group(3);
+      if (block.equalsIgnoreCase("stone"))
       {
-        int created = Integer.parseInt(m.group(1));
-        int destroyed = Integer.parseInt(m.group(2));
-        String block = m.group(3);
-        if (block.equalsIgnoreCase("stone"))
+        _stoneCount = destroyed;
+        _gotStone = true;
+        _stoneTime = System.currentTimeMillis();
+      }
+      else if (block.equalsIgnoreCase("diamond ore"))
+      {
+        _diamondCount = destroyed - created;
+        _gotDiamond = true;
+        _diamondTime = System.currentTimeMillis();
+      }
+
+      // If we have both stone and diamond figures, and if the time between
+      // is less than the timeout.
+      if (_gotStone
+          && _gotDiamond
+          && Math.abs(_stoneTime - _diamondTime) <= STONE_DIAMOND_TIMEOUT_MILLIS)
+      {
+        // The first line of output is the time period.
+        int localMinusServer = ServerTime.instance.getLocalMinusServerMinutes();
+        Calendar since = Calendar.getInstance();
+        since.set(Calendar.SECOND, 0);
+        since.add(Calendar.MINUTE, -(localMinusServer + _sinceMinutes));
+        Calendar before = Calendar.getInstance();
+        before.set(Calendar.SECOND, 0);
+        before.add(Calendar.MINUTE, -(localMinusServer + _beforeMinutes));
+        String period = String.format(Locale.US, "Between %s and %s:",
+          TimeStamp.formatQueryTime(since.getTimeInMillis()),
+          TimeStamp.formatQueryTime(before.getTimeInMillis()));
+        Log.debug("Between " + _sinceMinutes + " and " + _beforeMinutes
+                  + " minutes ago ==>");
+        Log.debug(period);
+
+        // The second line is the actual ratio.
+        String message;
+        if (_stoneCount <= 0)
         {
-          _stoneCount = destroyed;
-          _gotStone = true;
-          _stoneTime = System.currentTimeMillis();
+          message = "Was the player spelunking?";
         }
-        else if (block.equalsIgnoreCase("diamond ore"))
+        else if (_diamondCount < 0)
         {
-          _diamondCount = destroyed - created;
-          _gotDiamond = true;
-          _diamondTime = System.currentTimeMillis();
+          message = "Player placed more diamonds than were destroyed.";
+        }
+        else if (_diamondCount == 0)
+        {
+          message = "Did the player place and destroy previously silk touched diamonds?";
+        }
+        else
+        {
+          message = String.format(Locale.US,
+            "stone:diamond = %d / %d = %.3g", _stoneCount, _diamondCount,
+            (_stoneCount / (double) _diamondCount));
         }
 
-        // If we have both stone and diamond figures, and if the time between
-        // is less than the timeout.
-        if (_gotStone
-            && _gotDiamond
-            && Math.abs(_stoneTime - _diamondTime) <= STONE_DIAMOND_TIMEOUT_MILLIS)
-        {
-          // The first line of output is the time period.
-          int localMinusServer = ServerTime.instance.getLocalMinusServerMinutes();
-          Calendar since = Calendar.getInstance();
-          since.set(Calendar.SECOND, 0);
-          since.add(Calendar.MINUTE, -(localMinusServer + _sinceMinutes));
-          Calendar before = Calendar.getInstance();
-          before.set(Calendar.SECOND, 0);
-          before.add(Calendar.MINUTE, -(localMinusServer + _beforeMinutes));
-          String period = String.format(Locale.US, "Between %s and %s:",
-            TimeStamp.formatQueryTime(since.getTimeInMillis()),
-            TimeStamp.formatQueryTime(before.getTimeInMillis()));
-          Log.debug("Between " + _sinceMinutes + " and " + _beforeMinutes
-                    + " minutes ago ==>");
-          Log.debug(period);
+        // Echo the chat line that we just parsed now, rather than waiting for
+        // the ChatProcessor to do it.
+        Chat.localChat(chat);
+        Chat.localOutput(period);
+        Chat.localOutput(message);
+        reset();
 
-          // The second line is the actual ratio.
-          String message;
-          if (_stoneCount <= 0)
-          {
-            message = "Was the player spelunking?";
-          }
-          else if (_diamondCount < 0)
-          {
-            message = "Player placed more diamonds than were destroyed.";
-          }
-          else if (_diamondCount == 0)
-          {
-            message = "Did the player place and destroy previously silk touched diamonds?";
-          }
-          else
-          {
-            message = String.format(Locale.US,
-              "stone:diamond = %d / %d = %.3g", _stoneCount, _diamondCount,
-              (_stoneCount / (double) _diamondCount));
-          }
-          Chat.localOutput(period);
-          Chat.localOutput(message);
-          reset();
-        }
+        // Cancel echoing of chat by the ChatProcessor.
+        return false;
       }
     }
+    return true;
   } // lbSum
 
   // --------------------------------------------------------------------------
@@ -193,21 +228,6 @@ public class RatioAnalysis extends Analysis
    * be on the safe side...
    */
   protected static long STONE_DIAMOND_TIMEOUT_MILLIS = 250;
-
-  /**
-   * The pattern of full lb.header.ratio lines.
-   */
-  protected Pattern     _lbHeaderRatio;
-
-  /**
-   * The pattern of full lb.header.ratiocurrent lines.
-   */
-  protected Pattern     _lbHeaderRatioCurrent;
-
-  /**
-   * The pattern of full lb.sum lines.
-   */
-  protected Pattern     _lbSum;
 
   /**
    * Set to true when the lb.header.ratio line is detected, indicating that we

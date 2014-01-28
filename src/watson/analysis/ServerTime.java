@@ -1,17 +1,17 @@
 package watson.analysis;
 
+import static watson.analysis.LogBlockPatterns.LB_HEADER_NO_RESULTS;
+import static watson.analysis.LogBlockPatterns.LB_HEADER_TIME_CHECK;
+
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+import net.minecraft.util.IChatComponent;
 import watson.Controller;
 import watson.chat.Chat;
-import watson.chat.ChatClassifier;
-import watson.chat.ChatProcessor;
-import watson.chat.MethodChatHandler;
-import watson.chat.TagDispatchChatHandler;
+import watson.chat.IMatchedChatHandler;
 import watson.db.TimeStamp;
 import watson.debug.Log;
 
@@ -32,21 +32,6 @@ public class ServerTime extends Analysis
    * The single instance of this class.
    */
   public static final ServerTime instance = new ServerTime();
-
-  // --------------------------------------------------------------------------
-  /**
-   * @see watson.analysis.Analysis#registerAnalysis(watson.chat.TagDispatchChatHandler)
-   */
-  @Override
-  public void registerAnalysis(TagDispatchChatHandler tagDispatchChatHandler)
-  {
-    tagDispatchChatHandler.addChatHandler("lb.header.timecheck",
-      new MethodChatHandler(this, "lbHeaderTimeCheck"));
-    tagDispatchChatHandler.addChatHandler("lb.header.noresults",
-      new MethodChatHandler(this, "lbHeaderNoResults"));
-    _lbHeaderTimeCheck = ChatProcessor.getInstance().getChatClassifier().getChatCategoryById(
-      "lb.header.timecheck").getFullPattern();
-  }
 
   // --------------------------------------------------------------------------
   /**
@@ -117,65 +102,83 @@ public class ServerTime extends Analysis
     }
   } // queryServerTime
 
+  // ----------------------------------------------------------------------------
+  /**
+   * Constructor.
+   */
+  public ServerTime()
+  {
+    addMatchedChatHandler(LB_HEADER_TIME_CHECK, new IMatchedChatHandler()
+    {
+      @Override
+      public boolean onMatchedChat(IChatComponent chat, Matcher m)
+      {
+        lbHeaderTimeCheck(chat, m);
+        // Don't echo time check result header in GUI.
+        return false;
+      }
+    });
+    addMatchedChatHandler(LB_HEADER_NO_RESULTS, new IMatchedChatHandler()
+    {
+      @Override
+      public boolean onMatchedChat(IChatComponent chat, Matcher m)
+      {
+        // Called method controls whether chat is echoed.
+        return lbHeaderNoResults(chat, m);
+      }
+    });
+  } // constructor
+
   // --------------------------------------------------------------------------
   /**
-   * This method is called by the {@link ChatClassifier} when a chat line is
-   * assigned the "lb.header.timecheck" category.
+   * Handle the results of the time checking query.
    */
   @SuppressWarnings("unused")
-  private void lbHeaderTimeCheck(watson.chat.ChatLine line)
+  void lbHeaderTimeCheck(IChatComponent chat, Matcher m)
   {
     String serverIP = Controller.instance.getServerIP();
     if (serverIP != null && _localMinusServerMinutes.get(serverIP) == null)
     {
-      Matcher m = _lbHeaderTimeCheck.matcher(line.getUnformatted());
-      if (m.matches())
+      int serverMinutes = Integer.parseInt(m.group(1));
+
+      // Express getPastTime() as a certain number of minutes behind local
+      // time.
+      Calendar now = Calendar.getInstance();
+      Calendar pastTime = getPastTime();
+      int localMinutes = (int) ((now.getTimeInMillis() - pastTime.getTimeInMillis()) / MINUTES_TO_MILLISECONDS);
+
+      // This number is positive if local time is ahead of the server.
+      int localMinusServer = localMinutes - serverMinutes;
+      _localMinusServerMinutes.put(serverIP, localMinusServer);
+      Log.debug("Past time was " + serverMinutes
+                + " minutes ago on the server and " + localMinutes
+                + " minutes ago on the client.");
+      Log.debug("Client is " + localMinusServer
+                + " minutes ahead of the server.");
+
+      // Have we scheduled echoing of the server time?
+      if (_showServerTime)
       {
-        int serverMinutes = Integer.parseInt(m.group(1));
+        showCurrentServerTime();
+        _showServerTime = false;
+      }
 
-        // Express getPastTime() as a certain number of minutes behind local
-        // time.
-        Calendar now = Calendar.getInstance();
-        Calendar pastTime = getPastTime();
-        int localMinutes = (int) ((now.getTimeInMillis() - pastTime.getTimeInMillis()) / MINUTES_TO_MILLISECONDS);
-
-        // This number is positive if local time is ahead of the server.
-        int localMinusServer = localMinutes - serverMinutes;
-        _localMinusServerMinutes.put(serverIP, localMinusServer);
-        Log.debug("Past time was " + serverMinutes
-                  + " minutes ago on the server and " + localMinutes
-                  + " minutes ago on the client.");
-        Log.debug("Client is " + localMinusServer
-                  + " minutes ahead of the server.");
-
-        // Have we scheduled echoing of the server time?
-        if (_showServerTime)
-        {
-          showCurrentServerTime();
-          _showServerTime = false;
-        }
-
-        // Suppress the subsequent "No results found.".
-        _echoNextNoResults = false;
-      } // pattern matched
+      // Suppress the subsequent "No results found.".
+      _echoNextNoResults = false;
     } // need to compute the offset
   } // lbHeaderTimeCheck
 
   // --------------------------------------------------------------------------
   /**
-   * This method is called by the {@link ChatClassifier} when a chat line is
-   * assigned the "lb.header.noresults" category.
+   * Parses "No results found.". Suppresses echoing of that in the client chat
+   * GUI when it was triggered by the time checking query, only.
    */
   @SuppressWarnings("unused")
-  private void lbHeaderNoResults(watson.chat.ChatLine line)
+  boolean lbHeaderNoResults(IChatComponent chat, Matcher m)
   {
-    Log.debug("lbHeaderNoResults() " + line.getCategory().getTag());
-    if (_echoNextNoResults)
-    {
-      Chat.localChat(line.getFormatted());
-      Log.debug("Echoed " + line.getUnformatted());
-    }
+    boolean echo = _echoNextNoResults;
     _echoNextNoResults = true;
+    return echo;
   }
 
   // --------------------------------------------------------------------------
@@ -217,14 +220,9 @@ public class ServerTime extends Analysis
 
   // --------------------------------------------------------------------------
   /**
-   * Conversion gactor to convert minutes to milliseconds.
+   * Conversion factor to convert minutes to milliseconds.
    */
   private static final int           MINUTES_TO_MILLISECONDS  = 60 * 1000;
-
-  /**
-   * The pattern of full lb.header.timechecklines.
-   */
-  protected Pattern                  _lbHeaderTimeCheck;
 
   /**
    * A map from server IP or DNS name to number of minutes that local time is
