@@ -195,20 +195,6 @@ public class ExcludeTagChatHandler implements IChatHandler
 
   // --------------------------------------------------------------------------
   /**
-   * Implements inherited method.
-   */
-  @Override
-  public void revise(ChatLine oldLine, ChatLine newLine)
-  {
-    if (!isExcluded(newLine.getCategory().getTag())
-        && getDefaultHandler() != null)
-    {
-      getDefaultHandler().revise(oldLine, newLine);
-    }
-  }
-
-  // --------------------------------------------------------------------------
-  /**
    * The default handler to pass callbacks to if the chat is not excluded.
    */
   protected IChatHandler    _defaultHandler;

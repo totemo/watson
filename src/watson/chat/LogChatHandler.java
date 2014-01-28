@@ -65,18 +65,6 @@ public class LogChatHandler implements IChatHandler
 
   // --------------------------------------------------------------------------
   /**
-   * Implements inherited method.
-   */
-  @Override
-  public void revise(ChatLine oldLine, ChatLine newLine)
-  {
-    _writer.print(newLine.getCategory().getTag());
-    _writer.print(" REVISED: ");
-    _writer.println(newLine.getFormatted());
-    _writer.flush();
-  }
-  // --------------------------------------------------------------------------
-  /**
    * The Writer through which text is written.
    */
   private PrintWriter _writer;

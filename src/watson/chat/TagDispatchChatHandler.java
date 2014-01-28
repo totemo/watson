@@ -50,23 +50,6 @@ public class TagDispatchChatHandler implements IChatHandler
 
   // --------------------------------------------------------------------------
   /**
-   * Implements inherited method.
-   */
-  @Override
-  public void revise(ChatLine oldLine, ChatLine newLine)
-  {
-    HashSet<IChatHandler> handlerSet = getHandlerSet(newLine);
-    if (handlerSet != null)
-    {
-      for (IChatHandler handler : handlerSet)
-      {
-        handler.revise(oldLine, newLine);
-      }
-    }
-  } // revise
-
-  // --------------------------------------------------------------------------
-  /**
    * Return the set of {@link IChatHandler}s to dispatch to based on the
    * assigned {@link ChatCategory} of the {@link ChatLine}.
    * 

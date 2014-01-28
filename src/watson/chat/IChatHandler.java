@@ -18,15 +18,4 @@ public interface IChatHandler
    */
   public void classify(ChatLine line);
 
-  /**
-   * This method is called when it is found that a line was previously split,
-   * and is rejoined to form a longer line.
-   * 
-   * @param oldLine the older, shorter version of the line, previously passed to
-   *          classify() or revise().
-   * @param newLine the revised version of the line with extra characters
-   *          appended.
-   */
-  public void revise(ChatLine oldLine, ChatLine newLine);
-
 } // class IChatHandler

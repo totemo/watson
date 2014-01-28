@@ -52,28 +52,6 @@ public class MethodChatHandler implements IChatHandler
         Log.exception(Level.SEVERE, "no such method: " + classifyMethod, ex);
       }
     }
-    if (reviseMethod != null && reviseMethod.length() != 0)
-    {
-      try
-      {
-        _reviseMethod = cls.getDeclaredMethod(reviseMethod, ChatLine.class,
-          ChatLine.class);
-        _reviseMethod.setAccessible(true);
-      }
-      catch (Exception ex)
-      {
-        try
-        {
-          _singleArgRevise = true;
-          _reviseMethod = cls.getDeclaredMethod(reviseMethod, ChatLine.class);
-          _reviseMethod.setAccessible(true);
-        }
-        catch (Exception ex2)
-        {
-          Log.exception(Level.SEVERE, "no such method: " + reviseMethod, ex2);
-        }
-      }
-    }
   } // MethodChatHandler
 
   // --------------------------------------------------------------------------
@@ -110,33 +88,6 @@ public class MethodChatHandler implements IChatHandler
       }
     }
   } // classify
-
-  // --------------------------------------------------------------------------
-  /**
-   * Implements inherited method.
-   */
-  @Override
-  public void revise(ChatLine oldLine, ChatLine newLine)
-  {
-    if (_reviseMethod != null)
-    {
-      try
-      {
-        if (_singleArgRevise)
-        {
-          _reviseMethod.invoke(_target, newLine);
-        }
-        else
-        {
-          _reviseMethod.invoke(_target, oldLine, newLine);
-        }
-      }
-      catch (Exception ex)
-      {
-        Log.exception(Level.SEVERE, "problem calling: " + _reviseMethod, ex);
-      }
-    }
-  } // revise
 
   // --------------------------------------------------------------------------
   /**
