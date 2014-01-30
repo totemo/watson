@@ -5,6 +5,12 @@ import java.util.regex.Pattern;
 
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.event.ClickEvent;
+import net.minecraft.event.ClickEvent.Action;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import watson.Configuration;
 import watson.Controller;
 import watson.DisplaySettings;
@@ -922,14 +928,26 @@ public class WatsonCommand extends WatsonCommandBase
     localOutput(sender, "  /hl help");
     localOutput(sender, "  /anno help");
     localOutput(sender, "  /tag help");
-    localOutput(sender, "Documentation: http://github.com/totemo/watson");
+
+    // Make the documentation link clickable.
+    IChatComponent docs = new ChatComponentText("Documentation: ");
+    ChatStyle style = new ChatStyle().setColor(EnumChatFormatting.AQUA);
+    docs.setChatStyle(style);
+    String url = "http://github.com/totemo/watson";
+    IChatComponent link = new ChatComponentText(url);
+    ChatStyle linkStyle = new ChatStyle();
+    linkStyle.setUnderlined(true);
+    link.setChatStyle(linkStyle);
+    linkStyle.setChatClickEvent(new ClickEvent(Action.OPEN_URL, url));
+    docs.appendSibling(link);
+    sender.addChatMessage(docs);
+
     if (!Configuration.instance.isEnabled())
     {
       localOutput(sender, "Watson is currently disabled.");
       localOutput(sender, "To re-enable, use: /" + w + " config watson on");
     }
   } // help
-
   // --------------------------------------------------------------------------
   /**
    * Allowable patterns of command prefixes (setCommandPrefix()).

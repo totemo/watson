@@ -12,6 +12,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import net.minecraft.util.IChatComponent;
+
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
@@ -52,30 +54,99 @@ public class ChatHighlighter
 
   // --------------------------------------------------------------------------
   /**
-   * Highlight any sections of the chat line that match registered highlighting
-   * patterns.
+   * Return true if the chat text contains a Rei's Minimap enabling sequence or
+   * consists entirely of colour codes.
+   * 
+   * Rei's Minimap enables radar features based on a sequence of colour codes in
+   * the server's welcome message (MOTD). The sequence has to make it all the
+   * way into the scrollback buffer of the chat GUI. That is, it must be
+   * displayed exactly as it was received by the client in order for Rei's to
+   * work correctly. Therefore, the highighter should not mess with those lines
+   * or lines consisting only of colour which may do something similar to Rei's.
+   * 
+   * @return true if the chat contains a sequence of colour codes like that used
+   *         by Rei's Minimap.
    */
-  public String highlight(String chat)
+  boolean isReisLikeCode(String chat)
   {
-    // Rei's Minimap enables radar features based on a sequence of colour codes
-    // in the server's welcome message (MOTD). Don't mess with those lines or
-    // lines consisting only of colour which may do something similar to Rei's.
     Matcher reis = REIS_CODE.matcher(chat);
     Matcher allColour = COLOUR_LINE.matcher(chat);
-    if (reis.find() || allColour.matches())
+    return reis.find() || allColour.matches();
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Highlight the text in a chat component.
+   * 
+   * @param chat the text to highlight.
+   * @return highlighted text.
+   */
+  IChatComponent highlight(IChatComponent chat)
+  {
+    if (isReisLikeCode(chat.getFormattedText()))
     {
       return chat;
     }
     else
     {
-      Text text = new Text(chat);
-      for (Highlight h : _highlights)
+      ArrayList<IChatComponent> resultComponents = new ArrayList<IChatComponent>();
+      ArrayList<IChatComponent> components = ChatComponents.getComponents(chat);
+      while (!components.isEmpty())
       {
-        h.highlight(text);
-      }
-      return text.toFormattedString();
+        IChatComponent head = components.remove(0);
+        if (ChatComponents.hasEvents(head))
+        {
+          // Can't currently highlight links etc.
+          resultComponents.add(head);
+        }
+        else
+        {
+          // Collect all consecutive components that don't have events
+          // and therefore can be highlighted.
+          ArrayList<IChatComponent> highlightableComps = new ArrayList<IChatComponent>();
+          highlightableComps.add(head);
+
+          while (!components.isEmpty())
+          {
+            IChatComponent next = components.get(0);
+            if (ChatComponents.hasEvents(next))
+            {
+              break;
+            }
+            else
+            {
+              highlightableComps.add(next);
+              components.remove(0);
+            }
+          } // while
+
+          IChatComponent highlightable = ChatComponents.toChatComponent(highlightableComps);
+          String highlightableText = highlightable.getFormattedText();
+          Text highlighted = highlight(highlightableText);
+          resultComponents.add(highlighted.toChatComponent());
+        }
+      } // while there are components to consider
+      return ChatComponents.toChatComponent(resultComponents);
     }
   } // highlight
+
+  // --------------------------------------------------------------------------
+  /**
+   * Highlight any sections of the chat line that match registered highlighting
+   * patterns.
+   * 
+   * This method should not be called on chats for which isReisLikeCode() is
+   * true.
+   */
+  public Text highlight(String chat)
+  {
+    Text text = new Text(chat);
+    for (Highlight h : _highlights)
+    {
+      h.highlight(text);
+    }
+    return text;
+  }
 
   // --------------------------------------------------------------------------
   /**
@@ -93,22 +164,18 @@ public class ChatHighlighter
   {
     try
     {
-      Highlight highlight = new Highlight(new Format(format), pattern,
-        selection);
+      Highlight highlight = new Highlight(new Format(format), pattern, selection);
       _highlights.add(highlight);
-      Chat.localOutput("Added highlight #" + _highlights.size()
-                                      + " " + highlight.toString());
+      Chat.localOutput("Added highlight #" + _highlights.size() + " " + highlight.toString());
       saveHighlights();
     }
     catch (PatternSyntaxException ex)
     {
-      Chat.localError(pattern
-                                     + " is not a valid regular expression.");
+      Chat.localError(pattern + " is not a valid regular expression.");
     }
     catch (IllegalArgumentException ex)
     {
-      Chat.localError(format
-                                     + " is not a valid format specifier.");
+      Chat.localError(format + " is not a valid format specifier.");
     }
   } // addHighlight
 
@@ -299,11 +366,11 @@ public class ChatHighlighter
     public Highlight(HashMap<String, Object> attributes)
     {
       // Let this barf exceptions.
-      this(
-        new Format((String) attributes.get("colourCode")),
-        (String) attributes.get("pattern"),
-        ((attributes.get("selection") != null) ? (Boolean) attributes.get("selection")
-          : false));
+      this(new Format((String) attributes.get("colourCode")),
+           (String) attributes.get("pattern"),
+           ((attributes.get("selection") != null)
+             ? (Boolean) attributes.get("selection")
+             : false));
     }
 
     // ------------------------------------------------------------------------

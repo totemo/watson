@@ -84,9 +84,8 @@ public class Chat
     Minecraft mc = Minecraft.getMinecraft();
     if (mc.ingameGUI != null && mc.ingameGUI.getChatGUI() != null)
     {
-      // TODO: fix links in chat.
-      String highlighted = getChatHighlighter().highlight(chat.getFormattedText());
-      mc.ingameGUI.getChatGUI().func_146227_a(new ChatComponentText(highlighted));
+      IChatComponent highlighted = getChatHighlighter().highlight(chat);
+      mc.ingameGUI.getChatGUI().func_146227_a(highlighted);
     }
   }
 

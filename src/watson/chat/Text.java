@@ -1,5 +1,13 @@
 package watson.chat;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
+
 // ----------------------------------------------------------------------------
 /**
  * Represents Minecraft coloured text by separating out the colour escape
@@ -97,7 +105,79 @@ public class Text
 
   // --------------------------------------------------------------------------
   /**
+   * Return the IChatComponent representation of the Text.
+   * 
+   * @return the IChatComponent representation of the Text.
+   */
+  public IChatComponent toChatComponent()
+  {
+    ArrayList<IChatComponent> result = new ArrayList<IChatComponent>();
+    StringBuilder text = new StringBuilder();
+
+    // Sentinel:
+    char colourStyle = Colour.white.getCode();
+    ChatStyle style = new ChatStyle();
+
+    for (int i = 0; i < _unformatted.length(); ++i)
+    {
+      // Detect a change in colour or style and add new component to result.
+      if (_colourStyles.charAt(i) != colourStyle)
+      {
+        // Set the new colour. This also clears the current style.
+        char newColourStyle = _colourStyles.charAt(i);
+        char colour = (char) (newColourStyle & Format.COLOUR_MASK);
+
+        // Put all of the characters accumulated so far in ChatComponentText.
+        IChatComponent sibling = new ChatComponentText(text.toString());
+        sibling.setChatStyle(style);
+        result.add(sibling);
+
+        // Reuse StringBuilder to accumulate characters for the next sibling.
+        text.setLength(0);
+
+        // Configure the style of the next sibling to be appended to result.
+        style = new ChatStyle();
+        EnumChatFormatting chatFormatting = _TO_ENUM_CHAT_FORMATTING.get(colour);
+        style.setColor(chatFormatting);
+        if ((newColourStyle & Format.BOLD) != 0)
+        {
+          style.setBold(true);
+        }
+        if ((newColourStyle & Format.ITALIC) != 0)
+        {
+          style.setItalic(true);
+        }
+        if ((newColourStyle & Format.UNDERLINE) != 0)
+        {
+          style.setUnderlined(true);
+        }
+        if ((newColourStyle & Format.STRIKE) != 0)
+        {
+          style.setStrikethrough(true);
+        }
+        if ((newColourStyle & Format.RANDOM) != 0)
+        {
+          style.setObfuscated(true);
+        }
+
+        colourStyle = newColourStyle;
+      } // colour or style changed
+
+      text.append(_unformatted.charAt(i));
+    } // for
+
+    IChatComponent sibling = new ChatComponentText(text.toString());
+    sibling.setChatStyle(style);
+    result.add(sibling);
+    return ChatComponents.toChatComponent(result);
+  } // toChatComponent
+
+  // --------------------------------------------------------------------------
+  /**
    * Return the full formatted representation of the Text, with colour escapes.
+   * 
+   * This method has been obsoleted by Minecraft's use of IChatComponent. It is
+   * retained for reference.
    * 
    * @return the full formatted representation of the Text, with colour escapes.
    */
@@ -204,9 +284,22 @@ public class Text
 
   // --------------------------------------------------------------------------
   /**
+   * Map from single character formatting code for a colour to the corresponding
+   * EnumChatFormatting instance.
+   */
+  protected static final HashMap<Character, EnumChatFormatting> _TO_ENUM_CHAT_FORMATTING = new HashMap<Character, EnumChatFormatting>();
+  static
+  {
+    for (EnumChatFormatting colour : EnumChatFormatting.values())
+    {
+      _TO_ENUM_CHAT_FORMATTING.put(colour.getFormattingCode(), colour);
+    }
+  }
+
+  /**
    * The unformatted version of the text.
    */
-  protected StringBuilder _unformatted  = new StringBuilder();
+  protected StringBuilder                                       _unformatted             = new StringBuilder();
 
   /**
    * The colour code characters for each character in _unformatted.
@@ -214,5 +307,5 @@ public class Text
    * Invariant: _unformatted.length() == _colours.length() && (c in _colours ==>
    * c in {0-9, a-f}).
    */
-  protected StringBuilder _colourStyles = new StringBuilder();
+  protected StringBuilder                                       _colourStyles            = new StringBuilder();
 } // class Text
