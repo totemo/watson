@@ -139,7 +139,8 @@ public class PrismAnalysis extends Analysis
     String time = m.group(6);
     String action = m.group(6);
 
-    if (parsedNumericType)
+    // Prism uses ID 0 (o:0) for paintings etc. Fall back on names for those.
+    if (parsedNumericType && id != 0)
     {
       _type = BlockTypeRegistry.instance.getBlockTypeByIdData(id, data);
     }

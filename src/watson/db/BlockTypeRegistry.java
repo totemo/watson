@@ -100,7 +100,7 @@ public final class BlockTypeRegistry
         unknown = new BlockType();
         unknown.setIndex(MAX_INDEX);
         unknown.addName("unknown");
-        unknown.setARGB(new ARGB(255, 255, 0, 255));
+        // ARGB defaults to high visibility magenta.
         unknown.setBlockModel(BlockModelRegistry.instance.getBlockModel("cuboid"));
         addBlockType(unknown);
       }
@@ -122,90 +122,85 @@ public final class BlockTypeRegistry
    */
   private void loadBlockType(Map<String, Object> map)
   {
-    BlockType blockType = new BlockType();
     Integer id = loadScalar(map, "id", Integer.class, null);
     if (id == null)
     {
       Log.severe("a block type was specified without a valid id: value");
       return;
     }
+
+    // Allow data to be an integer, a List<Integer> signifying multiple similar
+    // blocks differentiated only by their data values, or the string all,
+    // which is a shorthand for the list of all data values from 0 to 15,
+    // inclusive.
+    ArrayList<Integer> data = new ArrayList<Integer>();
+    Object rawDataValue = map.get("data");
+    if (rawDataValue == null)
+    {
+      data.add(0);
+    }
+    else if (rawDataValue instanceof Integer)
+    {
+      data.add((Integer) rawDataValue);
+    }
+    else if (rawDataValue.equals("all"))
+    {
+      for (int i = 0; i < 16; ++i)
+      {
+        data.add(i);
+      }
+    }
+    else if (rawDataValue instanceof ArrayList<?>)
+    {
+      ArrayList<?> values = (ArrayList<?>) rawDataValue;
+      for (int i = 0; i < values.size(); ++i)
+      {
+        Object entry = values.get(i);
+        if (entry instanceof Integer)
+        {
+          data.add((Integer) entry);
+        }
+        else
+        {
+          Log.severe("block type " + id + " has a data value that is not an integer");
+        }
+      }
+    }
     else
     {
-      blockType.setId(id);
-    }
-
-    Integer data = loadScalar(map, "data", Integer.class, null);
-    if (data != null)
-    {
-      blockType.setData(data);
-    }
-    else
-    {
-      data = 0;
-    }
-
-    if (getBlockTypeByIdData(id, data) != null)
-    {
-
-      Log.severe("block type " + blockType.getId() + ':' + blockType.getData()
-                 + " has a duplicate definition; only the first counts");
-      return;
+      Log.severe("block type " + id + " has an invalid data value");
     }
 
     ArrayList<String> names = loadArray(map, "names", String.class, null);
     if (names == null || names.size() == 0)
     {
-      Log.severe("block type " + blockType.getId() + ':' + blockType.getData()
-                 + " could not be loaded because it needs a list of names");
+      Log.severe("block type " + id + " could not be loaded because it needs a list of names");
       return;
+    }
+
+    float lineWidth;
+    Object lineWidthValue = map.get("lineWidth");
+    if (lineWidthValue instanceof Number)
+    {
+      lineWidth = ((Number) lineWidthValue).floatValue();
     }
     else
     {
-      for (String name : names)
-      {
-        blockType.addName(name);
-      }
+      lineWidth = 3.0f;
+      Log.warning("block type " + id + " had a non-numeric linewidth; defaulting to " + lineWidth);
     }
-
-    Double lineWidth = loadScalar(map, "lineWidth", Double.class, 3.0);
-    if (lineWidth == null)
-    {
-      Log.warning("block type "
-                  + blockType.getId()
-                  + ':'
-                  + blockType.getData()
-                  + " had an invalid linewidth; did you use an integer where a double was required?");
-      lineWidth = 3.0;
-    }
-    blockType.setLineWidth((float) lineWidth.doubleValue());
 
     // Use null as the default to detect errors in the rgba value.
     ArrayList<Integer> rgba = loadArray(map, "rgba", Integer.class, null);
     if (rgba == null || rgba.size() < 3 || rgba.size() > 4)
     {
-      Log.warning("block type "
-                  + blockType.getId()
-                  + ':'
-                  + blockType.getData()
-                  + " had a malformed colour value and was set to the default colour");
-    }
-    else
-    {
-      int red = rgba.get(0);
-      int green = rgba.get(1);
-      int blue = rgba.get(2);
-      int alpha = rgba.size() == 4 ? rgba.get(3) : DEFAULT_ALPHA;
-      blockType.setARGB(new ARGB(alpha, red, green, blue));
+      Log.warning("block type " + id + " had a malformed colour value and was set to the default colour");
     }
 
     String modelName = loadScalar(map, "model", String.class, "cuboid");
     if (modelName == null)
     {
-      Log.warning("block type "
-                  + blockType.getId()
-                  + ':'
-                  + blockType.getData()
-                  + " had an invalid model name and will be drawn as a simple cuboid");
+      Log.warning("block type " + id + " had an invalid model name and will be drawn as a simple cuboid");
       modelName = "cuboid";
     }
     BlockModel model = BlockModelRegistry.instance.getBlockModel(modelName);
@@ -213,26 +208,55 @@ public final class BlockTypeRegistry
     {
       model = BlockModelRegistry.instance.getBlockModel("cuboid");
     }
-    blockType.setBlockModel(model);
 
     // Bounds.
     ArrayList<Double> bounds = loadArray(map, "bounds", Double.class,
       DEFAULT_BOUNDS);
     if (bounds == null || bounds.size() != 6)
     {
-      Log.warning("block type "
-                  + blockType.getId()
-                  + ':'
-                  + blockType.getData()
-                  + " had a badly formed bounds setting; the default will be used");
+      Log.warning("block type " + id + " had a badly formed bounds setting; the default will be used");
       bounds = DEFAULT_BOUNDS;
     }
-    blockType.setBounds((float) bounds.get(0).doubleValue(),
-      (float) bounds.get(1).doubleValue(), (float) bounds.get(2).doubleValue(),
-      (float) bounds.get(3).doubleValue(), (float) bounds.get(4).doubleValue(),
-      (float) bounds.get(5).doubleValue());
 
-    addBlockType(blockType);
+    // If previous errors invalidated all the data values in the list, add a
+    // reasonable default.
+    if (data.size() == 0)
+    {
+      Log.warning("defaulting the data value to 0 for block type " + id);
+      data.add(0);
+    }
+    for (int i = 0; i < data.size(); ++i)
+    {
+      BlockType blockType = new BlockType();
+      blockType.setId(id);
+      int dataValue = data.get(i);
+      if (getBlockTypeByIdData(id, dataValue) == null)
+      {
+        blockType.setData(dataValue);
+      }
+      else
+      {
+        Log.warning("block type " + id + ':' + dataValue + " has a duplicate definition; only the first counts");
+        continue;
+      }
+
+      for (String name : names)
+      {
+        blockType.addName(name);
+      }
+      blockType.setLineWidth(lineWidth);
+      int red = rgba.get(0);
+      int green = rgba.get(1);
+      int blue = rgba.get(2);
+      int alpha = rgba.size() == 4 ? rgba.get(3) : DEFAULT_ALPHA;
+      blockType.setARGB(new ARGB(alpha, red, green, blue));
+      blockType.setBlockModel(model);
+      blockType.setBounds(
+        (float) bounds.get(0).doubleValue(), (float) bounds.get(1).doubleValue(), (float) bounds.get(2).doubleValue(),
+        (float) bounds.get(3).doubleValue(), (float) bounds.get(4).doubleValue(), (float) bounds.get(5).doubleValue());
+
+      addBlockType(blockType);
+    } // for all data values
   } // loadBlockType
 
   // --------------------------------------------------------------------------
@@ -325,6 +349,9 @@ public final class BlockTypeRegistry
   /**
    * Add the specified BlockType to all of the collections.
    * 
+   * Only the BlockType with the lowest index value is registered for a given
+   * name.
+   * 
    * @param blockType the BlockType to add.
    */
   private void addBlockType(BlockType blockType)
@@ -335,7 +362,7 @@ public final class BlockTypeRegistry
     for (int i = 0; i < blockType.getNameCount(); ++i)
     {
       String name = blockType.getName(i);
-      _byName.put(name, blockType);
+      addBlockTypeName(name, blockType);
 
       // Where a name contains spaces, add a synonym with the spaces omitted.
       // Where synonyms are explicitly listed anyway, the map will collapse
@@ -343,12 +370,33 @@ public final class BlockTypeRegistry
       String noSpaces = name.replaceAll(" ", "");
       if (!name.equals(noSpaces))
       {
-        _byName.put(noSpaces, blockType);
+        addBlockTypeName(noSpaces, blockType);
       }
       String underscores = name.replaceAll(" ", "_");
-      _byName.put(underscores, blockType);
+      addBlockTypeName(underscores, blockType);
     } // for
   } // addBlockType
+
+  // --------------------------------------------------------------------------
+  /**
+   * Register the mapping from name to BlockType.
+   * 
+   * The mapping is only added if there is no pre-existing mapping from the name
+   * to a BlockType, or if the new BlockType has a lower index value than the
+   * pre-existing mapping. This ensures that where BlockTyeps are registered
+   * using a list of data values, only the lowest data value gets the name.
+   * 
+   * @param name the name to register under.
+   * @param blockType the new BlockType.
+   */
+  private void addBlockTypeName(String name, BlockType blockType)
+  {
+    BlockType oldBlockType = _byName.get(name);
+    if (oldBlockType == null || blockType.getIndex() < oldBlockType.getIndex())
+    {
+      _byName.put(name, blockType);
+    }
+  }
 
   // --------------------------------------------------------------------------
   /**

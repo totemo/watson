@@ -347,8 +347,10 @@ public final class BlockType
 
   /**
    * ARGB colour to draw blocks of this type.
+   * 
+   * Default to something highly visible.
    */
-  private ARGB              _argb;
+  private ARGB              _argb      = new ARGB(255, 255, 0, 255);
 
   /**
    * The width of wireframe lines used to draw the block.

@@ -32,7 +32,7 @@ public interface PrismPatterns
   // name:
   // " - totemo broke ironore 15:0 2m ago (a:break)"
   // " -- 14 - 14/01/29 6:7:53am - world @ -15.0 12.0 103.0"
-  public static final Pattern PLACE_BREAK            = Pattern.compile("^ [+-](?:\\s+\\[\\d+\\])? (\\w+) (?:placed|broke|poured) ((?:\\w| )+) (?:(\\d+):(\\d+) )?(\\w+ ago|just now) \\(a:(\\w+)\\).*$");
+  public static final Pattern PLACE_BREAK            = Pattern.compile("^ [+-](?:\\s+\\[\\d+\\])? (\\w+) (?:placed|broke|poured|hung) ((?:\\w| )+) (?:(\\d+):(\\d+) )?(\\w+ ago|just now) \\(a:(\\w+)\\).*$");
 
   // Date is M/D/YY.
   // -- 2178 - 3/25/13 6:37pm - world @ 2.0 65.0 238.0
