@@ -1456,12 +1456,12 @@ blocks:
 
     - id: 163
       data: all
-      names: [acacia wood stairs]
+      names: [acacia stairs, acacia wood stairs]
       rgba: [182, 97, 54]
       model: stair
     - id: 164
       data: all
-      names: [dark oak wood stairs]
+      names: [dark oak stairs, dark oak wood stairs]
       rgba: [69, 44, 21]
       model: stair
 
