@@ -115,7 +115,21 @@ public class CoreProtectAnalysis extends Analysis
       _millis = parseTimeExpression(m.group(1));
       _player = m.group(2);
       _creation = m.group(3).equals("placed");
-      _type = BlockTypeRegistry.instance.getBlockTypeByFormattedId(m.group(4));
+
+      // Special case for paintings and item frames, mapped to different IDs.
+      String type = m.group(4);
+      if (type.equals("321"))
+      {
+        _type = BlockTypeRegistry.instance.getBlockTypeByName("painting");
+      }
+      else if (type.equals("389"))
+      {
+        _type = BlockTypeRegistry.instance.getBlockTypeByName("item frame");
+      }
+      else
+      {
+        _type = BlockTypeRegistry.instance.getBlockTypeByFormattedId(type);
+      }
 
       if (_isLookup)
       {
