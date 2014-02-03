@@ -187,7 +187,10 @@ public final class BlockTypeRegistry
     else
     {
       lineWidth = 3.0f;
-      Log.warning("block type " + id + " had a non-numeric linewidth; defaulting to " + lineWidth);
+      if (lineWidthValue != null)
+      {
+        Log.warning("block type " + id + " had a non-numeric linewidth; defaulting to " + lineWidth);
+      }
     }
 
     // Use null as the default to detect errors in the rgba value.
@@ -210,13 +213,25 @@ public final class BlockTypeRegistry
     }
 
     // Bounds.
-    ArrayList<Double> bounds = loadArray(map, "bounds", Double.class,
-      DEFAULT_BOUNDS);
+    ArrayList<Number> bounds = loadArray(map, "bounds", Number.class, DEFAULT_BOUNDS);
     if (bounds == null || bounds.size() != 6)
     {
       Log.warning("block type " + id + " had a badly formed bounds setting; the default will be used");
       bounds = DEFAULT_BOUNDS;
     }
+
+    // TODO: implement GL lists first.
+    // ArrayList<Number> orientation = loadArray(map, "orientation",
+    // Number.class, null);
+    // if (orientation != null)
+    // {
+    // if (orientation.size() != 3)
+    // {
+    // Log.warning("block type " + id +
+    // "'s orientation vector is not of size 3");
+    // orientation = null;
+    // }
+    // }
 
     // If previous errors invalidated all the data values in the list, add a
     // reasonable default.
@@ -254,10 +269,18 @@ public final class BlockTypeRegistry
       blockType.setBounds(
         (float) bounds.get(0).doubleValue(), (float) bounds.get(1).doubleValue(), (float) bounds.get(2).doubleValue(),
         (float) bounds.get(3).doubleValue(), (float) bounds.get(4).doubleValue(), (float) bounds.get(5).doubleValue());
+      // TODO: use GL lists.
+      // if (orientation != null)
+      // {
+      // blockType.setOrientation(
+      // orientation.get(0).floatValue(),
+      // orientation.get(1).floatValue(),
+      // orientation.get(2).floatValue());
+      // }
 
       addBlockType(blockType);
     } // for all data values
-  } // loadBlockType
+  }// loadBlockType
 
   // --------------------------------------------------------------------------
   /**
@@ -331,10 +354,10 @@ public final class BlockTypeRegistry
         ArrayList<Object> result = (ArrayList<Object>) value;
         for (int i = 0; i < result.size(); ++i)
         {
-          if (result.get(i).getClass() != elementClass)
+          if (!elementClass.isInstance(result.get(i)))
           {
             Log.warning("for " + name + " expected array elements of type "
-                        + elementClass.getName() + "but got "
+                        + elementClass.getName() + " but got "
                         + result.get(i).getClass());
             result = null;
             break;
@@ -537,7 +560,7 @@ public final class BlockTypeRegistry
   /**
    * Default cuboid bounds when loaded from "blocks.yml".
    */
-  private static final ArrayList<Double> DEFAULT_BOUNDS     = new ArrayList<Double>(Arrays.asList(
+  private static final ArrayList<Number> DEFAULT_BOUNDS     = new ArrayList<Number>(Arrays.asList(
                                                               0.005, 0.005, 0.005, 0.995, 0.995, 0.995));
   /**
    * An array of BlockType instances accessed by index.
