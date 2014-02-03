@@ -686,6 +686,7 @@ blocks:
       rgba: [112, 112, 112]
       bounds: [0.25, 0.0, 0.25, 0.75, 0.6, 0.75]
     - id: 70
+      data: all
       names: [stone plate,stone pressure plate]
       rgba: [127, 127, 127]
       bounds: [0.0625, 0.0, 0.0625, 0.9375, 0.0625, 0.9375]
@@ -695,6 +696,7 @@ blocks:
       rgba: [197, 197, 197]
       bounds: [0.0, 0.0, 0.8125, 1.0, 1.0, 1.0]
     - id: 72
+      data: all
       names: [wood plate,wooden pressure plate]
       rgba: [180, 144, 90]
       bounds: [0.0625, 0.0, 0.0625, 0.9375, 0.0625, 0.9375]
@@ -1231,10 +1233,12 @@ blocks:
       lineWidth: 5.0
       bounds: [0.0625, 0.0, 0.0625, 0.9375, 0.875, 0.9375]
     - id: 147
+      data: all
       names: [gold plate, light pressure plate]
       rgba: [254, 251, 105]
       bounds: [0.0625, 0.0, 0.0625, 0.9375, 0.0625, 0.9375]
     - id: 148
+      data: all    
       names: [iron plate, heavy pressure plate]
       rgba: [230, 230, 230]
       bounds: [0.0625, 0.0, 0.0625, 0.9375, 0.0625, 0.9375]
