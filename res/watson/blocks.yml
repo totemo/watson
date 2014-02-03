@@ -81,7 +81,7 @@ blocks:
       rgba: [100, 100, 100]
     - id: 5
       data: 0
-      names: [wood, plank, planks, wood planks]
+      names: [wood, oak wood, plank, planks, wood planks]
       rgba: [188, 152, 98]
     - id: 5
       data: 1
@@ -107,7 +107,7 @@ blocks:
       # data: 0 = oak, 1 = spruce, 2 = birch, 3 = jungle
     - id: 6
       data: [0, 8]
-      names: [sapling]
+      names: [sapling, oak sapling]
       rgba: [87, 173, 63]
       bounds: [0.1, 0.0, 0.1, 0.9, 0.8, 0.9]
       model: plant
@@ -192,7 +192,7 @@ blocks:
       # data: 0 = oak, 1 = spruce, 2 = birch, 3 = jungle
     - id: 17
       data: [0, 4, 8]
-      names: [log]
+      names: [log, oak log]
       rgba: [107, 86, 53]
     - id: 17
       data: [1, 5, 9]
@@ -211,7 +211,7 @@ blocks:
     # data: 0 = oak, 1 = spruce, 2 = birch, 3 = jungle
     - id: 18
       data: [0, 4, 8, 12]
-      names: [leaves]
+      names: [leaves, oak leaves]
       rgba: [87, 173, 63]
     - id: 18
       data: [1, 5, 9, 13]
@@ -248,7 +248,7 @@ blocks:
       rgba: [197, 189, 117]
     - id: 24
       data: 1
-      names: [creeper sandstone]
+      names: [creeper sandstone, chiseled sandstone]
       rgba: [197, 189, 117]
     - id: 24
       data: 2
@@ -464,35 +464,35 @@ blocks:
       
     - id: 43
       data: [0, 8]
-      names: [double step, double slab]
+      names: [double step, double slab, stone double slab]
       rgba: [176, 176, 176]
     - id: 43
       data: [1, 9]
-      names: [double step, d sand slab]
+      names: [double step, d sand slab, sandstone double slab]
       rgba: [197, 189, 117]
     - id: 43
       data: [2, 10]
-      names: [double step]
+      names: [double step, oak wood double slab]
       rgba: [188, 152, 98]
     - id: 43
       data: [3, 11]
-      names: [double step, d cobble slab]
+      names: [double step, d cobble slab, cobblestone double slab]
       rgba: [100, 100, 100]
     - id: 43
       data: [4, 12]
-      names: [double step, d brick slab]
+      names: [double step, d brick slab, brick double slab]
       rgba: [155, 86, 67]
     - id: 43
       data: [5, 13]
-      names: [double step, d stone brick slab]
+      names: [double step, d stone brick slab, stone brick double slab]
       rgba: [136, 136, 136]
     - id: 43
       data: [6, 14]
-      names: [double step, d nether brick slab]
+      names: [double step, d nether brick slab, nether brick double slab]
       rgba: [48, 24, 28]
     - id: 43
       data: [7, 15]
-      names: [double step, d quartz slab]
+      names: [double step, d quartz slab, quartz double slab]
       rgba: [235, 233, 227]
       
       # Steps: Probably need to enumerate all of the possible data values for 
@@ -500,7 +500,7 @@ blocks:
       # are just "step".
     - id: 44
       data: 0
-      names: [step, slab, smooth stone slab, smooth stone step]
+      names: [step, slab, smooth stone slab, smooth stone step, stone slab]
       rgba: [176, 176, 176]
       bounds: [0.0, 0.0, 0.0, 1.0, 0.5, 1.0]
     - id: 44
@@ -540,42 +540,42 @@ blocks:
       bounds: [0.0, 0.0, 0.0, 1.0, 0.5, 1.0]
     - id: 44
       data: 8
-      names: [step, slab, smooth stone slab, smooth stone step]
+      names: [step, slab, smooth stone slab, smooth stone step, upper stone slab]
       rgba: [176, 176, 176]
       bounds: [0.0, 0.5, 0.0, 1.0, 1.0, 1.0]
     - id: 44
       data: 9
-      names: [sandstone slab, sandstone step, sandslab]
+      names: [upper sandstone slab]
       rgba: [197, 189, 117]
       bounds: [0.0, 0.5, 0.0, 1.0, 1.0, 1.0]
     - id: 44
       data: 10
-      names: [wood step, oak slab, oak step]
+      names: [upper oak slab]
       rgba: [188, 152, 98]
       bounds: [0.0, 0.5, 0.0, 1.0, 1.0, 1.0]
     - id: 44
       data: 11
-      names: [cobblestone slab, cobblestone step, cobble slab]
+      names: [upper cobblestone slab]
       rgba: [100, 100, 100]
       bounds: [0.0, 0.5, 0.0, 1.0, 1.0, 1.0]
     - id: 44
       data: 12
-      names: [brick slab, brick step]
+      names: [upper brick slab]
       rgba: [155, 86, 67]
       bounds: [0.0, 0.5, 0.0, 1.0, 1.0, 1.0]
     - id: 44
       data: 13
-      names: [stone brick slab, stone brick step]
+      names: [upper stone brick slab]
       rgba: [136, 136, 136]
       bounds: [0.0, 0.5, 0.0, 1.0, 1.0, 1.0]
     - id: 44
       data: 14
-      names: [nether brick slab, nether brick step]
+      names: [upper nether brick slab]
       rgba: [48, 24, 28]
       bounds: [0.0, 0.5, 0.0, 1.0, 1.0, 1.0]
     - id: 44
       data: 15
-      names: [quartz slab, quartz step]
+      names: [upper quartz slab]
       rgba: [235, 233, 227]
       bounds: [0.0, 0.5, 0.0, 1.0, 1.0, 1.0]
       
@@ -607,7 +607,7 @@ blocks:
       rgba: [25, 40, 51]
     - id: 53
       data: all
-      names: [wood stairs]
+      names: [wood stairs, oak wood stairs]
       rgba: [188, 152, 98]
       model: stair
     - id: 54
@@ -867,27 +867,27 @@ blocks:
     # 4 = cracked stone brick, 5 = chiselled stone brick
     - id: 97
       data: 0
-      names: [monster eggs,silverfish]
+      names: [monster eggs,silverfish, stone monster egg]
       rgba: [127, 127, 127]
     - id: 97
       data: 1
-      names: [monster eggs,silverfish]
+      names: [monster eggs,silverfish, cobblestone monster egg]
       rgba: [100, 100, 100]
     - id: 97
       data: 2
-      names: [monster eggs,silverfish]
+      names: [monster eggs,silverfish, stone brick monster egg]
       rgba: [136, 136, 136]
     - id: 97
       data: 3
-      names: [monster eggs,silverfish]
+      names: [monster eggs,silverfish, mossy stone brick monster egg]
       rgba: [121, 137, 91]
     - id: 97
       data: 4
-      names: [monster eggs,silverfish]
+      names: [monster eggs,silverfish, cracked stone brick monster egg]
       rgba: [94, 94, 94]
     - id: 97
       data: 5
-      names: [monster eggs,silverfish]
+      names: [monster eggs,silverfish, chiseled stone brick monster egg]
       rgba: [93, 93, 93]
       
     - id: 98
@@ -904,7 +904,7 @@ blocks:
       rgba: [94, 94, 94]
     - id: 98
       data: 3
-      names: [circular stone brick, circlestone, etched stone brick, circle stone brick]
+      names: [circular stone brick, circlestone, etched stone brick, circle stone brick, chiseled stone brick]
       rgba: [93, 93, 93]
       
     - id: 99
@@ -958,7 +958,7 @@ blocks:
       rgba: [136, 136, 136]
       model: stair      
     - id: 110
-      names: [mycel,mycelium]
+      names: [mycel, mycelium]
       rgba: [128, 107, 111]
     - id: 111
       names: [water lily,lily pad,lilypad]
@@ -1016,27 +1016,27 @@ blocks:
 
     - id: 125
       data: 0
-      names: [wood double step]
+      names: [wood double step, oak wood double slab]
       rgba: [188, 152, 98]
     - id: 125
       data: 1
-      names: [wood double step]
+      names: [spruce wood double slab]
       rgba: [69, 53, 31]
     - id: 125
       data: 2
-      names: [wood double step]
+      names: [birch wood double slab]
       rgba: [157, 145, 97]
     - id: 125
       data: 3
-      names: [wood double step]
+      names: [jungle wood double slab]
       rgba: [137, 98, 70]
     - id: 125
       data: 4
-      names: [wood double step]
+      names: [acacia wood double slab]
       rgba: [182, 97, 54]
     - id: 125
       data: 5
-      names: [wood double step]
+      names: [dark oak wood double slab]
       rgba: [69, 44, 21]
 
     - id: 126
@@ -1071,32 +1071,32 @@ blocks:
       bounds: [0.0, 0.0, 0.0, 1.0, 0.5, 1.0]
     - id: 126
       data: 8
-      names: [wooden step, oak wood slab]
+      names: [wooden step, upper oak wood slab]
       rgba: [188, 152, 98]
       bounds: [0.0, 0.5, 0.0, 1.0, 1.0, 1.0]
     - id: 126
       data: 9
-      names: [spruce wood slab, redwood slab]
+      names: [upper spruce wood slab, redwood slab]
       rgba: [69, 53, 31]
       bounds: [0.0, 0.5, 0.0, 1.0, 1.0, 1.0]
     - id: 126
       data: 10
-      names: [birch wood slab]
+      names: [upper birch wood slab]
       rgba: [157, 145, 97]
       bounds: [0.0, 0.5, 0.0, 1.0, 1.0, 1.0]
     - id: 126
       data: 11
-      names: [jungle wood slab]
+      names: [upper jungle wood slab]
       rgba: [137, 98, 70]
       bounds: [0.0, 0.5, 0.0, 1.0, 1.0, 1.0]
     - id: 126
       data: 12
-      names: [acacia wood slab]
+      names: [upper acacia wood slab]
       rgba: [182, 97, 54]
       bounds: [0.0, 0.5, 0.0, 1.0, 1.0, 1.0]
     - id: 126
       data: 13
-      names: [dark oak wood slab]
+      names: [upper dark oak wood slab]
       rgba: [69, 44, 21]
       bounds: [0.0, 0.5, 0.0, 1.0, 1.0, 1.0]
       
@@ -1271,7 +1271,7 @@ blocks:
       rgba: [235, 233, 227]
     - id: 155
       data: 1 
-      names: [chiselled quartz block,chiseled quartz block]
+      names: [chiselled quartz block, chiseled quartz block]
       rgba: [235, 233, 227]
     - id: 155
       data: [2, 3, 4]
@@ -1341,7 +1341,7 @@ blocks:
       data: 11
       rgba: [76, 62, 91]
     - id: 159
-      names: [brown clay]
+      names: [brown clay, brown stained clay]
       data: 12
       rgba: [79, 53, 37]
     - id: 159
@@ -1555,7 +1555,7 @@ blocks:
       rgba: [34, 32, 32]
       bounds: [0.0, 0.0, 0.0, 1.0, 0.0625, 1.0]
     - id: 172
-      names: [hard clay]
+      names: [hard clay, hardened clay]
       rgba: [152, 97, 68]
     - id: 173
       names: [coal block]
