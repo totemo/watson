@@ -133,13 +133,13 @@ blocks:
       data: [4, 12]
       names: [acacia sapling]
       rgba: [118, 112, 29]
-      bounds: [0.1, 0.0, 0.1, 0.9, 1.0, 0.9]
+      bounds: [0.1, 0.0, 0.1, 0.9, 0.8, 0.9]
       model: plant
     - id: 6
       data: [5, 13]
       names: [dark oak sapling]
       rgba: [61, 117, 36]
-      bounds: [0.1, 0.0, 0.1, 0.9, 1.0, 0.9]
+      bounds: [0.1, 0.0, 0.1, 0.9, 0.8, 0.9]
       model: plant
 
     - id: 7
