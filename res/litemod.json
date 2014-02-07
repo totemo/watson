@@ -4,8 +4,8 @@
 
     "name": "watson",
     "mcversion": "1.7.2_02",
-    "version": "1.7.2_02-0.5.0.75",
-    "revision": "75",
+    "version": "1.7.2_02-0.5.0.78",
+    "revision": "78",
     "author": "totemo",
     "description": "A 3-D log visualisation tool.",
     "classTransformerClasses": "watson.transformer.WatsonCallbackInjectionTransformer"

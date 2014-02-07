@@ -48,6 +48,18 @@ public class Chat
 
   // --------------------------------------------------------------------------
   /**
+   * Return true if the chat GUI is ready to display chat.
+   * 
+   * @return true if the chat GUI is ready to display chat.
+   */
+  public static boolean isChatGuiReady()
+  {
+    Minecraft mc = Minecraft.getMinecraft();
+    return mc.ingameGUI != null && mc.ingameGUI.getChatGUI() != null;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
    * Display a chat message locally.
    * 
    * @param message the text to display.
@@ -81,11 +93,10 @@ public class Chat
    */
   public static void localChat(IChatComponent chat)
   {
-    Minecraft mc = Minecraft.getMinecraft();
-    if (mc.ingameGUI != null && mc.ingameGUI.getChatGUI() != null)
+    if (isChatGuiReady())
     {
       IChatComponent highlighted = getChatHighlighter().highlight(chat);
-      mc.ingameGUI.getChatGUI().func_146227_a(highlighted);
+      Minecraft.getMinecraft().ingameGUI.getChatGUI().func_146227_a(highlighted);
     }
   }
 

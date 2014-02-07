@@ -33,9 +33,9 @@ import com.mumfrey.liteloader.ChatFilter;
 import com.mumfrey.liteloader.JoinGameListener;
 import com.mumfrey.liteloader.PostRenderListener;
 import com.mumfrey.liteloader.Tickable;
+import com.mumfrey.liteloader.core.LiteLoader;
 import com.mumfrey.liteloader.modconfig.ConfigStrategy;
 import com.mumfrey.liteloader.modconfig.ExposableOptions;
-import com.mumfrey.liteloader.util.ModUtilities;
 
 // ----------------------------------------------------------------------------
 /**
@@ -127,7 +127,7 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
     Configuration.instance.load();
     Log.info("Loading Watson version " + getVersion());
     Controller.instance.initialise();
-    ModUtilities.registerKey(_screenShotKeyBinding);
+    LiteLoader.getInput().registerKeyBinding(_screenShotKeyBinding);
 
     // TODO: Reinstate MacroIntegration.
     // MacroIntegration.initialiseMacroKeybind();
@@ -158,7 +158,7 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
   {
     if (Configuration.instance.isEnabled())
     {
-      Chat.localOutput(String.format(Locale.US, "Watson %s. Type /w help, for help.", getVersion()));
+      _gameJoinTime = System.currentTimeMillis();
 
       // Only set display settings on first connect. Subsequent connects
       // should retain the previous display state.
@@ -183,12 +183,25 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
   }
 
   // --------------------------------------------------------------------------
-
+  /**
+   * @see com.mumfrey.liteloader.Tickable#onTick(net.minecraft.client.Minecraft,
+   *      float, boolean, boolean)
+   */
   @Override
   public void onTick(Minecraft minecraft, float partialTicks, boolean inGame, boolean clock)
   {
     ChatProcessor.instance.processChatQueue();
     Controller.instance.processServerChatQueue();
+
+    // With Forge, onJoinGame() gets called before the chat GUI is ready to
+    // display the welcome message.
+    if (_gameJoinTime != 0 &&
+        System.currentTimeMillis() - _gameJoinTime > 1000 &&
+        Chat.isChatGuiReady())
+    {
+      Chat.localOutput(String.format(Locale.US, "Watson %s. Type /w help, for help.", getVersion()));
+      _gameJoinTime = 0;
+    }
 
     if (_screenShotKeyBinding.isPressed())
     {
@@ -346,5 +359,11 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
    * True while the player holds down the Watson screenshot key. Used to detect
    * the initial key-down.
    */
-  static boolean            _takingScreenshot     = false;
+  private static boolean    _takingScreenshot     = false;
+
+  /**
+   * Set, upon joining the game, to the current time to trigger the welcome
+   * message a second later. When 0, no welcome message is shown.
+   */
+  private static long       _gameJoinTime         = 0;
 } // class LiteModWatson
