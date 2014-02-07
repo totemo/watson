@@ -1,8 +1,8 @@
 package watson.transformer;
 
-import com.mumfrey.liteloader.core.transformers.Callback;
-import com.mumfrey.liteloader.core.transformers.Callback.CallBackType;
-import com.mumfrey.liteloader.core.transformers.CallbackInjectionTransformer;
+import com.mumfrey.liteloader.transformers.Callback;
+import com.mumfrey.liteloader.transformers.Callback.CallbackType;
+import com.mumfrey.liteloader.transformers.CallbackInjectionTransformer;
 
 // ----------------------------------------------------------------------------
 /**
@@ -48,26 +48,26 @@ public class WatsonCallbackInjectionTransformer extends CallbackInjectionTransfo
 
   // --------------------------------------------------------------------------
   /**
-   * @see com.mumfrey.liteloader.core.transformers.CallbackInjectionTransformer#addMappings()
+   * @see com.mumfrey.liteloader.transformers.CallbackInjectionTransformer#addCallbacks()
    */
   @Override
-  protected void addMappings()
+  protected void addCallbacks()
   {
-    this.addCallbackMapping(EntityClientPlayerMP, sendChatMessage, sendChatMessageDesc, CallBackType.REDIRECT,
-      new Callback(sendChatMessage, "watson.LiteModWatson", true));
-    this.addCallbackMapping(EntityClientPlayerMP, sendChatMessageSrg, sendChatMessageDesc, CallBackType.REDIRECT,
-      new Callback(sendChatMessage, "watson.LiteModWatson", true));
-    this.addCallbackMapping(EntityClientPlayerMPObf, sendChatMessageObf, sendChatMessageDesc, CallBackType.REDIRECT,
-      new Callback(sendChatMessage, "watson.LiteModWatson", true));
+    this.addCallback(EntityClientPlayerMP, sendChatMessage, sendChatMessageDesc,
+      new Callback(CallbackType.REDIRECT, sendChatMessage, "watson.LiteModWatson"));
+    this.addCallback(EntityClientPlayerMP, sendChatMessageSrg, sendChatMessageDesc,
+      new Callback(CallbackType.REDIRECT, sendChatMessage, "watson.LiteModWatson"));
+    this.addCallback(EntityClientPlayerMPObf, sendChatMessageObf, sendChatMessageDesc,
+      new Callback(CallbackType.REDIRECT, sendChatMessage, "watson.LiteModWatson"));
 
-    // this.addCallbackMapping(GuiChat, newChatEnteredMcp, newChatEnteredDesc,
-    // CallBackType.REDIRECT,
-    // new Callback(newChatEntered, "watson.LiteModWatson", false));
-    // this.addCallbackMapping(GuiChat, newChatEnteredSrg, newChatEnteredDesc,
-    // CallBackType.REDIRECT,
-    // new Callback(newChatEntered, "watson.LiteModWatson", false));
-    // this.addCallbackMapping(GuiChatObf, newChatEnteredObf,
-    // newChatEnteredDesc, CallBackType.REDIRECT,
-    // new Callback(newChatEntered, "watson.LiteModWatson", false));
+    // this.addCallback(GuiChat, newChatEnteredMcp, newChatEnteredDesc,
+    // new Callback(CallbackType.REDIRECT, newChatEntered,
+    // "watson.LiteModWatson"));
+    // this.addCallback(GuiChat, newChatEnteredSrg, newChatEnteredDesc,
+    // new Callback(CallbackType.REDIRECT, newChatEntered,
+    // "watson.LiteModWatson"));
+    // this.addCallback(GuiChatObf, newChatEnteredObf, newChatEnteredDesc,
+    // new Callback(CallbackType.REDIRECT, newChatEntered,
+    // "watson.LiteModWatson"));
   }
 } // class WatsonCallbackInjectionTransformer
