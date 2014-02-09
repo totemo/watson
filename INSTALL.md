@@ -1,7 +1,7 @@
 Installation
-------------
+============
 Minecraft Version 1.7.2
-=======================
+-----------------------
 As of 1.7.2, Watson is a LiteLoader mod.  There is no version of Macro/Keybind mod for 1.7.2, so support for that is not in this version of Watson.  Currently, no modding tools support Minecraft version 1.7.4.
 
 Installation procedure:
@@ -12,21 +12,17 @@ Installation procedure:
  
 Regardless of whether you have installed Minecraft Forge or not, run the LiteLoader 1.7.2 profile in the Minecraft launcher.
 
-Minecraft Version 1.6.4
-=======================
+
 For Minecraft version 1.6.4, install Watson according to the instructions [here](https://github.com/totemo/watson/blob/master/INSTALL_1.6.4.md).
 
 
 Downloads
----------
+=========
 
 GitHub has dropped support for uploading files, so downloads will be hosted on Google Drive from now on.
 
-<table>
-<tr>
-  <th>Minecraft 1.7.2</th> 
-</tr>
-<tr>
+Minecraft 1.7.2
+---------------
 <table>
   <tr>
     <th>Watson version</th> <td>0.5.0.83-mc1.7.2_02</td> 
@@ -35,24 +31,21 @@ GitHub has dropped support for uploading files, so downloads will be hosted on G
     <th>File Name</th> <td>watson-1.6.4-2013-10-08.zip</td>
   </tr>
   <tr>
-    <th>Download</th> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXZ3JHczJDMWo1T0k</td>
+    <th>Download</th> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXVEJLQ1JnNFV3SW8</td>
   </tr>
   <tr>
-    <th>sha256sum -b</th> <td>4ea4f85e0a5ccc308151a67b3a631dceff77dcb5f3fa74c7e7cfeb594e15b171</td>
+    <th>sha256sum -b</th> <td>0a9feddd8f1ef0783c6c099bf6535c8b9bed3e8b02307180f81b0b33d15bd337</td>
   </tr>
   <tr>
-    <th>Changes</th> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#164-2013-10-08">description</a></td>
+    <th>Changes</th> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#050-172_02">description</a></td>
   </tr>
   <tr>
     <th>Compatibility</th> <td><ul><li>Minecraft Forge 1.7.2-10.12.0.1024</li><li>LiteLoader 1.7.2_02 (beta)</li></ul></td>
   </tr>
 </table>
-</tr>
 
-<tr>
-  <th>Minecraft 1.6.4</th> 
-</tr>
-<tr>
+Minecraft 1.6.4
+---------------
 <table>
   <tr>
     <th>Watson version</th> <td>1.6.4 (2013-10-08)</td> 
@@ -73,12 +66,9 @@ GitHub has dropped support for uploading files, so downloads will be hosted on G
     <th>Compatibility</th> <td><ul><li>Minecraft Forge 1.6.4-9.11.1.916</li><li>LiteLoader for 1.6.4</li><li>Macro/Keybind Mod 0.9.11 for Minecraft 1.6.4</li></ul></td>
   </tr>
 </table>
-</tr>
 
-<tr>
-  <th>Minecraft 1.6.2</th> 
-</tr>
-<tr>
+Minecraft 1.6.2
+---------------
 <table>
   <tr>
     <th>Watson version</th> <td>1.6.2 (2013-08-06)</td> 
@@ -99,12 +89,10 @@ GitHub has dropped support for uploading files, so downloads will be hosted on G
     <th>Compatibility</th> <td><ul><li>Minecraft Forge 1.6.2-9.10.0.804</li><li>LiteLoader for 1.6.2</li><li>Macro/Keybind Mod 0.9.10 for Minecraft 1.6.2</li></ul></td>
   </tr>
 </table>
-</tr>
-</table>
 
 
 Compatibility
--------------
+=============
 
 Watson has been tested for compatibility with:
 
@@ -119,7 +107,7 @@ Watson has been tested for compatibility with:
 
 
 Troubleshooting
----------------
+===============
 
 <table>
   <tr>
@@ -145,7 +133,7 @@ Troubleshooting
 
 
 Contact Details
----------------
+===============
 
 If Watson's not working for you or you want to suggest improvements, I'm happy to help.  You can contact me directly in the following ways:
 
