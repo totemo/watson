@@ -10,7 +10,9 @@ Installation procedure:
  1. Make a .minecraft/mods/1.7.2/ folder, where .minecraft/ is your Minecraft installation folder.
  1. Download Watson using the link in the table below and put the .litemod file in .minecraft/mods/1.7.2/.
  
-Regardless of whether you have installed Minecraft Forge or not, run the LiteLoader 1.7.2 profile in the Minecraft launcher.
+Note that:
+ * Watson will not work if you put it in .minecraft/mods/. It *must* be in the .minecraft/mods/1.7.2/ folder in order for certain LiteLoader features to work correctly.
+ * Regardless of whether you have installed Minecraft Forge or not, run the LiteLoader 1.7.2 profile in the Minecraft launcher.
 
 
 For Minecraft version 1.6.4, install Watson according to the instructions [here](https://github.com/totemo/watson/blob/master/INSTALL_1.6.4.md).
