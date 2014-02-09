@@ -4,7 +4,7 @@
 
     "name": "${ant.project.name}",
     "mcversion": "${litemodversion}",
-    "version": "${litemodversion}-${version}.${build.number}",
+    "version": "${version}.${build.number}-mc${litemodversion}",
     "revision": "${build.number}",
     "author": "${author}",
     "description": "A 3-D log visualisation tool.",

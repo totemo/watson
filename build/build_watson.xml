@@ -253,7 +253,7 @@
 		<echo level="info" message="Building final output" />
 
 		<mkdir dir="${dist.dir}" />
-		<jar destfile="${dist.dir}/${file.prefix}_${ant.project.name}_${version}_mc${mcversion}.${file.type}" duplicate="preserve" index="true" manifestencoding="UTF-8">
+		<jar destfile="${dist.dir}/${file.prefix}_${ant.project.name}_${version}_mc${litemodversion}.${file.type}" duplicate="preserve" index="true" manifestencoding="UTF-8">
 			<manifest>
 				<attribute name="Built-By" value="MCP (http://mcp.ocean-labs.de)" />
 				<attribute name="Implementation-Vendor" value="${author}" />
