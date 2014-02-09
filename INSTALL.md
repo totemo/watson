@@ -1,41 +1,20 @@
 Installation
 ------------
-I hope to have Watson fully compatible with the new Minecraft launcher's tweaks mechanism soon.  As of 1.6.4, you can just put the Watson Zip file in your ~/.minecraft/mods/ directory and everything will work EXCEPT putting the currently selected player's name in screenshot file names.  You will need to download and run the [recommended Minecraft Forge installer for 1.6.4](http://adf.ly/673885/http://files.minecraftforge.net/minecraftforge/minecraftforge-installer-1.6.4-9.11.1.916.jar) from http://files.minecraftforge.net/ and if you want to use the Macro/Keybind Mod with Watson you should also run the [LiteLoader installer](http://www.minecraftforum.net/topic/1868280-164api-liteloader-for-minecraft-164/) after Minecraft Forge is installed, and select the option "Chain to Minecraft Forge 9.11.1.916."
+Minecraft Version 1.7.2
+=======================
+As of 1.7.2, Watson is a LiteLoader mod.  There is no version of Macro/Keybind mod for 1.7.2, so support for that is not in this version of Watson.  Currently, no modding tools support Minecraft version 1.7.4.
 
-If you need your screenshots named after the currently selected player, then until I have a tweaks class written, please patch your JAR file the old fashioned way:
+Installation procedure:
+ 1. If you require Minecraft Forge/FML support, then download the recommended Installer from [http://files.minecraftforge.net](http://files.minecraftforge.net) and run that first.
+ 1. Download the LiteLoader 1.7.2_02 (beta) installer from [the Minecraft Forums thread](http://www.minecraftforum.net/topic/1868280-172api-liteloader-for-minecraft-164-172-beta-available/page__st__1120#entry28781181) and run that installer.  If you have already installed Forge, then select the option to "Chain to Minecraft Forge".
+ 1. Make a .minecraft/mods/1.7.2/ folder, where .minecraft/ is your Minecraft installation folder.
+ 1. Download Watson using the link in the table below and put the .litemod file in .minecraft/mods/1.7.2/.
+ 
+Regardless of whether you have installed Minecraft Forge or not, run the LiteLoader 1.7.2 profile in the Minecraft launcher.
 
-1. Download a version of Watson that matches your current Minecraft version <i>exactly</i>.
-1. Download the recommended <i>installer</i> for Minecraft Forge from <a href"http://files.minecraftforge.net/">the Forge downloads site</a> and run that.  It will create a profile in a directory like %APPDATA%/.minecraft/versions/1.6.4-Forge9.11.1.916/ containing files called 1.6.4-Forge9.11.1.916.json and 1.6.4-Forge9.11.1.916.jar.  The names will vary according to what version of Forge you install.
-1. Run the Forge profile from the Minecraft launcher at least once.
-1. If you want to use the Macro/Keybind integration in Watson, you'll want to install LiteLoader as the start of the tweak chain, according to the <a href="http://www.minecraftforum.net/topic/1868280-162api-liteloader-for-minecraft-164/"><i>Manual Installation [advanced]</i> procedure in the LiteLoader forum post.</a>.  This requires editing the JSON file that describes the profile: %APPDATA%/.minecraft/versions/1.6.4-Forge9.11.1.916/1.6.4-Forge9.11.1.916.json.  After this, you will have both LiteLoader and Forge installed.  The start of the 1.6.4-Forge9.11.1.916.json file will look something like this (without the line wrapping of the minecraftArguments value):
-<pre>
-{
-	"minecraftArguments": "--username ${auth_player_name} --session ${auth_session} --version ${version_name} 
-	--gameDir ${game_directory} --assetsDir ${game_assets} 
-	--tweakClass com.mumfrey.liteloader.launch.LiteLoaderTweaker 
-	--cascadedTweaks cpw.mods.fml.common.launcher.FMLTweaker",
-	"libraries": [
-		{
-			"name": "com.mumfrey:liteloader:1.6.4",
-			"url": "http://dl.liteloader.com/versions/"
-		},
-		{
-			"name": "net.minecraft:launchwrapper:1.3"
-		},
-		{
-			"url": "http://files.minecraftforge.net/maven/",
-			"name": "net.minecraftforge:minecraftforge:9.11.1.916"
-		},
-</pre>
-1. Now you can patch the corresponding JAR file with the Watson classes.  It's at this point that you would add in other mods that also (at the time of writing) patch the JAR file, such as Rei's Minimap or Optifine.
-1. Open %APPDATA%/.minecraft/versions/1.6.4-Forge9.11.1.916/1.6.4-Forge9.11.1.916.jar with your chosen ZIP file editing program.
-1. Paste in the full contents of the Watson ZIP file.
-1. Delete the contents of the META-INF/ folder of your modified JAR file.
-1. Save the modified JAR file over the original 1.6.4-Forge9.11.1.916.jar.
-1. Start the Minecraft launcher, select Forge in the list of Profiles and click the Edit Profile button.
-1. Check the box marked JVM Arguments and add the following text:<br>
-  -Xmx1G -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true
-1. Click Save Profile.
+Minecraft Version 1.6.4
+=======================
+For Minecraft version 1.6.4, install Watson according to the instructions [here](https://github.com/totemo/watson/blob/master/INSTALL_1.6.4.md).
 
 
 Downloads
@@ -44,234 +23,83 @@ Downloads
 GitHub has dropped support for uploading files, so downloads will be hosted on Google Drive from now on.
 
 <table>
+<tr>
+  <th>Minecraft 1.7.2</th> 
+</tr>
+<tr>
+<table>
   <tr>
-    <th>Version</th> <th colspan="2">Details</th>
+    <th>Watson version</th> <td>0.5.0.83-mc1.7.2_02</td> 
   </tr>
   <tr>
-    <td rowspan="5">1.6.4<br>(2013-10-08)</td> <td>sha256sum -b</td> <td>4ea4f85e0a5ccc308151a67b3a631dceff77dcb5f3fa74c7e7cfeb594e15b171</td>
+    <th>File Name</th> <td>watson-1.6.4-2013-10-08.zip</td>
   </tr>
   <tr>
-    <td>File Name</td> <td>watson-1.6.4-2013-10-08.zip</td>
+    <th>Download</th> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXZ3JHczJDMWo1T0k</td>
   </tr>
   <tr>
-    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXZ3JHczJDMWo1T0k</td>
+    <th>sha256sum -b</th> <td>4ea4f85e0a5ccc308151a67b3a631dceff77dcb5f3fa74c7e7cfeb594e15b171</td>
   </tr>
   <tr>
-    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#164-2013-10-08">description</a></td>
+    <th>Changes</th> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#164-2013-10-08">description</a></td>
   </tr>
   <tr>
-    <td>Compatibility</td> <td><ul><li>Minecraft Forge 1.6.4-9.11.1.916</li><li>LiteLoader for 1.6.4</li><li>Macro/Keybind Mod 0.9.11 for Minecraft 1.6.4</li></ul></td>
+    <th>Compatibility</th> <td><ul><li>Minecraft Forge 1.7.2-10.12.0.1024</li><li>LiteLoader 1.7.2_02 (beta)</li></ul></td>
   </tr>
+</table>
+</tr>
 
+<tr>
+  <th>Minecraft 1.6.4</th> 
+</tr>
+<tr>
+<table>
   <tr>
-    <th>Version</th> <th colspan="2">Details</th>
+    <th>Watson version</th> <td>1.6.4 (2013-10-08)</td> 
   </tr>
   <tr>
-    <td rowspan="5">1.6.2<br>(2013-08-06)</td> <td>sha256sum -b</td> <td>392b1b2e0ba8c316f3f3c6c3c6fc36e68fa8a61313dffcf7ddead4d6dbcd54b2</td>
+    <th>File Name</th> <td>watson-1.6.4-2013-10-08.zip</td>
   </tr>
   <tr>
-    <td>File Name</td> <td>watson-1.6.2-2013-08-06.zip</td>
+    <th>Download</th> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXZ3JHczJDMWo1T0k</td>
   </tr>
   <tr>
-    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXeTZWaTAxZm1oNDQ</td>
+    <th>sha256sum -b</th> <td>4ea4f85e0a5ccc308151a67b3a631dceff77dcb5f3fa74c7e7cfeb594e15b171</td>
   </tr>
   <tr>
-    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#162-2013-08-06">description</a></td>
+    <th>Changes</th> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#164-2013-10-08">description</a></td>
   </tr>
   <tr>
-    <td>Compatibility</td> <td><ul><li>Minecraft Forge 1.6.2-9.10.0.804</li><li>LiteLoader for 1.6.2</li><li>Macro/Keybind Mod 0.9.10 for Minecraft 1.6.2</li></ul></td>
+    <th>Compatibility</th> <td><ul><li>Minecraft Forge 1.6.4-9.11.1.916</li><li>LiteLoader for 1.6.4</li><li>Macro/Keybind Mod 0.9.11 for Minecraft 1.6.4</li></ul></td>
   </tr>
+</table>
+</tr>
 
+<tr>
+  <th>Minecraft 1.6.2</th> 
+</tr>
+<tr>
+<table>
   <tr>
-    <th>Version</th> <th colspan="2">Details</th>
+    <th>Watson version</th> <td>1.6.2 (2013-08-06)</td> 
   </tr>
   <tr>
-    <td rowspan="5">1.5.2<br>(2013-07-03)</td> <td>sha256sum -b</td> <td>cefb5bc28a9ec0fb113b54617c5a134bd0d72a71b69c79caf594e491ae2157bc</td>
+    <th>File Name</th> <td>watson-1.6.2-2013-08-06.zip</td>
   </tr>
   <tr>
-    <td>File Name</td> <td>watson-1.5.2-2013-07-03.zip</td>
+    <th>Download</th> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXeTZWaTAxZm1oNDQ</td>
   </tr>
   <tr>
-    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXblZVRTlucC1PNnc</td>
+    <th>sha256sum -b</th> <td>392b1b2e0ba8c316f3f3c6c3c6fc36e68fa8a61313dffcf7ddead4d6dbcd54b2</td>
   </tr>
   <tr>
-    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#152-2013-07-03">description</a></td>
+    <th>Changes</th> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#162-2013-08-06">description</a></td>
   </tr>
   <tr>
-    <td>Compatibility</td> <td><ul><li>Minecraft Forge 1.5.2-7.8.1.737</li><li>Macro/Keybind Mod 0.9.9 for Minecraft 1.5.2</li></ul></td>
+    <th>Compatibility</th> <td><ul><li>Minecraft Forge 1.6.2-9.10.0.804</li><li>LiteLoader for 1.6.2</li><li>Macro/Keybind Mod 0.9.10 for Minecraft 1.6.2</li></ul></td>
   </tr>
-
-  <tr>
-    <th>Version</th> <th colspan="2">Details</th>
-  </tr>
-  <tr>
-    <td rowspan="5">1.5.2<br>(2013-06-01)</td> <td>sha256sum -b</td> <td>1641005e002831d23b9f709c030fedfb1f509b6a47ecb691675d368f5af599ef</td>
-  </tr>
-  <tr>
-    <td>File Name</td> <td>watson-1.5.2-2013-06-01.zip</td>
-  </tr>
-  <tr>
-    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXeGJkYlFMSEZ4cVU</td>
-  </tr>
-  <tr>
-    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#152-2013-06-01">description</a></td>
-  </tr>
-  <tr>
-    <td>Compatibility</td> <td>Macro/Keybind Mod 0.9.9 for Minecraft 1.5.2</td>
-  </tr>
-
-  <tr>
-    <th>Version</th> <th colspan="2">Details</th>
-  </tr>
-  <tr>
-    <td rowspan="5">1.5.2<br>(2013-05-15)</td> <td>sha256sum -b</td> <td>ecd0a05332cd699db9c8860a6b0fe4897e90fd62736f4bb46d8c8af756f60f2c</td>
-  </tr>
-  <tr>
-    <td>File Name</td> <td>watson-1.5.2-2013-05-15.zip</td>
-  </tr>
-  <tr>
-    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXak1nREl3TFY3bzg</td>
-  </tr>
-  <tr>
-    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#152-2013-05-15">description</a></td>
-  </tr>
-  <tr>
-    <td>Compatibility</td> <td>Macro/Keybind Mod 0.9.9 for Minecraft 1.5.2</td>
-  </tr>
-
-  <tr>
-    <th>Version</th> <th colspan="2">Details</th>
-  </tr>
-  <tr>
-    <td rowspan="5">1.5.2<br>(2013-05-05)</td> <td>sha256sum -b</td> <td>d1602cb32d8822231e8a22fb99c57ed8f12dad3b3f3aab777ffee9f9363da2ea</td>
-  </tr>
-  <tr>
-    <td>File Name</td> <td>watson-1.5.2-2013-05-05.zip</td>
-  </tr>
-  <tr>
-    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXR2x0Sk5CRmZPR0E</td>
-  </tr>
-  <tr>
-    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#152-2013-05-05">description</a></td>
-  </tr>
-  <tr>
-    <td>Compatibility</td> <td>Macro/Keybind Mod 0.9.9 for Minecraft 1.5.2</td>
-  </tr>
-
-  <tr>
-    <th>Version</th> <th colspan="2">Details</th>
-  </tr>
-  <tr>
-    <td rowspan="5">1.5.1<br>(2013-04-28)</td> <td>sha256sum -b</td> <td>bf7637920de44e8c78a088064a3a5b5126deb353461aaf8e7ace15be345a7055</td>
-  </tr>
-  <tr>
-    <td>File Name</td> <td>watson-1.5.1-2013-04-28.zip</td>
-  </tr>
-  <tr>
-    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXTjNicDZ5ZVEzNTA</td>
-  </tr>
-  <tr>
-    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#151-2013-04-28">description</a></td>
-  </tr>
-  <tr>
-    <td>Compatibility</td> <td>Macro/Keybind Mod 0.9.8.2 for Minecraft 1.5.1</td>
-  </tr>
-
-  <tr>
-    <th>Version</th> <th colspan="2">Details</th>
-  </tr>
-  <tr>
-    <td rowspan="4">1.5.1<br>(2013-04-10)</td> <td>sha256sum -b</td> <td>70709b6fb7e24e3e7ace49325783fc145536489b96bfb308890e7f9b8c797c01</td>
-  </tr>
-  <tr>
-    <td>File Name</td> <td>watson-1.5.1-2013-04-10.zip</td>
-  </tr>
-  <tr>
-    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXS0k4bDlTaGxwZEk</td>
-  </tr>
-  <tr>
-    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#151-2013-04-10">description</a></td>
-  </tr>
-
-  <tr>
-    <th>Version</th> <th colspan="2">Details</th>
-  </tr>
-  <tr>
-    <td rowspan="4">1.5.1<br>(2013-04-05)</td> <td>sha256sum -b</td> <td>2221be2210b68a65d7eee83b19f197ca3cc31d8acbdf2ab29156bf8e147ccb04</td>
-  </tr>
-  <tr>
-    <td>File Name</td> <td>watson-1.5.1-2013-04-05.zip</td>
-  </tr>
-  <tr>
-    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXRE5uWHdWRWNSS0E</td>
-  </tr>
-  <tr>
-    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#151-2013-04-05">description</a></td>
-  </tr>
-
-  <tr>
-    <th>Version</th> <th colspan="2">Details</th>
-  </tr>
-  <tr>
-    <td rowspan="4">1.5.1<br>(2013-04-02)</td> <td>sha256sum -b</td> <td>1d8571a9e139e4b6ee09285263a12711b5f6a523542e7ab5376800d1bd166fbd</td>
-  </tr>
-  <tr>
-    <td>File Name</td> <td>watson-1.5.1-2013-04-02.zip</td>
-  </tr>
-  <tr>
-    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXa05hRVVlaHVSZ0k</td>
-  </tr>
-  <tr>
-    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#151-2013-04-02">description</a></td>
-  </tr>
-
-  <tr>
-    <th>Version</th> <th colspan="2">Details</th>
-  </tr>
-  <tr>
-    <td rowspan="4">1.5.1<br>(2013-03-27)</td> <td>sha256sum -b</td> <td>dcb728358e9ef71eb9ff1a778c6cf6fb0d70985e6d936b924fb918e76df28744</td>
-  </tr>
-  <tr>
-    <td>File Name</td> <td>watson-1.5.1-2013-03-27.zip</td>
-  </tr>
-  <tr>
-    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXUV9LNVNReGVoN2c</td>
-  </tr>
-  <tr>
-    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#151-2013-03-27">description</a></td>
-  </tr>
-
-  <tr>
-    <th>Version</th> <th colspan="2">Details</th>
-  </tr>
-  <tr>
-    <td rowspan="4">1.5<br>(2013-03-16)</td> <td>sha256sum -b</td> <td>661a15a42fc363c25dea53c471221e791315ff883d0e0fcfbd4a76f76c0761cd</td>
-  </tr>
-  <tr>
-    <td>File Name</td> <td>watson-1.5-2013-03-16.zip</td>
-  </tr>
-  <tr>
-    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXSnk5YkdyYlFJOUk</td>
-  </tr>
-  <tr>
-    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#15-2013-03-16">description</a></td>
-  </tr>
-
-  <tr>
-    <th>Version</th> <th colspan="2">Details</th>
-  </tr>
-  <tr>
-    <td rowspan="4">1.4.7<br>(2013-03-07)</td> <td>sha256sum -b</td> <td>2b17a38597d8854ed16cea6c49f92aedee8db9e0bb0e3de9a342b434ee53e8c2</td>
-  </tr>
-  <tr>
-    <td>File Name</td> <td>watson-1.4.7-2013-03-07.zip</td>
-  </tr>
-  <tr>
-    <td>Download</td> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXUXJKZ2M5X2Z6M0k</td>
-  </tr>
-  <tr>
-    <td>Changes</td> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#147-2013-03-07">description</a></td>
-  </tr>
+</table>
+</tr>
 </table>
 
 
@@ -296,9 +124,6 @@ Troubleshooting
 <table>
   <tr>
     <th>Problem</th> <th>Resolution</th>
-  </tr>
-  <tr>
-    <td>Minecraft crashes on startup.</td> <td>Make sure you've followed the installation instructions exactly.  In particular, make sure you add Watson to the Minecraft JAR <i>last</i> and that you delete the contents of the META-INF/ folder of the JAR.</td>
   </tr>
   <tr>
     <td>I don't see anything.</td> <td>Make sure you put "coords" in your /lb query.  Watson needs coordinates to know where to draw things.</td>
