@@ -28,7 +28,7 @@ Minecraft 1.7.2
     <th>Watson version</th> <td>0.5.0.83-mc1.7.2_02</td> 
   </tr>
   <tr>
-    <th>File Name</th> <td>watson-1.6.4-2013-10-08.zip</td>
+    <th>File Name</th> <td>mod_watson_0.5.0_mc1.7.2_02.litemod</td>
   </tr>
   <tr>
     <th>Download</th> <td>https://docs.google.com/uc?export=download&id=0Bzf2TVOCqgpXVEJLQ1JnNFV3SW8</td>
@@ -37,7 +37,7 @@ Minecraft 1.7.2
     <th>sha256sum -b</th> <td>0a9feddd8f1ef0783c6c099bf6535c8b9bed3e8b02307180f81b0b33d15bd337</td>
   </tr>
   <tr>
-    <th>Changes</th> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#050-mc172_02">description</a></td>
+    <th>Changes</th> <td><a href="https://github.com/totemo/watson/blob/master/Changes.md#05083-mc172_02">description</a></td>
   </tr>
   <tr>
     <th>Compatibility</th> <td><ul><li>Minecraft Forge 1.7.2-10.12.0.1024</li><li>LiteLoader 1.7.2_02 (beta)</li></ul></td>
