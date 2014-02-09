@@ -17,8 +17,8 @@ Watson is a Minecraft mod that displays LogBlock (and to a limited extent Prism 
 * An optional, custom materials.yml file for LogBlock is provided.  That allows Watson to provide more visually distinct depictions of many types of blocks, notably carpets, stained clay and stained glass.  See the section on Custom LogBlock Material Names.
 
 
-Downloads, Installation and Help When Things Go Wrong
------------------------------------------------------
+Downloads, Installation, Troubleshooting, Contacts
+--------------------------------------------------
 
 See [INSTALL.md](https://github.com/totemo/watson/blob/master/INSTALL.md).
 
@@ -599,9 +599,7 @@ Files
 
 * **.minecraft/mods/watson/log.txt** - The debugging log. Also includes a log of chat messages.
 * **.minecraft/mods/watson/configuration.yml** - The main configuration file.  Stores a variety of settings that persist between Minecraft sessions.
-* **.minecraft/mods/watson/chatexclusions.yml** - The list of excluded chat category tags in YAML format.
 * **.minecraft/mods/watson/chathighights.yml** - The list of colours and regular expressions for highlighting chat content. The default contents of this file are saved in the modified minecraft.jar file and saved as a separate file the first time /hl add or /hl remove is run.
-* **.minecraft/mods/watson/chatcategories.yml** - If this file exists, it overrides the default version of it stored in minecraft.jar. It defines the categories of chat lines and the regular expressions used to recognise them.
 * **.minecraft/mods/watson/blocks.yml** - If this file exists, it overrides the default version of it stored in minecraft.jar. It defines the canonical names of block types, as they appear in LogBlock query results, as well as aliases, and defines the shape, colour and line thickness used to draw the block in 3-D.
 * **.minecraft/mods/watson/saves/** - Directory of save files containing records of edited blocks and annotations.
 
