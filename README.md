@@ -14,6 +14,7 @@ Watson is a Minecraft mod that displays LogBlock (and to a limited extent Prism 
 * It adds player names to screenshots automatically.
 * It does a `/region info regionname` for you when you right click on a region with the wooden sword (rate limited to once every 10 seconds - the wooden sword will simply list the region name the other times).
 * In order to shorten coordinate displays and make them easier to read, Watson also hides the LogBlock coords lines from chat and re-echoes them in a custom, brief format, where block IDs are numeric rather than words.  Re-echoed coordinates are assigned colours based on their physical proximity.  This makes separate ore deposits easy to distinguish in the coordinate listing.
+* An optional, custom materials.yml file for LogBlock is provided.  That allows Watson to provide more visually distinct depictions of many types of blocks, notably carpets, stained clay and stained glass.  See the section on Custom LogBlock Material Names.
 
 
 Downloads, Installation and Help When Things Go Wrong
@@ -493,11 +494,20 @@ And if you forget any commands, try:
 
 ### Screenshot Management
 
+As of Minecraft version 1.7.2, Watson's screenshot features are now bound to a custom Watson Take Screenshot key, which defaults to F12.  Configure this by clicking Options... -> Controls... from the Minecraft menu and scrolling down to the Watson section of the keybindings.  If you desire, you can configure Watson's Take Screenshot key to F2 and disable the default Minecraft Take Screenshot key under Miscellaneous by pressing Esc.  The Watson screenshot facility is a strict superset of the default Minecraft functionality.
+
 If you ban players for grief or xray, inevitably you will end up with a large number of screenshots that must be retained until the ban is appealed.  Watson includes features to make it easier to manage many Minecraft screenshots and to find the ones that pertain to a particular player.
 
 When the name of the player is known (because Watson saw an "/lb coords" result for that player since the last "/w clear") the screenshot will be placed in the directory .minecraft/screenshots/&lt;playername&gt;/, and &lt;playername&gt; will be appended to the filename, e.g. ".minecraft/screenshots/Notch/2013-02-21_12.47.50-Notch.png".  Both of these behaviours can be turned on or off using the ss_player_directory and ss_player_suffix configuration settings, respectively.
 
 When the player name is not known, then by default the screenshot just ends up in .minecraft/screenshots/.  But Watson can be configured to place the screenshot in a subdirectory based on the current date and time.  For example, "/w config ss_date_directory yyyy-MM-dd" would put the screenshot in a subdirectory based on the full numeric year, month and day, e.g. 2013-03-15.  Whereas "/w config ss_date_directory MMMM yyyy" would use the long name of the month, e.g. "March 2013".  There are many options and they are described in greater detail in the section on the Configuration File.
+
+
+### Custom LogBlock Material Names
+
+By default, LogBlock does not provide distinct names for various coloured materials.  For example, LogBlock calls all carpets "carpet" and all stained clay "stained clay".  Since Watson reads the type of the block from chat, Watson cannot distinguish between "red carpet" and any other colour of carpet, for example.  As of Minecraft version 1.7.2, Watson supports an optional LogBlock configuration with distinct names for the various colours of carpets, stained clay and stained glass.  The configuration distinguishes between different kinds of saplings, planks and logs.  It also has distinct names for the new 1.7 flowers and prepends the word "upper" to the names of any slabs in the upper half of the block.
+
+To install this configuration, download [config/LogBlock/materials.yml](https://raw.github.com/totemo/watson/master/config/LogBlock/materials.yml) and place it in plugins/LogBlock/ on your server, replacing the default file, then reload or restart.
 
 
 ### Prism Support

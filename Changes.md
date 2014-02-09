@@ -1,5 +1,20 @@
 Change History
 ==============
+0.5.0.83-mc1.7.2_02
+-------------------
+* Switch to LiteLoader 1.7.2._02 (beta).
+* Drop the /tag command. A more flexible, easier to use chat filter will be added later.
+* Retested with CoreProtect 2.0.8 for Bukkit 1.7.2.
+* Retested with Prism 2.0 Beta 4 for Bukkit 1.7.2. Added support for parsing data values from Prism output.
+* Dropped Macro/Keybind support temporarily. That mod apparently won't be updated for 1.7.2.
+* Added a custom Watson screenshot key (defaults to F12).
+  * This key does everything that the vanilla Minecraft screenshot key does, but also adds the player name to the filename when the player is known from the most recently selected edit.
+  * You can configure this key to use F2 and disable the default Minecraft keybind (use Esc) without loss of functionality.  See Options... -> Controls... in the Minecraft menu.
+* Added support for custom LogBlock material names.
+  * These names allow Watson to draw carpets, stained clay, stained glass and new 1.7 flowers in the correct colour.
+  * There are also better names for different kinds of wood, logs and saplings and the word "upper" is used to distinguish top half slabs from those in the bottom half of the block.
+  * To install, download [config/LogBlock/materials.yml](https://raw.github.com/totemo/watson/master/config/LogBlock/materials.yml) and place it in plugins/LogBlock/ on your server, replacing the default file, then reload/restart.
+
 1.6.4 (2013-10-08)
 ------------------
 * Updated to 1.6.4, Minecraft Forge 1.6.4-9.11.1.916.
@@ -54,7 +69,7 @@ Change History
 
 1.5.1 (2013-04-02)
 ------------------
-* Basic support for the Prism plugin.
+* Basic support for the Prism plugin.carpets, 
 * Drop logging of chat to console; the vanilla client now does that.
 * Fixed rendering of upward pointing vectors.
 * Render vectors for each player separately.
