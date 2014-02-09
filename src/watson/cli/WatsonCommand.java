@@ -927,7 +927,6 @@ public class WatsonCommand extends WatsonCommandBase
     localOutput(sender, "  /" + w + " config <name> [<value>]");
     localOutput(sender, "  /hl help");
     localOutput(sender, "  /anno help");
-    localOutput(sender, "  /tag help");
 
     // Make the documentation link clickable.
     IChatComponent docs = new ChatComponentText("Documentation: ");

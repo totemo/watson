@@ -3,7 +3,6 @@ Watson Overview
 
 Watson is a Minecraft mod that displays LogBlock (and to a limited extent Prism and CoreProtect) logs in 3-D.  It also has some features to make moderation tasks, such as observing chat and managing screenshots, a little easier.  The current features of the mod are:
 
-* It categorises chat lines and can exclude them from being displayed in the client, based on their category.
 * It displays individual edits as wireframe 3-D boxes.
 * It groups edits of ore blocks into ore deposits, numbers each deposit, shows the numbers in 3-D space and provides commands to teleport to deposits and compute a stone:diamond ratio.
 * It draws vectors between edits indicating the time sequence of edits.
@@ -490,28 +489,6 @@ To remove a specific pattern by number:
 And if you forget any commands, try:
 
     /hl help
-
-
-### Hiding Chat Lines by Category
-
-Watson classifies chat text into categories according to patterns specified in chatcategories.yml in the Minecraft JAR file (part of the Watson ZIP file).  That file can be overridden by extracting it to .minecraft/mods/watson/chatcategories.yml.  Individual categories can be hidden from chat using the /tag command.
-
-To turn off chat lines, e.g. the deathroll:
-
-    /tag hide server.obituary
-    /tag hide server.pvp
-
-To turn chat lines back on:
-
-    /tag show server.pvp
-
-To list the lines that are currently excluded from chat:
-
-    /tag list
-
-And for help:
-
-    /tag help
 
 
 ### Screenshot Management
