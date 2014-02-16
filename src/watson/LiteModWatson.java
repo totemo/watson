@@ -1,8 +1,10 @@
 package watson;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -83,20 +85,20 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
     try
     {
       Gson gson = new Gson();
-      is = getClass().getResourceAsStream("/litemod.json");
+      is = getLiteModJsonStream();
       @SuppressWarnings("unchecked")
       Map<String, String> meta = gson.fromJson(new InputStreamReader(is),
         HashMap.class);
       String version = meta.get("version");
       if (version == null)
       {
-        version = "Missing version info.";
+        version = "(missing version info)";
       }
       return version;
     }
     catch (Exception ex)
     {
-      return "Error loading version.";
+      return "(error loading version)";
     }
     finally
     {
@@ -347,7 +349,43 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
   }
 
   // --------------------------------------------------------------------------
+  /**
+   * Return an InputStream that reads "/litemod.json".
+   * 
+   * When running under the IDE, that's easy because the file is copied to the
+   * res/ directory and getResourceAsStream() can access it directly. When
+   * running as an installed mod file, getResourceAsStream() may return a
+   * reference to the litemod.json file for another mod, depending on the order
+   * of the mods in the classloader. In that circumstance, we use a specially
+   * crafted URL that references litemod.json via the URL of the .litemod (JAR)
+   * file.
+   * 
+   * @return the InputStream, or null on failure.
+   */
+  private InputStream getLiteModJsonStream()
+  {
+    String classURL = getClass().getResource("/" + getClass().getName().replace('.', '/') + ".class").toString();
+    if (classURL.contains("!"))
+    {
+      String jarURL = classURL.substring(0, classURL.indexOf('!'));
+      try
+      {
+        URL resourceURL = new URL(jarURL + "!/litemod.json");
+        return resourceURL.openStream();
+      }
+      catch (IOException ex)
+      {
+      }
+      return null;
+    }
+    else
+    {
+      // No JAR. Running under the IDE.
+      return getClass().getResourceAsStream("/litemod.json");
+    }
+  } // getLiteModJsonStream
 
+  // --------------------------------------------------------------------------
   /**
    * This is a keybinding that we will register with the game and use to toggle
    * the clock
