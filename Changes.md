@@ -1,5 +1,10 @@
 Change History
 ==============
+0.6.0.93-mc1.7.2_02
+-------------------
+* Separated Macro/Keybind Mod support into a separate mod (https://github.com/totemo/watson_macros).
+* Retested with the LiteLoader 1.7.2 release.
+
 0.5.0.83-mc1.7.2_02
 -------------------
 * Switch to LiteLoader 1.7.2_02 (beta).
