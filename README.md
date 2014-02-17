@@ -8,7 +8,7 @@ Watson is a Minecraft mod that displays LogBlock (and to a limited extent Prism 
 * It draws vectors between edits indicating the time sequence of edits.
 * It draws text annotations in 3-D space. These can act as teleport targets.
 * Edits and annotations can be saved to files and loaded at a later date.
-* If the [Macro/Keybind Mod](http://www.minecraftforum.net/topic/467504-152-macro-keybind-mod-099-and-liteloader-for-152/) is installed, Watson can be controlled and queried by that.
+* If you install the [Macro/Keybind Mod](http://www.minecraftforum.net/topic/467504-152-macro-keybind-mod-099-and-liteloader-for-152/) and the [Watson Macro/Keybind Support](https://github.com/totemo/watson_macros) then Watson can be controlled and queried by Macro/Keybind Mod scripts and key bindings.
 * There's a simple built-in calculator for working out stone:diamond ratios.
 * It uses colour to highlight parts of chat that match regular expressions. This can be used to draw attention to banned words. It can also be used to highlight the names of people, acting as a rudimentary friends list.
 * It adds player names to screenshots automatically.
@@ -17,10 +17,12 @@ Watson is a Minecraft mod that displays LogBlock (and to a limited extent Prism 
 * An optional, custom materials.yml file for LogBlock is provided.  That allows Watson to provide more visually distinct depictions of many types of blocks, notably carpets, stained clay and stained glass.  See the section on Custom LogBlock Material Names.
 
 
-Downloads, Installation, Troubleshooting, Contacts
---------------------------------------------------
+Downloads and Installation Instructions
+---------------------------------------
 
-See [INSTALL.md](https://github.com/totemo/watson/blob/master/INSTALL.md).
+See the [releases page for this project](https://github.com/totemo/watson/releases) for downloads and installation instructions.
+
+If you plan to control Watson using the Macro/Keybind Mod, then you will also need to install the [Watson Macro/Keybind Support mod](https://github.com/totemo/watson_macros).
 
 
 Using Watson
@@ -292,146 +294,9 @@ These commands list the number of edits by each player and say whether the edits
 
 ### Macro/Keybind Mod Integration
 
-Support for the Macro/Keybind Mod is enabled automatically when that is installed.
+In versions prior to Minecraft 1.7.2, Watson automatically enables support for the Macro/Keybind Mod when that is installed.
 
-#### Script Actions
-
-Watson defines a WATSON(command) script action, which performs any command supported by the Watson command line interface.  To invoke a script action using the Macro/Keybind Mod, the code needs to be wrapped up in $${ }$$ delimiters.  For example, the Macro/Keybind Mod code to toggle the Watson display is:
-
-    $${ WATSON(/w display); }$$
-
-#### Script Variables
-
-Watson defines the following global, read-only variables for interrogating its current state:
-
-<table>
-  <tr>
-    <th>Variable</th> <th>Description</th>
-  </tr>
-  <tr>
-    <td>WATSON_DISPLAY</td> <td>True if the Watson display is currently enabled.  False if not.</td>
-  </tr>
-  <tr>
-    <td>WATSON_OUTLINE</td> <td>True if the Watson outline display is currently enabled.  False if not.</td>
-  </tr>
-  <tr>
-    <td>WATSON_VECTOR</td> <td>True if the Watson vector display is currently enabled.  False if not.</td>
-  </tr>
-  <tr>
-    <td>WATSON_LABEL</td> <td>True if the Watson ore label display is currently enabled.  False if not.</td>
-  </tr>
-  <tr>
-    <td>WATSON_ANNOTATION</td> <td>True if the Watson annotation display is currently enabled.  False if not.</td>
-  </tr>
-  <tr>
-    <td>WATSON_PLAYER</td> <td>The name of the player who performed the most recently selected edit.</td>
-  </tr>
-  <tr>
-    <td>WATSON_ACTION</td> <td>The action performed on the block (either "created" or "destroyed").</td>
-  </tr>
-  <tr>
-    <td>WATSON_BLOCK</td> <td>The name of the type of block that was edited.</td>
-  </tr>
-  <tr>
-    <td>WATSON_ID</td> <td>The numeric ID of the block type.</td>
-  </tr>
-  <tr>
-    <td>WATSON_DATA</td> <td>The numeric data value of the block type, most often 0.</td>
-  </tr>
-  <tr>
-    <td>WATSON_X</td> <td>The X coordinate of the edit.</td>
-  </tr>
-  <tr>
-    <td>WATSON_Y</td> <td>The Y coordinate of the edit.</td>
-  </tr>
-  <tr>
-    <td>WATSON_Z</td> <td>The Z coordinate of the edit.</td>
-  </tr>
-  <tr>
-    <td>WATSON_XYZ</td> <td>The 3-D coordinates of the edit, of the form "X, Y, Z".</td>
-  </tr>
-  <tr>
-    <td>WATSON_DATE</td> <td>The date of the edit, of the form YYYY-MM-DD.</td>
-  </tr>
-  <tr>
-    <td>WATSON_TIME</td> <td>The time of the edit, of the form hh:mm:ss (24 hour clock).</td>
-  </tr>
-  <tr>
-    <td>WATSON_DATETIME</td> <td>The concatenation of WATSON_DATE and WATSON_TIME, separated by a single space.</td>
-  </tr>
-</table>
-
-#### Events
-
-Watson provides two custom events to the Macro/Keybind Mod.  
-
-<table>
-  <tr>
-    <th>Event</th> <th>Description</th>
-  </tr>
-  <tr>
-    <td>onWatsonDisplay</td> <td>Sent whenever the Watson display is hidden or shown, either by command (/w display) or when Watson enables the display automatically (when entering ModMode).  Use the value of the WATSON_DISPLAY variable to ascertain whether the display is currently visible in scripts bound to these events.</td>
-  </tr>
-  <tr>
-    <td>onWatsonSelection</td> <td>Sent whenever the currently selected position (WATSON_X, WATSON_Y, WATSON_Z) or edit (position plus WATSON_PLAYER, WATSON_ACTION, WATSON_BLOCK, WATSON_DATETIME, etc.) is changed or cleared.  This may occur either as a result of inspecting a block or performing a query, or as a result of the "/w clear" command.</td> 
-  </tr>
-</table>
-
-![Custom Macro/Keybind Mod buttons.](https://raw.github.com/totemo/watson/master/wiki/images/events.png)
-
-#### Sample Configuration
-
-A sample Macro/Keybind Mod configuration is provided as two text configuration files, [.minecraft/mods/macros/.macros.txt](https://raw.github.com/totemo/watson/master/config/macros/.macros.txt) and [.minecraft/mods/macros/.gui.xml](https://raw.github.com/totemo/watson/master/config/macros/.gui.xml).  These should either replace your existing Macro/Keybind Mod configuration files, or if you already have custom keybinds or on-screen elements that you want to preserve, you will need to merge these files into your existing configuration with a text editor.  If merging, take particular care to include the changes to the events.layout setting, since without it, the controls to edit the custom Watson events will not be displayed.
-
-The provided configuration includes an on-screen display with custom buttons.  To display it, press the Macro key, which by default is the backwards quote character (` - the key above Tab).  This is what the display looks like:
-
-![Custom Macro/Keybind Mod buttons.](https://raw.github.com/totemo/watson/master/wiki/images/buttons.png)
-
-The function of most of these buttons should be self-explanatory.  Directly underneath the Moody and Bright buttons, which switch between the two extremes of brightness setting, there are some labels that display information about the most recently selected edit.  It would be possible to use the Macro/Keybind Mod to show this information all the time (as opposed to only showing it when the Macro key is pressed) but due to current limitations of the Macro/Keybind Mod, there would be no way to hide that display.  The "Mod Mode" button issues the /modmode command to toggle between Moderator and normal player roles.  If you are using a different server plugin for this function, it is of course easy to rebind or remove this button.
-
-The sample configuration also binds the following key combinations:
-
-<table>
-  <tr>
-    <th>Event</th> <th>Action</th>
-  </tr>
-  <tr>
-    <td>Ctrl-w</td> <td>Toggle the Watson display on or off.</td>
-  </tr>
-  <tr>
-    <td>Ctrl-o</td> <td>Toggle the Watson overlay on or off.</td>
-  </tr>
-  <tr>
-    <td>Ctrl-n</td> <td>Run "/lb next" to request the next page of LogBlock query results.</td>
-  </tr>
-  <tr>
-    <td>Ctrl-c</td> <td>Query all edits by the most recently selected player in a 30 block radius.  Use the LogBlock inspector tool to select the player by querying a single edit first.</td>
-  </tr>
-  <tr>
-    <td>Ctrl-t</td> <td>Query the total number of constructive and destructive edits by the most recently selected player in a 30 block radius.  Use the LogBlock inspector tool to select the player by querying a single edit first.</td>
-  </tr>
-  <tr>
-    <td>Ctrl-y</td> <td>Query the total number of constructive and destructive edits by the most recently selected player with no distance restriction.  Use the LogBlock inspector tool to select the player by querying a single edit first.</td>
-  </tr>
-  <tr>
-    <td>Ctrl-Mouse-Scroll-Down</td> <td>Teleport to the next ore deposit (/w tp).</td>
-  </tr>
-  <tr>
-    <td>Ctrl-Mouse-Scroll-Up</td> <td>Teleport to the previous ore deposit (/w tp prev).</td>
-  </tr>
-  <tr>
-    <td>Ctrl-Right-Mouse-Button</td> <td>Query previous edits (/w pre).</td>
-  </tr>
-  <tr>
-    <td>F4</td> <td>Toggle ModMode (issue the /modmode command).</td>
-  </tr>
-  <tr>
-    <td>Ctrl-m</td> <td>Toggle ModMode (issue the /modmode command).</td>
-  </tr>
-  <tr>
-    <td>Ctrl-1 through Ctrl-9</td> <td>Issue the commands /check p:1 through /check p:9, for use with the ModReq plugin.</td>
-  </tr>
-</table>
+In Minecraft 1.7.2 and later versions, you must install the [Watson Macro/Keybind Support mod](https://github.com/totemo/watson_macros) in order to control Watson using the Macro/Keybind Mod.
 
 
 ### Built-In Calculator
@@ -604,8 +469,58 @@ Files
 * **.minecraft/mods/watson/saves/** - Directory of save files containing records of edited blocks and annotations.
 
 
-Bugs and Planned Features
--------------------------
+Compatibility
+-------------
 
-I keep track of these using [the GitHub issues page for this project](https://github.com/totemo/watson/issues).
+Watson is regularly tested for compatibility with:
+
+* LiteLoader
+* Minecraft Forge
+* MagicLauncher
+* Macro/Keybind Mod
+* WorldEditCUI
+* Rei's Minimap
+* Optifine
+
+Older versions of Watson (before 1.7.2) will require Minecraft Forge.  More recent versions of Watson use LiteLoader.  However, note that LiteLoader and Minecraft Forge can both be installed simultaneously without any problems.
+
+
+Troubleshooting
+---------------
+
+<table>
+  <tr>
+    <th>Problem</th> <th>Resolution</th>
+  </tr>  
+  <tr>
+    <td>The screenshot key does not add player names to saved screenshots.</td>
+    <td>As of Minecraft 1.7.2, Watson defines it's own key binding for Watson-style screenshots (defaults to F12).  If you want this functionality to be bound to the F2 key, configure that under Options... -> Controls... in the Minecraft menu (scroll down to the Watson section of the key bindings) and de-configure the default Minecraft "Take Screenshot" key (press Esc to set it to NONE).</td>
+  <tr>
+    <td>I don't see anything.</td> <td>Make sure you put "coords" in your /lb query.  Watson needs coordinates to know where to draw things.</td>
+  </tr>
+  <tr>
+    <td>I still don't see anything.</td> <td>Make sure you turn on the Watson display: /w display on</td>
+  </tr>
+  <tr>
+    <td>I can't teleport with "/w tp".</td> <td>By default, Watson expects a /tppos command that accepts decimal numbers for coordinates, e.g. "/tppos -120.5 7 345.5".  Many teleport commands don't, however, or they have a different name.  If your teleport command requires integer coordinates, try "/w config teleport_command /tppos %d %d %d".  If you're using the the CraftBukkit /tp command, then you can use: "/w config teleport_command /tp %d %d %d".</td>
+  </tr>
+  <tr>
+    <td>I see the edits, but ore deposits don't get numbered. /w ore doesn't work.</td> <td>An older version of Watson attempted to detect creative-mode servers and disable labelling of ore deposits (xray is pointless in creative mode).  However, what it actually detected was the user's game mode.  If you are using Watson in creative mode, and /w ore doesn't work, then you may need to turn on the group_ores_in_creative setting (recent Watson versions have this on by default).  The command is: /w config group_ores_in_creative on</td>
+  </tr>
+  <tr>
+    <td>When I query a particular block it shows up as a smallish bright pink cube.</td>
+    <td>Watson scrapes LogBlock/Prism query results out of chat.  If it doesn't recognise the name of a block it just draws the pink cube as a reminder for me to add that name.  Let me know about it and I'll fix it.</td>
+  </tr>
+</table>
+
+
+Contact Details
+---------------
+
+If Watson's not working for you or you want to suggest improvements, I'm happy to help.  You can contact me directly in the following ways:
+
+* On http://reddit.com and the http://nerd.nu forums, I have the same user name.
+* On gmail.com, append the word "research" to my name to get my address.
+
+You can also raise bug reports or feature requests via GitHub, [here](https://github.com/totemo/watson/issues).
 
