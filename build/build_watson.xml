@@ -163,13 +163,12 @@
 			<fileset file="${stage.dir}/litemod.json" />
 		</copy>
 		
-		
 		<!-- Stage selected classes from the build/runtime dependencies in mcp/lib/. -->
 		<unzip src="${mcp.dir}/lib/snakeyaml-1.10.jar"
 		       dest="${stage.dir}">
-		    <patternset>
-		        <include name="org/**"/>
-		    </patternset>
+			<patternset>
+				<include name="org/**"/>
+			</patternset>
 		</unzip>
 	</target>
 

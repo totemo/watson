@@ -130,9 +130,6 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
     Log.info("Loading Watson version " + getVersion());
     Controller.instance.initialise();
     LiteLoader.getInput().registerKeyBinding(_screenShotKeyBinding);
-
-    // TODO: Reinstate MacroIntegration.
-    // MacroIntegration.initialiseMacroKeybind();
   }
 
   // --------------------------------------------------------------------------

@@ -32,8 +32,7 @@ public class DisplaySettings
   {
     _displayed = displayed;
     Chat.localOutput("Watson display " + (displayed ? "enabled." : "disabled."));
-    // TODO: Reinstate MacroIntegration.
-    // MacroIntegration.sendEvent(MacroIntegration.ON_WATSON_DISPLAY);
+    _displayVisibilityChanged = true;
   }
 
   // --------------------------------------------------------------------------
@@ -45,6 +44,23 @@ public class DisplaySettings
   public boolean isDisplayed()
   {
     return _displayed;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return true if the Watson display's visibility setting has changed since
+   * the last time this method was called.
+   * 
+   * This is used by the Watson Macro/Keybind Support mod to determine when to
+   * dispatch the corresponding event.
+   * 
+   * @return true if isDisplayed() has changed.
+   */
+  public boolean isDisplayVisibilityChanged()
+  {
+    boolean result = _displayVisibilityChanged;
+    _displayVisibilityChanged = false;
+    return result;
   }
 
   // --------------------------------------------------------------------------
@@ -229,6 +245,11 @@ public class DisplaySettings
    * displays.
    */
   protected boolean _displayed          = true;
+
+  /**
+   * True if _displayed has changed.
+   */
+  protected boolean _displayVisibilityChanged;
 
   /**
    * True if wireframe block outlines should be drawn.

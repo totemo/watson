@@ -31,8 +31,6 @@ import watson.db.Filters;
 import watson.debug.Log;
 // import watson.macro.MacroIntegration;
 
-import com.google.gson.JsonParser;
-
 // ----------------------------------------------------------------------------
 /**
  * Provides a centralised Facade to control the facilities of this mod.
@@ -88,10 +86,6 @@ public class Controller
     ServerData serverData = mc.func_147104_D();
     if (!mc.isSingleplayer() && serverData != null)
     {
-      // TODO: test, tidy.
-      // SocketAddress address =
-      // mc.getNetHandler().getNetManager().getSocketAddress();
-      // return address != null ? address.toString() : null;
       return serverData.serverIP;
     }
     else
@@ -539,8 +533,7 @@ public class Controller
   public void clearVariables()
   {
     _variables.clear();
-    // TODO: Reinstate MacroIntegration.
-    // MacroIntegration.sendEvent(MacroIntegration.ON_WATSON_SELECTION);
+    _selectionChanged = true;
   }
 
   // --------------------------------------------------------------------------
@@ -581,8 +574,24 @@ public class Controller
     _variables.put("x", x);
     _variables.put("y", y);
     _variables.put("z", z);
-    // TODO: Reinstate MacroIntegration.
-    // MacroIntegration.sendEvent(MacroIntegration.ON_WATSON_SELECTION);
+    _selectionChanged = true;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return true if the selected position has changed since the last time this
+   * method was called.
+   * 
+   * This method is used by the Watson Macro/Keybind Support mod to determine
+   * when to fire an onWatsonSelection event.
+   * 
+   * @return true if the selection has changed since the last call.
+   */
+  public boolean isSelectionChanged()
+  {
+    boolean result = _selectionChanged;
+    _selectionChanged = false;
+    return result;
   }
 
   // --------------------------------------------------------------------------
@@ -861,7 +870,7 @@ public class Controller
   protected static final String           SAVE_SUBDIR      = "saves";
 
   /**
-   * 
+   * True if the selected edit position has changed.
    */
-  protected JsonParser                    _jsonParser      = new JsonParser();
+  protected boolean                       _selectionChanged;
 } // class Controller
