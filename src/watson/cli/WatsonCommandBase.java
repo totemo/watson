@@ -71,7 +71,6 @@ public abstract class WatsonCommandBase extends CommandBase
    */
   public void sendColouredText(ICommandSender sender, EnumChatFormatting colour, String message)
   {
-    // TODO: test and tidy.
     ChatComponentText chat = new ChatComponentText(message);
     ChatStyle style = new ChatStyle();
     style.setColor(colour);

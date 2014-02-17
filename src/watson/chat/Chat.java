@@ -1,10 +1,13 @@
 package watson.chat;
 
+import java.util.logging.Level;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
+import watson.debug.Log;
 
 // ----------------------------------------------------------------------------
 /**
@@ -40,9 +43,7 @@ public class Chat
     }
     catch (Exception ex)
     {
-      // TODO: switch to Log class.
-      // Log.exception(Level.SEVERE, "Sending chat to the server.", ex);
-      ex.printStackTrace();
+      Log.exception(Level.SEVERE, "Sending chat to the server.", ex);
     }
   }
 
