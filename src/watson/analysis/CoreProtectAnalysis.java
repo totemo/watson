@@ -10,6 +10,8 @@ import java.util.regex.Pattern;
 
 import net.minecraft.util.IChatComponent;
 import watson.Controller;
+import watson.SyncTaskQueue;
+import watson.analysis.task.AddBlockEditTask;
 import watson.chat.IMatchedChatHandler;
 import watson.db.BlockEdit;
 import watson.db.BlockType;
@@ -139,16 +141,17 @@ public class CoreProtectAnalysis extends Analysis
       }
       else
       {
-        // An inspector result, so add immediately.
-        BlockEdit edit = new BlockEdit(_millis, _player, _creation, _x, _y,
-                                       _z, _type);
-        boolean added = Controller.instance.getBlockEditSet().addBlockEdit(
-          edit, _firstInspectorResult);
-
-        // The first inspector result to pass the filter sets variables.
-        if (_firstInspectorResult && added)
+        // An inspector result, so it can be queued for addition.
+        if (Controller.instance.getFilters().isAcceptedPlayer(_player))
         {
-          _firstInspectorResult = false;
+          BlockEdit edit = new BlockEdit(_millis, _player, _creation, _x, _y, _z, _type);
+          SyncTaskQueue.instance.addTask(new AddBlockEditTask(edit, _firstInspectorResult));
+
+          // The first inspector result to pass the filter sets variables.
+          if (_firstInspectorResult)
+          {
+            _firstInspectorResult = false;
+          }
         }
       } // if inspector result
     }
@@ -182,9 +185,8 @@ public class CoreProtectAnalysis extends Analysis
       // TODO: String world = m.group(4);
       // https://github.com/totemo/watson/issues/23
 
-      BlockEdit edit = new BlockEdit(_millis, _player, _creation, _x, _y, _z,
-                                     _type);
-      Controller.instance.getBlockEditSet().addBlockEdit(edit, true);
+      BlockEdit edit = new BlockEdit(_millis, _player, _creation, _x, _y, _z, _type);
+      SyncTaskQueue.instance.addTask(new AddBlockEditTask(edit, true));
       _lookupDetails = false;
     }
   } // lookupCoords

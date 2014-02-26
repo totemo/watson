@@ -1,5 +1,9 @@
 Change History
 ==============
+0.6.1.95-mc1.7.2_02
+-------------------
+* Fix Issue #33: Watson breaks Macros onChat-Event
+
 0.6.0.93-mc1.7.2_02
 -------------------
 * Separated Macro/Keybind Mod support into a separate mod (https://github.com/totemo/watson_macros).

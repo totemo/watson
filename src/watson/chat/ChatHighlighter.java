@@ -67,7 +67,7 @@ public class ChatHighlighter
    * @return true if the chat contains a sequence of colour codes like that used
    *         by Rei's Minimap.
    */
-  boolean isReisLikeCode(String chat)
+  public boolean isReisLikeCode(String chat)
   {
     Matcher reis = REIS_CODE.matcher(chat);
     Matcher allColour = COLOUR_LINE.matcher(chat);
@@ -81,7 +81,7 @@ public class ChatHighlighter
    * @param chat the text to highlight.
    * @return highlighted text.
    */
-  IChatComponent highlight(IChatComponent chat)
+  public IChatComponent highlight(IChatComponent chat)
   {
     if (isReisLikeCode(chat.getFormattedText()))
     {

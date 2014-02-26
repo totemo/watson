@@ -10,6 +10,8 @@ import java.util.regex.Pattern;
 
 import net.minecraft.util.IChatComponent;
 import watson.Controller;
+import watson.SyncTaskQueue;
+import watson.analysis.task.AddBlockEditTask;
 import watson.chat.IMatchedChatHandler;
 import watson.db.BlockEdit;
 import watson.db.BlockType;
@@ -192,15 +194,17 @@ public class PrismAnalysis extends Analysis
 
       if (_player != null && _type != null)
       {
-        // Update variables only on the first (most recent) result after an
-        // inspector header, but update it on every result from a lookup.
-        boolean updateVariables = (!_inspectorResult || _awaitingFirstResult);
-        Controller.instance.getBlockEditSet().addBlockEdit(
-          new BlockEdit(millis, _player, _created, x, y, z, _type),
-          updateVariables);
-        if (_awaitingFirstResult)
+        if (Controller.instance.getFilters().isAcceptedPlayer(_player))
         {
-          _awaitingFirstResult = false;
+          // Update variables only on the first (most recent) result after an
+          // inspector header, but update it on every result from a lookup.
+          boolean updateVariables = (!_inspectorResult || _awaitingFirstResult);
+          BlockEdit edit = new BlockEdit(millis, _player, _created, x, y, z, _type);
+          SyncTaskQueue.instance.addTask(new AddBlockEditTask(edit, updateVariables));
+          if (_awaitingFirstResult)
+          {
+            _awaitingFirstResult = false;
+          }
         }
       }
     }

@@ -21,6 +21,8 @@ import java.util.regex.Matcher;
 import net.minecraft.util.IChatComponent;
 import watson.Configuration;
 import watson.Controller;
+import watson.SyncTaskQueue;
+import watson.analysis.task.AddBlockEditTask;
 import watson.chat.Chat;
 import watson.chat.Colour;
 import watson.chat.IMatchedChatHandler;
@@ -143,8 +145,8 @@ public class LbCoordsAnalysis extends Analysis
 
       BlockType type = BlockTypeRegistry.instance.getBlockTypeByName(block);
       boolean created = action.equals("created");
-      Controller.instance.getBlockEditSet().addBlockEdit(
-        new BlockEdit(millis, player, created, x, y, z, type));
+      BlockEdit edit = new BlockEdit(millis, player, created, x, y, z, type);
+      SyncTaskQueue.instance.addTask(new AddBlockEditTask(edit, true));
 
       // TODO: fix this :) Have a class that allows dynamic control of
       // filtered coords.
@@ -206,8 +208,8 @@ public class LbCoordsAnalysis extends Analysis
       BlockType type = BlockTypeRegistry.instance.getBlockTypeByName(oldBlock);
 
       // Store the destruction but don't bother with the creation.
-      Controller.instance.getBlockEditSet().addBlockEdit(
-        new BlockEdit(millis, player, false, x, y, z, type));
+      BlockEdit edit = new BlockEdit(millis, player, false, x, y, z, type);
+      SyncTaskQueue.instance.addTask(new AddBlockEditTask(edit, true));
 
       // TODO: fix this :)
       // Hacked in re-echoing of coords so we can see TP targets.

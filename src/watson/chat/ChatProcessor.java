@@ -1,7 +1,6 @@
 package watson.chat;
 
 import java.util.ArrayList;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.minecraft.util.IChatComponent;
 import watson.Configuration;
@@ -14,28 +13,18 @@ import watson.analysis.RatioAnalysis;
 import watson.analysis.RegionInfoAnalysis;
 import watson.analysis.ServerTime;
 import watson.analysis.TeleportAnalysis;
-import watson.db.BlockEdit;
-import watson.db.BlockEditSet;
 
 // ----------------------------------------------------------------------------
 /**
- * A Singleton that processes all incoming {@link net.minecraft.src.Packet3Chat}
- * chat packets and routes them through various Watson components and/or back
- * into the Minecraft GUI.
+ * A singleton that handles received chats by passing them through a set of
+ * {@link IChatHandler} instances to decide what to filter out of chat, and
+ * process various interesting chat messages as a side effect.
  * 
- * Normally, net.minecraft.src.NetClientHandler.handleChat() calls
- * GuiNewChat.printChatMessage() for every chat packet received. But Watson uses
- * lots of /lb coords queries that we would like to exclude from chat, so
- * instead, we categorise all incoming chats in this class and then only pass
- * some of them to the normal Minecraft handling.
- * 
- * Since a chat message tagged as "lb.coord" causes a new {@link BlockEdit} to
- * be added to the currently displayed {@link BlockEditSet}, if we happen to be
- * iterating that set to draw the blocks when the chat arrives, we will get a
- * ConcurrentModificationException, since the chat arrives asynchronously (the
- * network and game rendering threads are different). To avoid that, incoming
- * chats are simply added to a queue, and then later de-queued and processed
- * from the game thread.
+ * Normally, NetClientHandler.handleChat() calls GuiNewChat.printChatMessage()
+ * for every chat packet received. But Watson uses lots of /lb coords queries
+ * that we would like to exclude from chat, so instead, IChatHandler
+ * implementations process the chats and decide which should reach Minecraft's
+ * normal handling.
  */
 public class ChatProcessor
 {
@@ -57,53 +46,26 @@ public class ChatProcessor
 
   // --------------------------------------------------------------------------
   /**
-   * Add the specified chat message to the queue.
+   * Process the chat
    * 
    * @param chat the chat message.
    */
-  public void addChatToQueue(IChatComponent chat)
+  public boolean onChat(IChatComponent chat)
   {
     if (Configuration.instance.isEnabled())
     {
-      _chatQueue.add(chat);
+      boolean allow = true;
+      for (IChatHandler handler : _handlers)
+      {
+        allow &= handler.onChat(chat);
+      }
+      return allow;
     }
     else
     {
-      // Watson is disabled. Use default Minecraft processing.
-      Chat.localChat(chat);
+      return true;
     }
-  } // addToChatQueue
-
-  // --------------------------------------------------------------------------
-  /**
-   * Process each of the chat messages that was added to the queue by
-   * addChatToQueue() in the order they arrived.
-   */
-  public void processChatQueue()
-  {
-    // Clear the queue of chat messages that have arrived from the network
-    // thread. Do this even if Watson is disabled, to clear any chats from just
-    // before it was disabled.
-    for (;;)
-    {
-      IChatComponent chat = _chatQueue.poll();
-      if (chat == null)
-      {
-        break;
-      }
-
-      boolean echo = true;
-      for (IChatHandler handler : _handlers)
-      {
-        echo &= handler.onChat(chat);
-      }
-
-      if (echo)
-      {
-        Chat.localChat(chat);
-      }
-    }
-  } // processChatQueue
+  }
 
   // --------------------------------------------------------------------------
   /**
@@ -128,13 +90,5 @@ public class ChatProcessor
   /**
    * Handlers notified of chat arriving at the client.
    */
-  protected ArrayList<IChatHandler>               _handlers  = new ArrayList<IChatHandler>();
-
-  /**
-   * A queue to pass incoming chat messages from the network thread to the game
-   * thread. This is necessary to avoid a ConcurrentModificationException while
-   * traversing the set of BlockEdit instances and rendering them.
-   */
-  protected ConcurrentLinkedQueue<IChatComponent> _chatQueue = new ConcurrentLinkedQueue<IChatComponent>();
-
+  protected ArrayList<IChatHandler> _handlers = new ArrayList<IChatHandler>();
 } // class ChatProcessor

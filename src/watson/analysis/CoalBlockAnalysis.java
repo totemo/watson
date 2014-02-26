@@ -8,6 +8,8 @@ import java.util.regex.Matcher;
 
 import net.minecraft.util.IChatComponent;
 import watson.Controller;
+import watson.SyncTaskQueue;
+import watson.analysis.task.AddBlockEditTask;
 import watson.chat.IMatchedChatHandler;
 import watson.db.BlockEdit;
 import watson.db.BlockType;
@@ -93,16 +95,7 @@ public class CoalBlockAnalysis extends Analysis
       boolean created = action.equals("created");
       String block = m.group(8);
       BlockType type = BlockTypeRegistry.instance.getBlockTypeByName(block);
-
-      boolean added = Controller.instance.getBlockEditSet().addBlockEdit(
-        new BlockEdit(millis, player, created, _x, _y, _z, type),
-        _expectingFirstEdit);
-
-      // Once our first edit passes the filter, no need to set variables.
-      if (_expectingFirstEdit && added)
-      {
-        _expectingFirstEdit = false;
-      }
+      addBlockEdit(millis, player, created, type);
     }
   } // lbEdit
 
@@ -125,17 +118,33 @@ public class CoalBlockAnalysis extends Analysis
       BlockType type = BlockTypeRegistry.instance.getBlockTypeByName(oldBlock);
 
       // Just add the destruction.
-      boolean added = Controller.instance.getBlockEditSet().addBlockEdit(
-        new BlockEdit(millis, player, false, _x, _y, _z, type),
-        _expectingFirstEdit);
+      addBlockEdit(millis, player, false, type);
+    }
+  } // lbEditReplaced
+
+  // --------------------------------------------------------------------------
+  /**
+   * Common code for storing an edit if it passes the filter.
+   * 
+   * @param millis the time stamp.
+   * @param player the player name.
+   * @param created true if a block was created (rather than destroyed).
+   * @param type the type of block.
+   */
+  protected void addBlockEdit(long millis, String player, boolean created, BlockType type)
+  {
+    if (Controller.instance.getFilters().isAcceptedPlayer(player))
+    {
+      BlockEdit edit = new BlockEdit(millis, player, created, _x, _y, _z, type);
+      SyncTaskQueue.instance.addTask(new AddBlockEditTask(edit, _expectingFirstEdit));
 
       // Once our first edit passes the filter, no need to set variables.
-      if (_expectingFirstEdit && added)
+      if (_expectingFirstEdit)
       {
         _expectingFirstEdit = false;
       }
     }
-  } // lbEditReplaced
+  }
 
   // --------------------------------------------------------------------------
   /**

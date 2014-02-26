@@ -4,11 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Level;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
@@ -38,6 +40,7 @@ import com.mumfrey.liteloader.Tickable;
 import com.mumfrey.liteloader.core.LiteLoader;
 import com.mumfrey.liteloader.modconfig.ConfigStrategy;
 import com.mumfrey.liteloader.modconfig.ExposableOptions;
+import com.mumfrey.liteloader.util.ModUtilities;
 
 // ----------------------------------------------------------------------------
 /**
@@ -176,9 +179,24 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
   @Override
   public boolean onChat(S02PacketChat chatPacket, IChatComponent chat, String message)
   {
-    // TODO: reformulate chat processing using IChatComponent; handle URLs etc.
-    ChatProcessor.instance.addChatToQueue(chat);
-    return false;
+    boolean allowChat = ChatProcessor.instance.onChat(chat);
+    if (allowChat)
+    {
+      try
+      {
+        // Since the chat won't go through Chat.localChat(), highlight it here.
+        // TODO: Obfuscation.
+        String fieldName = ModUtilities.getObfuscatedFieldName("field_148919_a", "a", "field_148919_a");
+        Field field = S02PacketChat.class.getDeclaredField(fieldName);
+        field.setAccessible(true);
+        field.set(chatPacket, Chat.getChatHighlighter().highlight(chat));
+      }
+      catch (Exception ex)
+      {
+        Log.exception(Level.WARNING, "can't modify chat packet", ex);
+      }
+    }
+    return allowChat;
   }
 
   // --------------------------------------------------------------------------
@@ -189,7 +207,7 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
   @Override
   public void onTick(Minecraft minecraft, float partialTicks, boolean inGame, boolean clock)
   {
-    ChatProcessor.instance.processChatQueue();
+    SyncTaskQueue.instance.runTasks();
     Controller.instance.processServerChatQueue();
 
     // With Forge, onJoinGame() gets called before the chat GUI is ready to
@@ -353,7 +371,7 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
    * res/ directory and getResourceAsStream() can access it directly. When
    * running as an installed mod file, getResourceAsStream() may return a
    * reference to the litemod.json file for another mod, depending on the order
-   * of the mods in the classloader. In that circumstance, we use a specially
+   * of the mods in the ClassLoader. In that circumstance, we use a specially
    * crafted URL that references litemod.json via the URL of the .litemod (JAR)
    * file.
    * 
