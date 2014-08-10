@@ -1,5 +1,9 @@
 Change History
 ==============
+0.7.0.100-mc1.7.2_02
+-------------------
+* Fix Issue #35: Make reformatting and colour coding of LogBlock query results configurable.
+
 0.6.1.95-mc1.7.2_02
 -------------------
 * Fix Issue #33: Watson breaks Macros onChat-Event
