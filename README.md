@@ -13,7 +13,7 @@ Watson is a Minecraft mod that displays LogBlock (and to a limited extent Prism 
 * It uses colour to highlight parts of chat that match regular expressions. This can be used to draw attention to banned words. It can also be used to highlight the names of people, acting as a rudimentary friends list.
 * It adds player names to screenshots automatically.
 * It does a `/region info regionname` for you when you right click on a region with the wooden sword (rate limited to once every 10 seconds - the wooden sword will simply list the region name the other times).
-* In order to shorten coordinate displays and make them easier to read, Watson also hides the LogBlock coords lines from chat and re-echoes them in a custom, brief format, where block IDs are numeric rather than words.  Re-echoed coordinates are assigned colours based on their physical proximity.  This makes separate ore deposits easy to distinguish in the coordinate listing.
+* In order to shorten coordinate displays and make them easier to read, Watson also hides the LogBlock coords lines from chat and re-echoes them in a custom, brief format, where block IDs are numeric rather than words.  Re-echoed coordinates are assigned colours based on their physical proximity.  This makes separate ore deposits easy to distinguish in the coordinate listing.  Note that reformatting and recolouring of LogBlock query results can be controlled by the reformat_query_results and recolour_query_results [configuration settings](https://github.com/totemo/watson#configuration-file), respectively.
 * An optional, custom materials.yml file for LogBlock is provided.  That allows Watson to provide more visually distinct depictions of many types of blocks, notably carpets, stained clay and stained glass.  See the section on Custom LogBlock Material Names.
 
 
@@ -455,6 +455,12 @@ Watson's main configuration settings are stored in ".minecraft/mods/watson/confi
   </tr>
   <tr>
     <td>ss_date_directory</td> <td>date format string</td> <td></td> <td>This setting determines the directory to store screenshots when ss_player_directory is off, or when no player is currently selected.  The setting is a format specifier for the Java <a href="http://docs.oracle.com/javase/1.4.2/docs/api/java/text/SimpleDateFormat.html">SimpleDateFormat</a> class, interpreted in the user's locale (language settings), allowing considerable flexibility in the name of the output directory.  If set to the empty string (the default setting), then screenshots without a selected player will end up in .minecraft/screenshots/.  If a format is specified, then a subdirectory of .minecraft/screenshots/ is created to place each screenshot in, based on the time and date when the image was taken.  Recommended settings include "yyyy-MM-dd" (numeric year, month and day, e.g. 2013-03-15), "yyyy-MM" (year and month, e.g. 2013-03) and "MMMM yyyy" (month in long form and year, e.g. March 2013).  The format can be set to the empty string using the command "/w config ss_date_directory".</td> <td>/w config ss_date_directory yyyy-MM-dd</td>
+  </tr>
+  <tr>
+    <td>reformat_query_results</td> <td>on / off</td> <td>on</td> <td>When on, query results are reformatted to a more compact form that uses numbers instead of material names (currently applies to LogBlock results only).</td> <td>/w config reformat_query_results off</td>
+  </tr>
+  <tr>
+    <td>recolour_query_results</td> <td>on / off</td> <td>on</td> <td>(Note UK English spelling.) When on, query results are recoloured to indicate grouping of edits that are in close proximity to each other (currently applies to LogBlock results only).</td> <td>/w config recolour_query_results off</td>
   </tr>
 </table>
 

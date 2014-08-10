@@ -24,6 +24,7 @@ import watson.Controller;
 import watson.SyncTaskQueue;
 import watson.analysis.task.AddBlockEditTask;
 import watson.chat.Chat;
+import watson.chat.ChatComponents;
 import watson.chat.Colour;
 import watson.chat.IMatchedChatHandler;
 import watson.db.BlockEdit;
@@ -32,14 +33,14 @@ import watson.db.BlockTypeRegistry;
 import watson.db.TimeStamp;
 import watson.debug.Log;
 
-// --------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 /**
  * An {@link Analysis} implementation that extracts {@link BlockEdit} instances
  * from lb.coord lines.
  */
 public class LbCoordsAnalysis extends Analysis
 {
-  // ----------------------------------------------------------------------------
+  // --------------------------------------------------------------------------
   /**
    * Constructor.
    */
@@ -101,7 +102,6 @@ public class LbCoordsAnalysis extends Analysis
   /**
    * Parse creation and destruction coords results.
    */
-  @SuppressWarnings("unused")
   void lbCoord(IChatComponent chat, Matcher m)
   {
     try
@@ -148,29 +148,46 @@ public class LbCoordsAnalysis extends Analysis
       BlockEdit edit = new BlockEdit(millis, player, created, x, y, z, type);
       SyncTaskQueue.instance.addTask(new AddBlockEditTask(edit, true));
 
-      // TODO: fix this :) Have a class that allows dynamic control of
-      // filtered coords.
-      // Hacked in re-echoing of coords so we can see TP targets.
-      if (type.getId() != 1)
+      char colourCode = getChatColourChar(x, y, z);
+      String colour = Configuration.instance.getRecolourQueryResults() ? "\247" + colourCode : "";
+      if (Configuration.instance.getReformatQueryResults())
       {
-        String output;
-        if (sign1 == null)
+        // TODO: fix this :) Have a class that allows dynamic control of
+        // filtered coords.
+        // Hacked in re-echoing of coords so we can see TP targets.
+        if (type.getId() != 1)
         {
-          output = String.format(Locale.US,
-            "\247%c(%2d) %02d-%02d %02d:%02d:%02d (%d,%d,%d) %C%d %s",
-            getChatColourChar(x, y, z), index, month, day, hour, minute,
-            second, x, y, z, (created ? '+' : '-'), type.getId(), player);
+          String output;
+          if (sign1 == null)
+          {
+            output = String.format(Locale.US,
+              "%s(%2d) %02d-%02d %02d:%02d:%02d (%d,%d,%d) %C%d %s",
+              colour, index, month, day, hour, minute,
+              second, x, y, z, (created ? '+' : '-'), type.getId(), player);
+          }
+          else
+          {
+            output = String.format(
+              Locale.US,
+              "%s(%2d) %02d-%02d %02d:%02d:%02d (%d,%d,%d) %C%d %s [%s] [%s] [%s] [%s]",
+              colour, index, month, day, hour, minute,
+              second, x, y, z, (created ? '+' : '-'), type.getId(), player,
+              sign1, sign2, sign3, sign4);
+          }
+          Chat.localChat(output);
+        }
+      }
+      else
+      {
+        // No reformatting of query results. Recolour?
+        if (Configuration.instance.getRecolourQueryResults())
+        {
+          Chat.localChat(ChatComponents.getEnumChatFormatting(colourCode), chat.getUnformattedText());
         }
         else
         {
-          output = String.format(
-            Locale.US,
-            "\247%c(%2d) %02d-%02d %02d:%02d:%02d (%d,%d,%d) %C%d %s [%s] [%s] [%s] [%s]",
-            getChatColourChar(x, y, z), index, month, day, hour, minute,
-            second, x, y, z, (created ? '+' : '-'), type.getId(), player,
-            sign1, sign2, sign3, sign4);
+          Chat.localChat(chat);
         }
-        Chat.localChat(output);
       }
 
       requestNextPage();
@@ -186,7 +203,6 @@ public class LbCoordsAnalysis extends Analysis
    * Parse /lb coords results where the edit was replacement of one block with
    * another.
    */
-  @SuppressWarnings("unused")
   void lbCoordReplaced(IChatComponent chat, Matcher m)
   {
     try
@@ -211,17 +227,32 @@ public class LbCoordsAnalysis extends Analysis
       BlockEdit edit = new BlockEdit(millis, player, false, x, y, z, type);
       SyncTaskQueue.instance.addTask(new AddBlockEditTask(edit, true));
 
-      // TODO: fix this :)
-      // Hacked in re-echoing of coords so we can see TP targets.
-      if (type.getId() != 1)
+      char colourCode = getChatColourChar(x, y, z);
+      String colour = Configuration.instance.getRecolourQueryResults() ? "\247" + colourCode : "";
+      if (Configuration.instance.getReformatQueryResults())
       {
-        String target = String.format(Locale.US,
-          "\247%c(%2d) %02d-%02d %02d:%02d:%02d (%d,%d,%d) %C%d %s",
-          getChatColourChar(x, y, z), index, month, day, hour, minute,
-          second, x, y, z, '-', type.getId(), player);
-        Chat.localChat(target);
+        // TODO: fix this :)
+        // Hacked in re-echoing of coords so we can see TP targets.
+        if (type.getId() != 1)
+        {
+          String target = String.format(Locale.US,
+            "%s(%2d) %02d-%02d %02d:%02d:%02d (%d,%d,%d) %C%d %s",
+            colour, index, month, day, hour, minute, second, x, y, z, '-', type.getId(), player);
+          Chat.localChat(target);
+        }
       }
-
+      else
+      {
+        // No reformatting of query results. Recolour?
+        if (Configuration.instance.getRecolourQueryResults())
+        {
+          Chat.localChat(ChatComponents.getEnumChatFormatting(colourCode), chat.getUnformattedText());
+        }
+        else
+        {
+          Chat.localChat(chat);
+        }
+      }
       requestNextPage();
     }
     catch (Exception ex)

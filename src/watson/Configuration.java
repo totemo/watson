@@ -80,6 +80,8 @@ public class Configuration
       _ssPlayerDirectory = (Boolean) dom.get("ss_player_directory");
       _ssPlayerSuffix = (Boolean) dom.get("ss_player_suffix");
       setSsDateDirectoryImp((String) dom.get("ss_date_directory"));
+      _reformatQueryResults = (Boolean) dom.get("reformat_query_results");
+      _recolourQueryResults = (Boolean) dom.get("recolour_query_results");
     }
     catch (Exception ex)
     {
@@ -119,6 +121,8 @@ public class Configuration
       dom.put("ss_player_directory", _ssPlayerDirectory);
       dom.put("ss_player_suffix", _ssPlayerSuffix);
       dom.put("ss_date_directory", _ssDateDirectory.toPattern());
+      dom.put("reformat_query_results", _reformatQueryResults);
+      dom.put("recolour_query_results", _recolourQueryResults);
 
       DumperOptions options = new DumperOptions();
       options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
@@ -656,6 +660,57 @@ public class Configuration
 
   // --------------------------------------------------------------------------
   /**
+   * Enable or disable compact reformatting of query results in chat.
+   * 
+   * @param reformatQueryResults if true, query results in chat are displayed in
+   *          a more compact form.
+   */
+  public void setReformatQueryResults(boolean reformatQueryResults)
+  {
+    _reformatQueryResults = reformatQueryResults;
+    Chat.localOutput(String.format(Locale.US,
+      "Compact formatting of query results %s.", (_reformatQueryResults ? "enabled" : "disabled")));
+    save();
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return true if query results should be displayed in compact form.
+   * 
+   * @return true if query results should be displayed in compact form.
+   */
+  public boolean getReformatQueryResults()
+  {
+    return _reformatQueryResults;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Enable or disable recolouring of query results in chat.
+   * 
+   * @param recolourQueryResults if true, query results in chat are recoloured.
+   */
+  public void setRecolourQueryResults(boolean recolourQueryResults)
+  {
+    _recolourQueryResults = recolourQueryResults;
+    Chat.localOutput(String.format(Locale.US,
+      "Recolouring of query results %s.", (_recolourQueryResults ? "enabled" : "disabled")));
+    save();
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return true if query results should be recoloured.
+   * 
+   * @return true if query results should be recoloured.
+   */
+  public boolean getRecolourQueryResults()
+  {
+    return _recolourQueryResults;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
    * Perform lazy initialisation of the SnakeValidator used to validate in
    * load().
    */
@@ -668,38 +723,26 @@ public class Configuration
       MapValidatorNode root = new MapValidatorNode();
       root.addChild("enabled", new TypeValidatorNode(Boolean.class, true, true));
       root.addChild("debug", new TypeValidatorNode(Boolean.class, true, false));
-      root.addChild("auto_page", new TypeValidatorNode(Boolean.class, true,
-                                                       true));
-      root.addChild("region_info_timeout", new TypeValidatorNode(Double.class,
-                                                                 true, 5.0));
-      root.addChild("vectors_shown", new TypeValidatorNode(Boolean.class, true,
-                                                           true));
-      root.addChild("billboard_background", new TypeValidatorNode(
-                                                                  Integer.class, true, 0x7F000000));
-      root.addChild("billboard_foreground", new TypeValidatorNode(
-                                                                  Integer.class, true, 0xFFFFFFFF));
+      root.addChild("auto_page", new TypeValidatorNode(Boolean.class, true, true));
+      root.addChild("region_info_timeout", new TypeValidatorNode(Double.class, true, 5.0));
+      root.addChild("vectors_shown", new TypeValidatorNode(Boolean.class, true, true));
+      root.addChild("billboard_background", new TypeValidatorNode(Integer.class, true, 0x7F000000));
+      root.addChild("billboard_foreground", new TypeValidatorNode(Integer.class, true, 0xFFFFFFFF));
 
       // Default to true until we can distinguish server vs player gamemode.
-      root.addChild("group_ores_in_creative", new TypeValidatorNode(
-                                                                    Boolean.class, true, true));
+      root.addChild("group_ores_in_creative", new TypeValidatorNode(Boolean.class, true, true));
 
-      root.addChild("teleport_command", new TypeValidatorNode(String.class,
-                                                              true, "/tppos %g %d %g"));
-      root.addChild("chat_timeout", new TypeValidatorNode(Double.class, true,
-                                                          0.1));
-      root.addChild("max_auto_pages", new TypeValidatorNode(Integer.class,
-                                                            true, 10));
+      root.addChild("teleport_command", new TypeValidatorNode(String.class, true, "/tppos %g %d %g"));
+      root.addChild("chat_timeout", new TypeValidatorNode(Double.class, true, 0.1));
+      root.addChild("max_auto_pages", new TypeValidatorNode(Integer.class, true, 10));
       root.addChild("pre_count", new TypeValidatorNode(Integer.class, true, 45));
-      root.addChild("post_count",
-        new TypeValidatorNode(Integer.class, true, 45));
-      root.addChild("watson_prefix", new TypeValidatorNode(String.class, true,
-                                                           "w"));
-      root.addChild("ss_player_directory", new TypeValidatorNode(Boolean.class,
-                                                                 true, true));
-      root.addChild("ss_player_suffix", new TypeValidatorNode(Boolean.class,
-                                                              true, true));
-      root.addChild("ss_date_directory", new TypeValidatorNode(String.class,
-                                                               true, ""));
+      root.addChild("post_count", new TypeValidatorNode(Integer.class, true, 45));
+      root.addChild("watson_prefix", new TypeValidatorNode(String.class, true, "w"));
+      root.addChild("ss_player_directory", new TypeValidatorNode(Boolean.class, true, true));
+      root.addChild("ss_player_suffix", new TypeValidatorNode(Boolean.class, true, true));
+      root.addChild("ss_date_directory", new TypeValidatorNode(String.class, true, ""));
+      root.addChild("reformat_query_results", new TypeValidatorNode(Boolean.class, true, true));
+      root.addChild("recolour_query_results", new TypeValidatorNode(Boolean.class, true, true));
 
       _validator.setRoot(root);
     }
@@ -816,7 +859,15 @@ public class Configuration
    * 
    * I'm assuming that the empty string is a valid format that won't throw.
    */
-  protected SimpleDateFormat    _ssDateDirectory          = new SimpleDateFormat(
-                                                                                 "");
+  protected SimpleDateFormat    _ssDateDirectory          = new SimpleDateFormat("");
+  /**
+   * Reformat query results in chat more compactly.
+   */
+  protected boolean             _reformatQueryResults     = true;
+
+  /**
+   * Recolour query results in chat.
+   */
+  protected boolean             _recolourQueryResults     = true;
 } // class Configuration
 

@@ -18,7 +18,7 @@ import watson.analysis.ServerTime;
 import watson.db.Filters;
 import watson.db.OreDB;
 
-// --------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 /**
  * An ICommand implementation for the Watson /w command set.
  */
@@ -888,6 +888,36 @@ public class WatsonCommand extends WatsonCommandBase
         return true;
       }
     } // /w config ss_date_directory
+
+    // Configure reformatting of query results.
+    if (args[1].equals("reformat_query_results"))
+    {
+      if (args[2].equals("on"))
+      {
+        Configuration.instance.setReformatQueryResults(true);
+        return true;
+      }
+      else if (args[2].equals("off"))
+      {
+        Configuration.instance.setReformatQueryResults(false);
+        return true;
+      }
+    }
+
+    // Configure recolouring of query results.
+    if (args[1].equals("recolour_query_results"))
+    {
+      if (args[2].equals("on"))
+      {
+        Configuration.instance.setRecolourQueryResults(true);
+        return true;
+      }
+      else if (args[2].equals("off"))
+      {
+        Configuration.instance.setRecolourQueryResults(false);
+        return true;
+      }
+    }
 
     return false;
   } // handleConfigCommand

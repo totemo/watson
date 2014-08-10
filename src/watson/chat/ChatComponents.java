@@ -1,8 +1,10 @@
 package watson.chat;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
 // ----------------------------------------------------------------------------
@@ -102,6 +104,19 @@ public class ChatComponents
 
   // --------------------------------------------------------------------------
   /**
+   * Map a formatting character to the corresponding Minecraft
+   * EnumChatFormatting.
+   * 
+   * @param code the formatting code.
+   * @param the corresponding enum value.
+   */
+  public static EnumChatFormatting getEnumChatFormatting(char code)
+  {
+    return _formatCharToEnum.get(code);
+  }
+
+  // --------------------------------------------------------------------------
+  /**
    * Dump information about the IChatComponent to standard output.
    * 
    * @patam component the component.
@@ -127,6 +142,20 @@ public class ChatComponents
       System.out.println(i + ": " + hasEvents(c) + ": \"" + c.getFormattedText() + "\" "
                          + c.getUnformattedTextForChat().length() + " "
                          + c.getChatStyle().isEmpty() + " " + c.getChatStyle().toString());
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Map formatting character to the corresponding Minecraft EnumChatFormatting.
+   */
+  private static HashMap<Character, EnumChatFormatting> _formatCharToEnum = new HashMap<Character, EnumChatFormatting>();
+
+  static
+  {
+    for (EnumChatFormatting format : EnumChatFormatting.values())
+    {
+      _formatCharToEnum.put(format.getFormattingCode(), format);
     }
   }
 } // class ChatComponents

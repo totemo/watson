@@ -9,7 +9,8 @@ import java.util.HashMap;
  * NOTE: (compiler-generated) Colour.valueOf(String) will throw an
  * IllegalArgumentException if the specified colour name is not valid.
  */
-public enum Colour {
+public enum Colour
+{
   black('0'), darkblue('1'), navy('1'), green('2'), darkgreen('2'), cyan('3'), red(
     '4'), darkred('4'), purple('5'), orange('6'), gold('6'), brown('6'), lightgrey(
     '7'), lightgray('7'), grey('8'), darkgrey('8'), gray('8'), darkgray('8'), blue(
