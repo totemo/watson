@@ -35,6 +35,7 @@ import watson.debug.Log;
 import com.google.gson.Gson;
 import com.mumfrey.liteloader.ChatFilter;
 import com.mumfrey.liteloader.JoinGameListener;
+import com.mumfrey.liteloader.OutboundChatFilter;
 import com.mumfrey.liteloader.PostRenderListener;
 import com.mumfrey.liteloader.Tickable;
 import com.mumfrey.liteloader.core.LiteLoader;
@@ -48,8 +49,8 @@ import com.mumfrey.liteloader.util.ModUtilities;
  * 
  * @author totemo
  */
-@ExposableOptions(strategy = ConfigStrategy.Versioned, filename = "examplemod.json")
-public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, PostRenderListener
+@ExposableOptions(strategy = ConfigStrategy.Versioned, filename = "watson.json")
+public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, PostRenderListener, OutboundChatFilter
 {
   // --------------------------------------------------------------------------
   /**
@@ -350,10 +351,23 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
 
   // --------------------------------------------------------------------------
   /**
-   * Callback redirected from EntityClientPlayerMP.sendChatMessage(String).
+   * @see com.mumfrey.liteloader.OutboundChatFilter#onSendChatMessage(java.lang.String)
+   */
+  @Override
+  public boolean onSendChatMessage(String chat)
+  {
+    // Send the chat to server if not handled locally as a command.
+    return !ClientCommandManager.instance.handleClientCommand(chat);
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * This method acts as an entry point into
+   * ClientCommandManager.handleClientCommand(), for use by the watson_macros
+   * mod.
    * 
-   * This is used to intercept player chats heading for the server and filter
-   * out (and act upon) Watson commands.
+   * The method was originally a callback used by a transformer, but that is no
+   * longer the case.
    */
   public static void sendChatMessage(EntityClientPlayerMP player, String chat)
   {
@@ -419,4 +433,5 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
    * message a second later. When 0, no welcome message is shown.
    */
   private static long       _gameJoinTime         = 0;
+
 } // class LiteModWatson

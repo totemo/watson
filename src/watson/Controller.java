@@ -83,7 +83,7 @@ public class Controller
   public String getServerIP()
   {
     Minecraft mc = Minecraft.getMinecraft();
-    ServerData serverData = mc.func_147104_D();
+    ServerData serverData = mc.getCurrentServerData();
     if (!mc.isSingleplayer() && serverData != null)
     {
       return serverData.serverIP;

@@ -1,5 +1,9 @@
 Change History
 ==============
+0.8.0.104-mc1.7.10
+-------------------
+* Updated to LiteLoader 1.7.10.
+
 0.7.0.100-mc1.7.2_02
 -------------------
 * Fix Issue #35: Make reformatting and colour coding of LogBlock query results configurable.

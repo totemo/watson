@@ -97,7 +97,7 @@ public class Chat
     if (isChatGuiReady())
     {
       IChatComponent highlighted = getChatHighlighter().highlight(chat);
-      Minecraft.getMinecraft().ingameGUI.getChatGUI().func_146227_a(highlighted);
+      Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(highlighted);
     }
   }
 

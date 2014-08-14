@@ -396,8 +396,7 @@ public class BlockEditSet
       GL11.glPushMatrix();
 
       Minecraft mc = Minecraft.getMinecraft();
-      ScaledResolution scaledResolution = new ScaledResolution(mc.gameSettings,
-                                                               mc.displayWidth, mc.displayHeight);
+      ScaledResolution scaledResolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 
     }
     finally

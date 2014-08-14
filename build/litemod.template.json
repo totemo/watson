@@ -7,6 +7,5 @@
     "version": "${version}.${build.number}-mc${litemodversion}",
     "revision": "${build.number}",
     "author": "${author}",
-    "description": "A 3-D log visualisation tool.",
-    "classTransformerClasses": "watson.transformer.WatsonCallbackInjectionTransformer"
+    "description": "A 3-D log visualisation tool."
 }
