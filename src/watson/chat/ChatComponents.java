@@ -6,6 +6,7 @@ import java.util.HashMap;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
+import watson.PrivateFieldsWatson;
 
 // ----------------------------------------------------------------------------
 /**
@@ -155,7 +156,7 @@ public class ChatComponents
   {
     for (EnumChatFormatting format : EnumChatFormatting.values())
     {
-      _formatCharToEnum.put(format.getFormattingCode(), format);
+      _formatCharToEnum.put(PrivateFieldsWatson.formattingCode.get(format), format);
     }
   }
 } // class ChatComponents

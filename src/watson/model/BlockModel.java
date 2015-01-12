@@ -2,6 +2,7 @@ package watson.model;
 
 import net.minecraft.client.renderer.Tessellator;
 
+import net.minecraft.client.renderer.WorldRenderer;
 import org.lwjgl.opengl.GL11;
 
 import watson.db.BlockType;
@@ -88,47 +89,48 @@ public abstract class BlockModel
                                   double zTop1, double xTop2, double zTop2,
                                   double yTop, ARGB colour, float lineWidth)
   {
-    Tessellator tess = Tessellator.instance;
+    Tessellator tess = Tessellator.getInstance();
+      WorldRenderer wr = tess.getWorldRenderer();
 
     // Bottom face.
-    tess.startDrawing(GL11.GL_LINE_LOOP);
-    tess.setColorRGBA(colour.getRed(), colour.getGreen(), colour.getBlue(),
+      wr.startDrawing(GL11.GL_LINE_LOOP);
+      wr.setColorRGBA(colour.getRed(), colour.getGreen(), colour.getBlue(),
       colour.getAlpha());
     GL11.glLineWidth(lineWidth);
-    tess.addVertex(xBot1, yBot, zBot1);
-    tess.addVertex(xBot2, yBot, zBot1);
-    tess.addVertex(xBot2, yBot, zBot2);
-    tess.addVertex(xBot1, yBot, zBot2);
+      wr.addVertex(xBot1, yBot, zBot1);
+      wr.addVertex(xBot2, yBot, zBot1);
+      wr.addVertex(xBot2, yBot, zBot2);
+      wr.addVertex(xBot1, yBot, zBot2);
     tess.draw();
 
     // Top face.
-    tess.startDrawing(GL11.GL_LINE_LOOP);
-    tess.setColorRGBA(colour.getRed(), colour.getGreen(), colour.getBlue(),
+      wr.startDrawing(GL11.GL_LINE_LOOP);
+      wr.setColorRGBA(colour.getRed(), colour.getGreen(), colour.getBlue(),
       colour.getAlpha());
     GL11.glLineWidth(lineWidth);
-    tess.addVertex(xTop1, yTop, zTop1);
-    tess.addVertex(xTop2, yTop, zTop1);
-    tess.addVertex(xTop2, yTop, zTop2);
-    tess.addVertex(xTop1, yTop, zTop2);
+      wr.addVertex(xTop1, yTop, zTop1);
+      wr.addVertex(xTop2, yTop, zTop1);
+      wr.addVertex(xTop2, yTop, zTop2);
+      wr.addVertex(xTop1, yTop, zTop2);
     tess.draw();
 
     // Vertical lines joining top and bottom.
-    tess.startDrawing(GL11.GL_LINES);
-    tess.setColorRGBA(colour.getRed(), colour.getGreen(), colour.getBlue(),
+      wr.startDrawing(GL11.GL_LINES);
+      wr.setColorRGBA(colour.getRed(), colour.getGreen(), colour.getBlue(),
       colour.getAlpha());
     GL11.glLineWidth(lineWidth);
 
-    tess.addVertex(xBot1, yBot, zBot1);
-    tess.addVertex(xTop1, yTop, zTop1);
+      wr.addVertex(xBot1, yBot, zBot1);
+      wr.addVertex(xTop1, yTop, zTop1);
 
-    tess.addVertex(xBot2, yBot, zBot1);
-    tess.addVertex(xTop2, yTop, zTop1);
+      wr.addVertex(xBot2, yBot, zBot1);
+      wr.addVertex(xTop2, yTop, zTop1);
 
-    tess.addVertex(xBot1, yBot, zBot2);
-    tess.addVertex(xTop1, yTop, zTop2);
+      wr.addVertex(xBot1, yBot, zBot2);
+      wr.addVertex(xTop1, yTop, zTop2);
 
-    tess.addVertex(xBot2, yBot, zBot2);
-    tess.addVertex(xTop2, yTop, zTop2);
+      wr.addVertex(xBot2, yBot, zBot2);
+      wr.addVertex(xTop2, yTop, zTop2);
     tess.draw();
   } // renderTaperedBox
 

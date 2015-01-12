@@ -3,11 +3,13 @@ package watson.db;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
 
 import org.lwjgl.opengl.GL11;
 
 import watson.Configuration;
+import watson.PrivateFieldsWatson;
 
 // ----------------------------------------------------------------------------
 /**
@@ -107,7 +109,7 @@ public class Annotation
   public static void drawBillboard(double x, double y, double z, int bgARGB,
                                    int fgARGB, double scaleFactor, String text)
   {
-    RenderManager renderManager = RenderManager.instance;
+    RenderManager renderManager = Minecraft.getMinecraft().getRenderManager();
     FontRenderer fontRenderer = renderManager.getFontRenderer();
     if (fontRenderer == null)
     {
@@ -118,9 +120,9 @@ public class Annotation
     Minecraft mc = Minecraft.getMinecraft();
     // (512 >> mc.gameSettings.renderDistance) * 0.8;
     double far = mc.gameSettings.renderDistanceChunks * 16;
-    double dx = x - RenderManager.renderPosX + 0.5d;
-    double dy = y - RenderManager.renderPosY + 0.5d;
-    double dz = z - RenderManager.renderPosZ + 0.5d;
+    double dx = x - PrivateFieldsWatson.renderPosX.get(renderManager) + 0.5d;
+    double dy = y - PrivateFieldsWatson.renderPosY.get(renderManager) + 0.5d;
+    double dz = z - PrivateFieldsWatson.renderPosZ.get(renderManager) + 0.5d;
     double distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
     double dl = distance;
     if (dl > far)
@@ -144,7 +146,8 @@ public class Annotation
     GL11.glDisable(GL11.GL_LIGHTING);
     GL11.glEnable(GL11.GL_BLEND);
     GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-    Tessellator tessellator = Tessellator.instance;
+    Tessellator tessellator = Tessellator.getInstance();
+      WorldRenderer wr = tessellator.getWorldRenderer();
 
     int textWidth = fontRenderer.getStringWidth(text) >> 1;
     if (textWidth != 0)
@@ -154,12 +157,12 @@ public class Annotation
       GL11.glDepthMask(false);
 
       // Draw background plate.
-      tessellator.startDrawingQuads();
-      tessellator.setColorRGBA_I(bgARGB & 0x00FFFFFF, (bgARGB >>> 24) & 0xFF);
-      tessellator.addVertex(-textWidth - 1, -6, 0.0);
-      tessellator.addVertex(-textWidth - 1, 4, 0.0);
-      tessellator.addVertex(textWidth + 1, 4, 0.0);
-      tessellator.addVertex(textWidth + 1, -6, 0.0);
+        wr.startDrawingQuads();
+        wr.setColorRGBA_I(bgARGB & 0x00FFFFFF, (bgARGB >>> 24) & 0xFF);
+        wr.addVertex(-textWidth - 1, -6, 0.0);
+        wr.addVertex(-textWidth - 1, 4, 0.0);
+        wr.addVertex(textWidth + 1, 4, 0.0);
+        wr.addVertex(textWidth + 1, -6, 0.0);
       tessellator.draw();
 
       // Draw text.

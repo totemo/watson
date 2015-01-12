@@ -1,10 +1,13 @@
 package watson.cli;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.command.CommandResultStats;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import watson.chat.Chat;
 
@@ -36,9 +39,9 @@ public class ClientCommandSender implements ICommandSender
    * @see net.minecraft.src.ICommandSender#getCommandSenderName()
    */
   @Override
-  public String getCommandSenderName()
+  public String getName()
   {
-    return _sender.getCommandSenderName();
+    return _sender.getName();
   }
 
   // --------------------------------------------------------------------------
@@ -46,7 +49,7 @@ public class ClientCommandSender implements ICommandSender
    * @see net.minecraft.src.ICommandSender#canCommandSenderUseCommand(java.lang.String)
    */
   @Override
-  public boolean canCommandSenderUseCommand(int unknown, String command)
+  public boolean canUseCommand(int unknown, String command)
   {
     return true;
   }
@@ -59,7 +62,7 @@ public class ClientCommandSender implements ICommandSender
    * @see net.minecraft.command.ICommandSender#func_145748_c_()
    */
   @Override
-  public IChatComponent func_145748_c_()
+  public IChatComponent getDisplayName()
   {
     // ChatComponentStyle.getChatStyle() creates a default ChatStyle instance on
     // demand, so a default ChatComponentText instance suffices.
@@ -87,17 +90,44 @@ public class ClientCommandSender implements ICommandSender
     return Minecraft.getMinecraft().thePlayer.worldObj;
   }
 
-  // --------------------------------------------------------------------------
+    /**
+     * Returns the entity associated with the command sender. MAY BE NULL!
+     */
+    @Override
+    public Entity getCommandSenderEntity() {
+        return Minecraft.getMinecraft().thePlayer;
+    }
+
+    /**
+     * Returns true if the command sender should be sent feedback about executed commands
+     */
+    @Override
+    public boolean sendCommandFeedback() {
+        return false;
+    }
+
+    @Override
+    public void setCommandStat(CommandResultStats.Type type, int amount) {
+
+    }
+
+    // --------------------------------------------------------------------------
   /**
    * @see net.minecraft.src.ICommandSender#getPlayerCoordinates()
    */
   @Override
-  public ChunkCoordinates getPlayerCoordinates()
+  public BlockPos getPosition()
   {
-    return Minecraft.getMinecraft().thePlayer.getPlayerCoordinates();
+    return Minecraft.getMinecraft().thePlayer.getPosition();
   }
 
   // --------------------------------------------------------------------------
+
+    @Override
+    public Vec3 getPositionVector() {
+        return Minecraft.getMinecraft().thePlayer.getPositionVector();
+    }
+
   /**
    * The default sender - Minecraft.thePlayer.
    */

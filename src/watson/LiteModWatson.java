@@ -12,11 +12,16 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 
+import com.mojang.realmsclient.dto.RealmsServer;
+import com.mumfrey.liteloader.core.LiteLoaderEventBroker;
+import com.mumfrey.liteloader.util.ObfuscationUtilities;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.play.client.C01PacketChatMessage;
 import net.minecraft.network.play.server.S01PacketJoinGame;
@@ -157,7 +162,7 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
    *      net.minecraft.network.play.server.S01PacketJoinGame)
    */
   @Override
-  public void onJoinGame(INetHandler netHandler, S01PacketJoinGame joinGamePacket)
+  public void onJoinGame(INetHandler netHandler, S01PacketJoinGame joinGamePacket, ServerData serverData, RealmsServer realmsServer)
   {
     if (Configuration.instance.isEnabled())
     {
@@ -178,16 +183,16 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
    *      net.minecraft.util.IChatComponent, java.lang.String)
    */
   @Override
-  public boolean onChat(S02PacketChat chatPacket, IChatComponent chat, String message)
+  public boolean onChat(IChatComponent chat, String message, LiteLoaderEventBroker.ReturnValue<IChatComponent> newMessage)
   {
     boolean allowChat = ChatProcessor.instance.onChat(chat);
     if (allowChat)
     {
-      try
+      /* try
       {
         // Since the chat won't go through Chat.localChat(), highlight it here.
         // TODO: Obfuscation.
-        String fieldName = ModUtilities.getObfuscatedFieldName("field_148919_a", "a", "field_148919_a");
+        String fieldName = ObfuscationUtilities.getObfuscatedFieldName("field_148919_a", "a", "field_148919_a");
         Field field = S02PacketChat.class.getDeclaredField(fieldName);
         field.setAccessible(true);
         field.set(chatPacket, Chat.getChatHighlighter().highlight(chat));
@@ -195,7 +200,8 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
       catch (Exception ex)
       {
         Log.exception(Level.WARNING, "can't modify chat packet", ex);
-      }
+      } */
+        newMessage.set(Chat.getChatHighlighter().highlight(chat));
     }
     return allowChat;
   }
@@ -329,7 +335,7 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
 
   private double getPlayerX(float partialTicks)
   {
-    EntityClientPlayerMP p = Minecraft.getMinecraft().thePlayer;
+      EntityPlayerSP p = Minecraft.getMinecraft().thePlayer;
     return p.prevPosX + (p.posX - p.prevPosX) * partialTicks;
   }
 
@@ -337,7 +343,7 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
 
   private double getPlayerY(float partialTicks)
   {
-    EntityClientPlayerMP p = Minecraft.getMinecraft().thePlayer;
+      EntityPlayerSP p = Minecraft.getMinecraft().thePlayer;
     return p.prevPosY + (p.posY - p.prevPosY) * partialTicks;
   }
 
@@ -345,7 +351,7 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
 
   private double getPlayerZ(float partialTicks)
   {
-    EntityClientPlayerMP p = Minecraft.getMinecraft().thePlayer;
+      EntityPlayerSP p = Minecraft.getMinecraft().thePlayer;
     return p.prevPosZ + (p.posZ - p.prevPosZ) * partialTicks;
   }
 
@@ -369,7 +375,7 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
    * The method was originally a callback used by a transformer, but that is no
    * longer the case.
    */
-  public static void sendChatMessage(EntityClientPlayerMP player, String chat)
+  public static void sendChatMessage(EntityPlayerSP player, String chat)
   {
     if (!ClientCommandManager.instance.handleClientCommand(chat))
     {

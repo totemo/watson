@@ -2,6 +2,7 @@ package watson.model;
 
 import net.minecraft.client.renderer.Tessellator;
 
+import net.minecraft.client.renderer.WorldRenderer;
 import org.lwjgl.opengl.GL11;
 
 import watson.db.BlockType;
@@ -28,7 +29,8 @@ public class StairBlockModel extends BlockModel
   @Override
   public void render(BlockType blockType, int x, int y, int z)
   {
-    Tessellator tess = Tessellator.instance;
+    Tessellator tess = Tessellator.getInstance();
+      WorldRenderer wr = tess.getWorldRenderer();
 
     // Opposite corners.
     double x1 = x + blockType.getX1();
@@ -43,57 +45,57 @@ public class StairBlockModel extends BlockModel
     double zMid = z + 0.5 * (blockType.getZ1() + blockType.getZ2());
 
     // x1 side.
-    tess.startDrawing(GL11.GL_LINE_LOOP);
-    tess.setColorRGBA(blockType.getARGB().getRed(),
+      wr.startDrawing(GL11.GL_LINE_LOOP);
+      wr.setColorRGBA(blockType.getARGB().getRed(),
       blockType.getARGB().getGreen(), blockType.getARGB().getBlue(),
       blockType.getARGB().getAlpha());
     GL11.glLineWidth(blockType.getLineWidth());
-    tess.addVertex(x1, y1, z1);
-    tess.addVertex(x1, y1, z2);
-    tess.addVertex(x1, y2, z2);
-    tess.addVertex(x1, y2, zMid);
-    tess.addVertex(x1, yMid, zMid);
-    tess.addVertex(x1, yMid, z1);
+      wr.addVertex(x1, y1, z1);
+      wr.addVertex(x1, y1, z2);
+      wr.addVertex(x1, y2, z2);
+      wr.addVertex(x1, y2, zMid);
+      wr.addVertex(x1, yMid, zMid);
+      wr.addVertex(x1, yMid, z1);
     tess.draw();
 
     // x2 side.
-    tess.startDrawing(GL11.GL_LINE_LOOP);
-    tess.setColorRGBA(blockType.getARGB().getRed(),
+      wr.startDrawing(GL11.GL_LINE_LOOP);
+      wr.setColorRGBA(blockType.getARGB().getRed(),
       blockType.getARGB().getGreen(), blockType.getARGB().getBlue(),
       blockType.getARGB().getAlpha());
     GL11.glLineWidth(blockType.getLineWidth());
-    tess.addVertex(x2, y1, z1);
-    tess.addVertex(x2, y1, z2);
-    tess.addVertex(x2, y2, z2);
-    tess.addVertex(x2, y2, zMid);
-    tess.addVertex(x2, yMid, zMid);
-    tess.addVertex(x2, yMid, z1);
+      wr.addVertex(x2, y1, z1);
+      wr.addVertex(x2, y1, z2);
+      wr.addVertex(x2, y2, z2);
+      wr.addVertex(x2, y2, zMid);
+      wr.addVertex(x2, yMid, zMid);
+      wr.addVertex(x2, yMid, z1);
     tess.draw();
 
     // Horizontal lines joining the two sides.
-    tess.startDrawing(GL11.GL_LINES);
-    tess.setColorRGBA(blockType.getARGB().getRed(),
+      wr.startDrawing(GL11.GL_LINES);
+      wr.setColorRGBA(blockType.getARGB().getRed(),
       blockType.getARGB().getGreen(), blockType.getARGB().getBlue(),
       blockType.getARGB().getAlpha());
     GL11.glLineWidth(blockType.getLineWidth());
 
-    tess.addVertex(x1, y1, z1);
-    tess.addVertex(x2, y1, z1);
+      wr.addVertex(x1, y1, z1);
+      wr.addVertex(x2, y1, z1);
 
-    tess.addVertex(x1, y1, z2);
-    tess.addVertex(x2, y1, z2);
+      wr.addVertex(x1, y1, z2);
+      wr.addVertex(x2, y1, z2);
 
-    tess.addVertex(x1, y2, z2);
-    tess.addVertex(x2, y2, z2);
+      wr.addVertex(x1, y2, z2);
+      wr.addVertex(x2, y2, z2);
 
-    tess.addVertex(x1, y2, zMid);
-    tess.addVertex(x2, y2, zMid);
+      wr.addVertex(x1, y2, zMid);
+      wr.addVertex(x2, y2, zMid);
 
-    tess.addVertex(x1, yMid, zMid);
-    tess.addVertex(x2, yMid, zMid);
+      wr.addVertex(x1, yMid, zMid);
+      wr.addVertex(x2, yMid, zMid);
 
-    tess.addVertex(x1, yMid, z1);
-    tess.addVertex(x2, yMid, z1);
+      wr.addVertex(x1, yMid, z1);
+      wr.addVertex(x2, yMid, z1);
     tess.draw();
   } // render
 } // class StairBlockModel
