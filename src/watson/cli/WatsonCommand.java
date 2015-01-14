@@ -626,6 +626,12 @@ public class WatsonCommand extends WatsonCommandBase
           return true;
         }
       }
+      else if (args.length == 2)
+      {
+        double seconds = Configuration.instance.getRegionInfoTimeoutSeconds();
+        localOutput(sender, "Automatic region info timeout is currently set to " + seconds + " seconds.");
+        return true;
+      }
     } // /w config region_info_timeout
 
     // Set the text billboard background colour.
@@ -647,6 +653,12 @@ public class WatsonCommand extends WatsonCommandBase
           return true;
         }
       }
+      else if (args.length == 2)
+      {
+          int argb = Configuration.instance.getBillboardBackground();
+          localOutput(sender, "Billboard background colour is currently set to " + argb + ".");
+          return true;
+      }
     } // /w config billboard_background
 
     // Set the text billboard foreground colour.
@@ -667,6 +679,12 @@ public class WatsonCommand extends WatsonCommandBase
           localError(sender, "The colour should be a 32-bit hexadecimal ARGB value.");
           return true;
         }
+      }
+      else if (args.length == 2)
+      {
+          int argb = Configuration.instance.getBillboardForeground();
+          localOutput(sender, "Billboard foreground colour is currently set to " + argb + ".");
+          return true;
       }
     } // /w config billboard_foreground
 
@@ -693,11 +711,20 @@ public class WatsonCommand extends WatsonCommandBase
       }
     } // /w config group_ores_in_creative
 
-    if (args[1].equals("teleport_command") && args.length >= 3)
+    if (args[1].equals("teleport_command"))
     {
-      String format = concatArgs(args, 2, args.length, " ");
-      Configuration.instance.setTeleportCommand(format);
-      return true;
+      if (args.length >= 3)
+      {
+        String format = concatArgs(args, 2, args.length, " ");
+        Configuration.instance.setTeleportCommand(format);
+        return true;
+      }
+      else if (args.length == 2)
+      {
+        String format = Configuration.instance.getTeleportCommand();
+        localOutput(sender, "Teleport command format is currently set to " + format + ".");
+        return true;
+      }
     }
 
     // Set minimum time separation between programmatically generated chat
@@ -717,6 +744,12 @@ public class WatsonCommand extends WatsonCommandBase
           localError(sender, "The timeout should be a decimal number of seconds.");
           return true;
         }
+      }
+      else if (args.length == 2)
+      {
+        double seconds = Configuration.instance.getChatTimeoutSeconds();
+        localOutput(sender, "Chat command timeout is currently set to " + seconds + " seconds.");
+        return true;
       }
     } // /w config chat_timeout
 
@@ -747,7 +780,14 @@ public class WatsonCommand extends WatsonCommandBase
         }
         return true;
       } // if
-    } // /w config pre_count
+      else if (args.length == 2)
+      {
+        int maxAutoPages = Configuration.instance.getMaxAutoPages();
+        localOutput(sender, "Currently, up to " + maxAutoPages + " pages of \"/lb coords\" results will be "
+                + "stepped through automatically.");
+        return true;
+      }
+    } // /w config max_auto_pages
 
     // Set the default number of edits to query when no count parameter is
     // specified with "/w pre".
@@ -776,6 +816,12 @@ public class WatsonCommand extends WatsonCommandBase
         }
         return true;
       } // if
+      else if (args.length == 2)
+      {
+        int preCount = Configuration.instance.getPreCount();
+        localOutput(sender, "Currently, by default, \"/w pre\" will return " + preCount + " edits.");
+        return true;
+      }
     } // /w config pre_count
 
     // Set the default number of edits to query when no count parameter is
@@ -805,26 +851,39 @@ public class WatsonCommand extends WatsonCommandBase
         }
         return true;
       } // if
+      else if (args.length == 2)
+      {
+        int postCount = Configuration.instance.getPostCount();
+        localOutput(sender, "Currently, by default, \"/w post\" will return " + postCount + " edits.");
+        return true;
+      }
     } // /w config post_count
 
     // Set the prefix for Watson commands.
-    if (args[1].equals("watson_prefix") && args.length == 3)
-    {
-      String newPrefix = args[2];
-      if (!PREFIX_PATTERN.matcher(newPrefix).matches())
+    if (args[1].equals("watson_prefix"))
+      if (args.length == 3)
       {
-        localError(sender, "The command prefix can only contain letters, digits and underscores.");
+        String newPrefix = args[2];
+        if (!PREFIX_PATTERN.matcher(newPrefix).matches())
+        {
+          localError(sender, "The command prefix can only contain letters, digits and underscores.");
+        }
+        else
+        {
+          // De-register, set the prefix and re-register this command.
+          @SuppressWarnings("unchecked")
+          Map<String, ICommand> commands = ClientCommandManager.instance.getCommands();
+          commands.remove(Configuration.instance.getWatsonPrefix());
+          Configuration.instance.setWatsonPrefix(newPrefix);
+          ClientCommandManager.instance.registerCommand(this);
+        }
+        return true;
       }
-      else
+      else if (args.length == 2)
       {
-        // De-register, set the prefix and re-register this command.
-        @SuppressWarnings("unchecked")
-        Map<String, ICommand> commands = ClientCommandManager.instance.getCommands();
-        commands.remove(Configuration.instance.getWatsonPrefix());
-        Configuration.instance.setWatsonPrefix(newPrefix);
-        ClientCommandManager.instance.registerCommand(this);
-      }
-      return true;
+        String watsonPrefix = Configuration.instance.getWatsonPrefix();
+        localOutput(sender, "Watson command prefix is currently set to " + watsonPrefix + ".");
+        return true;
     } // /w config watson_prefix <prefix>
 
     // Enable or disable per-player screenshot subdirectories.
