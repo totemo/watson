@@ -995,7 +995,7 @@ public class WatsonCommand extends WatsonCommandBase
       localOutput(sender, "  /" + w + " config watson : toggles watson mod as a whole");
       localOutput(sender, "  /" + w + " config debug : enable or disable debug logging");
       localOutput(sender, "  /" + w + " config auto_page : enable or disable automatic \"/lb coords\" paging");
-      localOutput(sender, "  /" + w + " config region_info_timeout [seconds]: set minimum time separation between automatic \"/region info\"s");
+      localOutput(sender, "  /" + w + " config region_info_timeout [seconds] : set minimum time separation between automatic \"/region info\"s");
       localOutput(sender, "  /" + w + " config billboard_background [argb] : set the text billboard background colour");
       localOutput(sender, "  /" + w + " config billboard_foreground [argb] : set the text billboard foreground colour");
       localOutput(sender, "  /" + w + " config group_ores_in_creative : enable or disable forced grouping of ores in creative mode");
@@ -1008,8 +1008,8 @@ public class WatsonCommand extends WatsonCommandBase
       localOutput(sender, "  /" + w + " config ss_player_directory : enable or disable per-player screenshot subdirectories");
       localOutput(sender, "  /" + w + " config ss_player_suffix : enable or disable per-player screenshot suffixes");
       localOutput(sender, "  /" + w + " config ss_date_directory [string] : set the anonymous screenshot subdirectory format speficier");
-      localOutput(sender, "  /" + w + " config reformat_query_results : enable or disable the reformatting of query results");
-      localOutput(sender, "  /" + w + " config recolour_query_results : emable or disable the recolouring of query results");
+      localOutput(sender, "  /" + w + " config reformat_query_results [on/off] : enable or disable the reformatting of query results");
+      localOutput(sender, "  /" + w + " config recolour_query_results [on/off] : enable or disable the recolouring of query results");
       return true;
     } // /w config help
     
