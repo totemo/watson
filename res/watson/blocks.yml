@@ -1752,7 +1752,7 @@ blocks:
       names: [villager]
       rgba: [255, 214, 209]
       bounds: [0.031, 0.005, 0.1955, 0.969, 2.005, 0.8045]
-    # Generic model for player kills, assigned by watson.analysis.LbCoordsAnalysis.lbCoordKills
+    # Generic model for player kills, assigned by watson.db.BlockTypeRegistry.getBlockKillTypeByName()
     # is longer than sixteen characters so it can never be an actual player name
     - id: 219
       names: [genericplayername]
