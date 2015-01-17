@@ -867,27 +867,27 @@ blocks:
     # 4 = cracked stone brick, 5 = chiselled stone brick
     - id: 97
       data: 0
-      names: [monster eggs,silverfish, stone monster egg]
+      names: [monster eggs, stone monster egg]
       rgba: [127, 127, 127]
     - id: 97
       data: 1
-      names: [monster eggs,silverfish, cobblestone monster egg]
+      names: [monster eggs, cobblestone monster egg]
       rgba: [100, 100, 100]
     - id: 97
       data: 2
-      names: [monster eggs,silverfish, stone brick monster egg]
+      names: [monster eggs, stone brick monster egg]
       rgba: [136, 136, 136]
     - id: 97
       data: 3
-      names: [monster eggs,silverfish, mossy stone brick monster egg]
+      names: [monster eggs, mossy stone brick monster egg]
       rgba: [121, 137, 91]
     - id: 97
       data: 4
-      names: [monster eggs,silverfish, cracked stone brick monster egg]
+      names: [monster eggs, cracked stone brick monster egg]
       rgba: [94, 94, 94]
     - id: 97
       data: 5
-      names: [monster eggs,silverfish, chiseled stone brick monster egg]
+      names: [monster eggs, chiseled stone brick monster egg]
       rgba: [93, 93, 93]
       
     - id: 98
@@ -896,7 +896,7 @@ blocks:
       rgba: [136, 136, 136]
     - id: 98
       data: 1
-      names: [mossy stone brick]
+      names: [mossy stone b/rick]
       rgba: [121, 137, 91]
     - id: 98
       data: 2
@@ -1623,3 +1623,138 @@ blocks:
       rgba: [197, 197, 197]
       bounds: [-0.125, 0.1875, -0.0, 1.125, 0.8125, 1.0]
 
+    # More abuse of unused IDs for LogBlock mob kill logging.
+    - id: 251
+      names: [creeper]
+      rgba: [44, 76, 41]
+      bounds: [0.25, 0.005, 0.125, 0.75, 1.63, 0.875]
+    - id: 250
+      names: [skeleton]
+      rgba: [53, 53, 53]
+      bounds: [0.1095, 0.005, 0.0625, 0.8905, 2.005, 0.9375]
+    - id: 249
+      names: [spider]
+      rgba: [35, 30, 25]
+      bounds: [-0.531, 0.005, -0.3515, 1.531, 0.943, 1.3515]
+    - id: 248
+      names: [giant]
+      rgba: [43, 62, 55]
+      bounds: [-2.6405, 0.005, -2.172, 3.6405, 12.005, 3.172]
+    - id: 247
+      names: [zombie]
+      rgba: [43, 62, 55]
+      bounds: [-0.0155, 0.005, 0.0545, 1.0155, 2.005, 0.9455]
+    - id: 246
+      names: [slime]
+      rgba: [126, 204, 110]
+      bounds: [-0.5, 0.005, -0.5, 1.5, 2.005, 1.5]
+    - id: 245
+      names: [ghast]
+      rgba: [179, 179, 179]
+      bounds: [-1.75, 0.005, -1.75, 2.75, 7.489, 2.75]
+    - id: 244
+      names: [pigzombie, pig_zombie]
+      rgba: [255, 228, 222]
+      bounds: [-0.0155, 0.005, -0.0625, 1.0155, 2.035, 1.0625]
+    - id: 243
+      names: [enderman]
+      rgba: [8, 8, 8]
+      bounds: [-0.047, 0.005, 0.25, 1.047, 2.88, 0.75]
+    - id: 242
+      names: [cavespider, cave_spider]
+      rgba: [8, 21, 24]
+      bounds: [-0.219, 0.005, -0.094, 1.219, 0.552, 1.094]
+    - id: 241
+      names: [silverfish]
+      rgba: [142, 159, 162]
+      bounds: [0.1955, 0.005, -0.047, 0.8045, 0.443, 1.047]
+    - id: 240
+      names: [blaze]
+      rgba: [255, 255, 232]
+      bounds: [-0.125, 0.005, 0.047, 1.125, 1.505, 0.953]
+    - id: 239
+      names: [magmacube, magma_cube, lavaslime]
+      rgba: [29, 14, 0]
+      bounds: [-0.5, 0.005, -0.5, 1.5, 2.005, 1.5]
+    - id: 238
+      names: [enderdragon, ender_dragon]
+      rgba: [17, 17, 17]
+      bounds: [-7.078, 0.005, -7.617, 8.078, 3.693, 8.617]
+    - id: 237
+      names: [wither, witherboss]
+      rgba: [224, 138, 250]
+      bounds: [-1.0, 0.005, -0.3595, 2.0, 2.849, 1.3595]
+    - id: 236
+      names: [bat]
+      rgba: [30, 24, 17]
+      bounds: [0.2655, 0.005, 0.258, 0.7345, 0.505, 0.742]
+    - id: 235
+      names: [witch]
+      rgba: [23, 18, 22]
+      bounds: [0.031, 0.005, 0.164, 0.969, 2.567, 0.836]
+    - id: 234
+      names: [endermite]
+      rgba: [87, 56, 101]
+      bounds: [0.1955, 0.005, -0.047, 0.8045, 0.443, 1.047]
+    - id: 233
+      names: [guardian]
+      rgba: [65, 89, 58]
+      bounds: [-0.15, 0.005, -0.45, 1.15, 1.305, 1.45]
+    - id: 232
+      names: [pig]
+      rgba: [255, 189, 189]
+      bounds: [0.1875, 0.005, -0.25, 0.8125, 1.005, 1.25]
+    - id: 231
+      names: [sheep]
+      rgba: [255, 255, 255]
+      bounds: [0.1405, 0.005, -0.242, 0.8595, 1.411, 1.242]
+    - id: 230
+      names: [cow]
+      rgba: [63, 48, 36]
+      bounds: [0.125, 0.005, -0.25, 0.875, 1.567, 1.25]
+    - id: 229
+      names: [chicken]
+      rgba: [255, 247, 247]
+      bounds: [0.25, 0.005, 0.125, 0.75, 0.943, 0.875]
+    - id: 228
+      names: [squid]
+      rgba: [18, 39, 55]
+      bounds: [0.0, 0.005, 0.125, 1.0, 2.067, 0.875]
+    - id: 227
+      names: [wolf]
+      rgba: [213, 209, 209]
+      bounds: [0.25, 0.005, -0.297, 0.75, 0.974, 1.297]
+    - id: 226
+      names: [mushroomcow, mushroom_cow]
+      rgba: [148, 0, 0]
+      bounds: [0.0545, 0.005, -0.3905, 0.9455, 1.88, 1.3905]
+    - id: 225
+      names: [snowman]
+      rgba: [255, 255, 255]
+      bounds: [-0.1405, 0.005, 0.156, 1.1405, 1.88, 0.844]
+    - id: 224
+      names: [ocelot, ozelot]
+      rgba: [239, 225, 170]
+      bounds: [0.344, 0.005, -0.1875, 0.656, 0.755, 1.1875]
+    - id: 223
+      names: [irongolem, iron_golem, villagergolem]
+      rgba: [229, 219, 217]
+      bounds: [-0.3125, 0.005, 0.047, 1.3125, 2.693, 0.953]
+    - id: 222
+      names: [horse, entityhorse]
+      rgba: [64, 8, 0]
+      bounds: [-0.05, 0.005, -0.5, 1.05, 2.005, 1.5]
+    - id: 221
+      names: [rabbit]
+      rgba: [161, 16, 0]
+      bounds: [0.25, 0.005, 0.125, 0.75, 0.955, 0.875]
+    - id: 220
+      names: [villager]
+      rgba: [255, 214, 209]
+      bounds: [0.031, 0.005, 0.1955, 0.969, 2.005, 0.8045]
+    # Generic model for player kills, assigned by watson.analysis.LbCoordsAnalysis.lbCoordKills
+    # is longer than sixteen characters so it can never be an actual player name
+    - id: 219
+      names: [genericplayername]
+      rgba: [149, 203, 207]
+      bounds: [-0.0155, 0.005, 0.0545, 1.0155, 1.855, 0.9455]

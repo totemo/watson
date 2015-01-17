@@ -1,6 +1,7 @@
 package watson.analysis;
 
 import static watson.analysis.LogBlockPatterns.LB_COORD;
+import static watson.analysis.LogBlockPatterns.LB_COORD_KILLS;
 import static watson.analysis.LogBlockPatterns.LB_COORD_REPLACED;
 import static watson.analysis.LogBlockPatterns.LB_HEADER_BLOCK;
 import static watson.analysis.LogBlockPatterns.LB_HEADER_BLOCKS;
@@ -52,6 +53,16 @@ public class LbCoordsAnalysis extends Analysis
       public boolean onMatchedChat(IChatComponent chat, Matcher m)
       {
         lbCoord(chat, m);
+        // Don't echo in GUI.
+        return false;
+      }
+    });
+    addMatchedChatHandler(LB_COORD_KILLS, new IMatchedChatHandler()
+    {
+      @Override
+      public boolean onMatchedChat(IChatComponent chat, Matcher m)
+      {
+        lbCoordKills(chat, m);
         // Don't echo in GUI.
         return false;
       }
@@ -197,6 +208,90 @@ public class LbCoordsAnalysis extends Analysis
       Log.exception(Level.INFO, "error parsing lb coords", ex);
     }
   } // lbCoord
+
+  // --------------------------------------------------------------------------
+  /**
+   * Parse kill coords results.
+   */
+  void lbCoordKills(IChatComponent chat, Matcher m)
+  {
+    try
+    {
+      int index = Integer.parseInt(m.group(1));
+      int month = Integer.parseInt(m.group(2));
+      int day = Integer.parseInt(m.group(3));
+      int hour = Integer.parseInt(m.group(4));
+      int minute = Integer.parseInt(m.group(5));
+      int second = Integer.parseInt(m.group(6));
+      long millis = TimeStamp.toMillis(month, day, hour, minute, second);
+
+      String player = m.group(7);
+      String action = m.group(8);
+      String block = m.group(9);
+
+      int x = Integer.parseInt(m.group(10));
+      int y = Integer.parseInt(m.group(11));
+      int z = Integer.parseInt(m.group(12));
+      String weapon = m.group(13);
+
+      /**
+       * LogBlock doesn't distinguish between player kills and other kills, it just
+       * gives the name of what was killed.  Since we (hopefully) list all the possible
+       * kill types that aren't players in blocks.yml, for things matching the
+       * LB_COORD_KILLS pattern we will assume that anything that isn't listed in
+       * blocks.yml is a player.  getBlockKillTypeByName() does this by assigning any
+       * unknown kill to the "unknown" kill ID, which is 219, our generic player model
+       * (this is similar to how getBlockTypeByName() assigns any unknown ID to 256.)
+       * The downside of this is that true new/unknown kill types will be assigned a
+       * player-like looking model over a typical "unknown" bright magenta box.
+       */
+
+      BlockType type = BlockTypeRegistry.instance.getBlockKillTypeByName(block);
+
+      // For our purposes, we'll treat a kill like a block destruction
+      boolean created = action.equals("created");
+      BlockEdit edit = new BlockEdit(millis, player, created, x, y, z, type);
+      SyncTaskQueue.instance.addTask(new AddBlockEditTask(edit, true));
+
+      char colourCode = getChatColourChar(x, y, z);
+      String colour = Configuration.instance.getRecolourQueryResults() ? "\247" + colourCode : "";
+      if (Configuration.instance.getReformatQueryResults())
+      {
+        // TODO: fix this :) Have a class that allows dynamic control of
+        // filtered coords.
+        // Hacked in re-echoing of coords so we can see TP targets.
+        if (type.getId() != 1)
+        {
+          String output;
+
+          output = String.format(Locale.US,
+            "%s(%2d) %02d-%02d %02d:%02d:%02d (%d,%d,%d) %s %s %s %s",
+            colour, index, month, day, hour, minute,
+            second, x, y, z, (created ? '+' : '-'), block, player, weapon);
+
+          Chat.localChat(output);
+        }
+      }
+      else
+      {
+        // No reformatting of query results. Recolour?
+        if (Configuration.instance.getRecolourQueryResults())
+        {
+          Chat.localChat(ChatComponents.getEnumChatFormatting(colourCode), chat.getUnformattedText());
+        }
+        else
+        {
+          Chat.localChat(chat);
+        }
+      }
+
+      requestNextPage();
+    }
+    catch (Exception ex)
+    {
+      Log.exception(Level.INFO, "error parsing lb kills coords", ex);
+    }
+  } // lbCoordKills
 
   // --------------------------------------------------------------------------
   /**
