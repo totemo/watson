@@ -896,7 +896,7 @@ blocks:
       rgba: [136, 136, 136]
     - id: 98
       data: 1
-      names: [mossy stone b/rick]
+      names: [mossy stone brick]
       rgba: [121, 137, 91]
     - id: 98
       data: 2
