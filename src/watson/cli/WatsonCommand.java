@@ -445,15 +445,23 @@ public class WatsonCommand extends WatsonCommandBase
       }
     } // file
 
-    // "/w config" command.
+    // "/w config" command with parameters.
     if (args.length >= 2 && args[0].equals("config"))
     {
       if (handleConfigCommand(sender, args))
       {
         return;
       }
-    } // config
-
+    } // config with parameters
+    
+    // "/w config" with no parameters, direct to /w config help
+    if (args.length == 1 && args[0].equals("config"))
+    {
+      String w = Configuration.instance.getWatsonPrefix();
+      localOutput(sender, "Type \"/" + w + " config help\" for help with configuration options.");
+      return;
+    } // config with no parameters
+    
     localError(sender, "Invalid command syntax.");
   } // processCommand
 
@@ -626,6 +634,12 @@ public class WatsonCommand extends WatsonCommandBase
           return true;
         }
       }
+      else if (args.length == 2)
+      {
+        double seconds = Configuration.instance.getRegionInfoTimeoutSeconds();
+        localOutput(sender, "Automatic region info timeout is currently set to " + seconds + " seconds.");
+        return true;
+      }
     } // /w config region_info_timeout
 
     // Set the text billboard background colour.
@@ -647,6 +661,12 @@ public class WatsonCommand extends WatsonCommandBase
           return true;
         }
       }
+      else if (args.length == 2)
+      {
+          int argb = Configuration.instance.getBillboardBackground();
+          localOutput(sender, "Billboard background colour is currently set to " + argb + ".");
+          return true;
+      }
     } // /w config billboard_background
 
     // Set the text billboard foreground colour.
@@ -667,6 +687,12 @@ public class WatsonCommand extends WatsonCommandBase
           localError(sender, "The colour should be a 32-bit hexadecimal ARGB value.");
           return true;
         }
+      }
+      else if (args.length == 2)
+      {
+          int argb = Configuration.instance.getBillboardForeground();
+          localOutput(sender, "Billboard foreground colour is currently set to " + argb + ".");
+          return true;
       }
     } // /w config billboard_foreground
 
@@ -693,11 +719,20 @@ public class WatsonCommand extends WatsonCommandBase
       }
     } // /w config group_ores_in_creative
 
-    if (args[1].equals("teleport_command") && args.length >= 3)
+    if (args[1].equals("teleport_command"))
     {
-      String format = concatArgs(args, 2, args.length, " ");
-      Configuration.instance.setTeleportCommand(format);
-      return true;
+      if (args.length >= 3)
+      {
+        String format = concatArgs(args, 2, args.length, " ");
+        Configuration.instance.setTeleportCommand(format);
+        return true;
+      }
+      else if (args.length == 2)
+      {
+        String format = Configuration.instance.getTeleportCommand();
+        localOutput(sender, "Teleport command format is currently set to " + format + ".");
+        return true;
+      }
     }
 
     // Set minimum time separation between programmatically generated chat
@@ -717,6 +752,12 @@ public class WatsonCommand extends WatsonCommandBase
           localError(sender, "The timeout should be a decimal number of seconds.");
           return true;
         }
+      }
+      else if (args.length == 2)
+      {
+        double seconds = Configuration.instance.getChatTimeoutSeconds();
+        localOutput(sender, "Chat command timeout is currently set to " + seconds + " seconds.");
+        return true;
       }
     } // /w config chat_timeout
 
@@ -747,7 +788,14 @@ public class WatsonCommand extends WatsonCommandBase
         }
         return true;
       } // if
-    } // /w config pre_count
+      else if (args.length == 2)
+      {
+        int maxAutoPages = Configuration.instance.getMaxAutoPages();
+        localOutput(sender, "Currently, up to " + maxAutoPages + " pages of \"/lb coords\" results will be "
+                + "stepped through automatically.");
+        return true;
+      }
+    } // /w config max_auto_pages
 
     // Set the default number of edits to query when no count parameter is
     // specified with "/w pre".
@@ -776,6 +824,12 @@ public class WatsonCommand extends WatsonCommandBase
         }
         return true;
       } // if
+      else if (args.length == 2)
+      {
+        int preCount = Configuration.instance.getPreCount();
+        localOutput(sender, "Currently, by default, \"/w pre\" will return " + preCount + " edits.");
+        return true;
+      }
     } // /w config pre_count
 
     // Set the default number of edits to query when no count parameter is
@@ -805,26 +859,39 @@ public class WatsonCommand extends WatsonCommandBase
         }
         return true;
       } // if
+      else if (args.length == 2)
+      {
+        int postCount = Configuration.instance.getPostCount();
+        localOutput(sender, "Currently, by default, \"/w post\" will return " + postCount + " edits.");
+        return true;
+      }
     } // /w config post_count
 
     // Set the prefix for Watson commands.
-    if (args[1].equals("watson_prefix") && args.length == 3)
-    {
-      String newPrefix = args[2];
-      if (!PREFIX_PATTERN.matcher(newPrefix).matches())
+    if (args[1].equals("watson_prefix"))
+      if (args.length == 3)
       {
-        localError(sender, "The command prefix can only contain letters, digits and underscores.");
+        String newPrefix = args[2];
+        if (!PREFIX_PATTERN.matcher(newPrefix).matches())
+        {
+          localError(sender, "The command prefix can only contain letters, digits and underscores.");
+        }
+        else
+        {
+          // De-register, set the prefix and re-register this command.
+          @SuppressWarnings("unchecked")
+          Map<String, ICommand> commands = ClientCommandManager.instance.getCommands();
+          commands.remove(Configuration.instance.getWatsonPrefix());
+          Configuration.instance.setWatsonPrefix(newPrefix);
+          ClientCommandManager.instance.registerCommand(this);
+        }
+        return true;
       }
-      else
+      else if (args.length == 2)
       {
-        // De-register, set the prefix and re-register this command.
-        @SuppressWarnings("unchecked")
-        Map<String, ICommand> commands = ClientCommandManager.instance.getCommands();
-        commands.remove(Configuration.instance.getWatsonPrefix());
-        Configuration.instance.setWatsonPrefix(newPrefix);
-        ClientCommandManager.instance.registerCommand(this);
-      }
-      return true;
+        String watsonPrefix = Configuration.instance.getWatsonPrefix();
+        localOutput(sender, "Watson command prefix is currently set to " + watsonPrefix + ".");
+        return true;
     } // /w config watson_prefix <prefix>
 
     // Enable or disable per-player screenshot subdirectories.
@@ -889,7 +956,7 @@ public class WatsonCommand extends WatsonCommandBase
       }
     } // /w config ss_date_directory
 
-    // Configure reformatting of query results.
+    // Enable or disable the reformatting of query results.
     if (args[1].equals("reformat_query_results"))
     {
       if (args[2].equals("on"))
@@ -902,9 +969,9 @@ public class WatsonCommand extends WatsonCommandBase
         Configuration.instance.setReformatQueryResults(false);
         return true;
       }
-    }
+    } // /w config reformat_query_results
 
-    // Configure recolouring of query results.
+    // Enable or disable the recolouring of query results.
     if (args[1].equals("recolour_query_results"))
     {
       if (args[2].equals("on"))
@@ -917,8 +984,35 @@ public class WatsonCommand extends WatsonCommandBase
         Configuration.instance.setRecolourQueryResults(false);
         return true;
       }
-    }
-
+    } // /w config recolour_query_results
+    
+    // Help with /w config
+    if (args[1].equals("help"))
+    {
+      String w = Configuration.instance.getWatsonPrefix();
+      localOutput(sender, "Config options, note that non-toggle commands can be entered without arguments to see currently set values:");
+      localOutput(sender, "  /" + w + " config help : display these instructions");
+      localOutput(sender, "  /" + w + " config watson : toggles watson mod as a whole");
+      localOutput(sender, "  /" + w + " config debug : enable or disable debug logging");
+      localOutput(sender, "  /" + w + " config auto_page : enable or disable automatic \"/lb coords\" paging");
+      localOutput(sender, "  /" + w + " config region_info_timeout [seconds] : set minimum time separation between automatic \"/region info\"s");
+      localOutput(sender, "  /" + w + " config billboard_background [argb] : set the text billboard background colour");
+      localOutput(sender, "  /" + w + " config billboard_foreground [argb] : set the text billboard foreground colour");
+      localOutput(sender, "  /" + w + " config group_ores_in_creative : enable or disable forced grouping of ores in creative mode");
+      localOutput(sender, "  /" + w + " config teleport_command [string] : set the teleport command formatting");
+      localOutput(sender, "  /" + w + " config chat_timeout [seconds] : set minimum time separation between programmatically generated chat messages sent to the server");
+      localOutput(sender, "  /" + w + " config max_auto_pages [int]: set the maximum number of pages of \"/lb coords\" results automatically paged through");
+      localOutput(sender, "  /" + w + " config pre_count [int] : set the default number of edits to query when no count parameter is specified with \"/" + w + " pre\"");
+      localOutput(sender, "  /" + w + " config post_count [int] : set the default number of edits to query when no count parameter is specified with \"/" + w + " post\"");
+      localOutput(sender, "  /" + w + " config watson_prefix [string] : set the prefix for watson commands");
+      localOutput(sender, "  /" + w + " config ss_player_directory : enable or disable per-player screenshot subdirectories");
+      localOutput(sender, "  /" + w + " config ss_player_suffix : enable or disable per-player screenshot suffixes");
+      localOutput(sender, "  /" + w + " config ss_date_directory [string] : set the anonymous screenshot subdirectory format speficier");
+      localOutput(sender, "  /" + w + " config reformat_query_results [on/off] : enable or disable the reformatting of query results");
+      localOutput(sender, "  /" + w + " config recolour_query_results [on/off] : enable or disable the recolouring of query results");
+      return true;
+    } // /w config help
+    
     return false;
   } // handleConfigCommand
 
