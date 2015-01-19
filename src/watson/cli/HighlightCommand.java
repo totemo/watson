@@ -1,5 +1,6 @@
 package watson.cli;
 
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import watson.chat.Chat;
 import watson.chat.ChatHighlighter;
@@ -15,7 +16,7 @@ public class HighlightCommand extends WatsonCommandBase
    * @see net.minecraft.src.ICommand#getCommandName()
    */
   @Override
-  public String getCommandName()
+  public String getName()
   {
     return "hl";
   }
@@ -26,7 +27,7 @@ public class HighlightCommand extends WatsonCommandBase
    *      java.lang.String[])
    */
   @Override
-  public void processCommand(ICommandSender sender, String[] args)
+  public void execute(ICommandSender sender, String[] args) throws CommandException
   {
     ChatHighlighter highlighter = Chat.getChatHighlighter();
     if (args.length == 0)
@@ -51,7 +52,7 @@ public class HighlightCommand extends WatsonCommandBase
     {
       if (args[0].equals("remove"))
       {
-        int index = parseIntWithMin(sender, args[1], 1);
+        int index = parseInt(args[1], 1);
         highlighter.removeHighlight(index);
         return;
       }

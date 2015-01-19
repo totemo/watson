@@ -7,6 +7,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
+import watson.PrivateFieldsWatson;
 
 // ----------------------------------------------------------------------------
 /**
@@ -292,7 +293,7 @@ public class Text
   {
     for (EnumChatFormatting colour : EnumChatFormatting.values())
     {
-      _TO_ENUM_CHAT_FORMATTING.put(colour.getFormattingCode(), colour);
+      _TO_ENUM_CHAT_FORMATTING.put(PrivateFieldsWatson.formattingCode.get(colour), colour);
     }
   }
 

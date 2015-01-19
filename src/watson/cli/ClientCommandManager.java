@@ -17,6 +17,7 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
@@ -79,11 +80,11 @@ public class ClientCommandManager implements ICommandManager
    */
   public void registerCommand(ICommand command)
   {
-    _commands.put(command.getCommandName(), command);
+    _commands.put(command.getName(), command);
     _canonicalCommands.add(command);
 
     // Add all aliases of the command.
-    List<String> aliases = command.getCommandAliases();
+    List<String> aliases = command.getAliases();
     if (aliases != null)
     {
       for (String alias : aliases)
@@ -101,11 +102,11 @@ public class ClientCommandManager implements ICommandManager
    */
   public void unregisterCommand(ICommand command)
   {
-    _commands.remove(command.getCommandName());
+    _commands.remove(command.getName());
     _canonicalCommands.remove(command);
 
     // remove all aliases of the command.
-    List<String> aliases = command.getCommandAliases();
+    List<String> aliases = command.getAliases();
     if (aliases != null)
     {
       for (String alias : aliases)
@@ -154,9 +155,9 @@ public class ClientCommandManager implements ICommandManager
         throw new CommandNotFoundException();
       }
       tokens = Arrays.copyOfRange(tokens, 1, tokens.length);
-      if (command.canCommandSenderUseCommand(sender))
+      if (command.canCommandSenderUse(sender))
       {
-        command.processCommand(sender, tokens);
+        command.execute(sender, tokens);
         return 1;
       }
       else
@@ -168,11 +169,11 @@ public class ClientCommandManager implements ICommandManager
     {
       sendError(sender,
         new ChatComponentTranslation("commands.generic.usage",
-                                     new Object[]{new ChatComponentTranslation(ex.getMessage(), ex.getErrorOjbects())}));
+                                     new Object[]{new ChatComponentTranslation(ex.getMessage(), ex.getErrorObjects())}));
     }
     catch (CommandException ex)
     {
-      sendError(sender, new ChatComponentTranslation(ex.getMessage(), ex.getErrorOjbects()));
+      sendError(sender, new ChatComponentTranslation(ex.getMessage(), ex.getErrorObjects()));
     }
     catch (Throwable throwable)
     {
@@ -189,7 +190,7 @@ public class ClientCommandManager implements ICommandManager
    *      java.lang.String)
    */
   @Override
-  public List<String> getPossibleCommands(ICommandSender var1, String prefix)
+  public List<String> getTabCompletionOptions(ICommandSender var1, String prefix, BlockPos pos)
   {
     List<String> commands = new ArrayList<String>();
     for (String command : _commands.keySet())

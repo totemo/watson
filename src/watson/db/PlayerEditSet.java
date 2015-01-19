@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.TreeSet;
 
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.util.Vec3;
 
 import org.lwjgl.opengl.GL11;
@@ -150,16 +151,17 @@ public class PlayerEditSet
     DisplaySettings settings = Controller.instance.getDisplaySettings();
     if (settings.areVectorsShown() && isVisible() && !_edits.isEmpty())
     {
-      final Tessellator tess = Tessellator.instance;
-      tess.startDrawing(GL11.GL_LINES);
+      final Tessellator tess = Tessellator.getInstance();
+        final WorldRenderer wr = tess.getWorldRenderer();
+        wr.startDrawing(GL11.GL_LINES);
 
       // TODO: Make the vector colour and thickness configurable.
-      tess.setColorRGBA_I(colour.getRGB(), colour.getAlpha());
+        wr.setColorRGBA_I(colour.getRGB(), colour.getAlpha());
       GL11.glLineWidth(0.5f);
 
       // Unit X and Y vectors used for cross products to get arrow axes.
-      Vec3 unitX = Vec3.createVectorHelper(1, 0, 0);
-      Vec3 unitY = Vec3.createVectorHelper(0, 1, 0);
+      Vec3 unitX = new Vec3(1, 0, 0);
+      Vec3 unitY = new Vec3(0, 1, 0);
 
       // We only need to draw vectors if there are at least 2 edits.
       Iterator<BlockEdit> it = _edits.iterator();
@@ -175,8 +177,8 @@ public class PlayerEditSet
                          || (!next.creation && settings.isLinkedDestructions());
           if (show)
           {
-            Vec3 pPos = Vec3.createVectorHelper(0.5 + prev.x, 0.5 + prev.y, 0.5 + prev.z);
-            Vec3 nPos = Vec3.createVectorHelper(0.5 + next.x, 0.5 + next.y, 0.5 + next.z);
+            Vec3 pPos = new Vec3(0.5 + prev.x, 0.5 + prev.y, 0.5 + prev.z);
+            Vec3 nPos = new Vec3(0.5 + next.x, 0.5 + next.y, 0.5 + next.z);
             // Vector difference, from prev to next.
             Vec3 diff = nPos.subtract(pPos);
 
@@ -186,8 +188,8 @@ public class PlayerEditSet
             if (length >= settings.getMinVectorLength())
             {
               // Draw the vector.
-              tess.addVertex(pPos.xCoord, pPos.yCoord, pPos.zCoord);
-              tess.addVertex(nPos.xCoord, nPos.yCoord, nPos.zCoord);
+                wr.addVertex(pPos.xCoord, pPos.yCoord, pPos.zCoord);
+                wr.addVertex(nPos.xCoord, nPos.yCoord, nPos.zCoord);
 
               // Length from arrow tip to midpoint of vector as a fraction of
               // the total vector length. Scale the arrow in proportion to the
@@ -201,13 +203,13 @@ public class PlayerEditSet
 
               // Position of the tip and tail of the arrow, sitting in the
               // middle of the vector.
-              Vec3 tip = Vec3.createVectorHelper(
+              Vec3 tip = new Vec3(
                 pPos.xCoord * (0.5 - arrowScale) + nPos.xCoord
                   * (0.5 + arrowScale), pPos.yCoord * (0.5 - arrowScale)
                                         + nPos.yCoord * (0.5 + arrowScale),
                 pPos.zCoord * (0.5 - arrowScale) + nPos.zCoord
                   * (0.5 + arrowScale));
-              Vec3 tail = Vec3.createVectorHelper(
+              Vec3 tail = new Vec3(
                 pPos.xCoord * (0.5 + arrowScale) + nPos.xCoord * (0.5 - arrowScale),
                 pPos.yCoord * (0.5 + arrowScale) + nPos.yCoord * (0.5 - arrowScale),
                 pPos.zCoord * (0.5 + arrowScale) + nPos.zCoord * (0.5 - arrowScale));
@@ -226,22 +228,19 @@ public class PlayerEditSet
               }
 
               Vec3 fin2 = fin1.crossProduct(diff).normalize();
-              fin1.xCoord *= arrowScale * length;
-              fin1.yCoord *= arrowScale * length;
-              fin1.zCoord *= arrowScale * length;
-              fin2.xCoord *= arrowScale * length;
-              fin2.yCoord *= arrowScale * length;
-              fin2.zCoord *= arrowScale * length;
+
+                Vec3 draw1 = new Vec3(fin1.xCoord * arrowScale * length, fin1.yCoord * arrowScale * length, fin1.zCoord * arrowScale * length);
+                Vec3 draw2 = new Vec3(fin2.xCoord * arrowScale * length, fin2.yCoord * arrowScale * length, fin2.zCoord * arrowScale * length);
 
               // Draw four fins.
-              tess.addVertex(tip.xCoord, tip.yCoord, tip.zCoord);
-              tess.addVertex(tail.xCoord + fin1.xCoord, tail.yCoord + fin1.yCoord, tail.zCoord + fin1.zCoord);
-              tess.addVertex(tip.xCoord, tip.yCoord, tip.zCoord);
-              tess.addVertex(tail.xCoord - fin1.xCoord, tail.yCoord - fin1.yCoord, tail.zCoord - fin1.zCoord);
-              tess.addVertex(tip.xCoord, tip.yCoord, tip.zCoord);
-              tess.addVertex(tail.xCoord + fin2.xCoord, tail.yCoord + fin2.yCoord, tail.zCoord + fin2.zCoord);
-              tess.addVertex(tip.xCoord, tip.yCoord, tip.zCoord);
-              tess.addVertex(tail.xCoord - fin2.xCoord, tail.yCoord - fin2.yCoord, tail.zCoord - fin2.zCoord);
+                wr.addVertex(tip.xCoord, tip.yCoord, tip.zCoord);
+                wr.addVertex(tail.xCoord + draw1.xCoord, tail.yCoord + draw1.yCoord, tail.zCoord + draw1.zCoord);
+                wr.addVertex(tip.xCoord, tip.yCoord, tip.zCoord);
+                wr.addVertex(tail.xCoord - draw1.xCoord, tail.yCoord - draw1.yCoord, tail.zCoord - draw1.zCoord);
+                wr.addVertex(tip.xCoord, tip.yCoord, tip.zCoord);
+                wr.addVertex(tail.xCoord + draw2.xCoord, tail.yCoord + draw2.yCoord, tail.zCoord + draw2.zCoord);
+                wr.addVertex(tip.xCoord, tip.yCoord, tip.zCoord);
+                wr.addVertex(tail.xCoord - draw2.xCoord, tail.yCoord - draw2.yCoord, tail.zCoord - draw2.zCoord);
             } // if we are drawing this vector
             prev = next;
           } // if

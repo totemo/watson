@@ -2,6 +2,7 @@ package watson.model;
 
 import net.minecraft.client.renderer.Tessellator;
 
+import net.minecraft.client.renderer.WorldRenderer;
 import org.lwjgl.opengl.GL11;
 
 import watson.db.BlockType;
@@ -32,7 +33,8 @@ public class PlantBlockModel extends BlockModel
   @Override
   public void render(BlockType blockType, int x, int y, int z)
   {
-    Tessellator tess = Tessellator.instance;
+    Tessellator tess = Tessellator.getInstance();
+      WorldRenderer wr = tess.getWorldRenderer();
 
     double x1 = x + blockType.getX1();
     double y1 = y + blockType.getY1();
@@ -42,27 +44,27 @@ public class PlantBlockModel extends BlockModel
     double z2 = z + blockType.getZ2();
 
     // First rectangle.
-    tess.startDrawing(GL11.GL_LINE_LOOP);
-    tess.setColorRGBA(blockType.getARGB().getRed(),
+      wr.startDrawing(GL11.GL_LINE_LOOP);
+      wr.setColorRGBA(blockType.getARGB().getRed(),
       blockType.getARGB().getGreen(), blockType.getARGB().getBlue(),
       blockType.getARGB().getAlpha());
     GL11.glLineWidth(blockType.getLineWidth());
-    tess.addVertex(x1, y1, z1);
-    tess.addVertex(x2, y1, z2);
-    tess.addVertex(x2, y2, z2);
-    tess.addVertex(x1, y2, z1);
+      wr.addVertex(x1, y1, z1);
+      wr.addVertex(x2, y1, z2);
+      wr.addVertex(x2, y2, z2);
+      wr.addVertex(x1, y2, z1);
     tess.draw();
 
     // Second rectangle.
-    tess.startDrawing(GL11.GL_LINE_LOOP);
-    tess.setColorRGBA(blockType.getARGB().getRed(),
+      wr.startDrawing(GL11.GL_LINE_LOOP);
+      wr.setColorRGBA(blockType.getARGB().getRed(),
       blockType.getARGB().getGreen(), blockType.getARGB().getBlue(),
       blockType.getARGB().getAlpha());
     GL11.glLineWidth(blockType.getLineWidth());
-    tess.addVertex(x1, y1, z2);
-    tess.addVertex(x2, y1, z1);
-    tess.addVertex(x2, y2, z1);
-    tess.addVertex(x1, y2, z2);
+      wr.addVertex(x1, y1, z2);
+      wr.addVertex(x2, y1, z1);
+      wr.addVertex(x2, y2, z1);
+      wr.addVertex(x1, y2, z2);
     tess.draw();
   } // render
 } // class PlantBlockModel
