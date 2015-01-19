@@ -487,6 +487,28 @@ public final class BlockTypeRegistry
 
   // --------------------------------------------------------------------------
   /**
+   * Return the block (kill) type with the specified name (case insensitive).
+   *
+   * @param name the name of the block (kill) as returned by LogBlock queries, e.g.
+   *          "cow" or "pig".
+   * @return the {@link BlockType}.
+   */
+  public BlockType getBlockKillTypeByName(String name)
+  {
+    BlockType result = _byName.get(name.toLowerCase());
+    if (result == null)
+    {
+      // Return the "player" BlockKillType.
+      return getBlockTypeById(219);
+    }
+    else
+    {
+      return result;
+    }
+  } // getBlockKillTypeByName
+
+  // --------------------------------------------------------------------------
+  /**
    * Return the block type with the numeric ID in the form ## or ##:# as a
    * String.
    * 

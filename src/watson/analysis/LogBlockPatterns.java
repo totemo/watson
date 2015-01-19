@@ -17,6 +17,8 @@ public interface LogBlockPatterns
 
   public static final Pattern LB_COORD                = Pattern.compile("^\\((\\d+)\\) (\\d{2})-(\\d{2}) (\\d{2}):(\\d{2}):(\\d{2}) (\\w+) (created|destroyed) ([a-zA-Z ]+)(?: \\[(.*)\\] \\[(.*)\\] \\[(.*)\\] \\[(.*)\\])? at (-?\\d+):(\\d+):(-?\\d+)$");
 
+  public static final Pattern LB_COORD_KILLS          = Pattern.compile("^\\((\\d+)\\) (\\d{2})-(\\d{2}) (\\d{2}):(\\d{2}):(\\d{2}) (\\w+) (killed) ([a-zA-Z ]+) at (-?\\d+):(\\d+):(-?\\d+) with (.*)$");
+
   public static final Pattern LB_COORD_REPLACED       = Pattern.compile("^\\((\\d+)\\) (\\d{2})-(\\d{2}) (\\d{2}):(\\d{2}):(\\d{2}) (\\w+) replaced ([a-zA-Z ]+) with ([a-zA-Z ]+) at (-?\\d+):(\\d+):(-?\\d+)$");
 
   public static final Pattern LB_TP                   = Pattern.compile("^Teleported to (-?\\d+):(\\d+):(-?\\d+)$");
