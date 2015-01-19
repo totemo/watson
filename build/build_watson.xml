@@ -17,7 +17,7 @@
 
 	<!-- The version of your mod, can be any string as long as it's valid as part of a file name -->
 	<!-- and should match the version string returned by your mod.                               -->
-	<property name="version"        value="0.8.1" />
+	<property name="version"        value="0.9.0" />
 
 	<!-- The Minecraft version the mod is for, appended to the output file name for reference -->
 	<property name="mcversion"      value="1.8.0" />
@@ -54,9 +54,18 @@
 	<property name="file.prefix"    value="mod" />
 	<property name="file.type"      value="litemod" />
 
-	<!-- Path to the python executable used by MCP, change if using a non-windows OS -->
-	<!-- <property name="python"         location="${mcp.dir}/runtime/bin/python/python_mcp.exe" /> -->
-	<property name="python" location="/usr/bin/python" />
+	<!-- Path to the python executable used by MCP. -->
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties" classpath="tasks/ant-contrib.jar" />
+	<if>
+		<os family="windows"/>
+		<then>
+			<property name="python" location="${mcp.dir}/runtime/bin/python/python_mcp.exe"/>
+		</then>
+		<!-- Add an <elseif> here for <os family=mac"/> if this <else> doesn't work for Macs.    -->
+		<else>
+			<property name="python" location="/usr/bin/python"/>
+		</else>
+	</if>
 
 	<!-- Main target -->
 	<target name="main" description="Perform all tasks for a build">

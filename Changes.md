@@ -1,5 +1,10 @@
 Change History
 ==============
+0.9.0.108-mc1.8.0
+* Updated to LiteLoader 1.8.0. Thanks to @GuntherDW for contributing this code.
+* Added in-game help for /w config. Thanks to @tompreuss for contributing this code.
+* Added visualisation of LogBlock death locations. Thanks to @tompreuss.
+
 0.8.0.104-mc1.7.10
 -------------------
 * Updated to LiteLoader 1.7.10.

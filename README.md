@@ -400,9 +400,11 @@ Note also that the parsing of lookup results currently ignores the returned worl
     /co l r:10
 
 
-### Configuration File
+### Configuration
 
-Watson's main configuration settings are stored in ".minecraft/mods/watson/configuration.yml".  They can be changed using the "/w config" command.  If a setting can be either "on" or "off", omitting a value for it in "/w config" will reverse the current value.
+Watson's main configuration settings are stored in ".minecraft/mods/watson/configuration.yml".  They can be changed using the "/w config" command.  If a setting can be either "on" or "off", omitting a value for it in "/w config" will reverse the current value.  If the setting has a value that can't be toggled in this way, "/w config settingname" will show its current value.
+
+Running "/w config help" will show help for all of the configuration settings.
 
 <table>
   <tr>

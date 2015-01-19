@@ -159,10 +159,13 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
    * Perform actions triggered on initial join.
    * 
    * @see com.mumfrey.liteloader.JoinGameListener#onJoinGame(net.minecraft.network.INetHandler,
-   *      net.minecraft.network.play.server.S01PacketJoinGame)
+   *      net.minecraft.network.play.server.S01PacketJoinGame,
+   *      net.minecraft.client.multiplayer.ServerData,
+   *      com.mojang.realmsclient.dto.RealmsServer)
    */
   @Override
-  public void onJoinGame(INetHandler netHandler, S01PacketJoinGame joinGamePacket, ServerData serverData, RealmsServer realmsServer)
+  public void onJoinGame(INetHandler netHandler, S01PacketJoinGame joinGamePacket, ServerData serverData,
+                         RealmsServer realmsServer)
   {
     if (Configuration.instance.isEnabled())
     {
@@ -179,8 +182,9 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
 
   // --------------------------------------------------------------------------
   /**
-   * @see com.mumfrey.liteloader.ChatFilter#onChat(net.minecraft.network.play.server.S02PacketChat,
-   *      net.minecraft.util.IChatComponent, java.lang.String)
+   * @see com.mumfrey.liteloader.ChatFilter#onChat(net.minecraft.util.IChatComponent,
+   *      java.lang.String,
+   *      com.mumfrey.liteloader.core.LiteLoaderEventBroker.ReturnValue)
    */
   @Override
   public boolean onChat(IChatComponent chat, String message, LiteLoaderEventBroker.ReturnValue<IChatComponent> newMessage)
@@ -188,20 +192,7 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
     boolean allowChat = ChatProcessor.instance.onChat(chat);
     if (allowChat)
     {
-      /* try
-      {
-        // Since the chat won't go through Chat.localChat(), highlight it here.
-        // TODO: Obfuscation.
-        String fieldName = ObfuscationUtilities.getObfuscatedFieldName("field_148919_a", "a", "field_148919_a");
-        Field field = S02PacketChat.class.getDeclaredField(fieldName);
-        field.setAccessible(true);
-        field.set(chatPacket, Chat.getChatHighlighter().highlight(chat));
-      }
-      catch (Exception ex)
-      {
-        Log.exception(Level.WARNING, "can't modify chat packet", ex);
-      } */
-        newMessage.set(Chat.getChatHighlighter().highlight(chat));
+      newMessage.set(Chat.getChatHighlighter().highlight(chat));
     }
     return allowChat;
   }
@@ -335,7 +326,7 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
 
   private double getPlayerX(float partialTicks)
   {
-      EntityPlayerSP p = Minecraft.getMinecraft().thePlayer;
+    EntityPlayerSP p = Minecraft.getMinecraft().thePlayer;
     return p.prevPosX + (p.posX - p.prevPosX) * partialTicks;
   }
 
@@ -343,7 +334,7 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
 
   private double getPlayerY(float partialTicks)
   {
-      EntityPlayerSP p = Minecraft.getMinecraft().thePlayer;
+    EntityPlayerSP p = Minecraft.getMinecraft().thePlayer;
     return p.prevPosY + (p.posY - p.prevPosY) * partialTicks;
   }
 
@@ -351,7 +342,7 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
 
   private double getPlayerZ(float partialTicks)
   {
-      EntityPlayerSP p = Minecraft.getMinecraft().thePlayer;
+    EntityPlayerSP p = Minecraft.getMinecraft().thePlayer;
     return p.prevPosZ + (p.posZ - p.prevPosZ) * partialTicks;
   }
 

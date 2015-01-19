@@ -3,9 +3,9 @@
     "__comment2__": "Actual comments in this file confuse the JSON parser when deployed. :/",
 
     "name": "watson",
-    "mcversion": "1.7.10",
-    "version": "0.8.0.104-mc1.7.10",
-    "revision": "104",
+    "mcversion": "1.8.0",
+    "version": "0.9.0.108-mc1.8.0",
+    "revision": "108",
     "author": "totemo",
     "description": "A 3-D log visualisation tool."
 }

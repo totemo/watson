@@ -49,6 +49,8 @@ public class ChatProcessor
    * Process the chat
    * 
    * @param chat the chat message.
+   * @return true if the chat should be echoed in the client chat GUI; false if
+   *         it should be filtered out.
    */
   public boolean onChat(IChatComponent chat)
   {
