@@ -1,5 +1,12 @@
 # Add block or item names you want to be overridden or also names for custom blocks
 
+'1':
+  '1': granite
+  '2': polished granite
+  '3': diorite
+  '4': polished diorite
+  '5': andesite
+  '6': polished andesite
 '3':
   '1': grassless dirt
   '2': podzol
@@ -58,6 +65,9 @@
   '13': spruce leaves
   '14': birch leaves
   '15': jungle leaves
+'19':
+  '0': sponge
+  '1': wet sponge
 '24':
   '0': sandstone
   '1': chiseled sandstone
@@ -127,6 +137,8 @@
   '14': upper nether brick slab
   '15': upper quartz slab
 '53': oak wood stairs
+'64': oak door
+'85': oak fence
 '95':
   '0': white stained glass
   '1': orange stained glass
@@ -144,6 +156,7 @@
   '13': green stained glass
   '14': red stained glass
   '15': black stained glass
+'96': wooden trapdoor
 '97':
   '0': stone monster egg
   '1': cobblestone monster egg
@@ -158,6 +171,7 @@
   '3': chiseled stone brick
 '99': huge brown mushroom
 '100': huge red mushroom
+'107': oak fence gate
 '109': stone brick stairs
 '110': mycelium
 '125':
@@ -234,6 +248,10 @@
   '9': dark oak log
 '163': acacia wood stairs
 '164': dark oak wood stairs
+'168':
+  '0': prismarine
+  '1': prismarine bricks
+  '2': dark prismarine
 '171':
   '0': white carpet
   '1': orange carpet
@@ -260,6 +278,10 @@
   '4': rose bush
   '5': peony
   '8': double plant
+'181': double red sandstone slab
+'182':
+  '0': red sandstone slab
+  '8': upper red sandstone slab
 '351':
   '0': black dye
   '1': red dye

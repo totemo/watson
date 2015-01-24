@@ -1,16 +1,22 @@
 Change History
 ==============
+0.9.1.110-mc1.8.0
+-----------------
+* Added shape and colour information for the new blocks in 1.8.
+* Updated config/LogBlock/materials.yml to allow Watson to more accurately draw those blocks on servers that use LogBlock.  Simply drop that file in plugins/LogBlock/ on the server.
+
 0.9.0.108-mc1.8.0
+-----------------
 * Updated to LiteLoader 1.8.0. Thanks to @GuntherDW for contributing this code.
 * Added in-game help for /w config. Thanks to @tompreuss for contributing this code.
 * Added visualisation of LogBlock death locations. Thanks to @tompreuss.
 
 0.8.0.104-mc1.7.10
--------------------
+------------------
 * Updated to LiteLoader 1.7.10.
 
 0.7.0.100-mc1.7.2_02
--------------------
+--------------------
 * Fix Issue #35: Make reformatting and colour coding of LogBlock query results configurable.
 
 0.6.1.95-mc1.7.2_02

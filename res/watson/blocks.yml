@@ -10,8 +10,8 @@
 # "birchlog" is recognised as a synonym of "birch log".
 #
 # The "data" field can be an integer (from 0 to 15), a list of integers, e.g.
-# [0, 1, 2, 3], or the string all signifying the list of all integers from 0 to
-# 15 inclusive.  When multiple data values are listed under a given id, block
+# [0, 1, 2, 3], or the string "all" signifying the list of all integers from 0
+# to 15 inclusive.  When multiple data values are listed under a given id, block
 # types are added for all of those data values.  Only the lowest data value
 # is associated with the list of names.  This allows query results from logging
 # plugins that return id:data numbers to be correctly displayed with less effort
@@ -55,6 +55,38 @@ blocks:
       lineWidth: 0.5
       bounds: [0.3, 0.3, 0.3, 0.7, 0.7, 0.7]
       rgba: [127, 127, 127]
+
+    - id: 1
+      names: [granite]
+      data: 1
+      lineWidth: 0.5
+      bounds: [0.3, 0.3, 0.3, 0.7, 0.7, 0.7]
+      rgba: [157, 106, 87]
+    - id: 1
+      names: [polished granite]
+      data: 2
+      rgba: [157, 106, 87]
+    - id: 1
+      names: [diorite]
+      data: 3
+      lineWidth: 0.5
+      bounds: [0.3, 0.3, 0.3, 0.7, 0.7, 0.7]
+      rgba: [201, 201, 205]
+    - id: 1
+      names: [polished diorite]
+      data: 4
+      rgba: [201, 201, 205]
+    - id: 1
+      names: [andesite]
+      data: 5
+      lineWidth: 0.5
+      bounds: [0.3, 0.3, 0.3, 0.7, 0.7, 0.7]
+      rgba: [137, 138, 129]
+    - id: 1
+      names: [polished andesite]
+      data: 6
+      rgba: [137, 138, 129]
+
     - id: 2
       names: [grass]
       rgba: [108, 172, 66]
@@ -66,7 +98,7 @@ blocks:
       rgba: [150, 108, 74]
     - id: 3
       data: 1
-      names: [grassless dirt]
+      names: [grassless dirt, coarse dirt]
       lineWidth: 0.5
       bounds: [0.3, 0.3, 0.3, 0.7, 0.7, 0.7]
       rgba: [150, 108, 74]
@@ -228,6 +260,10 @@ blocks:
       
     - id: 19
       names: [sponge]
+      rgba: [206, 206, 70]
+    - id: 19
+      data: 1
+      names: [wet sponge]
       rgba: [206, 206, 70]
     - id: 20
       names: [glass]
@@ -657,7 +693,7 @@ blocks:
 
     - id: 64
       data: all
-      names: [wooden door]
+      names: [wooden door, oak door]
       rgba: [143, 107, 53]
       bounds: [0.0, 0.0, 0.8125, 1.0, 1.0, 1.0]
     - id: 65
@@ -750,7 +786,7 @@ blocks:
       names: [jukebox]
       rgba: [102, 56, 33]
     - id: 85
-      names: [fence]
+      names: [fence, oak fence]
       rgba: [188, 152, 98]
       bounds: [0.375, 0.0, 0.375, 0.625, 1.0, 0.625]      
     - id: 86
@@ -858,7 +894,7 @@ blocks:
             
     - id: 96
       data: all
-      names: [trap door,trapdoor]
+      names: [trap door, trapdoor, wooden trapdoor]
       rgba: [145, 109, 56]
       bounds: [0.0, 0.0, 0.0, 1.0, 0.1875, 1.0]      
       
@@ -944,7 +980,7 @@ blocks:
       bounds: [0.0, 0.0, 0.0, 1.0, 1.0, 0.0625]
     - id: 107
       data: all
-      names: [fence gate, gate]
+      names: [fence gate, oak fence gate]
       rgba: [188, 152, 98]
       bounds: [0.375, 0.3125, 0.0, 0.625, 1.0, 1.0]      
     - id: 108
@@ -1470,6 +1506,35 @@ blocks:
       rgba: [69, 44, 21]
       model: stair
 
+    - id: 165
+      data: all
+      names: [slime block]
+      rgba: [123, 200, 101]
+    - id: 166
+      data: all
+      names: [barrier]
+      rgba: [227, 0, 0]
+      bounds: [0.25, 0.25, 0.25, 0.75, 0.75, 0.75]
+    - id: 167
+      data: all
+      names: [iron trapdoor]
+      rgba: [197, 197, 197]
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.1875, 1.0]
+    - id: 168
+      data: 0
+      names: [prismarine]
+      rgba: [84, 157, 155]
+    - id: 168
+      data: 1
+      names: [prismarine bricks]
+      rgba: [101, 153, 139]
+    - id: 168
+      data: 2
+      names: [dark prismarine]
+      rgba: [56, 90, 79]
+    - id: 169
+      names: [sea lantern]
+      rgba: [221, 231, 222]
     - id: 170
       data: [0, 4, 8]
       names: [hay block]
@@ -1606,7 +1671,121 @@ blocks:
       rgba: [23, 121, 9]
       bounds: [0.1, 0.0, 0.1, 0.9, 1.0, 0.9]
       model: plant
-          
+
+    - id: 176
+      names: [standing banner, banner]
+      rgba: [132, 132, 132]
+      bounds: [0.09375, 0.125, 0.4375, 0.90625, 1.84375, 0.625]
+    - id: 177
+      names: [wall banner]
+      rgba: [132, 132, 132]
+      bounds: [0.09375, -0.875, 0.0, 0.90625, 0.875, 0.1875]
+
+    - id: 179
+      data: 0
+      names: [red sandstone]
+      rgba: [170, 87, 31]
+    - id: 179
+      data: 1
+      names: [chiseled red sandstone]
+      rgba: [170, 87, 31]
+    - id: 179
+      data: 2
+      names: [smooth red sandstone]
+      rgba: [170, 87, 31]
+    - id: 180
+      data: all
+      names: [red sandstone stairs]
+      rgba: [170, 87, 31]
+      model: stair
+    - id: 181
+      data: all
+      names: [double red sandstone slab, double stone slab2]
+      rgba: [170, 87, 31]
+    - id: 182
+      data: 0
+      names: [red sandstone slab, stone slab2]
+      rgba: [170, 87, 31]
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.5, 1.0]
+    - id: 182
+      data: 8
+      names: [upper red sandstone slab]
+      rgba: [170, 87, 31]
+      bounds: [0.0, 0.5, 0.0, 1.0, 1.0, 1.0]
+
+    - id: 183
+      data: all
+      names: [spruce fence gate]
+      rgba: [69, 53, 31]
+      bounds: [0.375, 0.3125, 0.0, 0.625, 1.0, 1.0]
+    - id: 184
+      data: all
+      names: [birch fence gate]
+      rgba: [157, 145, 97]
+      bounds: [0.375, 0.3125, 0.0, 0.625, 1.0, 1.0]
+    - id: 185
+      data: all
+      names: [jungle fence gate]
+      rgba: [137, 98, 70]
+      bounds: [0.375, 0.3125, 0.0, 0.625, 1.0, 1.0]
+    - id: 186
+      data: all
+      names: [dark oak fence gate]
+      rgba: [69, 44, 21]
+      bounds: [0.375, 0.3125, 0.0, 0.625, 1.0, 1.0]
+    - id: 187
+      data: all
+      names: [acacia fence gate]
+      rgba: [182, 97, 54]
+      bounds: [0.375, 0.3125, 0.0, 0.625, 1.0, 1.0]
+
+    - id: 188
+      names: [spruce fence]
+      rgba: [69, 53, 31]
+      bounds: [0.375, 0.0, 0.375, 0.625, 1.0, 0.625]
+    - id: 189
+      names: [birch fence]
+      rgba: [157, 145, 97]
+      bounds: [0.375, 0.0, 0.375, 0.625, 1.0, 0.625]
+    - id: 190
+      names: [jungle fence]
+      rgba: [137, 98, 70]
+      bounds: [0.375, 0.0, 0.375, 0.625, 1.0, 0.625]
+    - id: 191
+      names: [dark oak fence]
+      rgba: [69, 44, 21]
+      bounds: [0.375, 0.0, 0.375, 0.625, 1.0, 0.625]
+    - id: 192
+      names: [acacia fence]
+      rgba: [182, 97, 54]
+      bounds: [0.375, 0.0, 0.375, 0.625, 1.0, 0.625]
+
+    - id: 193
+      data: all
+      names: [spruce door]
+      rgba: [69, 53, 31]
+      bounds: [0.0, 0.0, 0.8125, 1.0, 1.0, 1.0]
+    - id: 194
+      data: all
+      names: [birch door]
+      rgba: [157, 145, 97]
+      bounds: [0.0, 0.0, 0.8125, 1.0, 1.0, 1.0]
+    - id: 195
+      data: all
+      names: [jungle door]
+      rgba: [137, 98, 70]
+      bounds: [0.0, 0.0, 0.8125, 1.0, 1.0, 1.0]
+    - id: 196
+      data: all
+      names: [dark oak door]
+      rgba: [69, 44, 21]
+      bounds: [0.0, 0.0, 0.8125, 1.0, 1.0, 1.0]
+    - id: 197
+      data: all
+      names: [acacia door]
+      rgba: [182, 97, 54]
+      bounds: [0.0, 0.0, 0.8125, 1.0, 1.0, 1.0]
+
     # A minor concession to Prism's logging of paintings, frames and minecarts.
     # Since these IDs are currently unused, abuse them to represent those.
     - id: 252
