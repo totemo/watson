@@ -18,6 +18,7 @@ import com.mumfrey.liteloader.util.ObfuscationUtilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.settings.KeyBinding;
@@ -256,19 +257,19 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
       RenderHelper.disableStandardItemLighting();
       OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 
-      GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-      GL11.glEnable(GL11.GL_BLEND);
-      GL11.glDisable(GL11.GL_TEXTURE_2D);
-      GL11.glDisable(GL11.GL_LIGHTING);
-      GL11.glDepthMask(false);
-      GL11.glDisable(GL11.GL_DEPTH_TEST);
+      GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+      GlStateManager.enableBlend();
+      GlStateManager.disableTexture2D();
+      GlStateManager.disableLighting();
+      GlStateManager.depthMask(false);
+      GlStateManager.disableDepth();
 
       boolean foggy = GL11.glIsEnabled(GL11.GL_FOG);
-      GL11.glDisable(GL11.GL_FOG);
+      GlStateManager.disableFog();
 
-      GL11.glPushMatrix();
+      GlStateManager.pushMatrix();
 
-      GL11.glTranslated(
+      GlStateManager.translate(
         -getPlayerX(partialTicks),
         -getPlayerY(partialTicks),
         -getPlayerZ(partialTicks));
@@ -288,7 +289,7 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
       // tess.addVertex(-5, 27, 5);
       // tess.draw();
 
-      GL11.glPopMatrix();
+      GlStateManager.popMatrix();
 
       edits.drawAnnotations();
       edits.getOreDB().drawDepositLabels();
@@ -301,13 +302,13 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
       // Or else, fog is *all* you'll see with Optifine.
       if (foggy)
       {
-        GL11.glEnable(GL11.GL_FOG);
+          GlStateManager.enableFog();
       }
-      GL11.glEnable(GL11.GL_DEPTH_TEST);
-      GL11.glDepthMask(true);
-      GL11.glEnable(GL11.GL_LIGHTING);
-      GL11.glEnable(GL11.GL_TEXTURE_2D);
-      GL11.glDisable(GL11.GL_BLEND);
+      GlStateManager.enableDepth();
+      GlStateManager.depthMask(true);
+      GlStateManager.enableLighting();
+      GlStateManager.enableTexture2D();
+      GlStateManager.disableBlend();
 
       RenderHelper.enableStandardItemLighting();
     }

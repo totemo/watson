@@ -2,6 +2,7 @@ package watson.db;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -134,27 +135,27 @@ public class Annotation
       dl = far;
     }
 
-    GL11.glPushMatrix();
+    GlStateManager.pushMatrix();
 
     double scale = (0.05 * dl + 1.0) * scaleFactor;
-    GL11.glTranslated(dx, dy, dz);
-    GL11.glRotatef(-renderManager.playerViewY, 0.0f, 1.0f, 0.0f);
-    GL11.glRotatef(
+    GlStateManager.translate(dx, dy, dz);
+    GlStateManager.rotate(-renderManager.playerViewY, 0.0f, 1.0f, 0.0f);
+    GlStateManager.rotate(
       mc.gameSettings.thirdPersonView != 2 ? renderManager.playerViewX
         : -renderManager.playerViewX, 1.0f, 0.0f, 0.0f);
-    GL11.glScaled(-scale, -scale, scale);
-    GL11.glDisable(GL11.GL_LIGHTING);
-    GL11.glEnable(GL11.GL_BLEND);
-    GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+    GlStateManager.scale(-scale, -scale, scale);
+    GlStateManager.disableLighting();
+    GlStateManager.disableBlend();
+    GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
     Tessellator tessellator = Tessellator.getInstance();
       WorldRenderer wr = tessellator.getWorldRenderer();
 
     int textWidth = fontRenderer.getStringWidth(text) >> 1;
     if (textWidth != 0)
     {
-      GL11.glDisable(GL11.GL_TEXTURE_2D);
-      GL11.glDisable(GL11.GL_DEPTH_TEST);
-      GL11.glDepthMask(false);
+      GlStateManager.disableTexture2D();
+      GlStateManager.disableDepth();
+      GlStateManager.depthMask(false);
 
       // Draw background plate.
         wr.startDrawingQuads();
@@ -166,18 +167,18 @@ public class Annotation
       tessellator.draw();
 
       // Draw text.
-      GL11.glEnable(GL11.GL_TEXTURE_2D);
-      GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+      GlStateManager.enableTexture2D();
+      GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
       fontRenderer.drawString(text, -textWidth, -5, fgARGB);
-      GL11.glEnable(GL11.GL_DEPTH_TEST);
-      GL11.glDepthMask(true);
+      GlStateManager.enableDepth();
+      GlStateManager.depthMask(true);
     }
 
-    GL11.glDisable(GL11.GL_BLEND);
-    GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-    GL11.glEnable(GL11.GL_TEXTURE_2D);
-    GL11.glEnable(GL11.GL_LIGHTING);
-    GL11.glPopMatrix();
+    GlStateManager.disableBlend();
+    GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+    GlStateManager.enableTexture2D();
+    GlStateManager.enableLighting();
+    GlStateManager.popMatrix();
   } // drawBillboard
 
   // --------------------------------------------------------------------------
