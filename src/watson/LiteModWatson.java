@@ -4,17 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.logging.Level;
 
-import com.mojang.realmsclient.dto.RealmsServer;
-import com.mumfrey.liteloader.core.LiteLoaderEventBroker;
-import com.mumfrey.liteloader.util.ObfuscationUtilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.ServerData;
@@ -22,11 +17,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.play.client.C01PacketChatMessage;
 import net.minecraft.network.play.server.S01PacketJoinGame;
-import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.util.IChatComponent;
 
 import org.lwjgl.input.Keyboard;
@@ -39,15 +32,16 @@ import watson.db.BlockEditSet;
 import watson.debug.Log;
 
 import com.google.gson.Gson;
+import com.mojang.realmsclient.dto.RealmsServer;
 import com.mumfrey.liteloader.ChatFilter;
 import com.mumfrey.liteloader.JoinGameListener;
 import com.mumfrey.liteloader.OutboundChatFilter;
 import com.mumfrey.liteloader.PostRenderListener;
 import com.mumfrey.liteloader.Tickable;
 import com.mumfrey.liteloader.core.LiteLoader;
+import com.mumfrey.liteloader.core.LiteLoaderEventBroker;
 import com.mumfrey.liteloader.modconfig.ConfigStrategy;
 import com.mumfrey.liteloader.modconfig.ExposableOptions;
-import com.mumfrey.liteloader.util.ModUtilities;
 
 // ----------------------------------------------------------------------------
 /**
@@ -418,7 +412,7 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable, Po
    * the clock
    */
   private static KeyBinding _screenShotKeyBinding = new KeyBinding("Take Screenshot", Keyboard.KEY_F12,
-                                                                   "Watson");
+                                                    "Watson");
 
   /**
    * True while the player holds down the Watson screenshot key. Used to detect

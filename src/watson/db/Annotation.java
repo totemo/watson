@@ -108,7 +108,7 @@ public class Annotation
    * @param text the text on the billboard.
    */
   public static void drawBillboard(double x, double y, double z, int bgARGB,
-                                   int fgARGB, double scaleFactor, String text)
+    int fgARGB, double scaleFactor, String text)
   {
     RenderManager renderManager = Minecraft.getMinecraft().getRenderManager();
     FontRenderer fontRenderer = renderManager.getFontRenderer();
@@ -148,7 +148,7 @@ public class Annotation
     GlStateManager.disableBlend();
     GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
     Tessellator tessellator = Tessellator.getInstance();
-      WorldRenderer wr = tessellator.getWorldRenderer();
+    WorldRenderer wr = tessellator.getWorldRenderer();
 
     int textWidth = fontRenderer.getStringWidth(text) >> 1;
     if (textWidth != 0)
@@ -158,12 +158,12 @@ public class Annotation
       GlStateManager.depthMask(false);
 
       // Draw background plate.
-        wr.startDrawingQuads();
-        wr.setColorRGBA_I(bgARGB & 0x00FFFFFF, (bgARGB >>> 24) & 0xFF);
-        wr.addVertex(-textWidth - 1, -6, 0.0);
-        wr.addVertex(-textWidth - 1, 4, 0.0);
-        wr.addVertex(textWidth + 1, 4, 0.0);
-        wr.addVertex(textWidth + 1, -6, 0.0);
+      wr.startDrawingQuads();
+      wr.setColorRGBA_I(bgARGB & 0x00FFFFFF, (bgARGB >>> 24) & 0xFF);
+      wr.addVertex(-textWidth - 1, -6, 0.0);
+      wr.addVertex(-textWidth - 1, 4, 0.0);
+      wr.addVertex(textWidth + 1, 4, 0.0);
+      wr.addVertex(textWidth + 1, -6, 0.0);
       tessellator.draw();
 
       // Draw text.

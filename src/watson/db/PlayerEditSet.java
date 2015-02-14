@@ -152,11 +152,11 @@ public class PlayerEditSet
     if (settings.areVectorsShown() && isVisible() && !_edits.isEmpty())
     {
       final Tessellator tess = Tessellator.getInstance();
-        final WorldRenderer wr = tess.getWorldRenderer();
-        wr.startDrawing(GL11.GL_LINES);
+      final WorldRenderer wr = tess.getWorldRenderer();
+      wr.startDrawing(GL11.GL_LINES);
 
       // TODO: Make the vector colour and thickness configurable.
-        wr.setColorRGBA_I(colour.getRGB(), colour.getAlpha());
+      wr.setColorRGBA_I(colour.getRGB(), colour.getAlpha());
       GL11.glLineWidth(0.5f);
 
       // Unit X and Y vectors used for cross products to get arrow axes.
@@ -173,8 +173,8 @@ public class PlayerEditSet
           BlockEdit next = it.next();
 
           // Work out whether to link edits with vectors.
-          boolean show = (next.creation && settings.isLinkedCreations())
-                         || (!next.creation && settings.isLinkedDestructions());
+          boolean show = (next.creation && settings.isLinkedCreations()) ||
+                         (!next.creation && settings.isLinkedDestructions());
           if (show)
           {
             Vec3 pPos = new Vec3(0.5 + prev.x, 0.5 + prev.y, 0.5 + prev.z);
@@ -188,8 +188,8 @@ public class PlayerEditSet
             if (length >= settings.getMinVectorLength())
             {
               // Draw the vector.
-                wr.addVertex(pPos.xCoord, pPos.yCoord, pPos.zCoord);
-                wr.addVertex(nPos.xCoord, nPos.yCoord, nPos.zCoord);
+              wr.addVertex(pPos.xCoord, pPos.yCoord, pPos.zCoord);
+              wr.addVertex(nPos.xCoord, nPos.yCoord, nPos.zCoord);
 
               // Length from arrow tip to midpoint of vector as a fraction of
               // the total vector length. Scale the arrow in proportion to the
@@ -229,18 +229,20 @@ public class PlayerEditSet
 
               Vec3 fin2 = fin1.crossProduct(diff).normalize();
 
-                Vec3 draw1 = new Vec3(fin1.xCoord * arrowScale * length, fin1.yCoord * arrowScale * length, fin1.zCoord * arrowScale * length);
-                Vec3 draw2 = new Vec3(fin2.xCoord * arrowScale * length, fin2.yCoord * arrowScale * length, fin2.zCoord * arrowScale * length);
+              Vec3 draw1 = new Vec3(fin1.xCoord * arrowScale * length, fin1.yCoord * arrowScale * length, fin1.zCoord
+                                                                                                          * arrowScale * length);
+              Vec3 draw2 = new Vec3(fin2.xCoord * arrowScale * length, fin2.yCoord * arrowScale * length, fin2.zCoord
+                                                                                                          * arrowScale * length);
 
               // Draw four fins.
-                wr.addVertex(tip.xCoord, tip.yCoord, tip.zCoord);
-                wr.addVertex(tail.xCoord + draw1.xCoord, tail.yCoord + draw1.yCoord, tail.zCoord + draw1.zCoord);
-                wr.addVertex(tip.xCoord, tip.yCoord, tip.zCoord);
-                wr.addVertex(tail.xCoord - draw1.xCoord, tail.yCoord - draw1.yCoord, tail.zCoord - draw1.zCoord);
-                wr.addVertex(tip.xCoord, tip.yCoord, tip.zCoord);
-                wr.addVertex(tail.xCoord + draw2.xCoord, tail.yCoord + draw2.yCoord, tail.zCoord + draw2.zCoord);
-                wr.addVertex(tip.xCoord, tip.yCoord, tip.zCoord);
-                wr.addVertex(tail.xCoord - draw2.xCoord, tail.yCoord - draw2.yCoord, tail.zCoord - draw2.zCoord);
+              wr.addVertex(tip.xCoord, tip.yCoord, tip.zCoord);
+              wr.addVertex(tail.xCoord + draw1.xCoord, tail.yCoord + draw1.yCoord, tail.zCoord + draw1.zCoord);
+              wr.addVertex(tip.xCoord, tip.yCoord, tip.zCoord);
+              wr.addVertex(tail.xCoord - draw1.xCoord, tail.yCoord - draw1.yCoord, tail.zCoord - draw1.zCoord);
+              wr.addVertex(tip.xCoord, tip.yCoord, tip.zCoord);
+              wr.addVertex(tail.xCoord + draw2.xCoord, tail.yCoord + draw2.yCoord, tail.zCoord + draw2.zCoord);
+              wr.addVertex(tip.xCoord, tip.yCoord, tip.zCoord);
+              wr.addVertex(tail.xCoord - draw2.xCoord, tail.yCoord - draw2.yCoord, tail.zCoord - draw2.zCoord);
             } // if we are drawing this vector
             prev = next;
           } // if
@@ -290,7 +292,7 @@ public class PlayerEditSet
    * most recent.
    */
   protected TreeSet<BlockEdit>  _edits                 = new TreeSet<BlockEdit>(
-                                                                                new BlockEditComparator());
+                                                         new BlockEditComparator());
 
   /**
    * True if this player's edits are visible.
