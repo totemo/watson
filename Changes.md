@@ -1,5 +1,9 @@
 Change History
 ==============
+0.9.2.111-mc1.8.0
+-----------------
+* Fix some potential rendering issues by using Mojang's GlStateManager (thanks to @GuntherDW for this patch).
+
 0.9.1.110-mc1.8.0
 -----------------
 * Added shape and colour information for the new blocks in 1.8.
