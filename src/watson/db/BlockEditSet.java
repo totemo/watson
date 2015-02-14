@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 
+import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
 
 import watson.Configuration;
@@ -393,7 +394,7 @@ public class BlockEditSet
   {
     try
     {
-      GL11.glPushMatrix();
+      GlStateManager.pushMatrix();
 
       Minecraft mc = Minecraft.getMinecraft();
       ScaledResolution scaledResolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
@@ -401,7 +402,7 @@ public class BlockEditSet
     }
     finally
     {
-      GL11.glPopMatrix();
+      GlStateManager.popMatrix();
     }
   } // drawHUD
 
