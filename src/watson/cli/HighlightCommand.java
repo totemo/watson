@@ -16,7 +16,7 @@ public class HighlightCommand extends WatsonCommandBase
    * @see net.minecraft.src.ICommand#getCommandName()
    */
   @Override
-  public String getName()
+  public String getCommandName()
   {
     return "hl";
   }
@@ -27,7 +27,7 @@ public class HighlightCommand extends WatsonCommandBase
    *      java.lang.String[])
    */
   @Override
-  public void execute(ICommandSender sender, String[] args) throws CommandException
+  public void processCommand(ICommandSender sender, String[] args) throws CommandException
   {
     ChatHighlighter highlighter = Chat.getChatHighlighter();
     if (args.length == 0)

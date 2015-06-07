@@ -22,7 +22,7 @@ public abstract class WatsonCommandBase extends CommandBase
    * @return the usage message for the command.
    */
   @Override
-  public String getUsage(ICommandSender icommandsender)
+  public String getCommandUsage(ICommandSender icommandsender)
   {
     return "";
   }

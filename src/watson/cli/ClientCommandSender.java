@@ -39,9 +39,9 @@ public class ClientCommandSender implements ICommandSender
    * @see net.minecraft.src.ICommandSender#getCommandSenderName()
    */
   @Override
-  public String getName()
+  public String getCommandSenderName()
   {
-    return _sender.getName();
+    return _sender.getCommandSenderName();
   }
 
   // --------------------------------------------------------------------------
@@ -49,7 +49,7 @@ public class ClientCommandSender implements ICommandSender
    * @see net.minecraft.src.ICommandSender#canCommandSenderUseCommand(java.lang.String)
    */
   @Override
-  public boolean canUseCommand(int unknown, String command)
+  public boolean canCommandSenderUseCommand(int unknown, String command)
   {
     return true;
   }

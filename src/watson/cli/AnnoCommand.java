@@ -20,7 +20,7 @@ public class AnnoCommand extends WatsonCommandBase
    * @see net.minecraft.src.ICommand#getCommandName()
    */
   @Override
-  public String getName()
+  public String getCommandName()
   {
     return "anno";
   }
@@ -31,7 +31,7 @@ public class AnnoCommand extends WatsonCommandBase
    *      java.lang.String[])
    */
   @Override
-  public void execute(ICommandSender sender, String[] args)
+  public void processCommand(ICommandSender sender, String[] args)
   {
     if (args.length == 0)
     {
