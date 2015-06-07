@@ -25,7 +25,7 @@ public interface CoreProtectPatterns
 
   // This format may describe either inspector results, or the first line of
   // each lookup result.
-  public static final Pattern DETAILS          = Pattern.compile("^(\\d+\\.\\d+/h ago|\\d{1,2}-\\d{1,2} \\d{1,2}:\\d{2}:\\d{2}) - (#?\\w+) (\\w+) #(\\d+(?::\\d+)?).+");
+  public static final Pattern DETAILS          = Pattern.compile("^(\\d+\\.\\d+/h ago|\\d{1,2}-\\d{1,2} \\d{1,2}:\\d{2}:\\d{2}) - (#?\\w+) (\\w+) (\\w+).+");
 
   public static final Pattern LOOKUP_COORDS    = Pattern.compile("^ +\\^ \\(x(-?\\d+)\\/y(\\d+)\\/z(-?\\d+)\\/(.+)\\)$");
 

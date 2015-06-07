@@ -130,7 +130,7 @@ public class CoreProtectAnalysis extends Analysis
       }
       else
       {
-        _type = BlockTypeRegistry.instance.getBlockTypeByFormattedId(type);
+        _type = BlockTypeRegistry.instance.getBlockTypeByName(type);
       }
 
       if (_isLookup)
