@@ -80,11 +80,11 @@ public class ClientCommandManager implements ICommandManager
    */
   public void registerCommand(ICommand command)
   {
-    _commands.put(command.getName(), command);
+    _commands.put(command.getCommandName(), command);
     _canonicalCommands.add(command);
 
     // Add all aliases of the command.
-    List<String> aliases = command.getAliases();
+    List<String> aliases = command.getCommandAliases();
     if (aliases != null)
     {
       for (String alias : aliases)
@@ -102,11 +102,11 @@ public class ClientCommandManager implements ICommandManager
    */
   public void unregisterCommand(ICommand command)
   {
-    _commands.remove(command.getName());
+    _commands.remove(command.getCommandName());
     _canonicalCommands.remove(command);
 
     // remove all aliases of the command.
-    List<String> aliases = command.getAliases();
+    List<String> aliases = command.getCommandAliases();
     if (aliases != null)
     {
       for (String alias : aliases)
@@ -155,9 +155,9 @@ public class ClientCommandManager implements ICommandManager
         throw new CommandNotFoundException();
       }
       tokens = Arrays.copyOfRange(tokens, 1, tokens.length);
-      if (command.canCommandSenderUse(sender))
+      if (command.canCommandSenderUseCommand(sender))
       {
-        command.execute(sender, tokens);
+        command.processCommand(sender, tokens);
         return 1;
       }
       else

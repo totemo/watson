@@ -37,7 +37,7 @@ public class CalcCommand extends WatsonCommandBase
    * @see net.minecraft.src.ICommand#getCommandName()
    */
   @Override
-  public String getName()
+  public String getCommandName()
   {
     return "calc";
   }
@@ -48,7 +48,7 @@ public class CalcCommand extends WatsonCommandBase
    *      java.lang.String[])
    */
   @Override
-  public void execute(ICommandSender sender, String[] args)
+  public void processCommand(ICommandSender sender, String[] args)
   {
     if (args.length == 0)
     {
