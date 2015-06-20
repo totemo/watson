@@ -17,7 +17,7 @@
 
 	<!-- The version of your mod, can be any string as long as it's valid as part of a file name -->
 	<!-- and should match the version string returned by your mod.                               -->
-	<property name="version"        value="0.9.2" />
+	<property name="version"        value="0.10.0" />
 
 	<!-- The Minecraft version the mod is for, appended to the output file name for reference -->
 	<property name="mcversion"      value="1.8.0" />
@@ -165,13 +165,13 @@
 				<expandproperties />
 			</filterchain>
 		</concat>
-		
+
 		<!-- Copy the staged litemod.json into the Eclipse project's res/ folder so it's         -->
 		<!-- available when testing (eventually).                                                -->
 		<copy todir="${eclipse.dir}/${project}/res" overwrite="true">
 			<fileset file="${stage.dir}/litemod.json" />
 		</copy>
-		
+
 		<!-- Stage selected classes from the build/runtime dependencies in mcp/lib/. -->
 		<unzip src="${mcp.dir}/lib/snakeyaml-1.10.jar"
 		       dest="${stage.dir}">
@@ -222,7 +222,7 @@
 		<mkdir dir="${dist.dir}" />
 		<mkdir dir="${md5.dir}" />
 	</target>
-	
+
 	<!-- MCP recompilation task -->
 	<target name="recompile" description="MCP recompile">
 		<echo level="info" message="Compiling projects" />

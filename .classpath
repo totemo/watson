@@ -5,8 +5,8 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/LiteLoader"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/Client/jars/libraries/com/google/code/gson/gson/2.2.4/gson-2.2.4.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/SnakeYAML 1.10"/>
 	<classpathentry kind="lib" path="/Client/jars/libraries/com/google/guava/guava/17.0/guava-17.0.jar"/>
-	<classpathentry kind="lib" path="/Client/jars/libraries/com/mojang/realms/1.5.4/realms-1.5.4.jar"/>
+	<classpathentry kind="lib" path="/Client/jars/libraries/com/mojang/realms/1.6.1/realms-1.6.1.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/SnakeYAML 1.10"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

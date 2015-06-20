@@ -1,5 +1,11 @@
 Change History
 ==============
+0.9.3.115-mc1.8.0
+-----------------
+* "Update for CoreProtect 2.11 compatibility, fixes #45" by tompreuss.
+  * That change also updates to the latest LiteLoader pre-release based on MCP 910.
+* Added a pseudo block ID for "armor stand" to show those changes correctly.
+
 0.9.2.111-mc1.8.0
 -----------------
 * Fix some potential rendering issues by using Mojang's GlStateManager (thanks to @GuntherDW for this patch).
@@ -101,7 +107,7 @@ Change History
 
 1.5.1 (2013-04-02)
 ------------------
-* Basic support for the Prism plugin.carpets, 
+* Basic support for the Prism plugin.carpets,
 * Drop logging of chat to console; the vanilla client now does that.
 * Fixed rendering of upward pointing vectors.
 * Render vectors for each player separately.

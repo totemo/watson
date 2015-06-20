@@ -1,11 +1,11 @@
-# Each block may be listed under multiple names, the first of which is the 
-# primary name and should always be the name that LogBlock returns in query 
+# Each block may be listed under multiple names, the first of which is the
+# primary name and should always be the name that LogBlock returns in query
 # results.  Subsequent names are aliases for use in Watson queries.
-# For future reference, the name that LogBlock uses seems to always be the 
+# For future reference, the name that LogBlock uses seems to always be the
 # Material enum value from the Bukkit API:
 #   http://jd.bukkit.org/apidocs/org/bukkit/Material.html
 #
-# As an initial stab at basic Prism support, class BlockTypeRegistry also 
+# As an initial stab at basic Prism support, class BlockTypeRegistry also
 # automatically adds aliases for these block names with the spaces omitted, e.g.
 # "birchlog" is recognised as a synonym of "birch log".
 #
@@ -16,37 +16,37 @@
 # is associated with the list of names.  This allows query results from logging
 # plugins that return id:data numbers to be correctly displayed with less effort
 # in writing this configuration, although a more accurate display will typically
-# result from setting unique bounds (at the very least) for each data value.  
+# result from setting unique bounds (at the very least) for each data value.
 #
-# rgba values are a 4-tuple of integers in the range [0,255], specifying red, 
+# rgba values are a 4-tuple of integers in the range [0,255], specifying red,
 # green, blue and alpha components of wireframe colour. The alpha value can be
-# omitted, in which case it defaults to a value close to opaque 
+# omitted, in which case it defaults to a value close to opaque
 # (see class BlockTypeRegistry).
 #
-# lineWidth is the OpenGL wireframe line thickness (as a double), which defaults 
+# lineWidth is the OpenGL wireframe line thickness (as a double), which defaults
 # to 3.0 if not specified.
 #
-# The model: setting is a reference to the BlockModel implementation used to 
+# The model: setting is a reference to the BlockModel implementation used to
 # draw all blocks of the given type. The specified name is looked up using
 # watson.model.BlockModelRegistry.  If not specified, it defaults to "cuboid".
 #
-# The bounds: setting is an array of 6 doubles. DO NOT USE INTEGERS.  The 
+# The bounds: setting is an array of 6 doubles. DO NOT USE INTEGERS.  The
 # elements are [x1, y1, z1, x2, y2, z2] defining opposite corners of a cuboid:
-# (x1,y1,z1) - (x2,y2,z2). [0.0,0.0,0.0,1.0,1.0,1.0] is the unit cube.  The 
+# (x1,y1,z1) - (x2,y2,z2). [0.0,0.0,0.0,1.0,1.0,1.0] is the unit cube.  The
 # default value is [0.005, 0.005, 0.005, 0.995, 0.995, 0.995] - just slightly
 # smaller than the unit cube.
 
 blocks:
     # Any block IDs that I have forgotten to add to this file will be rendered
-    # using the "unknown" block type.  I've made them bright magenta so that 
-    # they stand out and I will remember to update this file. 
+    # using the "unknown" block type.  I've made them bright magenta so that
+    # they stand out and I will remember to update this file.
     - id: 256
       names: [unknown]
       lineWidth: 3.0
       rgba: [255, 0, 255]
       model: cuboid
       bounds: [0.1, 0.1, 0.1, 0.9, 0.9, 0.9]
-      
+
     - id: 0
       names: [air]
       rgba: [0, 0, 0, 0]
@@ -177,22 +177,22 @@ blocks:
     - id: 7
       names: [bedrock]
       rgba: [0, 0, 0]
-      
+
       # Is there a difference between coalblock names and lb header names of these?
     - id: 8
       names: [water]
       rgba: [31, 85, 255]
     - id: 9
-      names: [stationary water] 
+      names: [stationary water]
       rgba: [38, 92, 255]
-      
+
     - id: 10
       names: [lava]
       rgba: [252, 87, 0]
     - id: 11
       names: [stationary lava]
       rgba: [252, 161, 0]
-      
+
     - id: 12
       data: 0
       names: [sand]
@@ -219,7 +219,7 @@ blocks:
       names: [coal ore]
       lineWidth: 5.0
       rgba: [25, 22, 17]
-      
+
       # Logs:
       # data: 0 = oak, 1 = spruce, 2 = birch, 3 = jungle
     - id: 17
@@ -239,7 +239,7 @@ blocks:
       names: [jungle log]
       rgba: [89, 68, 25]
 
-    # Leaves      
+    # Leaves
     # data: 0 = oak, 1 = spruce, 2 = birch, 3 = jungle
     - id: 18
       data: [0, 4, 8, 12]
@@ -257,7 +257,7 @@ blocks:
       data: [3, 7, 11, 15]
       names: [jungle leaves]
       rgba: [44, 108, 24]
-      
+
     - id: 19
       names: [sponge]
       rgba: [206, 206, 70]
@@ -299,21 +299,21 @@ blocks:
       bounds: [0.0, 0.0, 0.0, 1.0, 0.5625, 1.0]
     - id: 27
       data: all
-      names: [powered rail] 
-      rgba: [243, 193, 42]      
+      names: [powered rail]
+      rgba: [243, 193, 42]
       bounds: [0.0, 0.0, 0.0, 1.0, 0.125, 1.0]
     - id: 28
       names: [detector rail]
-      rgba: [82, 0, 0]      
+      rgba: [82, 0, 0]
       bounds: [0.0, 0.0, 0.0, 1.0, 0.125, 1.0]
     - id: 29
       data: all
-      names: [piston sticky base, sticky piston] 
-      rgba: [123, 142, 83]      
+      names: [piston sticky base, sticky piston]
+      rgba: [123, 142, 83]
     - id: 30
-      names: [cobweb, web] 
-      rgba: [237, 237, 237]      
-      
+      names: [cobweb, web]
+      rgba: [237, 237, 237]
+
       # Shrub, Long Grass, Fern - something's not quite right here...
       # the code and the wiki seem to say block 31 for a dead bush, but
       # LogBlock stores it as ID 32.
@@ -341,7 +341,7 @@ blocks:
       rgba: [148, 100, 40]
       bounds: [0.1, 0.0, 0.1, 0.9, 0.8, 0.9]
       model: plant
-      
+
     - id: 33
       data: all
       names: [piston base, piston]
@@ -352,10 +352,10 @@ blocks:
       rgba: [180, 144, 90]
 
     # Wool:
-    # 0 = white, 1 = orange, 2 = magenta, 3 = light blue, 
-    # 4 = yellow, 5 = light green, 6 = pink, 7 = dark grey, 
-    # 8 = grey, 9 = cyan, 10 = purple, 11 = blue, 
-    # 12 = brown, 13 = dark green, 14 = red, 15 = black 
+    # 0 = white, 1 = orange, 2 = magenta, 3 = light blue,
+    # 4 = yellow, 5 = light green, 6 = pink, 7 = dark grey,
+    # 8 = grey, 9 = cyan, 10 = purple, 11 = blue,
+    # 12 = brown, 13 = dark green, 14 = red, 15 = black
     - id: 35
       data: 0
       names: [white wool, wool]
@@ -497,7 +497,7 @@ blocks:
     - id: 42
       names: [iron block]
       rgba: [230, 230, 230]
-      
+
     - id: 43
       data: [0, 8]
       names: [double step, double slab, stone double slab]
@@ -530,8 +530,8 @@ blocks:
       data: [7, 15]
       names: [double step, d quartz slab, quartz double slab]
       rgba: [235, 233, 227]
-      
-      # Steps: Probably need to enumerate all of the possible data values for 
+
+      # Steps: Probably need to enumerate all of the possible data values for
       # this. LogBlock tends to list wooden steps as "wood step"; stone ones
       # are just "step".
     - id: 44
@@ -614,7 +614,7 @@ blocks:
       names: [upper quartz slab]
       rgba: [235, 233, 227]
       bounds: [0.0, 0.5, 0.0, 1.0, 1.0, 1.0]
-      
+
     - id: 45
       names: [brick, brick block]
       rgba: [155, 86, 67]
@@ -675,7 +675,7 @@ blocks:
       names: [soil, farmland]
       rgba: [100, 54, 19]
       bounds: [0.0, 0.0, 0.0, 1.0, 0.9375, 1.0]
-      
+
     - id: 61
       data: all
       names: [furnace]
@@ -710,7 +710,7 @@ blocks:
       data: all
       names: [stairs, cobblestone stairs, cobble stairs]
       rgba: [78, 74, 66]
-      model: stair      
+      model: stair
     - id: 68
       data: [0, 2, 3, 4, 5]
       names: [wall sign]
@@ -774,21 +774,21 @@ blocks:
     - id: 81
       names: [cactus]
       rgba: [18, 140, 33]
-      bounds: [0.0625, 0.0, 0.0625, 0.9375, 1.0, 0.9375]      
+      bounds: [0.0625, 0.0, 0.0625, 0.9375, 1.0, 0.9375]
     - id: 82
       names: [clay, clay block]
       rgba: [169, 175, 186]
     - id: 83
       names: [sugar cane block,sugarcane]
       rgba: [170, 219, 116]
-      model: plant      
+      model: plant
     - id: 84
       names: [jukebox]
       rgba: [102, 56, 33]
     - id: 85
       names: [fence, oak fence]
       rgba: [188, 152, 98]
-      bounds: [0.375, 0.0, 0.375, 0.625, 1.0, 0.625]      
+      bounds: [0.375, 0.0, 0.375, 0.625, 1.0, 0.625]
     - id: 86
       data: all
       names: [pumpkin]
@@ -799,14 +799,14 @@ blocks:
     - id: 88
       names: [soul sand]
       rgba: [72, 52, 40]
-      bounds: [0.0, 0.0, 0.0, 1.0, 0.875, 1.0]      
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.875, 1.0]
     - id: 89
       names: [glowstone]
       rgba: [249, 212, 156]
     - id: 90
       names: [portal]
       rgba: [105, 49, 153]
-      bounds: [0.375, 0.0, 0.0, 0.625, 1.0, 1.0]      
+      bounds: [0.375, 0.0, 0.0, 0.625, 1.0, 1.0]
     - id: 91
       data: all
       names: [jack o lantern,jackolantern]
@@ -815,12 +815,12 @@ blocks:
       data: all
       names: [cake block,cake]
       rgba: [234, 233, 235]
-      bounds: [0.0625, 0.0, 0.0625, 0.9375, 0.5, 0.9375]      
+      bounds: [0.0625, 0.0, 0.0625, 0.9375, 0.5, 0.9375]
     - id: 93
       data: all
       names: [diode block off,repeater off]
       rgba: [88, 1, 1]
-      bounds: [0.0, 0.0, 0.0, 1.0, 0.125, 1.0]      
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.125, 1.0]
     - id: 94
       data: all
       names: [diode block on,repeater on]
@@ -891,13 +891,13 @@ blocks:
       data: 15
       names: [black stained glass]
       rgba: [32, 32, 32, 96]
-            
+
     - id: 96
       data: all
       names: [trap door, trapdoor, wooden trapdoor]
       rgba: [145, 109, 56]
-      bounds: [0.0, 0.0, 0.0, 1.0, 0.1875, 1.0]      
-      
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.1875, 1.0]
+
     # There are subtypes for silverfish:
     # 0 = smooth stone, 1 = cobblestone, 2 = stone brick, 3 = mossy stone brick
     # 4 = cracked stone brick, 5 = chiselled stone brick
@@ -925,7 +925,7 @@ blocks:
       data: 5
       names: [monster eggs, chiseled stone brick monster egg]
       rgba: [93, 93, 93]
-      
+
     - id: 98
       data: 0
       names: [smooth brick, stone brick]
@@ -942,37 +942,37 @@ blocks:
       data: 3
       names: [circular stone brick, circlestone, etched stone brick, circle stone brick, chiseled stone brick]
       rgba: [93, 93, 93]
-      
+
     - id: 99
       data: all
       names: [huge mushroom 1,huge brown mushroom]
-      rgba: [142, 106, 82]            
+      rgba: [142, 106, 82]
     - id: 100
       data: all
       names: [huge mushroom 2,huge red mushroom]
       rgba: [184, 32, 30]
-                  
+
     - id: 101
       names: [iron fence,iron bars]
-      rgba: [171, 171, 171]            
+      rgba: [171, 171, 171]
       bounds: [0.4375, 0.0, 0.4375, 0.5625, 1.0, 0.5625]
     - id: 102
       names: [thin glass, glass pane]
-      rgba: [192, 245, 254]            
+      rgba: [192, 245, 254]
       bounds: [0.0, 0.0, 0.4375, 1.0, 1.0, 0.5625]
     - id: 103
       names: [melon block,melon]
       rgba: [188, 185, 45]
     - id: 104
-      data: [0, 1, 2, 3, 4, 5, 6, 7]    
+      data: [0, 1, 2, 3, 4, 5, 6, 7]
       names: [pumpkin stem]
       rgba: [204, 158, 78]
-      bounds: [0.375, 0.0, 0.375, 0.625, 0.8125, 0.625]      
+      bounds: [0.375, 0.0, 0.375, 0.625, 0.8125, 0.625]
     - id: 105
-      data: [0, 1, 2, 3, 4, 5, 6, 7]    
+      data: [0, 1, 2, 3, 4, 5, 6, 7]
       names: [melon stem]
       rgba: [204, 158, 78]
-      bounds: [0.375, 0.0, 0.375, 0.625, 0.8125, 0.625]      
+      bounds: [0.375, 0.0, 0.375, 0.625, 0.8125, 0.625]
     - id: 106
       data: all
       names: [vine]
@@ -982,31 +982,31 @@ blocks:
       data: all
       names: [fence gate, oak fence gate]
       rgba: [188, 152, 98]
-      bounds: [0.375, 0.3125, 0.0, 0.625, 1.0, 1.0]      
+      bounds: [0.375, 0.3125, 0.0, 0.625, 1.0, 1.0]
     - id: 108
       data: all
       names: [brick stairs]
       rgba: [155, 86, 67]
-      model: stair      
+      model: stair
     - id: 109
       data: all
       names: [smooth stairs, stone brick stairs]
       rgba: [136, 136, 136]
-      model: stair      
+      model: stair
     - id: 110
       names: [mycel, mycelium]
       rgba: [128, 107, 111]
     - id: 111
       names: [water lily,lily pad,lilypad]
       rgba: [19, 139, 33]
-      bounds: [0.125, 0.0, 0.125, 0.875, 0.0625, 0.875]      
+      bounds: [0.125, 0.0, 0.125, 0.875, 0.0625, 0.875]
     - id: 112
       names: [nether brick, nether brick block]
       rgba: [48, 24, 28]
     - id: 113
       names: [nether fence, nbrick fence]
       rgba: [48, 24, 28]
-      bounds: [0.375, 0.0, 0.375, 0.625, 1.0, 0.625]      
+      bounds: [0.375, 0.0, 0.375, 0.625, 1.0, 0.625]
     - id: 114
       data: all
       names: [nether brick stairs, nbrickstairs]
@@ -1016,11 +1016,11 @@ blocks:
       data: [0, 1, 2, 3]
       names: [nether warts,nether wart]
       rgba: [143, 23, 25]
-      bounds: [0.25, 0.0, 0.25, 0.75, 0.25, 0.75]      
+      bounds: [0.25, 0.0, 0.25, 0.75, 0.25, 0.75]
     - id: 116
       names: [enchantment table]
       rgba: [138, 21, 18]
-      bounds: [0.0, 0.0, 0.0, 1.0, 0.75, 1.0]      
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.75, 1.0]
     - id: 117
       names: [brewing stand]
       rgba: [203, 193, 104]
@@ -1032,7 +1032,7 @@ blocks:
     - id: 119
       names: [end portal, ender portal]
       rgba: [80, 135, 117]
-      bounds: [0.0, 0.6875, 0.0, 1.0, 0.8125, 1.0]       
+      bounds: [0.0, 0.6875, 0.0, 1.0, 0.8125, 1.0]
     - id: 120
       names: [end portal frame, ender portal frame]
       rgba: [55, 100, 89]
@@ -1135,16 +1135,16 @@ blocks:
       names: [upper dark oak wood slab]
       rgba: [69, 44, 21]
       bounds: [0.0, 0.5, 0.0, 1.0, 1.0, 1.0]
-      
+
     - id: 127
       names: [cocoa,cocoa plant]
       rgba: [203, 104, 31]
-      bounds: [0.25, 0.1875, 0.0625, 0.75, 0.75, 0.5625]       
+      bounds: [0.25, 0.1875, 0.0625, 0.75, 0.75, 0.5625]
     - id: 128
       data: all
       names: [sandstone stairs]
       rgba: [236, 227, 180]
-      model: stair      
+      model: stair
     - id: 129
       names: [emerald ore]
       lineWidth: 5.0
@@ -1167,7 +1167,7 @@ blocks:
     - id: 133
       names: [emerald block]
       rgba: [131, 237, 161]
-      
+
     - id: 134
       data: all
       names: [spruce wood stairs, redwood stairs]
@@ -1183,7 +1183,7 @@ blocks:
       names: [jungle wood stairs]
       rgba: [137, 98, 70]
       model: stair
-      
+
     - id: 137
       names: [command,command block]
       rgba: [195, 124, 77]
@@ -1219,46 +1219,46 @@ blocks:
       names: [wood button]
       rgba: [188, 152, 98]
       bounds: [0.3125, 0.375, 0.0, 0.6875, 0.625, 0.125]
-      
+
     - id: 144
       names: [skull, skeleton skull, wither skull, zombie skull, player skull, creeper skull]
-      rgba: [161, 161, 161]      
+      rgba: [161, 161, 161]
       bounds: [0.25, 0.0, 0.25, 0.75, 0.5, 0.75]
     # Skull sitting on a horizontal surface.
     - id: 144
       data: 1
       names: [skull]
-      rgba: [161, 161, 161]      
+      rgba: [161, 161, 161]
       bounds: [0.25, 0.0, 0.25, 0.75, 0.5, 0.75]
     # Wall-mounted skull looking north.
     - id: 144
       data: 2
       names: [skull]
-      rgba: [161, 161, 161]      
+      rgba: [161, 161, 161]
       bounds: [0.25, 0.25, 0.5, 0.75, 0.75, 1.0]
     # Wall-mounted skull looking south.
     - id: 144
       data: 3
       names: [skull]
-      rgba: [161, 161, 161]      
+      rgba: [161, 161, 161]
       bounds: [0.25, 0.25, 0.0, 0.75, 0.75, 0.5]
     # Wall-mounted skull looking west.
     - id: 144
       data: 4
       names: [skull]
-      rgba: [161, 161, 161]      
+      rgba: [161, 161, 161]
       bounds: [0.5, 0.25, 0.25, 1.0, 0.75, 0.75]
     # Wall-mounted skull looking east.
     - id: 144
       data: 5
       names: [skull]
-      rgba: [161, 161, 161]      
+      rgba: [161, 161, 161]
       bounds: [0.0, 0.25, 0.25, 0.5, 0.75, 0.75]
 
     - id: 145
       data: all
       names: [anvil]
-      rgba: [43, 36, 29]      
+      rgba: [43, 36, 29]
       model: anvil
 
       # v1.5 blocks
@@ -1274,7 +1274,7 @@ blocks:
       rgba: [254, 251, 105]
       bounds: [0.0625, 0.0, 0.0625, 0.9375, 0.0625, 0.9375]
     - id: 148
-      data: all    
+      data: all
       names: [iron plate, heavy pressure plate]
       rgba: [230, 230, 230]
       bounds: [0.0625, 0.0, 0.0625, 0.9375, 0.0625, 0.9375]
@@ -1282,11 +1282,11 @@ blocks:
       data: all
       names: [redstone comparator off]
       rgba: [88, 1, 1]
-      bounds: [0.0, 0.0, 0.0, 1.0, 0.125, 1.0]      
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.125, 1.0]
     - id: 150
       names: [redstone comparator on]
       rgba: [253, 3, 0]
-      bounds: [0.0, 0.0, 0.0, 1.0, 0.125, 1.0]      
+      bounds: [0.0, 0.0, 0.0, 1.0, 0.125, 1.0]
     - id: 151
       names: [daylight detector,daylight sensor]
       rgba: [97, 76, 47]
@@ -1300,13 +1300,13 @@ blocks:
     - id: 154
       data: [0, 2, 3, 4, 5]
       names: [hopper]
-      rgba: [56, 56, 56]      
+      rgba: [56, 56, 56]
       model: hopper
     - id: 155
       names: [quartz block]
       rgba: [235, 233, 227]
     - id: 155
-      data: 1 
+      data: 1
       names: [chiselled quartz block, chiseled quartz block]
       rgba: [235, 233, 227]
     - id: 155
@@ -1321,7 +1321,7 @@ blocks:
     - id: 157
       data: all
       names: [activator rail]
-      rgba: [82, 0, 0]      
+      rgba: [82, 0, 0]
       bounds: [0.0, 0.0, 0.0, 1.0, 0.125, 1.0]
     - id: 158
       data: all
@@ -1937,3 +1937,8 @@ blocks:
       names: [genericplayername]
       rgba: [149, 203, 207]
       bounds: [-0.0155, 0.005, 0.0545, 1.0155, 1.855, 0.9455]
+    - id: 218
+      names: [armor stand]
+      rgba: [188, 152, 98]
+      bounds: [0.125, 0.0, 0.125, 0.875, 1.875, 0.875]
+
