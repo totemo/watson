@@ -1,6 +1,6 @@
 Change History
 ==============
-0.9.3.115-mc1.8.0
+0.10.0.115-mc1.8.0
 -----------------
 * "Update for CoreProtect 2.11 compatibility, fixes #45" by tompreuss.
   * That change also updates to the latest LiteLoader pre-release based on MCP 910.
