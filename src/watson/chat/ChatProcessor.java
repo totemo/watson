@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import net.minecraft.util.IChatComponent;
 import watson.Configuration;
-import watson.analysis.CoalBlockAnalysis;
+import watson.analysis.LbToolBlockAnalysis;
 import watson.analysis.CoreProtectAnalysis;
 import watson.analysis.LbCoordsAnalysis;
 import watson.analysis.ModModeAnalysis;
@@ -76,7 +76,7 @@ public class ChatProcessor
   private ChatProcessor()
   {
     addChatHandler(new LbCoordsAnalysis());
-    addChatHandler(new CoalBlockAnalysis());
+    addChatHandler(new LbToolBlockAnalysis());
     addChatHandler(new TeleportAnalysis());
     addChatHandler(new RatioAnalysis());
     addChatHandler(ServerTime.instance);

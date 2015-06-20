@@ -19,16 +19,16 @@ import watson.db.TimeStamp;
 // --------------------------------------------------------------------------
 /**
  * An {@link Analysis} implementation that adds new {@link BlockEdit}s in
- * response to results returned hitting specific blocks with a coal block (the
- * lb toolblock).
+ * response to results returned hitting specific blocks with the LogBlock
+ * "toolblock" (inspector).
  */
-public class CoalBlockAnalysis extends Analysis
+public class LbToolBlockAnalysis extends Analysis
 {
   // ----------------------------------------------------------------------------
   /**
    * Constructor.
    */
-  public CoalBlockAnalysis()
+  public LbToolBlockAnalysis()
   {
     addMatchedChatHandler(LB_POSITION, new IMatchedChatHandler()
     {
@@ -125,7 +125,7 @@ public class CoalBlockAnalysis extends Analysis
   // --------------------------------------------------------------------------
   /**
    * Common code for storing an edit if it passes the filter.
-   * 
+   *
    * @param millis the time stamp.
    * @param player the player name.
    * @param created true if a block was created (rather than destroyed).
@@ -172,7 +172,7 @@ public class CoalBlockAnalysis extends Analysis
    * This flag is set to true when the coordinate header for LogBlock toolblock
    * (coal ore) queries has just been parsed, and we are expecting to see the
    * first edit result. It is cleared to false again after the first result.
-   * 
+   *
    * The purpose of this is to allow us to set variables (particularly "player")
    * from the most recent edit, which is the first listed. Older edits of the
    * same block should have no effect on variables.
