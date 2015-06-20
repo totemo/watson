@@ -123,35 +123,34 @@ public class LbCoordsAnalysis extends Analysis
       // BlockEdit as directed by config file.
 
       int index = Integer.parseInt(m.group(1));
-      int month = Integer.parseInt(m.group(2));
-      int day = Integer.parseInt(m.group(3));
-      int hour = Integer.parseInt(m.group(4));
-      int minute = Integer.parseInt(m.group(5));
-      int second = Integer.parseInt(m.group(6));
-      long millis = TimeStamp.toMillis(month, day, hour, minute, second);
+      int[] ymd = TimeStamp.parseYMD(m.group(2));
+      int hour = Integer.parseInt(m.group(3));
+      int minute = Integer.parseInt(m.group(4));
+      int second = Integer.parseInt(m.group(5));
+      long millis = TimeStamp.toMillis(ymd, hour, minute, second);
 
-      String player = m.group(7);
-      String action = m.group(8);
-      String block = m.group(9);
+      String player = m.group(6);
+      String action = m.group(7);
+      String block = m.group(8);
 
       // If there are an extra 4 groups, then we're dealing with a sign.
       String sign1 = null, sign2 = null, sign3 = null, sign4 = null;
       int x, y, z;
-      if (m.groupCount() == 16)
+      if (m.groupCount() == 15)
       {
-        sign1 = m.group(10);
-        sign2 = m.group(11);
-        sign3 = m.group(12);
-        sign4 = m.group(13);
-        x = Integer.parseInt(m.group(14));
-        y = Integer.parseInt(m.group(15));
-        z = Integer.parseInt(m.group(16));
+        sign1 = m.group(9);
+        sign2 = m.group(10);
+        sign3 = m.group(11);
+        sign4 = m.group(12);
+        x = Integer.parseInt(m.group(13));
+        y = Integer.parseInt(m.group(14));
+        z = Integer.parseInt(m.group(15));
       }
       else
       {
-        x = Integer.parseInt(m.group(10));
-        y = Integer.parseInt(m.group(11));
-        z = Integer.parseInt(m.group(12));
+        x = Integer.parseInt(m.group(9));
+        y = Integer.parseInt(m.group(10));
+        z = Integer.parseInt(m.group(11));
       }
 
       BlockType type = BlockTypeRegistry.instance.getBlockTypeByName(block);
@@ -168,23 +167,18 @@ public class LbCoordsAnalysis extends Analysis
         // Hacked in re-echoing of coords so we can see TP targets.
         if (type.getId() != 1)
         {
-          String output;
-          if (sign1 == null)
-          {
-            output = String.format(Locale.US,
-              "%s(%2d) %02d-%02d %02d:%02d:%02d (%d,%d,%d) %C%d %s",
-              colour, index, month, day, hour, minute,
-              second, x, y, z, (created ? '+' : '-'), type.getId(), player);
-          }
-          else
-          {
-            output = String.format(
-              Locale.US,
-              "%s(%2d) %02d-%02d %02d:%02d:%02d (%d,%d,%d) %C%d %s [%s] [%s] [%s] [%s]",
-              colour, index, month, day, hour, minute,
-              second, x, y, z, (created ? '+' : '-'), type.getId(), player,
-              sign1, sign2, sign3, sign4);
-          }
+          String signText = (sign1 != null)
+            ? String.format(Locale.US, " [%s] [%s] [%s] [%s]", sign1, sign2, sign3, sign4)
+            : "";
+
+          // Only show the year if LogBlock is configured to return it.
+          String year = (ymd[0] != 0)
+            ? String.format(Locale.US, "%02d-", ymd[0])
+            : "";
+          String output = String.format(Locale.US,
+            "%s(%2d) %s%02d-%02d %02d:%02d:%02d (%d,%d,%d) %C%d %s%s",
+            colour, index, year, ymd[1], ymd[2], hour, minute,
+            second, x, y, z, (created ? '+' : '-'), type.getId(), player, signText);
           Chat.localChat(output);
         }
       }
@@ -218,39 +212,34 @@ public class LbCoordsAnalysis extends Analysis
     try
     {
       int index = Integer.parseInt(m.group(1));
-      int month = Integer.parseInt(m.group(2));
-      int day = Integer.parseInt(m.group(3));
-      int hour = Integer.parseInt(m.group(4));
-      int minute = Integer.parseInt(m.group(5));
-      int second = Integer.parseInt(m.group(6));
-      long millis = TimeStamp.toMillis(month, day, hour, minute, second);
+      int[] ymd = TimeStamp.parseYMD(m.group(2));
+      int hour = Integer.parseInt(m.group(3));
+      int minute = Integer.parseInt(m.group(4));
+      int second = Integer.parseInt(m.group(5));
+      long millis = TimeStamp.toMillis(ymd, hour, minute, second);
 
-      String player = m.group(7);
-      String action = m.group(8);
-      String block = m.group(9);
+      String player = m.group(6);
+      String victim = m.group(7);
 
-      int x = Integer.parseInt(m.group(10));
-      int y = Integer.parseInt(m.group(11));
-      int z = Integer.parseInt(m.group(12));
-      String weapon = m.group(13);
+      int x = Integer.parseInt(m.group(8));
+      int y = Integer.parseInt(m.group(9));
+      int z = Integer.parseInt(m.group(10));
+      String weapon = m.group(11);
 
-      /**
-       * LogBlock doesn't distinguish between player kills and other kills, it just
-       * gives the name of what was killed.  Since we (hopefully) list all the possible
-       * kill types that aren't players in blocks.yml, for things matching the
-       * LB_COORD_KILLS pattern we will assume that anything that isn't listed in
-       * blocks.yml is a player.  getBlockKillTypeByName() does this by assigning any
-       * unknown kill to the "unknown" kill ID, which is 219, our generic player model
-       * (this is similar to how getBlockTypeByName() assigns any unknown ID to 256.)
-       * The downside of this is that true new/unknown kill types will be assigned a
-       * player-like looking model over a typical "unknown" bright magenta box.
-       */
-
-      BlockType type = BlockTypeRegistry.instance.getBlockKillTypeByName(block);
+      // LogBlock doesn't distinguish between player kills and other kills, it
+      // just gives the name of what was killed. Since we (hopefully) list all
+      // the possible kill types that aren't players in blocks.yml, for things
+      // matching the LB_COORD_KILLS pattern we will assume that anything that
+      // isn't listed in blocks.yml is a player. getBlockKillTypeByName() does
+      // this by assigning any unknown kill to the "unknown" kill ID, which is
+      // 219, our generic player model (this is similar to how
+      // getBlockTypeByName() assigns any unknown ID to 256.) The downside of
+      // this is that true new/unknown kill types will be assigned a player-like
+      // looking model over a typical "unknown" bright magenta box.
+      BlockType type = BlockTypeRegistry.instance.getBlockKillTypeByName(victim);
 
       // For our purposes, we'll treat a kill like a block destruction
-      boolean created = action.equals("created");
-      BlockEdit edit = new BlockEdit(millis, player, created, x, y, z, type);
+      BlockEdit edit = new BlockEdit(millis, player, false, x, y, z, type);
       SyncTaskQueue.instance.addTask(new AddBlockEditTask(edit, true));
 
       char colourCode = getChatColourChar(x, y, z);
@@ -262,13 +251,14 @@ public class LbCoordsAnalysis extends Analysis
         // Hacked in re-echoing of coords so we can see TP targets.
         if (type.getId() != 1)
         {
-          String output;
-
-          output = String.format(Locale.US,
-            "%s(%2d) %02d-%02d %02d:%02d:%02d (%d,%d,%d) %s %s %s %s",
-            colour, index, month, day, hour, minute,
-            second, x, y, z, (created ? '+' : '-'), block, player, weapon);
-
+          // Only show the year if LogBlock is configured to return it.
+          String year = (ymd[0] != 0)
+            ? String.format(Locale.US, "%02d-", ymd[0])
+            : "";
+          String output = String.format(Locale.US,
+            "%s(%2d) %s%02d-%02d %02d:%02d:%02d (%d,%d,%d) %s %s > %s",
+            colour, index, year, ymd[1], ymd[2], hour, minute,
+            second, x, y, z, player, weapon, victim);
           Chat.localChat(output);
         }
       }
@@ -303,19 +293,18 @@ public class LbCoordsAnalysis extends Analysis
     try
     {
       int index = Integer.parseInt(m.group(1));
-      int month = Integer.parseInt(m.group(2));
-      int day = Integer.parseInt(m.group(3));
-      int hour = Integer.parseInt(m.group(4));
-      int minute = Integer.parseInt(m.group(5));
-      int second = Integer.parseInt(m.group(6));
-      long millis = TimeStamp.toMillis(month, day, hour, minute, second);
+      int[] ymd = TimeStamp.parseYMD(m.group(2));
+      int hour = Integer.parseInt(m.group(3));
+      int minute = Integer.parseInt(m.group(4));
+      int second = Integer.parseInt(m.group(5));
+      long millis = TimeStamp.toMillis(ymd, hour, minute, second);
 
-      String player = m.group(7);
-      String oldBlock = m.group(8);
-      // UNUSED: String newBlock = m.group(9);
-      int x = Integer.parseInt(m.group(10));
-      int y = Integer.parseInt(m.group(11));
-      int z = Integer.parseInt(m.group(12));
+      String player = m.group(6);
+      String oldBlock = m.group(7);
+      // UNUSED: String newBlock = m.group(8);
+      int x = Integer.parseInt(m.group(9));
+      int y = Integer.parseInt(m.group(10));
+      int z = Integer.parseInt(m.group(11));
       BlockType type = BlockTypeRegistry.instance.getBlockTypeByName(oldBlock);
 
       // Store the destruction but don't bother with the creation.
@@ -330,10 +319,15 @@ public class LbCoordsAnalysis extends Analysis
         // Hacked in re-echoing of coords so we can see TP targets.
         if (type.getId() != 1)
         {
-          String target = String.format(Locale.US,
-            "%s(%2d) %02d-%02d %02d:%02d:%02d (%d,%d,%d) %C%d %s",
-            colour, index, month, day, hour, minute, second, x, y, z, '-', type.getId(), player);
-          Chat.localChat(target);
+          // Only show the year if LogBlock is configured to return it.
+          String year = (ymd[0] != 0)
+            ? String.format(Locale.US, "%02d-", ymd[0])
+            : "";
+
+          String output = String.format(Locale.US,
+            "%s(%2d) %s%02d-%02d %02d:%02d:%02d (%d,%d,%d) %C%d %s",
+            colour, index, year, ymd[1], ymd[2], hour, minute, second, x, y, z, '-', type.getId(), player);
+          Chat.localChat(output);
         }
       }
       else
@@ -359,7 +353,7 @@ public class LbCoordsAnalysis extends Analysis
   // --------------------------------------------------------------------------
   /**
    * Parse page headers.
-   * 
+   *
    * We run "/lb page (n+1)" automatically if the number of pages of results in
    * the "/lb coords" output is less than or equal to the max_auto_pages
    * configuration setting.
@@ -422,7 +416,7 @@ public class LbCoordsAnalysis extends Analysis
   // --------------------------------------------------------------------------
   /**
    * Get the colour to highlight coordinates when they are re-echoed into chat.
-   * 
+   *
    * The colour changes whenever the
    */
   private char getChatColourChar(int x, int y, int z)
@@ -457,11 +451,11 @@ public class LbCoordsAnalysis extends Analysis
 
   /**
    * The index into the _COLOUR_CYCLE array referencing the current chat colour.
-   * 
+   *
    * Since the very first colour is pretty much guaranteed to roll over (since
    * _lastX, _lastY, _lastZ will be nowhere near), init to the end of the cycle
    * in anticipation).
-   * 
+   *
    * TODO: Make the colour of echoed coordinates stable? Or at least reset when
    * the lb header is seen.
    */

@@ -5,21 +5,45 @@ import java.util.regex.Pattern;
 // ----------------------------------------------------------------------------
 /**
  * Regular expressions describing chat messages output by LogBlock.
+ *
+ * I would love to specify these patterns with named groups, but I can't until
+ * Mojang fixes Minecraft's Java support on the Mac.
+ *
+ * (It is possible to fix it yourself, but not everybody is technically
+ * inclined.)
+ * <ol>
+ * <li>https://bugs.mojang.com/browse/MCL-1049</li>
+ * <li>
+ * http://www.cgwerks.com/make-minecraft-work-mac-osx-yosemite-latest-java-8/</li>
+ * <li>http://kovuthehusky.com/blog/running-minecraft-on-os-x-using-java-7/</li>
+ * </ol>
  */
 public interface LogBlockPatterns
 {
   public static final Pattern LB_POSITION             = Pattern.compile("^Block changes at (-?\\d+):(-?\\d+):(-?\\d+) in .+:$");
+  // Java 1.7: public static final Pattern LB_POSITION =
+  // Pattern.compile("^Block changes at (?<x>-?\\d+):(?<y>-?\\d+):(?<z>-?\\d+) in .+:$");
 
   // Optional bit at the end deals with signs.
-  public static final Pattern LB_EDIT                 = Pattern.compile("^(\\d{2})-(\\d{2}) (\\d{2}):(\\d{2}):(\\d{2}) (\\w+) (created|destroyed) ((?: |\\w)+)( \\[.*\\] \\[.*\\] \\[.*\\] \\[.*\\])?$");
+  public final Pattern        LB_EDIT                 = Pattern.compile("^((?:\\d{2,4}-)?\\d{2}-\\d{2}) (\\d{2}):(\\d{2}):(\\d{2}) (\\w+) (created|destroyed) ((?: |\\w)+)( \\[.*\\] \\[.*\\] \\[.*\\] \\[.*\\])?$");
+  // Java 1.7: public final Pattern LB_EDIT =
+  // Pattern.compile("^(?<date>(?:\\d{2,4}-)?\\d{2}-\\d{2}) (?<hour>\\d{2}):(?<min>\\d{2}):(?<sec>\\d{2}) (?<player>\\w+) (?<action>created|destroyed) (?<block>(?: |\\w)+)(?<sign> \\[.*\\] \\[.*\\] \\[.*\\] \\[.*\\])?$");
 
-  public static final Pattern LB_EDIT_REPLACED        = Pattern.compile("^(\\d{2})-(\\d{2}) (\\d{2}):(\\d{2}):(\\d{2}) (\\w+) replaced ((?: |\\w)+) with ((?: |\\w)+)$");
+  public static final Pattern LB_EDIT_REPLACED        = Pattern.compile("^((?:\\d{2,4}-)?\\d{2}-\\d{2}) (\\d{2}):(\\d{2}):(\\d{2}) (\\w+) replaced ((?: |\\w)+) with ((?: |\\w)+)$");
+  // Java 1.7: public static final Pattern LB_EDIT_REPLACED =
+  // Pattern.compile("^(?<date>(?:\\d{2,4}-)?\\d{2}-\\d{2}) (?<hour>\\d{2}):(?<min>\\d{2}):(?<sec>\\d{2}) (?<player>\\w+) replaced (?<oldblock>(?: |\\w)+) with (?<newblock>(?: |\\w)+)$");
 
-  public static final Pattern LB_COORD                = Pattern.compile("^\\((\\d+)\\) (\\d{2})-(\\d{2}) (\\d{2}):(\\d{2}):(\\d{2}) (\\w+) (created|destroyed) ([a-zA-Z ]+)(?: \\[(.*)\\] \\[(.*)\\] \\[(.*)\\] \\[(.*)\\])? at (-?\\d+):(\\d+):(-?\\d+)$");
+  public static final Pattern LB_COORD                = Pattern.compile("^\\((\\d+)\\) ((?:\\d{2,4}-)?\\d{2}-\\d{2}) (\\d{2}):(\\d{2}):(\\d{2}) (\\w+) (created|destroyed) ([a-zA-Z ]+)(?: \\[(?<sign1>.*)\\] \\[(?<sign2>.*)\\] \\[(?<sign3>.*)\\] \\[(?<sign4>.*)\\])? at (-?\\d+):(\\d+):(-?\\d+)$");
+  // Java 1.7: public static final Pattern LB_COORD =
+  // Pattern.compile("^\\((?<index>\\d+)\\) (?<date>(?:\\d{2,4}-)?\\d{2}-\\d{2}) (?<hour>\\d{2}):(?<min>\\d{2}):(?<sec>\\d{2}) (?<player>\\w+) (?<action>created|destroyed) (?<block>[a-zA-Z ]+)(?: \\[(?<sign1>.*)\\] \\[(?<sign2>.*)\\] \\[(?<sign3>.*)\\] \\[(?<sign4>.*)\\])? at (?<x>-?\\d+):(?<y>\\d+):(?<z>-?\\d+)$");
 
-  public static final Pattern LB_COORD_KILLS          = Pattern.compile("^\\((\\d+)\\) (\\d{2})-(\\d{2}) (\\d{2}):(\\d{2}):(\\d{2}) (\\w+) (killed) ([a-zA-Z ]+) at (-?\\d+):(\\d+):(-?\\d+) with (.*)$");
+  public static final Pattern LB_COORD_KILLS          = Pattern.compile("^\\((\\d+)\\) ((?:\\d{2,4}-)?\\d{2}-\\d{2}) (\\d{2}):(\\d{2}):(\\d{2}) (\\w+) killed ([a-zA-Z ]+) at (-?\\d+):(\\d+):(-?\\d+) with (.*)$");
+  // Java 1.7: public static final Pattern LB_COORD_KILLS =
+  // Pattern.compile("^\\((?<index>\\d+)\\) (?<date>(?:\\d{2,4}-)?\\d{2}-\\d{2}) (?<hour>\\d{2}):(?<min>\\d{2}):(?<sec>\\d{2}) (?<player>\\w+) killed (?<victim>[a-zA-Z ]+) at (?<x>-?\\d+):(?<y>\\d+):(?<z>-?\\d+) with (?<weapon>.*)$");
 
-  public static final Pattern LB_COORD_REPLACED       = Pattern.compile("^\\((\\d+)\\) (\\d{2})-(\\d{2}) (\\d{2}):(\\d{2}):(\\d{2}) (\\w+) replaced ([a-zA-Z ]+) with ([a-zA-Z ]+) at (-?\\d+):(\\d+):(-?\\d+)$");
+  public static final Pattern LB_COORD_REPLACED       = Pattern.compile("^\\((\\d+)\\) ((?:\\d{2,4}-)?\\d{2}-\\d{2}) (\\d{2}):(\\d{2}):(\\d{2}) (\\w+) replaced ([a-zA-Z ]+) with ([a-zA-Z ]+) at (-?\\d+):(\\d+):(-?\\d+)$");
+  // Java 1.7: public static final Pattern LB_COORD_REPLACED =
+  // Pattern.compile("^\\((?<index>\\d+)\\) (?<date>(?:\\d{2,4}-)?\\d{2}-\\d{2}) (?<hour>\\d{2}):(?<min>\\d{2}):(?<sec>\\d{2}) (?<player>\\w+) replaced (?<oldblock>[a-zA-Z ]+) with (?<newblock>[a-zA-Z ]+) at (?<x>-?\\d+):(?<y>\\d+):(?<z>-?\\d+)$");
 
   public static final Pattern LB_TP                   = Pattern.compile("^Teleported to (-?\\d+):(\\d+):(-?\\d+)$");
 

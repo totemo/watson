@@ -16,7 +16,7 @@ import watson.db.BlockType;
 import watson.db.BlockTypeRegistry;
 import watson.db.TimeStamp;
 
-// --------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 /**
  * An {@link Analysis} implementation that adds new {@link BlockEdit}s in
  * response to results returned hitting specific blocks with the LogBlock
@@ -24,7 +24,7 @@ import watson.db.TimeStamp;
  */
 public class LbToolBlockAnalysis extends Analysis
 {
-  // ----------------------------------------------------------------------------
+  // --------------------------------------------------------------------------
   /**
    * Constructor.
    */
@@ -84,16 +84,15 @@ public class LbToolBlockAnalysis extends Analysis
   {
     if ((System.currentTimeMillis() - _lbPositionTime) < POSITION_TIMEOUT_MILLIS)
     {
-      int month = Integer.parseInt(m.group(1));
-      int day = Integer.parseInt(m.group(2));
-      int hour = Integer.parseInt(m.group(3));
-      int minute = Integer.parseInt(m.group(4));
-      int second = Integer.parseInt(m.group(5));
-      long millis = TimeStamp.toMillis(month, day, hour, minute, second);
-      String player = m.group(6);
-      String action = m.group(7);
+      int[] ymd = TimeStamp.parseYMD(m.group(1));
+      int hour = Integer.parseInt(m.group(2));
+      int minute = Integer.parseInt(m.group(3));
+      int second = Integer.parseInt(m.group(4));
+      long millis = TimeStamp.toMillis(ymd, hour, minute, second);
+      String player = m.group(5);
+      String action = m.group(6);
       boolean created = action.equals("created");
-      String block = m.group(8);
+      String block = m.group(7);
       BlockType type = BlockTypeRegistry.instance.getBlockTypeByName(block);
       addBlockEdit(millis, player, created, type);
     }
@@ -107,14 +106,13 @@ public class LbToolBlockAnalysis extends Analysis
   {
     if ((System.currentTimeMillis() - _lbPositionTime) < POSITION_TIMEOUT_MILLIS)
     {
-      int month = Integer.parseInt(m.group(1));
-      int day = Integer.parseInt(m.group(2));
-      int hour = Integer.parseInt(m.group(3));
-      int minute = Integer.parseInt(m.group(4));
-      int second = Integer.parseInt(m.group(5));
-      long millis = TimeStamp.toMillis(month, day, hour, minute, second);
-      String player = m.group(6);
-      String oldBlock = m.group(7);
+      int[] ymd = TimeStamp.parseYMD(m.group(1));
+      int hour = Integer.parseInt(m.group(2));
+      int minute = Integer.parseInt(m.group(3));
+      int second = Integer.parseInt(m.group(4));
+      long millis = TimeStamp.toMillis(ymd, hour, minute, second);
+      String player = m.group(5);
+      String oldBlock = m.group(6);
       BlockType type = BlockTypeRegistry.instance.getBlockTypeByName(oldBlock);
 
       // Just add the destruction.
