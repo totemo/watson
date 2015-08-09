@@ -1,8 +1,13 @@
 Change History
 ==============
+0.10.1.117-mc1.8.0
+-----------------
+* For LogBlock, the following date formats are now supported: yyyy-MM-dd (ISO 8601), yy-MM-dd, MM-dd (the LogBlock default).
+* If reformatting of parsed results is enabled, kills are formatted as "killer weapon > victim".
+
 0.10.0.115-mc1.8.0
 -----------------
-* "Update for CoreProtect 2.11 compatibility, fixes #45" by tompreuss.
+* "Update for CoreProtect 2.11 compatibility, fixes #45" by @tompreuss.
   * That change also updates to the latest LiteLoader pre-release based on MCP 910.
 * Added a pseudo block ID for "armor stand" to show those changes correctly.
 
