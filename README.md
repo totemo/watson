@@ -464,6 +464,9 @@ Running "/w config help" will show help for all of the configuration settings.
   <tr>
     <td>recolour_query_results</td> <td>on / off</td> <td>on</td> <td>(Note UK English spelling.) When on, query results are recoloured to indicate grouping of edits that are in close proximity to each other (currently applies to LogBlock results only).</td> <td>/w config recolour_query_results off</td>
   </tr>
+  <tr>
+    <td>time_ordered_deposits</td> <td>on / off</td> <td>off</td> <td>When off (the default) ore deposits are numbered in order of their significance to investigating xray (diamonds before iron, before coal).  When on, ore deposits are numbered in the order they were mined.</td> <td>/w config time_ordered_deposits on</td>
+  </tr>
 </table>
 
 

@@ -1,6 +1,8 @@
 package watson.db;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -18,12 +20,12 @@ import watson.debug.Log;
  * A simple spatial database, mapping 3-D coordinates ({@link IntCoord}) to the
  * destruction of the original ore at that location and the corresponding
  * {@link OreDeposit} that was there.
- * 
+ *
  * This class currently only stores the coordinates of ores (block IDs 14, 15,
  * 16, 21, 56, 73, 74, 129 and 153). The complete editing history retrieved by
  * LogBlock is instead stored in {@link BlockEditSet}.
- * 
- * Note that an ore is considered an ore irrespective of whether ut normally
+ *
+ * Note that an ore is considered an ore irrespective of whether it normally
  * spawns in a given dimension with the vanilla Minecraft generator. So, for
  * example, quartz ore counts as an ore in the overworld. This allows the ore
  * indexing to work with custom terrain generators.
@@ -73,27 +75,37 @@ public class OreDB
 
     // The first call to tpNex() will increment this to 1.
     _tpIndex = 0;
+    invalidateOreDepositSequence();
   } // clear
 
   // --------------------------------------------------------------------------
   /**
+   * Force recalculation of the sequence in which ore deposits are assigned a
+   * 1-based label.
+   */
+  public void invalidateOreDepositSequence()
+  {
+    _oreDepositSequenceChanged = true;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
    * List all of the ore deposits in the database in chat.
-   * 
+   *
    * @param page the 1-based page index to list; page numbers less than 1 are
    *          assumed to have been eliminated by the caller.
    */
   public void listDeposits(int page)
   {
     int depositCount = getOreDepositCount();
-    int pages = (depositCount + Controller.PAGE_LINES - 1)
-                / Controller.PAGE_LINES;
-
     if (depositCount == 0)
     {
       Chat.localOutput("There are no ore deposits.");
     }
     else
     {
+      int pages = (depositCount + Controller.PAGE_LINES - 1)
+                  / Controller.PAGE_LINES;
       if (page > pages)
       {
         Chat.localError(String.format(Locale.US,
@@ -111,39 +123,29 @@ public class OreDB
             "There are %d ore deposits.", depositCount));
         }
 
-        // Most of the time, there is only a single page of deposits and it is
-        // more efficient therefore to iterate linearly to skip pages.
-        int id = 1;
-        int start = 1 + (page - 1) * Controller.PAGE_LINES;
-        int end = start + Controller.PAGE_LINES;
-        outer: for (TypedOreDB db : _db.values())
-        {
-          for (OreDeposit deposit : db.getOreDeposits())
-          {
-            if (id >= start && id < end)
-            {
-              long time = deposit.getTimeStamp();
-              OreBlock block = deposit.getKeyOreBlock();
-              BlockEdit edit = block.getEdit();
-              BlockType type = edit.type;
-              String player = edit.player;
-              String strike = edit.playerEditSet.isVisible() ? "" : "\247m";
-              String line = String.format(Locale.US,
-                "\247%c%s(%3d) %s (% 5d % 3d % 5d) %2d [%2d] %s",
-                _chatColours.get(type).getCode(), strike, id,
-                TimeStamp.formatMonthDayTime(time), block.getLocation().getX(),
-                block.getLocation().getY(), block.getLocation().getZ(),
-                type.getId(), deposit.getBlockCount(), player);
-              Chat.localChat(line);
-            }
+        // Get iteration sequence of deposits; will be updated if necessary.
+        ArrayList<OreDeposit> deposits = getOreDepositSequence();
 
-            ++id;
-            if (id >= end)
-            {
-              break outer;
-            }
-          } // for all deposits of this ore type
-        } // for all types of deposits
+        // Note: Ore deposit ID and first and last deposit numbers are 1-based.
+        int first = 1 + (page - 1) * Controller.PAGE_LINES;
+        int last = Math.min(first + Controller.PAGE_LINES - 1, getOreDepositCount());
+        for (int id = first; id <= last; ++id)
+        {
+          OreDeposit deposit = deposits.get(id - 1);
+          long time = deposit.getTimeStamp();
+          OreBlock block = deposit.getKeyOreBlock();
+          BlockEdit edit = block.getEdit();
+          BlockType type = edit.type;
+          String player = edit.player;
+          String strike = edit.playerEditSet.isVisible() ? "" : "\247m";
+          String line = String.format(Locale.US,
+            "\247%c%s(%3d) %s (% 5d % 3d % 5d) %2d [%2d] %s",
+            _chatColours.get(type).getCode(), strike, id,
+            TimeStamp.formatMonthDayTime(time), block.getLocation().getX(),
+            block.getLocation().getY(), block.getLocation().getZ(),
+            type.getId(), deposit.getBlockCount(), player);
+          Chat.localChat(line);
+        } // for all deposits on the current page
 
         if (page < pages)
         {
@@ -152,7 +154,6 @@ public class OreDB
           Chat.localOutput(String.format(Locale.US,
             "Use \"/w ore %d\" to view the next page.", (page + 1)));
         }
-
       } // page number is valid
     } // there are ore deposits
   } // listDeposits
@@ -160,53 +161,37 @@ public class OreDB
   // --------------------------------------------------------------------------
   /**
    * Return the number of {@link OreDeposit}s in the database.
-   * 
+   *
    * @return the number of {@link OreDeposit}s in the database.
    */
   public int getOreDepositCount()
   {
-    int count = 0;
-    for (TypedOreDB db : _db.values())
-    {
-      count += db.getOreDepositCount();
-    }
-    return count;
+    return getOreDepositSequence().size();
   }
 
   // --------------------------------------------------------------------------
   /**
    * Return a reference to the {@link OreDeposit} with the specified 1-based
    * index.
-   * 
+   *
    * An index less than one wraps around to the maximum, and an index greater
    * than the maximum wraps around to 1.
-   * 
+   *
    * @param index the 1-based index of the {@link OreDeposit}.
    * @return the {@link OreDeposit} with the specified index.
    */
   public OreDeposit getOreDeposit(int index)
   {
     index = limitOreDepositIndex(index);
-    for (TypedOreDB db : _db.values())
-    {
-      if (index <= db.getOreDepositCount())
-      {
-        return db.getOreDeposit(index);
-      }
-      else
-      {
-        index -= db.getOreDepositCount();
-      }
-    } // for
-    throw new IllegalStateException("shouldn't happen");
-  } // getOreDeposit
+    return getOreDepositSequence().get(index - 1);
+  }
 
   // --------------------------------------------------------------------------
   /**
    * Remove all ore deposits mined by the specified player.
-   * 
+   *
    * This method is called when "/w edits remove <player>" is executed.
-   * 
+   *
    * @param player the case-insensitive player name.
    */
   public void removeDeposits(String player)
@@ -215,6 +200,7 @@ public class OreDB
     {
       db.removeDeposits(player);
     }
+    invalidateOreDepositSequence();
   }
 
   // --------------------------------------------------------------------------
@@ -238,7 +224,7 @@ public class OreDB
   // --------------------------------------------------------------------------
   /**
    * Teleport to the ore deposit with the specified 1-based index.
-   * 
+   *
    * @return the index teleported to.
    */
   public void tpIndex(int index)
@@ -258,7 +244,6 @@ public class OreDB
 
       // "Select" the tp target so that /w pre will work.
       Controller.instance.selectBlockEdit(deposit.getKeyOreBlock().getEdit());
-
     }
   } // tpIndex
 
@@ -299,9 +284,8 @@ public class OreDB
         else
         {
           // If the next deposit is more than 7 minutes after the previous, or
-          // if
-          // this is the last of the ore deposits, then our run of consecutive
-          // deposits is over.
+          // if this is the last of the ore deposits, then our run of
+          // consecutive deposits is over.
           if (Math.abs(depositTime - lastTime) > 7 * 60 * 1000
               || deposit == diamonds.getOreDeposits().last())
           {
@@ -368,7 +352,7 @@ public class OreDB
   /**
    * Examine the edit to see if it is an ore, and if it is, add it to the
    * database.
-   * 
+   *
    * @param edit the edit to examine.
    */
   public void addBlockEdit(BlockEdit edit)
@@ -382,6 +366,7 @@ public class OreDB
       {
         TypedOreDB db = getDB(mergedType);
         db.addBlockEdit(edit);
+        invalidateOreDepositSequence();
       }
     }
     catch (Exception ex)
@@ -400,29 +385,27 @@ public class OreDB
     if (settings.areLabelsShown())
     {
       int id = 1;
+      // Draw ore deposits in descending order of importance.
       StringBuilder label = new StringBuilder();
-      for (TypedOreDB db : _db.values())
+      for (OreDeposit deposit : getOreDepositSequence())
       {
-        for (OreDeposit deposit : db.getOreDeposits())
+        OreBlock block = deposit.getKeyOreBlock();
+        if (block.getEdit().playerEditSet.isVisible())
         {
-          OreBlock block = deposit.getKeyOreBlock();
-          if (block.getEdit().playerEditSet.isVisible())
-          {
-            label.setLength(0);
-            label.ensureCapacity(4);
-            label.append(id);
-            Annotation.drawBillboard(
-              block.getLocation().getX(),
-              block.getLocation().getY(),
-              block.getLocation().getZ(),
-              Configuration.instance.getBillboardBackground(),
-              Configuration.instance.getBillboardForeground(),
-              0.03,
-              label.toString());
-          }
-          ++id;
-        } // for all deposits
-      } // for all ore types
+          label.setLength(0);
+          label.ensureCapacity(4);
+          label.append(id);
+          Annotation.drawBillboard(
+            block.getLocation().getX(),
+            block.getLocation().getY(),
+            block.getLocation().getZ(),
+            Configuration.instance.getBillboardBackground(),
+            Configuration.instance.getBillboardForeground(),
+            0.03,
+            label.toString());
+        }
+        ++id;
+      } // for all deposits
     } // if drawing deposit labels
   } // drawDepositLabels
 
@@ -431,7 +414,7 @@ public class OreDB
    * Issue a LogBlock query for the time period 7 minutes before the specified
    * first {@link OreDeposit} to the start of the next minute after the last
    * {@link OreDeposit}.
-   * 
+   *
    * @param first the first deposit.
    * @param last the last deposit.
    */
@@ -475,7 +458,7 @@ public class OreDB
   /**
    * Return the {@link TypedOreDB} instance applicable to the specified ore
    * type.
-   * 
+   *
    * @param type the {@link BlockType} of the ore.
    * @return the {@link TypedOreDB} that stores information about
    *         {@link OreDeposits} of that type.
@@ -488,7 +471,7 @@ public class OreDB
   // --------------------------------------------------------------------------
   /**
    * Return true if the specified {@link BlockType} is an ore.
-   * 
+   *
    * @param type the block type.
    * @return true if the specified {@link BlockType} is an ore.
    */
@@ -500,7 +483,7 @@ public class OreDB
   // --------------------------------------------------------------------------
   /**
    * Limit the specified {@link OreDeposit} index to the valid range.
-   * 
+   *
    * @param index the 1-based index.
    * @return an index in the valid range [1,getOreDepositCount()].
    */
@@ -524,7 +507,7 @@ public class OreDB
   /**
    * If the specified BlockType is redstone ore, return (merge it with) glowing
    * redstone ore.
-   * 
+   *
    * @param type the type of ore.
    * @return redstone ore for both redstone ore types, or the original type
    *         parameter if not redstone.
@@ -543,20 +526,95 @@ public class OreDB
 
   // --------------------------------------------------------------------------
   /**
+   * Return a collection of {@link OreDeposit}s in the order that they should be
+   * assigned 1-based numeric labels.
+   *
+   * @return a collection of {@link OreDeposit}s in the order that they should
+   *         be assigned 1-based numeric labels.
+   */
+  protected ArrayList<OreDeposit> getOreDepositSequence()
+  {
+    Configuration config = Configuration.instance;
+    if (_lastTimeOrderedDeposits != config.timeOrderedDeposits())
+    {
+      _oreDepositSequenceChanged = true;
+    }
+
+    if (_oreDepositSequenceChanged)
+    {
+      _oreDepositSequenceChanged = false;
+      _lastTimeOrderedDeposits = config.timeOrderedDeposits();
+
+      // Build an array of OreDeposits in decreasing order of significance.
+      _oreDepositSequence.clear();
+      for (TypedOreDB db : _db.values())
+      {
+        for (OreDeposit deposit : db.getOreDeposits())
+        {
+          _oreDepositSequence.add(deposit);
+        }
+      }
+
+      // Reorder deposits by timestamp if required by the settings.
+      if (config.timeOrderedDeposits())
+      {
+        _oreDepositSequence.sort(new Comparator<OreDeposit>()
+        {
+          @Override
+          public int compare(OreDeposit o1, OreDeposit o2)
+          {
+            return Long.signum(o1.getEarliestEdit().time - o2.getEarliestEdit().time);
+          }
+        });
+      }
+    }
+    return _oreDepositSequence;
+  } // getOreDepositSequence
+
+  // --------------------------------------------------------------------------
+  /**
    * Map from {@link BlockType} to {@link TypedOreDB}, linked in the order that
    * we would like to list ore deposits to the user, i.e. diamonds first.
    */
-  protected LinkedHashMap<BlockType, TypedOreDB> _db          = new LinkedHashMap<BlockType, TypedOreDB>();
+  protected LinkedHashMap<BlockType, TypedOreDB> _db                        = new LinkedHashMap<BlockType, TypedOreDB>();
 
   /**
    * A map from the {@link BlockType} to the {@link Colour} to use when listing
    * ores of that type in chat.
    */
-  protected LinkedHashMap<BlockType, Colour>     _chatColours = new LinkedHashMap<BlockType, Colour>();
+  protected LinkedHashMap<BlockType, Colour>     _chatColours               = new LinkedHashMap<BlockType, Colour>();
 
   /**
    * The index of the most recently teleported to {@link OreDeposit}.
    */
-  protected int                                  _tpIndex     = 0;
+  protected int                                  _tpIndex                   = 0;
 
+  /**
+   * To support fast iteration through all {@link OreDeposit}s, to draw labels
+   * quickly, we keep a cache of them in the order they should be numbered.
+   *
+   * The order that {@link OreDeposit}s are assigned label numbers is determined
+   * by the time_ordered_deposits setting. When true, deposits are numbered in
+   * strictly ascending order of their first edit. When false, the
+   * {@link OreDeposit}s are ordered first by the diagnostic significance of the
+   * ore type (rarer ores first) and then by the time they were mined.
+   *
+   * Regardless of the order that we number the ores, we use this cache to step
+   * through them. It is cleared and rebuilt from scratch whenever an
+   * {@link OreDeposit} is added or removed.
+   */
+  protected ArrayList<OreDeposit>                _oreDepositSequence        = new ArrayList<OreDeposit>();
+
+  /**
+   * This boolean is set to true to record that OreDeposits have been added or
+   * removed, thus requiring that _oreDepositSequence be recomputed.
+   */
+  protected boolean                              _oreDepositSequenceChanged = true;
+
+  /**
+   * This boolean records the value of DisplaySettings.timeOrderedDeposits()
+   * when the cached sequence of OreDeposits was last updated. If the setting
+   * has changed since then, then the sequence must be recomputed.
+   */
+  protected boolean                              _lastTimeOrderedDeposits   = true;
 } // class OreDB

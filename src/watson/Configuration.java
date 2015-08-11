@@ -82,6 +82,7 @@ public class Configuration
       setSsDateDirectoryImp((String) dom.get("ss_date_directory"));
       _reformatQueryResults = (Boolean) dom.get("reformat_query_results");
       _recolourQueryResults = (Boolean) dom.get("recolour_query_results");
+      _timeOrderedDeposits = (Boolean) dom.get("time_ordered_deposits");
     }
     catch (Exception ex)
     {
@@ -123,6 +124,7 @@ public class Configuration
       dom.put("ss_date_directory", _ssDateDirectory.toPattern());
       dom.put("reformat_query_results", _reformatQueryResults);
       dom.put("recolour_query_results", _recolourQueryResults);
+      dom.put("time_ordered_desposits", _timeOrderedDeposits);
 
       DumperOptions options = new DumperOptions();
       options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
@@ -138,10 +140,10 @@ public class Configuration
   // --------------------------------------------------------------------------
   /**
    * Enable or disable the Watson mod as a whole.
-   * 
+   *
    * When disabled, only the /w config enable and /w help commands are
    * available, and Watson does no processing of chat or rendering of edits.
-   * 
+   *
    * @param enabled if true, Watson is enabled.
    */
   public void setEnabled(boolean enabled)
@@ -168,7 +170,7 @@ public class Configuration
   // --------------------------------------------------------------------------
   /**
    * Return true if Watson, the mod as a whole, is enabled.
-   * 
+   *
    * @return true if Watson, the mod as a whole, is enabled.
    */
   public boolean isEnabled()
@@ -179,7 +181,7 @@ public class Configuration
   // --------------------------------------------------------------------------
   /**
    * Enable or disable debug logging.
-   * 
+   *
    * @param debug if true, debug messages will be logged.
    */
   public void setDebug(boolean debug)
@@ -193,7 +195,7 @@ public class Configuration
   // --------------------------------------------------------------------------
   /**
    * Return true if Watson, the mod as a whole, is enabled.
-   * 
+   *
    * @return true if Watson, the mod as a whole, is enabled.
    */
   public boolean isDebug()
@@ -205,7 +207,7 @@ public class Configuration
   /**
    * Enable or disable automatic paging through "/lb coords" results, up to 3
    * pages.
-   * 
+   *
    * @param enabled if true, automatic paging is enabled up to the limit.
    */
   public void setAutoPage(boolean enabled)
@@ -219,7 +221,7 @@ public class Configuration
   // --------------------------------------------------------------------------
   /**
    * Return true if automatic paging through "/lb coords" results is enabled.
-   * 
+   *
    * @return true if automatic paging through "/lb coords" results is enabled.
    */
   public boolean isAutoPage()
@@ -231,14 +233,14 @@ public class Configuration
   /**
    * Set the timeout, in seconds, between automatic calls to "/region info" when
    * right clicking with a wooden sword.
-   * 
+   *
    * The time separation between "/region info" commands will be at least this.
    * The timeout has a lower bound, which is dictated by the command spam
    * detector on s.nerd.nu. Allowing "/region info" commands to be issued faster
    * than that would just lead to them being cued up for sending to the server
    * (bad) or we could send them to the server and aggravate the spam filter
    * (bad).
-   * 
+   *
    * @param seconds the timeout in seconds.
    */
   public void setRegionInfoTimeoutSeconds(double seconds)
@@ -256,7 +258,7 @@ public class Configuration
   // --------------------------------------------------------------------------
   /**
    * Return the timeout between automatic calls to "/region info", in seconds.
-   * 
+   *
    * @return the timeout between automatic calls to "/region info", in seconds.
    */
   public double getRegionInfoTimeoutSeconds()
@@ -267,7 +269,7 @@ public class Configuration
   // --------------------------------------------------------------------------
   /**
    * Enable or disable the vector display.
-   * 
+   *
    * @param dispayVectors if true, the vector display will be visible.
    */
   public void setVectorsShown(boolean dispayVectors)
@@ -279,7 +281,7 @@ public class Configuration
   // --------------------------------------------------------------------------
   /**
    * Return true if the vector display will be visible.
-   * 
+   *
    * @return true if the vector display will be visible.
    */
   public boolean getVectorsShown()
@@ -290,7 +292,7 @@ public class Configuration
   // --------------------------------------------------------------------------
   /**
    * Set the background colour of billboards to the specified ARGB colour.
-   * 
+   *
    * @param argb the colour; alpha in the most significant octet, blue in the
    *          least significant octet.
    */
@@ -305,7 +307,7 @@ public class Configuration
   // --------------------------------------------------------------------------
   /**
    * Return the background colour of billboards to the specified ARGB colour.
-   * 
+   *
    * @return the background colour of billboards to the specified ARGB colour.
    */
   public int getBillboardBackground()
@@ -316,7 +318,7 @@ public class Configuration
   // --------------------------------------------------------------------------
   /**
    * Set the foreground colour of billboards to the specified ARGB colour.
-   * 
+   *
    * @param argb the colour; alpha in the most significant octet, blue in the
    *          least significant octet.
    */
@@ -331,7 +333,7 @@ public class Configuration
   // --------------------------------------------------------------------------
   /**
    * Return the foreground colour of billboards to the specified ARGB colour.
-   * 
+   *
    * @return the foreground colour of billboards to the specified ARGB colour.
    */
   public int getBillboardForeground()
@@ -342,9 +344,9 @@ public class Configuration
   // --------------------------------------------------------------------------
   /**
    * Control whether ores are grouped even in creative mode.
-   * 
+   *
    * By default, ores receive no special treatment in creative mode.
-   * 
+   *
    * @param groupingOresInCreative if true, ores are grouped and can be listed
    *          using /w ores in creative mode. If false, that facility is only
    *          available in survival type modes.
@@ -360,7 +362,7 @@ public class Configuration
   // --------------------------------------------------------------------------
   /**
    * Return true if grouping of ores is enabled even in creative mode.
-   * 
+   *
    * @return true if grouping of ores is enabled even in creative mode.
    */
   public boolean isGroupingOresInCreative()
@@ -372,7 +374,7 @@ public class Configuration
   /**
    * Set the format string used to generate the teleport command set to the
    * server.
-   * 
+   *
    * @param format a format string suitable for use with String.format(); but
    *          only %d and %g are recognised as numeric format specifiers.
    */
@@ -388,7 +390,7 @@ public class Configuration
   /**
    * Return the format string used to generate the teleport command set to the
    * server.
-   * 
+   *
    * @return the format string used to generate the teleport command set to the
    *         server.
    */
@@ -401,7 +403,7 @@ public class Configuration
   /**
    * Set the minimum number of seconds that must elapse between programmatically
    * sent chat messages (usually commands to the server).
-   * 
+   *
    * @param seconds timeout in seconds.
    */
   public void setChatTimeoutSeconds(double seconds)
@@ -420,7 +422,7 @@ public class Configuration
   /**
    * Return the minimum number of seconds that must elapse between
    * programmatically sent chat messages (usually commands to the server).
-   * 
+   *
    * @return the minimum number of seconds that must elapse between
    *         programmatically sent chat messages (usually commands to the
    *         server).
@@ -434,7 +436,7 @@ public class Configuration
   /**
    * Set the maximum number of pages of "/lb coords" results that will be
    * automatically stepped through by issuing "/lb page #" commands.
-   * 
+   *
    * @param maxAutoPages the number of pages.
    */
   public void setMaxAutoPages(int maxAutoPages)
@@ -451,7 +453,7 @@ public class Configuration
   /**
    * Return the maximum number of pages of "/lb coords" results that will be
    * automatically stepped through by issuing "/lb page #" commands.
-   * 
+   *
    * @return the maximum number of pages of "/lb coords" results that will be
    *         automatically stepped through by issuing "/lb page #" commands.
    */
@@ -463,7 +465,7 @@ public class Configuration
   // --------------------------------------------------------------------------
   /**
    * Set the number of edits to fetch from LogBlock when "/w pre" is run.
-   * 
+   *
    * @param preCount the number of edits.
    */
   public void setPreCount(int preCount)
@@ -477,7 +479,7 @@ public class Configuration
   // --------------------------------------------------------------------------
   /**
    * Return the number of edits to fetch from LogBlock when "/w pre" is run.
-   * 
+   *
    * @return the number of edits to fetch from LogBlock when "/w pre" is run.
    */
   public int getPreCount()
@@ -488,7 +490,7 @@ public class Configuration
   // --------------------------------------------------------------------------
   /**
    * Set the number of edits to fetch from LogBlock when "/w post" is run.
-   * 
+   *
    * @param postCount the number of edits.
    */
   public void setPostCount(int postCount)
@@ -502,7 +504,7 @@ public class Configuration
   // --------------------------------------------------------------------------
   /**
    * Return the number of edits to fetch from LogBlock when "/w post" is run.
-   * 
+   *
    * @return the number of edits to fetch from LogBlock when "/w post" is run.
    */
   public int getPostCount()
@@ -513,10 +515,10 @@ public class Configuration
   // --------------------------------------------------------------------------
   /**
    * Set the start of all Watson commands, without the slash.
-   * 
+   *
    * The caller should ensure that the specified prefix consists entirely of
    * word characters ([a-zA-Z_0-9]), or it will be rejected.
-   * 
+   *
    * @param watsonPrefix the command prefix.
    */
   public void setWatsonPrefix(String watsonPrefix)
@@ -530,7 +532,7 @@ public class Configuration
   // --------------------------------------------------------------------------
   /**
    * Return the start of all Watson commands, without the slash.
-   * 
+   *
    * @return the start of all Watson commands, without the slash.
    */
   public String getWatsonPrefix()
@@ -542,7 +544,7 @@ public class Configuration
   /**
    * If true, a subdirectory named after the currently selected player is
    * created to hold screenshots of his edits.
-   * 
+   *
    * @param ssPlayerDirectory whether to create the directory.
    */
   public void setSsPlayerDirectory(boolean ssPlayerDirectory)
@@ -558,7 +560,7 @@ public class Configuration
   /**
    * Return true if a subdirectory named after the currently selected player is
    * created to hold screenshots of his edits.
-   * 
+   *
    * @return true if a subdirectory named after the currently selected player is
    *         created to hold screenshots of his edits.
    */
@@ -571,7 +573,7 @@ public class Configuration
   /**
    * If true, a the name of the currently selected player is appended to
    * screenshot files.
-   * 
+   *
    * @param ssPlayerSuffix whether to append the suffix.
    */
   public void setSsPlayerSuffix(boolean ssPlayerSuffix)
@@ -587,7 +589,7 @@ public class Configuration
   /**
    * Return true if the name of the currently selected player is appended to
    * screenshot files.
-   * 
+   *
    * @return true if the name of the currently selected player is appended to
    *         screenshot files.
    */
@@ -601,7 +603,7 @@ public class Configuration
    * A {@link SimpleDateFormat} format string specifying the name of the
    * subdirectory to create to store screenshots when there is no currently
    * selected player, or when isPlayerDirectory() is false.
-   * 
+   *
    * @param ssDateDirectory the format specifier.
    */
   public void setSsDateDirectory(String ssDateDirectory)
@@ -622,10 +624,10 @@ public class Configuration
    * Set the form format string specifying the name of the subdirectory to
    * create to store screenshots when there is no currently selected player, or
    * when isPlayerDirectory() is false.
-   * 
+   *
    * This is the underlying implementation of setSsDateDirectory(), without the
    * save() of the configuration or feedback into player chat.
-   * 
+   *
    * @param ssDateDirectory the format specifier.
    * @return true if successful.
    */
@@ -649,7 +651,7 @@ public class Configuration
   /**
    * Return the format specifier to use to name screenshot subdirectories based
    * on the current date and/or time.
-   * 
+   *
    * @return the format specifier to use to name screenshot subdirectories based
    *         on the current date and/or time.
    */
@@ -661,7 +663,7 @@ public class Configuration
   // --------------------------------------------------------------------------
   /**
    * Enable or disable compact reformatting of query results in chat.
-   * 
+   *
    * @param reformatQueryResults if true, query results in chat are displayed in
    *          a more compact form.
    */
@@ -676,7 +678,7 @@ public class Configuration
   // --------------------------------------------------------------------------
   /**
    * Return true if query results should be displayed in compact form.
-   * 
+   *
    * @return true if query results should be displayed in compact form.
    */
   public boolean getReformatQueryResults()
@@ -687,7 +689,7 @@ public class Configuration
   // --------------------------------------------------------------------------
   /**
    * Enable or disable recolouring of query results in chat.
-   * 
+   *
    * @param recolourQueryResults if true, query results in chat are recoloured.
    */
   public void setRecolourQueryResults(boolean recolourQueryResults)
@@ -701,12 +703,46 @@ public class Configuration
   // --------------------------------------------------------------------------
   /**
    * Return true if query results should be recoloured.
-   * 
+   *
    * @return true if query results should be recoloured.
    */
   public boolean getRecolourQueryResults()
   {
     return _recolourQueryResults;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Enable or disable time ordering of deposits.
+   *
+   * @param enabled if true, number ore deposits according to their timestamps
+   *          only; if false, ores are ordered rarest-first (i.e. diamonds
+   *          before iron, iron before coal, etc.).
+   */
+  public void setTimeOrderedDeposits(boolean enabled)
+  {
+    _timeOrderedDeposits = enabled;
+    Chat.localOutput(_timeOrderedDeposits
+      ? "Ore deposits will be numbered according to their timestamps (only)."
+      : "Ore deposits will be numbered in decreasing order of scarcity."
+        );
+    save();
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return true if ore deposits should be assigned 1-based numeric labels
+   * strictly in the order that they were mined.
+   *
+   * If false, ore deposits are ordered in descending order of scarcity first,
+   * and then time stamps are taken into account.
+   *
+   * @return true if ore deposits should be assigned 1-based numeric labels
+   *         strictly in the order that they were mined.
+   */
+  public boolean timeOrderedDeposits()
+  {
+    return _timeOrderedDeposits;
   }
 
   // --------------------------------------------------------------------------
@@ -743,6 +779,7 @@ public class Configuration
       root.addChild("ss_date_directory", new TypeValidatorNode(String.class, true, ""));
       root.addChild("reformat_query_results", new TypeValidatorNode(Boolean.class, true, true));
       root.addChild("recolour_query_results", new TypeValidatorNode(Boolean.class, true, true));
+      root.addChild("time_ordered_deposits", new TypeValidatorNode(Boolean.class, true, false));
 
       _validator.setRoot(root);
     }
@@ -800,7 +837,7 @@ public class Configuration
 
   /**
    * If true, group ores even in creative mode.
-   * 
+   *
    * I currently know of no way of distinguishing the server's gamemode from
    * that of the player. Therefore, it is best if this setting is left true so
    * that "/w ore" works for admins in creative mode.
@@ -856,7 +893,7 @@ public class Configuration
    * A {@link SimpleDateFormat} specifying the name of the subdirectory to
    * create to store screenshots when there is no currently selected player, or
    * when isPlayerDirectory() is false.
-   * 
+   *
    * I'm assuming that the empty string is a valid format that won't throw.
    */
   protected SimpleDateFormat    _ssDateDirectory          = new SimpleDateFormat("");
@@ -869,5 +906,13 @@ public class Configuration
    * Recolour query results in chat.
    */
   protected boolean             _recolourQueryResults     = true;
+
+  /**
+   * If true, ore deposits should be assigned 1-based numeric labels strictly in
+   * the order that they were mined. When false, ores are ordered in descending
+   * order of their scarcity.
+   */
+  protected boolean             _timeOrderedDeposits      = false;
+
 } // class Configuration
 

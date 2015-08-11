@@ -34,8 +34,6 @@ public class WatsonCommand extends WatsonCommandBase
     return Configuration.instance.getWatsonPrefix();
   }
 
-
-
   // --------------------------------------------------------------------------
   /**
    * @see net.minecraft.src.ICommand#processCommand(net.minecraft.src.ICommandSender,
@@ -455,7 +453,7 @@ public class WatsonCommand extends WatsonCommandBase
         return;
       }
     } // config with parameters
-    
+
     // "/w config" with no parameters, direct to /w config help
     if (args.length == 1 && args[0].equals("config"))
     {
@@ -463,14 +461,14 @@ public class WatsonCommand extends WatsonCommandBase
       localOutput(sender, "Type \"/" + w + " config help\" for help with configuration options.");
       return;
     } // config with no parameters
-    
+
     localError(sender, "Invalid command syntax.");
   } // processCommand
 
   // --------------------------------------------------------------------------
   /**
    * Handle the various /w vector subcommands.
-   * 
+   *
    * @return true if the command was processed successfully.
    */
   protected boolean handleVectorCommand(ICommandSender sender, String[] args)
@@ -545,7 +543,7 @@ public class WatsonCommand extends WatsonCommandBase
   // --------------------------------------------------------------------------
   /**
    * Handle the various /w config subcommands.
-   * 
+   *
    * @return true if the command was processed successfully.
    */
   protected boolean handleConfigCommand(ICommandSender sender, String[] args)
@@ -665,9 +663,9 @@ public class WatsonCommand extends WatsonCommandBase
       }
       else if (args.length == 2)
       {
-          int argb = Configuration.instance.getBillboardBackground();
-          localOutput(sender, "Billboard background colour is currently set to " + argb + ".");
-          return true;
+        int argb = Configuration.instance.getBillboardBackground();
+        localOutput(sender, "Billboard background colour is currently set to #" + Integer.toUnsignedString(argb, 16) + ".");
+        return true;
       }
     } // /w config billboard_background
 
@@ -692,9 +690,9 @@ public class WatsonCommand extends WatsonCommandBase
       }
       else if (args.length == 2)
       {
-          int argb = Configuration.instance.getBillboardForeground();
-          localOutput(sender, "Billboard foreground colour is currently set to " + argb + ".");
-          return true;
+        int argb = Configuration.instance.getBillboardForeground();
+        localOutput(sender, "Billboard foreground colour is currently set to #" + Integer.toUnsignedString(argb, 16) + ".");
+        return true;
       }
     } // /w config billboard_foreground
 
@@ -794,7 +792,7 @@ public class WatsonCommand extends WatsonCommandBase
       {
         int maxAutoPages = Configuration.instance.getMaxAutoPages();
         localOutput(sender, "Currently, up to " + maxAutoPages + " pages of \"/lb coords\" results will be "
-                + "stepped through automatically.");
+                            + "stepped through automatically.");
         return true;
       }
     } // /w config max_auto_pages
@@ -894,7 +892,7 @@ public class WatsonCommand extends WatsonCommandBase
         String watsonPrefix = Configuration.instance.getWatsonPrefix();
         localOutput(sender, "Watson command prefix is currently set to " + watsonPrefix + ".");
         return true;
-    } // /w config watson_prefix <prefix>
+      } // /w config watson_prefix <prefix>
 
     // Enable or disable per-player screenshot subdirectories.
     if (args[1].equals("ss_player_directory"))
@@ -987,34 +985,74 @@ public class WatsonCommand extends WatsonCommandBase
         return true;
       }
     } // /w config recolour_query_results
-    
+
+    // Enable timestamp-only ordering of ore deposits.
+    if (args[1].equals("time_ordered_deposits"))
+    {
+      if (args[2].equals("on"))
+      {
+        Configuration.instance.setTimeOrderedDeposits(true);
+        return true;
+      }
+      else if (args[2].equals("off"))
+      {
+        Configuration.instance.setTimeOrderedDeposits(false);
+        return true;
+      }
+    } // /w config time_ordered_deposits
+
     // Help with /w config
     if (args[1].equals("help"))
     {
       String w = Configuration.instance.getWatsonPrefix();
-      localOutput(sender, "Config options, note that non-toggle commands can be entered without arguments to see currently set values:");
+      localOutput(sender,
+        "Config options, note that non-toggle commands can be entered without arguments to see currently set values:");
       localOutput(sender, "  /" + w + " config help : display these instructions");
       localOutput(sender, "  /" + w + " config watson : toggles watson mod as a whole");
       localOutput(sender, "  /" + w + " config debug : enable or disable debug logging");
       localOutput(sender, "  /" + w + " config auto_page : enable or disable automatic \"/lb coords\" paging");
-      localOutput(sender, "  /" + w + " config region_info_timeout [seconds] : set minimum time separation between automatic \"/region info\"s");
+      localOutput(sender,
+        "  /" + w + " config region_info_timeout [seconds] : set minimum time separation between automatic \"/region info\"s");
       localOutput(sender, "  /" + w + " config billboard_background [argb] : set the text billboard background colour");
       localOutput(sender, "  /" + w + " config billboard_foreground [argb] : set the text billboard foreground colour");
-      localOutput(sender, "  /" + w + " config group_ores_in_creative : enable or disable forced grouping of ores in creative mode");
+      localOutput(sender, "  /" + w
+                          + " config group_ores_in_creative : enable or disable forced grouping of ores in creative mode");
       localOutput(sender, "  /" + w + " config teleport_command [string] : set the teleport command formatting");
-      localOutput(sender, "  /" + w + " config chat_timeout [seconds] : set minimum time separation between programmatically generated chat messages sent to the server");
-      localOutput(sender, "  /" + w + " config max_auto_pages [int]: set the maximum number of pages of \"/lb coords\" results automatically paged through");
-      localOutput(sender, "  /" + w + " config pre_count [int] : set the default number of edits to query when no count parameter is specified with \"/" + w + " pre\"");
-      localOutput(sender, "  /" + w + " config post_count [int] : set the default number of edits to query when no count parameter is specified with \"/" + w + " post\"");
+      localOutput(
+        sender,
+        "  /"
+          + w
+          + " config chat_timeout [seconds] : set minimum time separation between programmatically generated chat messages sent to the server");
+      localOutput(
+        sender,
+        "  /"
+          + w
+          + " config max_auto_pages [int]: set the maximum number of pages of \"/lb coords\" results automatically paged through");
+      localOutput(sender,
+        "  /" + w
+          + " config pre_count [int] : set the default number of edits to query when no count parameter is specified with \"/"
+          + w + " pre\"");
+      localOutput(sender,
+        "  /" + w
+          + " config post_count [int] : set the default number of edits to query when no count parameter is specified with \"/"
+          + w + " post\"");
       localOutput(sender, "  /" + w + " config watson_prefix [string] : set the prefix for watson commands");
       localOutput(sender, "  /" + w + " config ss_player_directory : enable or disable per-player screenshot subdirectories");
       localOutput(sender, "  /" + w + " config ss_player_suffix : enable or disable per-player screenshot suffixes");
-      localOutput(sender, "  /" + w + " config ss_date_directory [string] : set the anonymous screenshot subdirectory format speficier");
-      localOutput(sender, "  /" + w + " config reformat_query_results [on/off] : enable or disable the reformatting of query results");
-      localOutput(sender, "  /" + w + " config recolour_query_results [on/off] : enable or disable the recolouring of query results");
+      localOutput(sender, "  /" + w
+                          + " config ss_date_directory [string] : set the anonymous screenshot subdirectory format speficier");
+      localOutput(sender, "  /" + w
+                          + " config reformat_query_results [on/off] : enable or disable the reformatting of query results");
+      localOutput(sender, "  /" + w
+                          + " config recolour_query_results [on/off] : enable or disable the recolouring of query results");
+      localOutput(
+        sender,
+        "  /"
+          + w
+          + " config time_ordered_deposits [on/off] : number deposits in according to their timestamp (on), or their scarcity (off)");
       return true;
     } // /w config help
-    
+
     return false;
   } // handleConfigCommand
 
