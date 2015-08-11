@@ -21,7 +21,7 @@ public class Annotation
   // --------------------------------------------------------------------------
   /**
    * Constructor.
-   * 
+   *
    * @param x the world x coordinate.
    * @param y the world y coordinate.
    * @param z the world z coordinate.
@@ -38,7 +38,7 @@ public class Annotation
   // --------------------------------------------------------------------------
   /**
    * Return the annotation text to display.
-   * 
+   *
    * @return the annotation text to display.
    */
   public String getText()
@@ -49,7 +49,7 @@ public class Annotation
   // --------------------------------------------------------------------------
   /**
    * Return the X coordinate of the block that was annotated.
-   * 
+   *
    * @return the X coordinate of the block that was annotated.
    */
   public int getX()
@@ -60,7 +60,7 @@ public class Annotation
   // --------------------------------------------------------------------------
   /**
    * Return the Y coordinate of the block that was annotated.
-   * 
+   *
    * @return the Y coordinate of the block that was annotated.
    */
   public int getY()
@@ -71,7 +71,7 @@ public class Annotation
   // --------------------------------------------------------------------------
   /**
    * Return the Z coordinate of the block that was annotated.
-   * 
+   *
    * @return the Z coordinate of the block that was annotated.
    */
   public int getZ()
@@ -93,7 +93,7 @@ public class Annotation
   // --------------------------------------------------------------------------
   /**
    * Draw a camera-facing text billboard in three dimensions.
-   * 
+   *
    * @param x the x world coordinate.
    * @param y the y world coordinate.
    * @param z the z world coordinate.
@@ -108,7 +108,7 @@ public class Annotation
    * @param text the text on the billboard.
    */
   public static void drawBillboard(double x, double y, double z, int bgARGB,
-    int fgARGB, double scaleFactor, String text)
+                                   int fgARGB, double scaleFactor, String text)
   {
     RenderManager renderManager = Minecraft.getMinecraft().getRenderManager();
     FontRenderer fontRenderer = renderManager.getFontRenderer();
@@ -145,7 +145,7 @@ public class Annotation
         : -renderManager.playerViewX, 1.0f, 0.0f, 0.0f);
     GlStateManager.scale(-scale, -scale, scale);
     GlStateManager.disableLighting();
-    GlStateManager.disableBlend();
+    GlStateManager.enableBlend();
     GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
     Tessellator tessellator = Tessellator.getInstance();
     WorldRenderer wr = tessellator.getWorldRenderer();
