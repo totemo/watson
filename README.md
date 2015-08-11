@@ -139,9 +139,13 @@ Given the above commands for working with ore deposits, a basic x-ray checking p
 
 ### Manipulating the Vector and Outline Displays
 
-Watson draws vectors (arrows) from each edit to the next edit which is more recent, provided that the distance in space between the edits is greater than the minimum vector length.  The default minimum length is 4.  To draw vectors between all edits:
+Watson draws vectors (arrows) from each edit to the next edit which is more recent, provided that the distance in space between the edits is greater than the minimum vector length.  The default minimum length is a configuration setting that defaults to 4.0.  To draw vectors between all edits:
 
-    /w vector length 1
+    /w vector length 0
+
+The above command sets the minimum vector length for the current session.  The minimum vector length can be permanently changed to that value using:
+
+    /w config vector_length 0
 
 To hide, show or toggle the vector display:
 
@@ -466,6 +470,9 @@ Running "/w config help" will show help for all of the configuration settings.
   </tr>
   <tr>
     <td>time_ordered_deposits</td> <td>on / off</td> <td>off</td> <td>When off (the default) ore deposits are numbered in order of their significance to investigating xray (diamonds before iron, before coal).  When on, ore deposits are numbered in the order they were mined.</td> <td>/w config time_ordered_deposits on</td>
+  </tr>
+  <tr>
+    <td>vector_length</td> <td>decimal</td> <td>4.0</td> <td>Specifies the minimum length (in blocks) of a vector for it to be visible.</td> <td>/w config vector_length 0</td>
   </tr>
 </table>
 

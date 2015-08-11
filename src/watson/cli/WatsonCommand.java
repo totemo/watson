@@ -959,47 +959,95 @@ public class WatsonCommand extends WatsonCommandBase
     // Enable or disable the reformatting of query results.
     if (args[1].equals("reformat_query_results"))
     {
-      if (args[2].equals("on"))
+      if (args.length == 2)
       {
-        Configuration.instance.setReformatQueryResults(true);
+        Configuration.instance.setReformatQueryResults(!Configuration.instance.getReformatQueryResults());
         return true;
       }
-      else if (args[2].equals("off"))
+      else if (args.length == 3)
       {
-        Configuration.instance.setReformatQueryResults(false);
-        return true;
+        if (args[2].equals("on"))
+        {
+          Configuration.instance.setReformatQueryResults(true);
+          return true;
+        }
+        else if (args[2].equals("off"))
+        {
+          Configuration.instance.setReformatQueryResults(false);
+          return true;
+        }
       }
     } // /w config reformat_query_results
 
     // Enable or disable the recolouring of query results.
     if (args[1].equals("recolour_query_results"))
     {
-      if (args[2].equals("on"))
+      if (args.length == 2)
       {
-        Configuration.instance.setRecolourQueryResults(true);
+        Configuration.instance.setRecolourQueryResults(!Configuration.instance.getRecolourQueryResults());
         return true;
       }
-      else if (args[2].equals("off"))
+      else if (args.length == 3)
       {
-        Configuration.instance.setRecolourQueryResults(false);
-        return true;
+        if (args[2].equals("on"))
+        {
+          Configuration.instance.setRecolourQueryResults(true);
+          return true;
+        }
+        else if (args[2].equals("off"))
+        {
+          Configuration.instance.setRecolourQueryResults(false);
+          return true;
+        }
       }
     } // /w config recolour_query_results
 
     // Enable timestamp-only ordering of ore deposits.
     if (args[1].equals("time_ordered_deposits"))
     {
-      if (args[2].equals("on"))
+      if (args.length == 2)
       {
-        Configuration.instance.setTimeOrderedDeposits(true);
+        Configuration.instance.setTimeOrderedDeposits(!Configuration.instance.timeOrderedDeposits());
         return true;
       }
-      else if (args[2].equals("off"))
+      else if (args.length == 3)
       {
-        Configuration.instance.setTimeOrderedDeposits(false);
-        return true;
+        if (args[2].equals("on"))
+        {
+          Configuration.instance.setTimeOrderedDeposits(true);
+          return true;
+        }
+        else if (args[2].equals("off"))
+        {
+          Configuration.instance.setTimeOrderedDeposits(false);
+          return true;
+        }
       }
     } // /w config time_ordered_deposits
+
+    // Minimum vector length (initial value for /w vector length <double>).
+    if (args[1].equals("vector_length"))
+    {
+      if (args.length == 2)
+      {
+        float length = Configuration.instance.getVectorLength();
+        localOutput(sender, "The default minimum length of a vector for it to be visible is " + length + " blocks.");
+        return true;
+      }
+      else if (args.length == 3)
+      {
+        try
+        {
+          float length = Math.max(0.0f, Float.parseFloat(args[2]));
+          Configuration.instance.setVectorLength(length);
+        }
+        catch (NumberFormatException ex)
+        {
+          localError(sender, "The minimum vector length should be a number.");
+        }
+        return true;
+      }
+    } // /w config vector_length
 
     // Help with /w config
     if (args[1].equals("help"))
@@ -1049,12 +1097,17 @@ public class WatsonCommand extends WatsonCommandBase
         sender,
         "  /"
           + w
-          + " config time_ordered_deposits [on/off] : number deposits in according to their timestamp (on), or their scarcity (off)");
+          + " config time_ordered_deposits [on/off] : number deposits according to their timestamp (on), or their scarcity (off)");
+      localOutput(
+        sender,
+        "  /"
+          + w
+          + " config vector_length [decimal]: set the default minimum length of a vector for it to be visible");
       return true;
     } // /w config help
 
     return false;
-  } // handleConfigCommand
+  }// handleConfigCommand
 
   // --------------------------------------------------------------------------
   /**

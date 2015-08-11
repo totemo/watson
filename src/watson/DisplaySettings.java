@@ -3,7 +3,7 @@ package watson;
 import net.minecraft.world.WorldSettings;
 import watson.chat.Chat;
 
-// --------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 /**
  * Records the current settings that affect the Watson displays.
  */
@@ -20,12 +20,13 @@ public class DisplaySettings
     // presence of ModMode and its associated notifications to turn on or off
     // the display.
     _displayed = gameType.isCreative();
+    _minVectorLength = Configuration.instance.getVectorLength();
   }
 
   // --------------------------------------------------------------------------
   /**
    * Turn on or off all Watson displays.
-   * 
+   *
    * @param displayed true if Watson draws stuff; false otherwise.
    */
   public void setDisplayed(boolean displayed)
@@ -38,7 +39,7 @@ public class DisplaySettings
   // --------------------------------------------------------------------------
   /**
    * Return true if Watson draws stuff; false otherwise.
-   * 
+   *
    * @return true if Watson draws stuff; false otherwise.
    */
   public boolean isDisplayed()
@@ -50,10 +51,10 @@ public class DisplaySettings
   /**
    * Return true if the Watson display's visibility setting has changed since
    * the last time this method was called.
-   * 
+   *
    * This is used by the Watson Macro/Keybind Support mod to determine when to
    * dispatch the corresponding event.
-   * 
+   *
    * @return true if isDisplayed() has changed.
    */
   public boolean isDisplayVisibilityChanged()
@@ -66,7 +67,7 @@ public class DisplaySettings
   // --------------------------------------------------------------------------
   /**
    * Turn on or off the wireframe block outline display.
-   * 
+   *
    * @param outlineShown if true, block outlines are drawn.
    */
   public void setOutlineShown(boolean outlineShown)
@@ -78,11 +79,11 @@ public class DisplaySettings
   // --------------------------------------------------------------------------
   /**
    * Return true if block outines should be drawn.
-   * 
+   *
    * This method takes into account the last calls to both setOutlineShown() and
    * setDisplayed(). It will return false if outlines are disabled or if the
    * overall Watson display is turned off.
-   * 
+   *
    * @return true if block outines should be drawn.
    */
   public boolean isOutlineShown()
@@ -93,7 +94,7 @@ public class DisplaySettings
   // --------------------------------------------------------------------------
   /**
    * Turn on or off the annotation display.
-   * 
+   *
    * @param annotationsShown if true, annotations are drawn.
    */
   public void setAnnotationsShown(boolean annotationsShown)
@@ -106,7 +107,7 @@ public class DisplaySettings
   // --------------------------------------------------------------------------
   /**
    * Return true if block annotations should be drawn.
-   * 
+   *
    * @return true if block annotations should be drawn.
    */
   public boolean areAnnotationsShown()
@@ -117,7 +118,7 @@ public class DisplaySettings
   // --------------------------------------------------------------------------
   /**
    * Turn on or off the ore deposit number labels.
-   * 
+   *
    * @param labelsShown if true, labels are shown.
    */
   public void setLabelsShown(boolean labelsShown)
@@ -129,7 +130,7 @@ public class DisplaySettings
   // --------------------------------------------------------------------------
   /**
    * Return true if ore deposit labels should be drawn.
-   * 
+   *
    * @return true if ore deposit labels should be drawn.
    */
   public boolean areLabelsShown()
@@ -140,7 +141,7 @@ public class DisplaySettings
   // --------------------------------------------------------------------------
   /**
    * Turn on or off the wireframe vector display.
-   * 
+   *
    * @param outlineShown if true, vectors between sufficiently spaced blocks are
    *          drawn.
    */
@@ -153,11 +154,11 @@ public class DisplaySettings
   // --------------------------------------------------------------------------
   /**
    * Return true if block outines should be drawn.
-   * 
+   *
    * This method takes into account the last calls to both setOutlineShown() and
    * setDisplayed(). It will return false if outlines are disabled or if the
    * overall Watson display is turned off.
-   * 
+   *
    * @return true if block outines should be drawn.
    */
   public boolean areVectorsShown()
@@ -169,7 +170,7 @@ public class DisplaySettings
   /**
    * Control whether block creations are linked by vectors (when they are
    * shown).
-   * 
+   *
    * @param linkedCreations if true, links are drawn.
    */
   public void setLinkedCreations(boolean linkedCreations)
@@ -182,7 +183,7 @@ public class DisplaySettings
   // --------------------------------------------------------------------------
   /**
    * Return true if vectors are drawn between block creations.
-   * 
+   *
    * @return true if vectors are drawn between block creations.
    */
   public boolean isLinkedCreations()
@@ -194,7 +195,7 @@ public class DisplaySettings
   /**
    * Control whether block destructions are linked by vectors (when they are
    * shown).
-   * 
+   *
    * @param linkedDestructions if true, links are drawn.
    */
   public void setLinkedDestructions(boolean linkedDestructions)
@@ -207,7 +208,7 @@ public class DisplaySettings
   // --------------------------------------------------------------------------
   /**
    * Return true if vectors are drawn between block destructions.
-   * 
+   *
    * @return true if vectors are drawn between block destructions.
    */
   public boolean isLinkedDestructions()
@@ -218,7 +219,7 @@ public class DisplaySettings
   // --------------------------------------------------------------------------
   /**
    * Set the minimum length of a vector between edits for it to be drawn.
-   * 
+   *
    * @param minVectorLength
    */
   public void setMinVectorLength(float minVectorLength)
@@ -231,7 +232,7 @@ public class DisplaySettings
   // --------------------------------------------------------------------------
   /**
    * Return the minimum length of a vector between edits for it to be drawn.
-   * 
+   *
    * @return the minimum length of a vector between edits for it to be drawn.
    */
   public float getMinVectorLength()

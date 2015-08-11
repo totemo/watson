@@ -1,9 +1,13 @@
 Change History
 ==============
-0.10.1.117-mc1.8.0
+0.10.1.118-mc1.8.0
 -----------------
 * For LogBlock, the following date formats are now supported: yyyy-MM-dd (ISO 8601), yy-MM-dd, MM-dd (the LogBlock default).
 * If reformatting of parsed results is enabled, kills are formatted as "killer weapon > victim".
+* Added a time_ordered_deposits (on/off) configuration setting to number deposits strictly by timestamp, rather than considering rarity of the ore.
+* Added a vector_length configuration setting that is the default minimum length for a vector to be visible.
+* Fix ore deposit label billboards having a solid background colour; they can now be transparent again.
+* /w config now shows colours in hexadecimal #AARRGGBB format.
 
 0.10.0.115-mc1.8.0
 -----------------

@@ -83,6 +83,7 @@ public class Configuration
       _reformatQueryResults = (Boolean) dom.get("reformat_query_results");
       _recolourQueryResults = (Boolean) dom.get("recolour_query_results");
       _timeOrderedDeposits = (Boolean) dom.get("time_ordered_deposits");
+      _vectorLength = ((Double) dom.get("vector_length")).floatValue();
     }
     catch (Exception ex)
     {
@@ -124,7 +125,8 @@ public class Configuration
       dom.put("ss_date_directory", _ssDateDirectory.toPattern());
       dom.put("reformat_query_results", _reformatQueryResults);
       dom.put("recolour_query_results", _recolourQueryResults);
-      dom.put("time_ordered_desposits", _timeOrderedDeposits);
+      dom.put("time_ordered_deposits", _timeOrderedDeposits);
+      dom.put("vector_length", (double) _vectorLength);
 
       DumperOptions options = new DumperOptions();
       options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
@@ -747,6 +749,34 @@ public class Configuration
 
   // --------------------------------------------------------------------------
   /**
+   * Set the default minimum length of vectors for them to be visible.
+   *
+   * The current displayed minimum vector length is also set.
+   *
+   * @param length the minimum length of a vector for it to be visible.
+   */
+  public void setVectorLength(float length)
+  {
+    _vectorLength = length;
+    Controller.instance.getDisplaySettings().setMinVectorLength(length);
+    save();
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Set the default minimum length of vectors for them to be visible.
+   *
+   * The current displayed minimum vector length is also set.
+   *
+   * @param length the minimum length of a vector for it to be visible.
+   */
+  public float getVectorLength()
+  {
+    return _vectorLength;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
    * Perform lazy initialisation of the SnakeValidator used to validate in
    * load().
    */
@@ -780,6 +810,7 @@ public class Configuration
       root.addChild("reformat_query_results", new TypeValidatorNode(Boolean.class, true, true));
       root.addChild("recolour_query_results", new TypeValidatorNode(Boolean.class, true, true));
       root.addChild("time_ordered_deposits", new TypeValidatorNode(Boolean.class, true, false));
+      root.addChild("vector_length", new TypeValidatorNode(Double.class, true, 4.0));
 
       _validator.setRoot(root);
     }
@@ -914,5 +945,9 @@ public class Configuration
    */
   protected boolean             _timeOrderedDeposits      = false;
 
+  /**
+   * The default minimum length of vectors for them to be visible.
+   */
+  protected float               _vectorLength             = 4.0f;
 } // class Configuration
 
