@@ -4,8 +4,8 @@
 
     "name": "watson",
     "mcversion": "1.8.0",
-    "version": "0.10.0.118-mc1.8.0",
-    "revision": "118",
+    "version": "0.11.0.120-mc1.8.0",
+    "revision": "120",
     "author": "totemo",
     "description": "A 3-D log visualisation tool."
 }

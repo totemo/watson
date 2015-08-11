@@ -1,6 +1,6 @@
 Change History
 ==============
-0.10.1.118-mc1.8.0
+0.11.0.120-mc1.8.0
 -----------------
 * For LogBlock, the following date formats are now supported: yyyy-MM-dd (ISO 8601), yy-MM-dd, MM-dd (the LogBlock default).
 * If reformatting of parsed results is enabled, kills are formatted as "killer weapon > victim".
