@@ -309,11 +309,23 @@ The various controls are described in the table below:
   </tr>
   <tr>
     <td>Watson Display: ON/OFF</td> <td>Toggle Button</td> <td>Clicking this button shows or hides the Watson display. When the watson display is hidden, all other controls are disabled, except the Clear Edits button.</td>
+  </tr>
+  <tr>
     <td>Show Vectors: ON/OFF</td> <td>Toggle Button</td> <td>Show or hide the vectors between edits, as if you typed "/w vector".</td>
+  </tr>
+  <tr>
     <td>Show Labels: ON/OFF</td> <td>Toggle Button</td> <td>Show or hide the ore deposit labels, as if you typed "/w label".</td>
+  </tr>
+  <tr>
     <td>Show Annotations: ON/OFF</td> <td>Toggle Button</td> <td>Show or hide annotations, as if you typed "/w anno".</td>
+  </tr>
+  <tr>
     <td>Clear Edits</td> <td>Push Button</td> <td>Forget all edits and filters, as if you typed "/w clear".</td>
+  </tr>
+  <tr>
     <td>Min Vector Length: &lt;number&gt;</td> <td>Slider</td> <td>Adjust the minimum length of a vector between consecutive edits for it to be visible. The setting is saved in the configuration file.  This is equivalent to "/w config vector_length &lt;value&gt;".</td>
+  </tr>
+  <tr>
     <td>Label Order: IMPORTANCE/TIMESTAMPS</td> <td>Toggle Button</td> <td>Switches between numbering ore deposits according to their time stamps or most important first (diamonds first). This button is equivalent to using the "/w config time_ordered_deposits" command.</td>
   </tr>
 </table>
@@ -341,10 +353,20 @@ Currently, the following settings can be configured with this screen:
   </tr>
   <tr>
     <td>Show in-game options</td> <td>Ctrl + RETURN</td> <td>Key binding to show the in-game GUI.</td>
+  </tr>
+  <tr>
     <td>Take a screenshot</td> <td>F12</td> <td>Take a Watson-styled screenshot with the player name in the filename.</td>
+  </tr>
+  <tr>
     <td>TP to next ore</td> <td>Ctrl + SCROLL_DOWN</td> <td>Teleport to the next ore deposit (equivalent to "/w tp"). Note that the default key binding uses the mouse scroll wheel.</td>
+  </tr>
+  <tr>
     <td>TP to previous ore</td> <td>Ctrl + SCROLL_UP</td> <td>Teleport to the next ore deposit (equivalent to "/w tp"). Note that the default key binding uses the mouse scroll wheel.</td>
+  </tr>
+  <tr>
     <td>Query edits before</td> <td>Ctrl + MOUSE_LEFT</td> <td>Query edits before the currently selected edit (equivalent to "/w pre").</td>
+  </tr>
+  <tr>
     <td>Query edits before</td> <td>Ctrl + MOUSE_RIGHT</td> <td>Query edits after the currently selected edit (equivalent to "/w post").</td>
   </tr>
 </table>
