@@ -361,7 +361,7 @@ Currently, the following settings can be configured with this screen:
     <td>TP to next ore</td> <td>Ctrl + SCROLL_DOWN</td> <td>Teleport to the next ore deposit (equivalent to "/w tp"). Note that the default key binding uses the mouse scroll wheel.</td>
   </tr>
   <tr>
-    <td>TP to previous ore</td> <td>Ctrl + SCROLL_UP</td> <td>Teleport to the next ore deposit (equivalent to "/w tp"). Note that the default key binding uses the mouse scroll wheel.</td>
+    <td>TP to previous ore</td> <td>Ctrl + SCROLL_UP</td> <td>Teleport to the previous ore deposit (equivalent to "/w tp prev"). Note that the default key binding uses the mouse scroll wheel.</td>
   </tr>
   <tr>
     <td>Query edits before</td> <td>Ctrl + MOUSE_LEFT</td> <td>Query edits before the currently selected edit (equivalent to "/w pre").</td>
