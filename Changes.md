@@ -1,7 +1,19 @@
 Change History
 ==============
+0.12.0.130-mc1.8.0
+------------------
+* Added key bindings to show a Watson in-game GUI, teleport to next or previous ore (/w tp next|prev) and queries of edits before and after the selection (/w pre|post).
+* All key bindings can use some combination of the Ctrl, Alt and Shift keys as modifiers. Mouse buttons and the mouse wheel are treated as keys.
+* The Watson-style screenshot key binding now uses the new key binding mechanism rather than Minecraft's control options screen.
+* Most key bindings are inactive when the Watson display is hidden.
+* The Watson in-game GUI controls various Watson display features.
+* Key bindings are configured through the LiteLoader-provided Settings screen (click the LiteLoader chicken in the top right of the window).
+* The /w config command now shows the current value of 
+* Watson includes a fix for the "stuck down" Alt key that results from using Alt-Tab to switch between Minecraft and other applications on some platforms.
+* Tested for compatibility with Forge, Schematica, Macro/Keybind, Tabby Chat and Optifine.
+
 0.11.0.120-mc1.8.0
------------------
+------------------
 * For LogBlock, the following date formats are now supported: yyyy-MM-dd (ISO 8601), yy-MM-dd, MM-dd (the LogBlock default).
 * If reformatting of parsed results is enabled, kills are formatted as "killer weapon > victim".
 * Added a time_ordered_deposits (on/off) configuration setting to number deposits strictly by timestamp, rather than considering rarity of the ore.
@@ -10,7 +22,7 @@ Change History
 * /w config now shows colours in hexadecimal #AARRGGBB format.
 
 0.10.0.115-mc1.8.0
------------------
+------------------
 * "Update for CoreProtect 2.11 compatibility, fixes #45" by @tompreuss.
   * That change also updates to the latest LiteLoader pre-release based on MCP 910.
 * Added a pseudo block ID for "armor stand" to show those changes correctly.
