@@ -8,7 +8,7 @@ Change History
 * Most key bindings are inactive when the Watson display is hidden.
 * The Watson in-game GUI controls various Watson display features.
 * Key bindings are configured through the LiteLoader-provided Settings screen (click the LiteLoader chicken in the top right of the window).
-* The /w config command now shows the current value of 
+* The /w config command now shows the current value of settings if a value is omitted (unless they have only two values, in which case the setting is toggled).
 * Watson includes a fix for the "stuck down" Alt key that results from using Alt-Tab to switch between Minecraft and other applications on some platforms.
 * Tested for compatibility with Forge, Schematica, Macro/Keybind, Tabby Chat and Optifine.
 
