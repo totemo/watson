@@ -367,7 +367,7 @@ Currently, the following settings can be configured with this screen:
     <td>Query edits before</td> <td>Ctrl + MOUSE_LEFT</td> <td>Query edits before the currently selected edit (equivalent to "/w pre").</td>
   </tr>
   <tr>
-    <td>Query edits before</td> <td>Ctrl + MOUSE_RIGHT</td> <td>Query edits after the currently selected edit (equivalent to "/w post").</td>
+    <td>Query edits after</td> <td>Ctrl + MOUSE_RIGHT</td> <td>Query edits after the currently selected edit (equivalent to "/w post").</td>
   </tr>
 </table>
 
