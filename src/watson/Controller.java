@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -29,6 +30,7 @@ import watson.db.BlockEditSet;
 import watson.db.BlockTypeRegistry;
 import watson.db.Filters;
 import watson.debug.Log;
+import watson.gui.WatsonGuiScreen;
 // import watson.macro.MacroIntegration;
 
 // ----------------------------------------------------------------------------
@@ -59,12 +61,83 @@ public class Controller
     ClientCommandManager.instance.registerCommand(new AnnoCommand());
     ClientCommandManager.instance.registerCommand(new HighlightCommand());
     ClientCommandManager.instance.registerCommand(new CalcCommand());
-  }
+
+    // Set up event handlers for key bindings.
+
+    final Configuration config = Configuration.instance;
+    config.KEYBIND_INGAME.setDisplayDependent(false);
+    config.KEYBIND_INGAME.setHandler(new Runnable()
+    {
+      @Override
+      public void run()
+      {
+        Minecraft.getMinecraft().displayGuiScreen(new WatsonGuiScreen());
+      }
+    });
+
+    config.KEYBIND_SCREENSHOT.setDisplayDependent(false);
+    config.KEYBIND_SCREENSHOT.setHandler(new Runnable()
+    {
+      @Override
+      public void run()
+      {
+        Date now = new Date();
+        Configuration config = Configuration.instance;
+        String player = (String) Controller.instance.getVariables().get("player");
+        String subdirectoryName = (player != null && config.isSsPlayerDirectory())
+          ? player
+          : config.getSsDateDirectory().format(now).toString();
+        Minecraft mc = Minecraft.getMinecraft();
+        File screenshotsDir = new File(mc.mcDataDir, "screenshots");
+        File subdirectory = new File(screenshotsDir, subdirectoryName);
+        File file = Screenshot.getUniqueFilename(subdirectory, player, now);
+        Chat.localChat(Screenshot.save(file, mc.displayWidth, mc.displayHeight));
+      }
+    });
+
+    config.KEYBIND_TP_NEXT.setHandler(new Runnable()
+    {
+      @Override
+      public void run()
+      {
+        getBlockEditSet().getOreDB().tpNext();
+      }
+    });
+
+    config.KEYBIND_TP_PREV.setHandler(new Runnable()
+    {
+      @Override
+      public void run()
+      {
+        getBlockEditSet().getOreDB().tpPrev();
+      }
+    });
+
+    Controller.instance.queryPreEdits(config.getPreCount());
+
+    config.KEYBIND_QUERY_BEFORE.setHandler(new Runnable()
+    {
+      @Override
+      public void run()
+      {
+        queryPreEdits(config.getPreCount());
+      }
+    });
+
+    config.KEYBIND_QUERY_AFTER.setHandler(new Runnable()
+    {
+      @Override
+      public void run()
+      {
+        queryPostEdits(config.getPostCount());
+      }
+    });
+  } // initialise
 
   // --------------------------------------------------------------------------
   /**
    * Return the {@link DisplaySettings} which control what is drawn.
-   * 
+   *
    * @return the {@link DisplaySettings} which control what is drawn.
    */
   public DisplaySettings getDisplaySettings()
@@ -76,7 +149,7 @@ public class Controller
   /**
    * Return the IP address or DNS name of the currently connected server, or
    * null if not connected.
-   * 
+   *
    * @return the IP address or DNS name of the currently connected server, or
    *         null if not connected.
    */
@@ -97,10 +170,10 @@ public class Controller
   // --------------------------------------------------------------------------
   /**
    * Return the current {@link BlockEditSet} under examination.
-   * 
+   *
    * A separate {@link BlockEditSet} is maintained for each dimension
    * (overworld, nether, end).
-   * 
+   *
    * @return the current {@link BlockEditSet} under examination.
    */
   public BlockEditSet getBlockEditSet()
@@ -136,11 +209,11 @@ public class Controller
   /**
    * Save the current {@link BlockEditSet} to the specified file in
    * getSaveDirectory().
-   * 
+   *
    * @param fileName the file name to write; if it is null and there is a
    *          current player variable value, a default file name of the form
    *          player-YYYY-MM-DD-hh.mm.ss is used.
-   * 
+   *
    */
   public void saveBlockEditFile(String fileName)
   {
@@ -157,11 +230,11 @@ public class Controller
       {
         Calendar calendar = Calendar.getInstance();
         fileName = String.format(Locale.US, "%s-%4d-%02d-%02d-%02d.%02d.%02d",
-          player, calendar.get(Calendar.YEAR),
-          calendar.get(Calendar.MONTH) + 1,
-          calendar.get(Calendar.DAY_OF_MONTH),
-          calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),
-          calendar.get(Calendar.SECOND));
+                                 player, calendar.get(Calendar.YEAR),
+                                 calendar.get(Calendar.MONTH) + 1,
+                                 calendar.get(Calendar.DAY_OF_MONTH),
+                                 calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),
+                                 calendar.get(Calendar.SECOND));
       }
     } // if
 
@@ -174,8 +247,8 @@ public class Controller
       int editCount = edits.save(file);
       int annoCount = edits.getAnnotations().size();
       Chat.localOutput(String.format(Locale.US,
-        "Saved %d edits and %d annotations to %s", editCount, annoCount,
-        fileName));
+                                     "Saved %d edits and %d annotations to %s", editCount, annoCount,
+                                     fileName));
     }
     catch (IOException ex)
     {
@@ -187,10 +260,10 @@ public class Controller
   // --------------------------------------------------------------------------
   /**
    * Load the set of {@link BlockEdit}s from the specified file.
-   * 
+   *
    * @param fileName the file name, or the start of the file name (beginning of
    *          player name), in the BlockEdit saves directory.
-   * 
+   *
    * @TODO: Does this need to be smarter about which dimension/server we're in?
    */
   public void loadBlockEditFile(String fileName)
@@ -216,13 +289,13 @@ public class Controller
         int editCount = edits.load(file);
         int annoCount = edits.getAnnotations().size();
         Chat.localOutput(String.format(Locale.US,
-          "Loaded %d edits and %d annotations from %s", editCount, annoCount,
-          file.getName()));
+                                       "Loaded %d edits and %d annotations from %s", editCount, annoCount,
+                                       file.getName()));
       }
       catch (Exception ex)
       {
         Log.exception(Level.SEVERE, "error loading BlockEditSet from " + file,
-          ex);
+                      ex);
         Chat.localError("The file " + fileName + " could not be loaded.");
       }
     }
@@ -236,7 +309,7 @@ public class Controller
   /**
    * List all of the {@link BlockEditSet} save files whose names begin with the
    * specified prefix, matched case-insensitively.
-   * 
+   *
    * @param prefix the start of the file name to match.
    * @param page the 1-based page number of the resuls to list.
    */
@@ -262,7 +335,7 @@ public class Controller
       if (page > pages)
       {
         Chat.localError(String.format(Locale.US, "The highest page number is %d.",
-          pages));
+                                      pages));
       }
       else
       {
@@ -281,8 +354,8 @@ public class Controller
         if (page < pages)
         {
           Chat.localOutput(String.format(Locale.US,
-            "Use \"/w file list %s %d\" to see the next page.", prefix,
-            (page + 1)));
+                                         "Use \"/w file list %s %d\" to see the next page.", prefix,
+                                         (page + 1)));
         }
       } // if the page number is valid
     } // if there are matches
@@ -291,7 +364,7 @@ public class Controller
   // --------------------------------------------------------------------------
   /**
    * Delete all save files that match the specified prefix.
-   * 
+   *
    * @param prefix the prefix of the block edit save file to match; use "*" for
    *          all files.
    */
@@ -313,8 +386,8 @@ public class Controller
         }
       }
       String message = String.format(Locale.US,
-        "Deleted %d out of %d save files matching \"%s\".",
-        (files.length - failed), files.length, prefix);
+                                     "Deleted %d out of %d save files matching \"%s\".",
+                                     (files.length - failed), files.length, prefix);
       if (failed == 0)
       {
         Chat.localOutput(message);
@@ -327,7 +400,7 @@ public class Controller
     else
     {
       Chat.localOutput(String.format(Locale.US,
-        "There are no save files matching \"%s\".", prefix));
+                                     "There are no save files matching \"%s\".", prefix));
     }
   } // deleteBlockEditFiles
 
@@ -335,7 +408,7 @@ public class Controller
   /**
    * Delete any edit save files that were last modified before the specified
    * date.
-   * 
+   *
    * @param date the expiry date, in the form YYYY-MM-DD.
    */
   public void expireBlockEditFiles(String date)
@@ -395,8 +468,8 @@ public class Controller
       else
       {
         String message = String.format(Locale.US,
-          "Deleted %d out of %d save files older than %s 00:00:00.", deleted,
-          deleted + failed, date);
+                                       "Deleted %d out of %d save files older than %s 00:00:00.", deleted,
+                                       deleted + failed, date);
         if (failed == 0)
         {
           Chat.localOutput(message);
@@ -417,7 +490,7 @@ public class Controller
   /**
    * Return an array of {@link BlockEditSet} save files whose names begin with
    * the specified prefix, matched case insensitively.
-   * 
+   *
    * @param prefix the case-insensitive prefix.
    * @return the array of files.
    */
@@ -425,7 +498,7 @@ public class Controller
   {
     createBlockEditDirectory();
     File[] files = getBlockEditDirectory().listFiles(
-      new CaseInsensitivePrefixFileFilter(prefix));
+                                                     new CaseInsensitivePrefixFileFilter(prefix));
     Arrays.sort(files);
     return files;
   }
@@ -433,7 +506,7 @@ public class Controller
   // --------------------------------------------------------------------------
   /**
    * Clear the BlockEditSet for the current server and dimension.
-   * 
+   *
    * Also clear the variables scraped from chat.
    */
   public void clearBlockEditSet()
@@ -449,13 +522,13 @@ public class Controller
    * Issue a LogBlock query that selects the edits that came immediately before
    * the most recent coalblock, /lb query result, or /lb tp destination. The
    * query takes the form:
-   * 
+   *
    * <pre>
    * /lb before DD.MM.YYYY hh:mm:ss player name coords limit <count>
    * </pre>
-   * 
+   *
    * This method is called in response to the "/w pre [<count>]" command.
-   * 
+   *
    * @param count the maximum number of edits that should be returned.
    */
   public void queryPreEdits(int count)
@@ -472,8 +545,8 @@ public class Controller
       String player = (String) _variables.get("player");
 
       String query = String.format(Locale.US,
-        "/lb before %d.%d.%d %02d:%02d:%02d player %s coords limit %d", day,
-        month, year, hour, minute, second, player, count);
+                                   "/lb before %d.%d.%d %02d:%02d:%02d player %s coords limit %d", day,
+                                   month, year, hour, minute, second, player, count);
       Log.debug(query);
       serverChat(query);
     }
@@ -484,13 +557,13 @@ public class Controller
    * Issue a LogBlock query that selects the edits that came immediately after
    * the most recent coalblock, /lb query result, or /lb tp destination. The
    * query takes the form:
-   * 
+   *
    * <pre>
    * /lb since DD.MM.YYYY hh:mm:ss player name coords limit <count> asc
    * </pre>
-   * 
+   *
    * This method is called in response to the "/w post [<count>]" command.
-   * 
+   *
    * @param count the maximum number of edits that should be returned.
    */
   public void queryPostEdits(int count)
@@ -507,8 +580,8 @@ public class Controller
       String player = (String) _variables.get("player");
 
       String query = String.format(Locale.US,
-        "/lb since %d.%d.%d %02d:%02d:%02d player %s coords limit %d asc", day,
-        month, year, hour, minute, second, player, count);
+                                   "/lb since %d.%d.%d %02d:%02d:%02d player %s coords limit %d asc", day,
+                                   month, year, hour, minute, second, player, count);
       Log.debug(query);
       serverChat(query);
     }
@@ -518,7 +591,7 @@ public class Controller
   /**
    * Get a mutable reference to the Map of all of the variables scraped from
    * chat lines.
-   * 
+   *
    * @return the variables.
    */
   public HashMap<String, Object> getVariables()
@@ -540,9 +613,9 @@ public class Controller
   /**
    * Set the current state variables from a {@link BlockEdit}, the same as they
    * would be set if they were set from a LogBlock toolblock (coal ore) query.
-   * 
+   *
    * Do nothing if the edit is null.
-   * 
+   *
    * @param edit the edit to select.
    */
   public void selectBlockEdit(BlockEdit edit)
@@ -564,7 +637,7 @@ public class Controller
   // --------------------------------------------------------------------------
   /**
    * Set the coordinate variables x, y and z.
-   * 
+   *
    * @param x the x.
    * @param y the y.
    * @param z the z.
@@ -581,10 +654,10 @@ public class Controller
   /**
    * Return true if the selected position has changed since the last time this
    * method was called.
-   * 
+   *
    * This method is used by the Watson Macro/Keybind Support mod to determine
    * when to fire an onWatsonSelection event.
-   * 
+   *
    * @return true if the selection has changed since the last call.
    */
   public boolean isSelectionChanged()
@@ -598,7 +671,7 @@ public class Controller
   /**
    * Return the {@link Filters} instance that determines which edits are stored
    * (in a {@link BlocKEditSet}) and which are ignored.
-   * 
+   *
    * @return the {@link Filters} instance that determines which edits are stored
    *         (in a {@link BlocKEditSet}) and which are ignored.
    */
@@ -610,12 +683,12 @@ public class Controller
   // --------------------------------------------------------------------------
   /**
    * Teleport to the middle of the block specified by integer coordinates.
-   * 
+   *
    * Essentials only accepts integer coordinates for teleports. Other plugins
    * use floating point coordinates. This method hides the difference by
    * formatting the teleport command using the
    * Configuration.getTeleportCommand() setting.
-   * 
+   *
    * @param x the x coordinate of the block.
    * @param y the y coordinate of the block.
    * @param z the z coordinate of the block.
@@ -650,7 +723,7 @@ public class Controller
   /**
    * Queue the specified message in a chat packet for transmission to the
    * server.
-   * 
+   *
    * @param message the chat message to send.
    */
   public void serverChat(String message)
@@ -661,7 +734,7 @@ public class Controller
   // --------------------------------------------------------------------------
   /**
    * Send the specified chat message to the server immediately (not throttled).
-   * 
+   *
    * @param message the chat message to send.
    */
   public void immediateServerChat(String message)
@@ -711,7 +784,7 @@ public class Controller
       catch (Exception ex)
       {
         Log.exception(Level.SEVERE,
-          "could not create mod directory: " + modDir, ex);
+                      "could not create mod directory: " + modDir, ex);
       }
     }
   } // createDirectories
@@ -732,7 +805,7 @@ public class Controller
       catch (Exception ex)
       {
         Log.exception(Level.SEVERE, "could not create saves directory: " + dir,
-          ex);
+                      ex);
       }
     }
   } // createBlockEditDirectory
@@ -740,7 +813,7 @@ public class Controller
   // --------------------------------------------------------------------------
   /**
    * Return the directory where this mod's data files are stored.
-   * 
+   *
    * @return the directory where this mod's data files are stored.
    */
   public static File getModDirectory()
@@ -752,7 +825,7 @@ public class Controller
   // --------------------------------------------------------------------------
   /**
    * Return the directory where BlockEditSet files are saved.
-   * 
+   *
    * @return the directory where BlockEditSet files are saved.
    */
   public static File getBlockEditDirectory()
@@ -763,11 +836,11 @@ public class Controller
   // --------------------------------------------------------------------------
   /**
    * Return an input stream that reads the specified file or resource name.
-   * 
+   *
    * If the file exists in the mod-specific configuration directory, it is
    * loaded from there. Otherwise, the resource of the same name is loaded from
    * the minecraft.jar file.
-   * 
+   *
    * @return an input stream that reads the specified file or resource name.
    */
   public static InputStream getConfigurationStream(String fileName)

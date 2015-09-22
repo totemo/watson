@@ -6,16 +6,23 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 
+import org.lwjgl.input.Keyboard;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
 import watson.chat.Chat;
 import watson.debug.Log;
+import watson.gui.ModifiedKeyBinding;
+import watson.gui.MouseButton;
 import watson.yaml.MapValidatorNode;
 import watson.yaml.SnakeValidator;
 import watson.yaml.TypeValidatorNode;
@@ -30,7 +37,45 @@ public class Configuration
   /**
    * Single instance of this class.
    */
-  public static final Configuration instance = new Configuration();
+  public static final Configuration instance             = new Configuration();
+
+  /**
+   * Key bind to show in-game Watson GUI.
+   */
+  public final ModifiedKeyBinding   KEYBIND_INGAME       = new ModifiedKeyBinding("Show in-game options:",
+                                                                                  Keyboard.KEY_RETURN,
+                                                                                  "", true, false, false);
+  /**
+   * Key bind to take a Watson-style screenshot (named after the player).
+   */
+  public final ModifiedKeyBinding   KEYBIND_SCREENSHOT   = new ModifiedKeyBinding("Take a screenshot:",
+                                                                                  Keyboard.KEY_F12,
+                                                                                  "", false, false, false);
+
+  /**
+   * Key bind to teleport to next ore.
+   */
+  public final ModifiedKeyBinding   KEYBIND_TP_NEXT      = new ModifiedKeyBinding("TP to next ore:",
+                                                                                  MouseButton.SCROLL_DOWN.getCode(),
+                                                                                  "", true, false, false);
+  /**
+   * Key bind to teleport to previous ore.
+   */
+  public final ModifiedKeyBinding   KEYBIND_TP_PREV      = new ModifiedKeyBinding("TP to previous ore:",
+                                                                                  MouseButton.SCROLL_UP.getCode(),
+                                                                                  "", true, false, false);
+  /**
+   * Key bind to query edits before the selection.
+   */
+  public final ModifiedKeyBinding   KEYBIND_QUERY_BEFORE = new ModifiedKeyBinding("Query edits before:",
+                                                                                  MouseButton.MOUSE_LEFT.getCode(),
+                                                                                  "", true, false, false);
+  /**
+   * Key bind to query edits after the selection.
+   */
+  public final ModifiedKeyBinding   KEYBIND_QUERY_AFTER  = new ModifiedKeyBinding("Query edits after:",
+                                                                                  MouseButton.MOUSE_RIGHT.getCode(),
+                                                                                  "", true, false, false);
 
   // --------------------------------------------------------------------------
   /**
@@ -57,7 +102,7 @@ public class Configuration
 
       @SuppressWarnings("unchecked")
       HashMap<String, Object> dom = (HashMap<String, Object>) _validator.loadAndValidate(
-        in, logSink);
+                                                                                         in, logSink);
 
       // Avoid calling setEnabled() at startup.
       // It would crash in Controller.getBlockEditSet() because server is not
@@ -84,6 +129,11 @@ public class Configuration
       _recolourQueryResults = (Boolean) dom.get("recolour_query_results");
       _timeOrderedDeposits = (Boolean) dom.get("time_ordered_deposits");
       _vectorLength = ((Double) dom.get("vector_length")).floatValue();
+
+      for (Entry<String, ModifiedKeyBinding> entry : getKeyBindingsMap().entrySet())
+      {
+        entry.getValue().parse((String) dom.get(entry.getKey()));
+      }
     }
     catch (Exception ex)
     {
@@ -127,6 +177,11 @@ public class Configuration
       dom.put("recolour_query_results", _recolourQueryResults);
       dom.put("time_ordered_deposits", _timeOrderedDeposits);
       dom.put("vector_length", (double) _vectorLength);
+
+      for (Entry<String, ModifiedKeyBinding> entry : getKeyBindingsMap().entrySet())
+      {
+        dom.put(entry.getKey(), entry.getValue().toString());
+      }
 
       DumperOptions options = new DumperOptions();
       options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
@@ -253,7 +308,7 @@ public class Configuration
     }
     _regionInfoTimeoutSeconds = seconds;
     Chat.localOutput(String.format(Locale.US,
-      "Automatic region info timeout set to %.2f seconds.", seconds));
+                                   "Automatic region info timeout set to %.2f seconds.", seconds));
     save();
   }
 
@@ -302,7 +357,7 @@ public class Configuration
   {
     _billboardBackground = argb;
     Chat.localOutput(String.format(Locale.US,
-      "Billboard background colour set to #%08X.", _billboardBackground));
+                                   "Billboard background colour set to #%08X.", _billboardBackground));
     save();
   }
 
@@ -328,7 +383,7 @@ public class Configuration
   {
     _billboardForeground = argb;
     Chat.localOutput(String.format(Locale.US,
-      "Billboard foreground colour set to #%08X.", _billboardForeground));
+                                   "Billboard foreground colour set to #%08X.", _billboardForeground));
     save();
   }
 
@@ -384,7 +439,7 @@ public class Configuration
   {
     _teleportCommand = format;
     Chat.localOutput(String.format(Locale.US,
-      "Teleport command format set to \"%s\".", _teleportCommand));
+                                   "Teleport command format set to \"%s\".", _teleportCommand));
     save();
   }
 
@@ -416,7 +471,7 @@ public class Configuration
     }
     _chatTimeoutSeconds = seconds;
     Chat.localOutput(String.format(Locale.US,
-      "Chat command timeout set to %.2f seconds.", seconds));
+                                   "Chat command timeout set to %.2f seconds.", seconds));
     save();
   }
 
@@ -444,10 +499,9 @@ public class Configuration
   public void setMaxAutoPages(int maxAutoPages)
   {
     _maxAutoPages = maxAutoPages;
-    Chat.localOutput(String.format(
-      Locale.US,
-      "Up to %d pages of \"/lb coords\" results will be stepped through automatically.",
-      maxAutoPages));
+    Chat.localOutput(String.format(Locale.US,
+                                   "Up to %d pages of \"/lb coords\" results will be stepped through automatically.",
+                                   maxAutoPages));
     save();
   }
 
@@ -474,7 +528,7 @@ public class Configuration
   {
     _preCount = preCount;
     Chat.localOutput(String.format(Locale.US,
-      "By default, \"/w pre\" will return %d edits.", _preCount));
+                                   "By default, \"/w pre\" will return %d edits.", _preCount));
     save();
   }
 
@@ -499,7 +553,7 @@ public class Configuration
   {
     _postCount = postCount;
     Chat.localOutput(String.format(Locale.US,
-      "By default, \"/w post\" will return %d edits.", _postCount));
+                                   "By default, \"/w post\" will return %d edits.", _postCount));
     save();
   }
 
@@ -527,7 +581,7 @@ public class Configuration
   {
     _watsonPrefix = watsonPrefix;
     Chat.localOutput(String.format(Locale.US,
-      "Watson command prefix set to /%s.", _watsonPrefix));
+                                   "Watson command prefix set to /%s.", _watsonPrefix));
     save();
   }
 
@@ -644,7 +698,7 @@ public class Configuration
     catch (Exception ex)
     {
       Log.exception(Level.WARNING,
-        "error setting the screenshot directory format specifier", ex);
+                    "error setting the screenshot directory format specifier", ex);
     }
     return false;
   }
@@ -673,7 +727,7 @@ public class Configuration
   {
     _reformatQueryResults = reformatQueryResults;
     Chat.localOutput(String.format(Locale.US,
-      "Compact formatting of query results %s.", (_reformatQueryResults ? "enabled" : "disabled")));
+                                   "Compact formatting of query results %s.", (_reformatQueryResults ? "enabled" : "disabled")));
     save();
   }
 
@@ -698,7 +752,7 @@ public class Configuration
   {
     _recolourQueryResults = recolourQueryResults;
     Chat.localOutput(String.format(Locale.US,
-      "Recolouring of query results %s.", (_recolourQueryResults ? "enabled" : "disabled")));
+                                   "Recolouring of query results %s.", (_recolourQueryResults ? "enabled" : "disabled")));
     save();
   }
 
@@ -754,11 +808,13 @@ public class Configuration
    * The current displayed minimum vector length is also set.
    *
    * @param length the minimum length of a vector for it to be visible.
+   * @param showInChat if true a message indicating the new minimum vector
+   *          length is shown in chat.
    */
-  public void setVectorLength(float length)
+  public void setVectorLength(float length, boolean showInChat)
   {
     _vectorLength = length;
-    Controller.instance.getDisplaySettings().setMinVectorLength(length);
+    Controller.instance.getDisplaySettings().setMinVectorLength(length, showInChat);
     save();
   }
 
@@ -773,6 +829,19 @@ public class Configuration
   public float getVectorLength()
   {
     return _vectorLength;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return all {@link ModifiedKeyBindings} in the order they should be listed
+   * in the configuration panel.
+   *
+   * @return all {@link ModifiedKeyBindings} in the order they should be listed
+   *         in the configuration panel.
+   */
+  public List<ModifiedKeyBinding> getAllModifiedKeyBindings()
+  {
+    return _bindings;
   }
 
   // --------------------------------------------------------------------------
@@ -812,59 +881,112 @@ public class Configuration
       root.addChild("time_ordered_deposits", new TypeValidatorNode(Boolean.class, true, false));
       root.addChild("vector_length", new TypeValidatorNode(Double.class, true, 4.0));
 
+      for (Entry<String, ModifiedKeyBinding> entry : getKeyBindingsMap().entrySet())
+      {
+        root.addChild(entry.getKey(), new TypeValidatorNode(String.class, true, entry.getValue().toString()));
+      }
+
       _validator.setRoot(root);
     }
   } // configureValidator
 
   // --------------------------------------------------------------------------
   /**
+   * Constructor.
+   *
+   * Sets default key bindings.
+   */
+  private Configuration()
+  {
+    _bindings.add(KEYBIND_INGAME);
+    _bindings.add(KEYBIND_SCREENSHOT);
+    _bindings.add(KEYBIND_TP_NEXT);
+    _bindings.add(KEYBIND_TP_PREV);
+    _bindings.add(KEYBIND_QUERY_BEFORE);
+    _bindings.add(KEYBIND_QUERY_AFTER);
+  } // ctor
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return a map from the lowercase name of each keybinding's value in the
+   * configuration file to he corresponding ModifiedKeyBinding instance.
+   *
+   * The map entries are not guaranteed to be in any particular order.
+   *
+   * @return a map from the lowercase name of each keybinding's value in the
+   *         configuration file to he corresponding ModifiedKeyBinding instance.
+   */
+  private static HashMap<String, ModifiedKeyBinding> getKeyBindingsMap()
+  {
+    HashMap<String, ModifiedKeyBinding> bindings = new HashMap<String, ModifiedKeyBinding>();
+    for (Field field : Configuration.class.getDeclaredFields())
+    {
+      if (field.getName().startsWith("KEYBIND_"))
+      {
+        try
+        {
+          bindings.put(field.getName().toLowerCase(), (ModifiedKeyBinding) field.get(Configuration.instance));
+        }
+        catch (IllegalArgumentException ex)
+        {
+        }
+        catch (IllegalAccessException ex)
+        {
+        }
+      }
+    }
+    return bindings;
+  } // getKeyBindingsMap
+
+  // --------------------------------------------------------------------------
+  /**
    * Minimum value of _regionInfoTimeoutSeconds.
    */
-  protected static final double MIN_REGION_INFO_TIMEOUT   = 1.0;
+  protected static final double           MIN_REGION_INFO_TIMEOUT   = 1.0;
 
   // --------------------------------------------------------------------------
   /**
    * Name of the configuration file in .minecraft/mods/watson/.
    */
-  protected static final String CONFIG_FILE               = "configuration.yml";
+  protected static final String           CONFIG_FILE               = "configuration.yml";
 
   /**
    * Used to validate configuration file contents on loading.
    */
-  protected SnakeValidator      _validator;
+  protected SnakeValidator                _validator;
 
   /**
    * Overall control of Watson: /w config watson [on|off]
    */
-  protected boolean             _enabled                  = true;
+  protected boolean                       _enabled                  = true;
 
   /**
    * If true, "/lb page" is executed to page through "/lb coords" results, up to
    * 3 pages.
    */
-  protected boolean             _autoPage                 = true;
+  protected boolean                       _autoPage                 = true;
 
   /**
    * The timeout between automatic calls to "/region info" in seconds.
    */
-  protected double              _regionInfoTimeoutSeconds = 5.0;
+  protected double                        _regionInfoTimeoutSeconds = 5.0;
 
   /**
    * If true, the vector display is enabled.
    */
-  protected boolean             _vectorsShown             = true;
+  protected boolean                       _vectorsShown             = true;
 
   /**
    * Background colour of text billboards (annotations etc) as an ARGB (alpha in
    * the most significant octet, blue in the least significant one).
    */
-  protected int                 _billboardBackground      = 0xA8000000;
+  protected int                           _billboardBackground      = 0xA8000000;
 
   /**
    * Background colour of text billboards (annotations etc) as an ARGB (alpha in
    * the most significant octet, blue in the least significant one).
    */
-  protected int                 _billboardForeground      = 0x7FFFFFFF;
+  protected int                           _billboardForeground      = 0x7FFFFFFF;
 
   /**
    * If true, group ores even in creative mode.
@@ -873,52 +995,52 @@ public class Configuration
    * that of the player. Therefore, it is best if this setting is left true so
    * that "/w ore" works for admins in creative mode.
    */
-  protected boolean             _groupingOresInCreative   = true;
+  protected boolean                       _groupingOresInCreative   = true;
 
   /**
    * The default teleport command. X and Z coordinates are formatted as doubles
    * to signify that 0.5 should be added to centre the player in the block.
    */
-  protected String              _teleportCommand          = "/tppos %g %d %g";
+  protected String                        _teleportCommand          = "/tppos %g %d %g";
 
   /**
    * The minimum number of seconds that must elapse between programmatically
    * sent chat messages (usually commands to the server).
    */
-  protected double              _chatTimeoutSeconds       = 0.1;
+  protected double                        _chatTimeoutSeconds       = 0.1;
 
   /**
    * The maximum number of pages of "/lb coords" results that will be
    * automatically stepped through by issuing "/lb page #" commands.
    */
-  protected int                 _maxAutoPages             = 10;
+  protected int                           _maxAutoPages             = 10;
 
   /**
    * The number of edits to fetch from LogBlock when "/w pre" is run.
    */
-  protected int                 _preCount                 = 45;
+  protected int                           _preCount                 = 45;
 
   /**
    * The number of edits to fetch from LogBlock when "/w post" is run.
    */
-  protected int                 _postCount                = 45;
+  protected int                           _postCount                = 45;
 
   /**
    * The start of all Watson commands, without the slash.
    */
-  protected String              _watsonPrefix             = "w";
+  protected String                        _watsonPrefix             = "w";
 
   /**
    * If true, a subdirectory named after the currently selected player is
    * created to hold screenshots of his edits.
    */
-  protected boolean             _ssPlayerDirectory        = true;
+  protected boolean                       _ssPlayerDirectory        = true;
 
   /**
    * If true, the name of the currently selected player is appended to
    * screenshot files.
    */
-  protected boolean             _ssPlayerSuffix           = true;
+  protected boolean                       _ssPlayerSuffix           = true;
 
   /**
    * A {@link SimpleDateFormat} specifying the name of the subdirectory to
@@ -927,27 +1049,33 @@ public class Configuration
    *
    * I'm assuming that the empty string is a valid format that won't throw.
    */
-  protected SimpleDateFormat    _ssDateDirectory          = new SimpleDateFormat("");
+  protected SimpleDateFormat              _ssDateDirectory          = new SimpleDateFormat("");
   /**
    * Reformat query results in chat more compactly.
    */
-  protected boolean             _reformatQueryResults     = true;
+  protected boolean                       _reformatQueryResults     = true;
 
   /**
    * Recolour query results in chat.
    */
-  protected boolean             _recolourQueryResults     = true;
+  protected boolean                       _recolourQueryResults     = true;
 
   /**
    * If true, ore deposits should be assigned 1-based numeric labels strictly in
    * the order that they were mined. When false, ores are ordered in descending
    * order of their scarcity.
    */
-  protected boolean             _timeOrderedDeposits      = false;
+  protected boolean                       _timeOrderedDeposits      = false;
 
   /**
    * The default minimum length of vectors for them to be visible.
    */
-  protected float               _vectorLength             = 4.0f;
+  protected float                         _vectorLength             = 4.0f;
+
+  /**
+   * All {@link ModifiedKeyBindings} in the order they should be listed in the
+   * configuration panel.
+   */
+  protected ArrayList<ModifiedKeyBinding> _bindings                 = new ArrayList<ModifiedKeyBinding>();
 } // class Configuration
 

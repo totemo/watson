@@ -326,7 +326,7 @@ public class WatsonCommand extends WatsonCommandBase
           for (int i = 2; i < args.length; ++i)
           {
             Controller.instance.getBlockEditSet().setEditVisibility(args[i],
-              args[1].equals("show"));
+                                                                    args[1].equals("show"));
           }
           return;
         }
@@ -471,7 +471,7 @@ public class WatsonCommand extends WatsonCommandBase
    *
    * @return true if the command was processed successfully.
    */
-  protected boolean handleVectorCommand(ICommandSender sender, String[] args)
+  protected boolean handleVectorCommand(@SuppressWarnings("unused") ICommandSender sender, String[] args)
   {
     DisplaySettings display = Controller.instance.getDisplaySettings();
     if (args.length == 1)
@@ -533,7 +533,7 @@ public class WatsonCommand extends WatsonCommandBase
       }
       else if (args[1].equals("length"))
       {
-        display.setMinVectorLength(Float.parseFloat(args[2]));
+        display.setMinVectorLength(Float.parseFloat(args[2]), true);
         return true;
       }
     }
@@ -879,7 +879,6 @@ public class WatsonCommand extends WatsonCommandBase
         else
         {
           // De-register, set the prefix and re-register this command.
-          @SuppressWarnings("unchecked")
           Map<String, ICommand> commands = ClientCommandManager.instance.getCommands();
           commands.remove(Configuration.instance.getWatsonPrefix());
           Configuration.instance.setWatsonPrefix(newPrefix);
@@ -1039,7 +1038,7 @@ public class WatsonCommand extends WatsonCommandBase
         try
         {
           float length = Math.max(0.0f, Float.parseFloat(args[2]));
-          Configuration.instance.setVectorLength(length);
+          Configuration.instance.setVectorLength(length, true);
         }
         catch (NumberFormatException ex)
         {
@@ -1054,36 +1053,39 @@ public class WatsonCommand extends WatsonCommandBase
     {
       String w = Configuration.instance.getWatsonPrefix();
       localOutput(sender,
-        "Config options, note that non-toggle commands can be entered without arguments to see currently set values:");
+                  "Config options, note that non-toggle commands can be entered without arguments to see currently set values:");
       localOutput(sender, "  /" + w + " config help : display these instructions");
       localOutput(sender, "  /" + w + " config watson : toggles watson mod as a whole");
       localOutput(sender, "  /" + w + " config debug : enable or disable debug logging");
       localOutput(sender, "  /" + w + " config auto_page : enable or disable automatic \"/lb coords\" paging");
       localOutput(sender,
-        "  /" + w + " config region_info_timeout [seconds] : set minimum time separation between automatic \"/region info\"s");
+                  "  /" + w
+                    + " config region_info_timeout [seconds] : set minimum time separation between automatic \"/region info\"s");
       localOutput(sender, "  /" + w + " config billboard_background [argb] : set the text billboard background colour");
       localOutput(sender, "  /" + w + " config billboard_foreground [argb] : set the text billboard foreground colour");
       localOutput(sender, "  /" + w
                           + " config group_ores_in_creative : enable or disable forced grouping of ores in creative mode");
       localOutput(sender, "  /" + w + " config teleport_command [string] : set the teleport command formatting");
       localOutput(
-        sender,
-        "  /"
-          + w
-          + " config chat_timeout [seconds] : set minimum time separation between programmatically generated chat messages sent to the server");
+                  sender,
+                  "  /"
+                    + w
+                    + " config chat_timeout [seconds] : set minimum time separation between programmatically generated chat messages sent to the server");
       localOutput(
-        sender,
-        "  /"
-          + w
-          + " config max_auto_pages [int]: set the maximum number of pages of \"/lb coords\" results automatically paged through");
+                  sender,
+                  "  /"
+                    + w
+                    + " config max_auto_pages [int]: set the maximum number of pages of \"/lb coords\" results automatically paged through");
       localOutput(sender,
-        "  /" + w
-          + " config pre_count [int] : set the default number of edits to query when no count parameter is specified with \"/"
-          + w + " pre\"");
+                  "  /"
+                    + w
+                    + " config pre_count [int] : set the default number of edits to query when no count parameter is specified with \"/"
+                    + w + " pre\"");
       localOutput(sender,
-        "  /" + w
-          + " config post_count [int] : set the default number of edits to query when no count parameter is specified with \"/"
-          + w + " post\"");
+                  "  /"
+                    + w
+                    + " config post_count [int] : set the default number of edits to query when no count parameter is specified with \"/"
+                    + w + " post\"");
       localOutput(sender, "  /" + w + " config watson_prefix [string] : set the prefix for watson commands");
       localOutput(sender, "  /" + w + " config ss_player_directory : enable or disable per-player screenshot subdirectories");
       localOutput(sender, "  /" + w + " config ss_player_suffix : enable or disable per-player screenshot suffixes");
@@ -1094,15 +1096,15 @@ public class WatsonCommand extends WatsonCommandBase
       localOutput(sender, "  /" + w
                           + " config recolour_query_results [on/off] : enable or disable the recolouring of query results");
       localOutput(
-        sender,
-        "  /"
-          + w
-          + " config time_ordered_deposits [on/off] : number deposits according to their timestamp (on), or their scarcity (off)");
+                  sender,
+                  "  /"
+                    + w
+                    + " config time_ordered_deposits [on/off] : number deposits according to their timestamp (on), or their scarcity (off)");
       localOutput(
-        sender,
-        "  /"
-          + w
-          + " config vector_length [decimal]: set the default minimum length of a vector for it to be visible");
+                  sender,
+                  "  /"
+                    + w
+                    + " config vector_length [decimal]: set the default minimum length of a vector for it to be visible");
       return true;
     } // /w config help
 

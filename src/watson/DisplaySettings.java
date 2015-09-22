@@ -14,7 +14,7 @@ public class DisplaySettings
    * This method configures the initial display settings based on the server
    * being connected to and the game type.
    */
-  public void configure(String serverIP, WorldSettings.GameType gameType)
+  public void configure(@SuppressWarnings("unused") String serverIP, WorldSettings.GameType gameType)
   {
     // The Watson display defaults to on. On survival servers, assume the
     // presence of ModMode and its associated notifications to turn on or off
@@ -220,13 +220,19 @@ public class DisplaySettings
   /**
    * Set the minimum length of a vector between edits for it to be drawn.
    *
-   * @param minVectorLength
+   * @param minVectorLength the minimum length of a vector between edits for it
+   *          to be drawn.
+   * @param showInChat if true a message indicating the new minimum vector
+   *          length is shown in chat.
    */
-  public void setMinVectorLength(float minVectorLength)
+  public void setMinVectorLength(float minVectorLength, boolean showInChat)
   {
     _minVectorLength = minVectorLength;
-    Chat.localOutput("Minimum vector length set to "
-                     + minVectorLength);
+    if (showInChat)
+    {
+
+      Chat.localOutput("Minimum vector length set to " + minVectorLength + ".");
+    }
   }
 
   // --------------------------------------------------------------------------
