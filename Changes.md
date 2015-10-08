@@ -1,5 +1,9 @@
 Change History
 ==============
+0.12.1.132-mc1.8.0
+------------------
+* Fix crashes loading files and clearing edits, apparently caused by changes to how 1.8 uses threads.
+
 0.12.0.130-mc1.8.0
 ------------------
 * Added key bindings to show a Watson in-game GUI, teleport to next or previous ore (/w tp next|prev) and queries of edits before and after the selection (/w pre|post).

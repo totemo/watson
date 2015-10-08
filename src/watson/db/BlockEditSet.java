@@ -15,11 +15,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
-
-import net.minecraft.client.renderer.GlStateManager;
-import org.lwjgl.opengl.GL11;
-
 import watson.Configuration;
 import watson.Controller;
 import watson.DisplaySettings;
@@ -45,11 +40,11 @@ public class BlockEditSet
   // --------------------------------------------------------------------------
   /**
    * Load additional entries from the specified file.
-   * 
+   *
    * @param file the file to load.
    * @return the number of edits loaded.
    */
-  public int load(File file)
+  public synchronized int load(File file)
     throws Exception
   {
     BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -84,7 +79,7 @@ public class BlockEditSet
           int z = Integer.parseInt(edit.group(13));
 
           BlockType type = BlockTypeRegistry.instance.getBlockTypeByIdData(id,
-            data);
+                                                                           data);
           blockEdit = new BlockEdit(time.getTimeInMillis(), player, created, x,
                                     y, z, type);
           addBlockEdit(blockEdit);
@@ -121,20 +116,20 @@ public class BlockEditSet
   // --------------------------------------------------------------------------
   /**
    * Save all {@link BlockEdit}s to the specified file.
-   * 
+   *
    * Each line is of the form:
-   * 
+   *
    * <pre>
    * YYYY-MM-DD|hh:mm:ss|action|id|data|x|y|z
    * </pre>
-   * 
+   *
    * Where action is c (created) or d (destroyed) and id is the numeric block
    * type.
-   * 
+   *
    * @param file the file to save.
    * @return the number of edits saved.
    */
-  public int save(File file)
+  public synchronized int save(File file)
     throws IOException
   {
     PrintWriter writer = new PrintWriter(new BufferedWriter(
@@ -152,7 +147,7 @@ public class BlockEditSet
       for (Annotation annotation : _annotations)
       {
         writer.format("#%d|%d|%d|%s\n", annotation.getX(), annotation.getY(),
-          annotation.getZ(), annotation.getText());
+                      annotation.getZ(), annotation.getText());
       }
       return editCount;
     }
@@ -166,7 +161,7 @@ public class BlockEditSet
   /**
    * Remove all entries from the list.
    */
-  public void clear()
+  public synchronized void clear()
   {
     _playerEdits.clear();
     _annotations.clear();
@@ -176,14 +171,14 @@ public class BlockEditSet
   // --------------------------------------------------------------------------
   /**
    * Find an edit with the specified coordinates and, optionally, player.
-   * 
+   *
    * @param x the x coordinate of the block
    * @param y the y coordinate of the block
    * @param z the z coordinate of the block
    * @param player the player name (can be null for a wildcard).
    * @return the matching edit, or null if not found.
    */
-  public BlockEdit findEdit(int x, int y, int z, String player)
+  public synchronized BlockEdit findEdit(int x, int y, int z, String player)
   {
     if (player != null)
     {
@@ -208,14 +203,14 @@ public class BlockEditSet
   // --------------------------------------------------------------------------
   /**
    * Add the specified edit to the list.
-   * 
+   *
    * State variables describing the most recent edit (player, time, etc.) are
    * updated.
-   * 
+   *
    * @param edit the BlockEdit describing an edit to add.
    * @return true if the edit passes the currently set filters.
    */
-  public boolean addBlockEdit(BlockEdit edit)
+  public synchronized boolean addBlockEdit(BlockEdit edit)
   {
     return addBlockEdit(edit, true);
   }
@@ -223,12 +218,12 @@ public class BlockEditSet
   // --------------------------------------------------------------------------
   /**
    * Add the specified edit to the list.
-   * 
+   *
    * @param edit the BlockEdit describing an edit to add.
    * @param updateVariables update the state variables for the most recent edit.
    * @return true if the edit passes the currently set filters.
    */
-  public boolean addBlockEdit(BlockEdit edit, boolean updateVariables)
+  public synchronized boolean addBlockEdit(BlockEdit edit, boolean updateVariables)
   {
     if (Controller.instance.getFilters().isAcceptedPlayer(edit.player))
     {
@@ -269,7 +264,7 @@ public class BlockEditSet
    * List the number and visibility of stored edits on a per player basis in the
    * dimension to which this BlockEditSet applies.
    */
-  public void listEdits()
+  public synchronized void listEdits()
   {
     if (_playerEdits.size() == 0)
     {
@@ -281,9 +276,9 @@ public class BlockEditSet
       for (PlayerEditSet editsByPlayer : _playerEdits.values())
       {
         Chat.localOutput(String.format(Locale.US,
-          "  %s - %d edits %s", editsByPlayer.getPlayer(),
-          editsByPlayer.getBlockEditCount(),
-          (editsByPlayer.isVisible() ? "shown" : "hidden")));
+                                       "  %s - %d edits %s", editsByPlayer.getPlayer(),
+                                       editsByPlayer.getBlockEditCount(),
+                                       (editsByPlayer.isVisible() ? "shown" : "hidden")));
       }
     }
   } // listEdits
@@ -291,11 +286,11 @@ public class BlockEditSet
   // --------------------------------------------------------------------------
   /**
    * Set the visibility of the edits for the specified player.
-   * 
+   *
    * @param player the name of the player.
    * @param visible if true, edits are shown.
    */
-  public void setEditVisibility(String player, boolean visible)
+  public synchronized void setEditVisibility(String player, boolean visible)
   {
     player = player.toLowerCase();
     PlayerEditSet editsByPlayer = _playerEdits.get(player);
@@ -303,14 +298,14 @@ public class BlockEditSet
     {
       editsByPlayer.setVisible(visible);
       Chat.localOutput(String.format(Locale.US,
-        "%d edits by %s are now %s.", editsByPlayer.getBlockEditCount(),
-        editsByPlayer.getPlayer(), (editsByPlayer.isVisible() ? "shown"
-          : "hidden")));
+                                     "%d edits by %s are now %s.", editsByPlayer.getBlockEditCount(),
+                                     editsByPlayer.getPlayer(), (editsByPlayer.isVisible() ? "shown"
+                                       : "hidden")));
     }
     else
     {
       Chat.localError(String.format(Locale.US,
-        "There are no stored edits for %s.", player));
+                                    "There are no stored edits for %s.", player));
     }
   } // setEditVisibility
 
@@ -318,7 +313,7 @@ public class BlockEditSet
   /**
    * @param player the name of the player.
    */
-  public void removeEdits(String player)
+  public synchronized void removeEdits(String player)
   {
     player = player.toLowerCase();
     PlayerEditSet editsByPlayer = _playerEdits.get(player);
@@ -327,13 +322,13 @@ public class BlockEditSet
       _playerEdits.remove(player.toLowerCase());
       getOreDB().removeDeposits(player);
       Chat.localOutput(String.format(Locale.US,
-        "%d edits by %s were removed.", editsByPlayer.getBlockEditCount(),
-        editsByPlayer.getPlayer()));
+                                     "%d edits by %s were removed.", editsByPlayer.getBlockEditCount(),
+                                     editsByPlayer.getPlayer()));
     }
     else
     {
       Chat.localError(String.format(Locale.US,
-        "There are no stored edits for %s.", player));
+                                    "There are no stored edits for %s.", player));
     }
   } // removeEdits
 
@@ -341,7 +336,7 @@ public class BlockEditSet
   /**
    * Draw wireframe outlines of all blocks.
    */
-  public void drawOutlines()
+  public synchronized void drawOutlines()
   {
     if (Controller.instance.getDisplaySettings().isOutlineShown())
     {
@@ -356,7 +351,7 @@ public class BlockEditSet
   /**
    * Draw direction vectors indicating motion of the miner.
    */
-  public void drawVectors()
+  public synchronized void drawVectors()
   {
     DisplaySettings settings = Controller.instance.getDisplaySettings();
     if (settings.areVectorsShown())
@@ -374,7 +369,7 @@ public class BlockEditSet
   /**
    * Draw all of the annotations associated with this BlockEditSet.
    */
-  public void drawAnnotations()
+  public synchronized void drawAnnotations()
   {
     DisplaySettings settings = Controller.instance.getDisplaySettings();
     if (settings.areAnnotationsShown() && !_annotations.isEmpty())
@@ -388,28 +383,8 @@ public class BlockEditSet
 
   // --------------------------------------------------------------------------
   /**
-   * Experimental: draw a HUD overlay listing ores.
-   */
-  public void drawHUD()
-  {
-    try
-    {
-      GlStateManager.pushMatrix();
-
-      Minecraft mc = Minecraft.getMinecraft();
-      ScaledResolution scaledResolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
-
-    }
-    finally
-    {
-      GlStateManager.popMatrix();
-    }
-  } // drawHUD
-
-  // --------------------------------------------------------------------------
-  /**
    * Return the list of {@link Annotation}s.
-   * 
+   *
    * @return the list of {@link Annotation}s.
    */
   public ArrayList<Annotation> getAnnotations()
@@ -420,22 +395,12 @@ public class BlockEditSet
   // --------------------------------------------------------------------------
   /**
    * Return the spatial database of ore deposits.
-   * 
+   *
    * @return the spatial database of ore deposits.
    */
   public OreDB getOreDB()
   {
     return _oreDB;
-  }
-
-  // --------------------------------------------------------------------------
-  /**
-   * Start animating all of the edits in the list.
-   */
-  public void startAnimating()
-  {
-    // Record current time as start time.
-    // Set cursor in _edits to oldest edit position.
   }
 
   // --------------------------------------------------------------------------
@@ -460,8 +425,9 @@ public class BlockEditSet
    * The cycle of colours used to draw vectors for different players.
    */
   protected static final ARGB[]                  _vectorColours = {
-                                                                // Formatters...
-    new ARGB(204, 255, 255, 140), // Pale yellow.
+
+                                                                new ARGB(204, 255, 255, 140), // Pale
+                                                                                              // yellow.
     new ARGB(204, 140, 158, 255), // Light blue.
     new ARGB(204, 255, 140, 140), // Salmon.
     new ARGB(204, 121, 255, 140), // Mint.
