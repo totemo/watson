@@ -91,7 +91,7 @@ The currently selected edit or position is shown as a magenta 3-D crosshair.  A 
 
 The current selection is automatically changed when a new query result is received in chat, if you teleport to an ore deposit using "/w tp" or if you use the logging plugin's teleport-to-edit command (e.g. "/lb tp 1").
 
-Watson can move the cursor through consecutive edits that it has seen in query results, using configurable keys (they default to Alt+SCROLL_UP and Alt+SCROLL_DOWN).  You can also teleport to the current cursor using a configurable key (which defaults to Alt+MOUSE_LEFT).
+Watson can move the cursor through consecutive edits that it has seen in query results, using configurable keys (they default to Alt+SCROLL_UP and Alt+SCROLL_DOWN).  You can also teleport to the current cursor position using a configurable key (which defaults to Alt+MOUSE_LEFT).
 
 
 ### Viewing Ore Deposits
