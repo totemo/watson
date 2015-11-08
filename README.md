@@ -85,6 +85,15 @@ If you forget any of the above commands:
     /w help
 
 
+### The Cursor
+
+The currently selected edit or position is shown as a magenta 3-D crosshair.  A position can be selected using the query tool of the logging plugin, irrespective of whether any results are returned.  If the currently selected position corresponds to a block edited by a player, then a dashed magenta line will be drawn to the edit that preceded it (if Watson has that edit in its memory).
+
+The current selection is automatically changed when a new query result is received in chat, if you teleport to an ore deposit using "/w tp" or if you use the logging plugin's teleport-to-edit command (e.g. "/lb tp 1").
+
+Watson can move the cursor through consecutive edits that it has seen in query results, using configurable keys (they default to Alt+SCROLL_UP and Alt+SCROLL_DOWN).  You can also teleport to the current cursor using a configurable key (which defaults to Alt+MOUSE_LEFT).
+
+
 ### Viewing Ore Deposits
 
 Watson groups adjacent destructions of ore blocks into ore deposits.  Here, "adjacent" includes blocks up to 1 block away along all three cardinal axes simultaneously.  Ore deposits are assigned numeric labels starting at 1 and increasing in time.  All diamonds are numbered first, then emeralds, then iron, gold, lapis, redstone, coal and finally quartz.  Thus, if the coordinates of 5 diamond deposits and 10 iron deposits have been retrieved from the LogBlock database, the diamond deposits will be numbered from 1 to 5, with 1 being the oldest diamond, and the iron deposits will be numbered from 6 to 15, with 6 being the oldest iron deposit.
@@ -368,6 +377,15 @@ Currently, the following settings can be configured with this screen:
   </tr>
   <tr>
     <td>Query edits after</td> <td>Ctrl + MOUSE_RIGHT</td> <td>Query edits after the currently selected edit (equivalent to "/w post").</td>
+  </tr>
+  <tr>
+    <td>Cursor to next edit</td> <td>Alt + SCROLL_DOWN</td> <td>Select the edit after the currently selected edit.</td>
+  </tr>
+  <tr>
+    <td>Cursor to previous edit</td> <td>Alt + SCROLL_UP</td> <td>Select the edit before the currently selected edit.</td>
+  </tr>
+  <tr>
+    <td>TP to cursor</td> <td>Alt + MOUSE_LEFT</td> <td>Teleport to the currently selected edit or position.</td>
   </tr>
 </table>
 

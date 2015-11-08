@@ -1,5 +1,12 @@
 Change History
 ==============
+0.13.0.134-mc1.8.0
+------------------
+* The currently selected position or edit is now indicated by a visible marker.
+* A dashed line is drawn between the selected edit and the preceding edit (if known).
+* The selection can be moved back and forth between consecutive edits using configurable keys.
+* You can teleport to the selection using a configurable key.
+
 0.12.1.132-mc1.8.0
 ------------------
 * Fix crashes loading files and clearing edits, apparently caused by changes to how 1.8 uses threads.

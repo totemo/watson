@@ -17,7 +17,7 @@
 
 	<!-- The version of your mod, can be any string as long as it's valid as part of a file name -->
 	<!-- and should match the version string returned by your mod.                               -->
-	<property name="version"        value="0.12.1" />
+	<property name="version"        value="0.13.0" />
 
 	<!-- The Minecraft version the mod is for, appended to the output file name for reference -->
 	<property name="mcversion"      value="1.8.0" />
