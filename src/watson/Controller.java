@@ -18,6 +18,11 @@ import java.util.regex.Pattern;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+
+import org.lwjgl.opengl.GL11;
+
 import watson.chat.Chat;
 import watson.cli.AnnoCommand;
 import watson.cli.CalcCommand;
@@ -132,6 +137,55 @@ public class Controller
         queryPostEdits(config.getPostCount());
       }
     });
+
+    config.KEYBIND_CURSOR_NEXT.setHandler(new Runnable()
+    {
+      @Override
+      public void run()
+      {
+        // Selection may have been created just to represent a position,
+        // in which case it does not belong to a set of player edits.
+        if (_selection != null && _selection.playerEditSet != null)
+        {
+          BlockEdit edit = _selection.playerEditSet.getEditAfter(_selection);
+          if (edit != null)
+          {
+            selectBlockEdit(edit);
+          }
+        }
+      }
+    });
+
+    config.KEYBIND_CURSOR_PREV.setHandler(new Runnable()
+    {
+      @Override
+      public void run()
+      {
+        // Selection may have been created just to represent a position,
+        // in which case it does not belong to a set of player edits.
+        if (_selection != null && _selection.playerEditSet != null)
+        {
+          BlockEdit edit = _selection.playerEditSet.getEditBefore(_selection);
+          if (edit != null)
+          {
+            selectBlockEdit(edit);
+          }
+        }
+      }
+    });
+
+    config.KEYBIND_TP_CURSOR.setHandler(new Runnable()
+    {
+      @Override
+      public void run()
+      {
+        if (_selection != null)
+        {
+          teleport(_selection.x, _selection.y, _selection.z);
+        }
+      }
+    });
+
   } // initialise
 
   // --------------------------------------------------------------------------
@@ -497,8 +551,7 @@ public class Controller
   public File[] getBlockEditFileList(String prefix)
   {
     createBlockEditDirectory();
-    File[] files = getBlockEditDirectory().listFiles(
-                                                     new CaseInsensitivePrefixFileFilter(prefix));
+    File[] files = getBlockEditDirectory().listFiles(new CaseInsensitivePrefixFileFilter(prefix));
     Arrays.sort(files);
     return files;
   }
@@ -512,7 +565,9 @@ public class Controller
   public void clearBlockEditSet()
   {
     getBlockEditSet().clear();
-    clearVariables();
+    _variables.clear();
+    _selectionChanged = true;
+    _selection = null;
     Chat.localOutput("Watson edits cleared.");
     getFilters().clear();
   }
@@ -601,16 +656,6 @@ public class Controller
 
   // --------------------------------------------------------------------------
   /**
-   * Clear all currently set state variables..
-   */
-  public void clearVariables()
-  {
-    _variables.clear();
-    _selectionChanged = true;
-  }
-
-  // --------------------------------------------------------------------------
-  /**
    * Set the current state variables from a {@link BlockEdit}, the same as they
    * would be set if they were set from a LogBlock toolblock (coal ore) query.
    *
@@ -622,6 +667,8 @@ public class Controller
   {
     if (edit != null)
     {
+      _selection = edit;
+
       _variables.put("time", edit.time);
       _variables.put("player", edit.player);
       _variables.put("id", edit.type.getId());
@@ -644,11 +691,64 @@ public class Controller
    */
   public void selectPosition(int x, int y, int z)
   {
+    // Create a pseudo-edit if we are selecting a position that is not already
+    // selected as an edit.
+    if (_selection == null || _selection.x != x || _selection.y != y || _selection.z != z)
+    {
+      _selection = new BlockEdit(0, "", false, x, y, z, null);
+    }
+
     _variables.put("x", x);
     _variables.put("y", y);
     _variables.put("z", z);
     _selectionChanged = true;
   }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Draw a cursor at the currently selected position.
+   */
+  public void drawSelection()
+  {
+    if (_selection != null && getDisplaySettings().isSelectionShown())
+    {
+      Tessellator tess = Tessellator.getInstance();
+      WorldRenderer wr = tess.getWorldRenderer();
+      wr.startDrawing(GL11.GL_LINES);
+      wr.setColorRGBA(255, 0, 255, 128);
+      GL11.glLineWidth(4.0f);
+
+      final float halfSize = 0.3f;
+      float x = _selection.x + 0.5f;
+      float y = _selection.y + 0.5f;
+      float z = _selection.z + 0.5f;
+      wr.addVertex(x - halfSize, y, z);
+      wr.addVertex(x + halfSize, y, z);
+      wr.addVertex(x, y - halfSize, z);
+      wr.addVertex(x, y + halfSize, z);
+      wr.addVertex(x, y, z - halfSize);
+      wr.addVertex(x, y, z + halfSize);
+      tess.draw();
+
+      if (_selection.playerEditSet != null)
+      {
+
+        BlockEdit predecessor = _selection.playerEditSet.getEditBefore(_selection);
+        if (predecessor != null)
+        {
+          wr.startDrawing(GL11.GL_LINES);
+          wr.setColorRGBA(255, 0, 255, 128);
+          GL11.glEnable(GL11.GL_LINE_STIPPLE);
+          GL11.glLineStipple(8, (short) 0xAAAA);
+          GL11.glLineWidth(3.0f);
+          wr.addVertex(predecessor.x + 0.5f, predecessor.y + 0.5f, predecessor.z + 0.5f);
+          wr.addVertex(x, y, z);
+          tess.draw();
+          GL11.glDisable(GL11.GL_LINE_STIPPLE);
+        }
+      }
+    }
+  } // drawSelection
 
   // --------------------------------------------------------------------------
   /**
@@ -783,8 +883,7 @@ public class Controller
       }
       catch (Exception ex)
       {
-        Log.exception(Level.SEVERE,
-                      "could not create mod directory: " + modDir, ex);
+        Log.exception(Level.SEVERE, "could not create mod directory: " + modDir, ex);
       }
     }
   } // createDirectories
@@ -804,8 +903,7 @@ public class Controller
       }
       catch (Exception ex)
       {
-        Log.exception(Level.SEVERE, "could not create saves directory: " + dir,
-                      ex);
+        Log.exception(Level.SEVERE, "could not create saves directory: " + dir, ex);
       }
     }
   } // createBlockEditDirectory
@@ -946,4 +1044,12 @@ public class Controller
    * True if the selected edit position has changed.
    */
   protected boolean                       _selectionChanged;
+
+  /**
+   * The currently selected {@link BlockEdit}.
+   *
+   * A dummy instance of BlockEdit is also used to select a block that has not
+   * been edited. In that case, the timestamp of the BlockEdit will be 0.
+   */
+  protected BlockEdit                     _selection;
 } // class Controller

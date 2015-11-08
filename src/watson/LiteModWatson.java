@@ -254,17 +254,15 @@ public class LiteModWatson implements JoinGameListener, ChatFilter, Tickable,
 
       boolean foggy = GL11.glIsEnabled(GL11.GL_FOG);
       GlStateManager.disableFog();
-
       GlStateManager.pushMatrix();
-
-      GlStateManager.translate(
-                               -getPlayerX(partialTicks),
+      GlStateManager.translate(-getPlayerX(partialTicks),
                                -getPlayerY(partialTicks),
                                -getPlayerZ(partialTicks));
 
       BlockEditSet edits = Controller.instance.getBlockEditSet();
       edits.drawOutlines();
       edits.drawVectors();
+      Controller.instance.drawSelection();
 
       // Test code. X marks the spot.
       // GL11.glLineWidth(3.0f);

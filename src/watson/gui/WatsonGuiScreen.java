@@ -85,6 +85,8 @@ public class WatsonGuiScreen extends GuiScreen
                                  getButtonLabel(ID_LABEL_ORDER)));
     buttonList.add(new GuiButton(ID_SHOW_ANNOTATIONS, width / 2 - 175, startY + currentRow * _rowHeight, 150, 20,
                                  getButtonLabel(ID_SHOW_ANNOTATIONS)));
+    buttonList.add(new GuiButton(ID_SHOW_SELECTION, width / 2 + 25, startY + currentRow++ * _rowHeight, 150, 20,
+                                 getButtonLabel(ID_SHOW_SELECTION)));
 
     buttonList.add(new GuiOptionButton(ID_DONE, width / 2 - 40, startY + (currentRow + 2) * _rowHeight, 80, 20,
                                        I18n.format("gui.done", new Object[0])));
@@ -128,7 +130,7 @@ public class WatsonGuiScreen extends GuiScreen
     for (Object o : buttonList)
     {
       GuiButton control = (GuiButton) o;
-      if (control.id >= ID_SHOW_VECTORS && control.id <= ID_SHOW_ANNOTATIONS)
+      if (control.id >= ID_SHOW_VECTORS && control.id <= ID_SHOW_SELECTION)
       {
         control.enabled = ds.isDisplayed();
       }
@@ -176,6 +178,10 @@ public class WatsonGuiScreen extends GuiScreen
         ds.setAnnotationsShown(!ds.areAnnotationsShown());
         button.displayString = getButtonLabel(button.id);
         break;
+      case ID_SHOW_SELECTION:
+        ds.setSelectionShown(!ds.isSelectionShown());
+        button.displayString = getButtonLabel(button.id);
+        break;
       case ID_DONE:
         mc.displayGuiScreen(null);
         break;
@@ -210,6 +216,8 @@ public class WatsonGuiScreen extends GuiScreen
         return "Label Order: " + (config.timeOrderedDeposits() ? "TIMESTAMPS" : "IMPORTANCE");
       case ID_SHOW_ANNOTATIONS:
         return "Show Annotations: " + (ds.areAnnotationsShown() ? "ON" : "OFF");
+      case ID_SHOW_SELECTION:
+        return "Show Selection: " + (ds.isSelectionShown() ? "ON" : "OFF");
       default:
         return "";
     }
@@ -234,5 +242,6 @@ public class WatsonGuiScreen extends GuiScreen
   private static final int ID_SHOW_LABELS       = 5;
   private static final int ID_LABEL_ORDER       = 6;
   private static final int ID_SHOW_ANNOTATIONS  = 7;
+  private static final int ID_SHOW_SELECTION    = 8;
   private static final int ID_DONE              = 100;
 } // class WatsonGuiScreen

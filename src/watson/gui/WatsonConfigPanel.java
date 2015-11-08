@@ -19,7 +19,7 @@ import com.mumfrey.liteloader.modconfig.ConfigPanelHost;
 
 // --------------------------------------------------------------------------
 /**
- * COnfiguration GUI.
+ * Configuration GUI.
  */
 public class WatsonConfigPanel extends Gui implements ConfigPanel
 {
@@ -40,8 +40,7 @@ public class WatsonConfigPanel extends Gui implements ConfigPanel
   @Override
   public int getContentHeight()
   {
-    // TODO: Compute the height from the size of all controls.
-    return 160;
+    return (Configuration.instance.getAllModifiedKeyBindings().size() + 1) * getRowHeight();
   }
 
   // --------------------------------------------------------------------------
@@ -54,14 +53,11 @@ public class WatsonConfigPanel extends Gui implements ConfigPanel
   @Override
   public void onPanelShown(ConfigPanelHost host)
   {
-    Minecraft mc = Minecraft.getMinecraft();
-    FontRenderer fr = mc.fontRendererObj;
-    _rowHeight = (int) (fr.FONT_HEIGHT * 2.75);
-
     int controlId = 0;
     for (ModifiedKeyBinding keyBinding : Configuration.instance.getAllModifiedKeyBindings())
     {
-      final KeyBindingButton button = new KeyBindingButton(controlId, 115, (controlId + 1) * _rowHeight, 200, 20, keyBinding);
+      final KeyBindingButton button = new KeyBindingButton(controlId, 135, (controlId + 1) * getRowHeight(),
+                                                           180, 20, keyBinding);
       _keyButtons.add(button);
 
       Runnable handler = new Runnable()
@@ -292,6 +288,25 @@ public class WatsonConfigPanel extends Gui implements ConfigPanel
 
   // --------------------------------------------------------------------------
   /**
+   * Return the distance in pixels between the top of one row of controls and
+   * the top of the next.
+   *
+   * @return the distance in pixels between the top of one row of controls and
+   *         the top of the next.
+   */
+  protected int getRowHeight()
+  {
+    if (_rowHeight == 0)
+    {
+      Minecraft mc = Minecraft.getMinecraft();
+      FontRenderer fr = mc.fontRendererObj;
+      _rowHeight = (int) (fr.FONT_HEIGHT * 2.75);
+    }
+    return _rowHeight;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
    * When non-null, all input is captured and handled by this control rather
    * than being passed to the control where the mouse pointer is located.
    */
@@ -313,8 +328,8 @@ public class WatsonConfigPanel extends Gui implements ConfigPanel
   protected List<KeyBindingButton>     _keyButtons = new ArrayList<KeyBindingButton>();
 
   /**
-   * The distance interval, in pixels between the top of one row of controls and
-   * the top of the next.
+   * The distance in pixels between the top of one row of controls and the top
+   * of the next.
    *
    * This is based on FontRenderer.FONT_HEIGHT, which is the height of the
    * current font. A default button in Minecraft is 200 wide and 20 tall, which

@@ -25,7 +25,7 @@ public class PlayerEditSet
   // --------------------------------------------------------------------------
   /**
    * Constructor.
-   * 
+   *
    * @param player name of the player who did these edits.
    */
   public PlayerEditSet(String player)
@@ -36,7 +36,7 @@ public class PlayerEditSet
   // --------------------------------------------------------------------------
   /**
    * Return the name of the player who did these edits.
-   * 
+   *
    * @return the name of the player who did these edits.
    */
   public String getPlayer()
@@ -47,19 +47,19 @@ public class PlayerEditSet
   // --------------------------------------------------------------------------
   /**
    * Find an edit with the specified coordinates.
-   * 
+   *
    * Currently, this method does an inefficient linear search, walking, on
    * average, half the collection. The edits are searched from oldest to newest,
    * meaning that the oldest edit at that coordinate will be retrieved.
-   * 
+   *
    * TODO: implement an efficient spatial search.
-   * 
+   *
    * @param x the x coordinate of the block
    * @param y the y coordinate of the block
    * @param z the z coordinate of the block
    * @return the matching edit, or null if not found.
    */
-  public BlockEdit findEdit(int x, int y, int z)
+  public synchronized BlockEdit findEdit(int x, int y, int z)
   {
     // Warning: O(N) algorithm. Avert your delicate eyes.
     for (BlockEdit edit : _edits)
@@ -74,11 +74,39 @@ public class PlayerEditSet
 
   // --------------------------------------------------------------------------
   /**
+   * Return the edit before the specified edit, or null if there is no edit
+   * before.
+   *
+   * @param edit the edit.
+   * @return the edit before the specified edit, or null if there is no edit
+   *         before.
+   */
+  public synchronized BlockEdit getEditBefore(BlockEdit edit)
+  {
+    return _edits.lower(edit);
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return the edit after the specified edit, or null if there is no edit
+   * before.
+   *
+   * @param edit the edit.
+   * @return the edit after the specified edit, or null if there is no edit
+   *         before.
+   */
+  public synchronized BlockEdit getEditAfter(BlockEdit edit)
+  {
+    return _edits.higher(edit);
+  }
+
+  // --------------------------------------------------------------------------
+  /**
    * Add the specified edit to the list.
-   * 
+   *
    * @param edit the BlockEdit describing an edit to add.
    */
-  public void addBlockEdit(BlockEdit edit)
+  public synchronized void addBlockEdit(BlockEdit edit)
   {
     _edits.add(edit);
 
@@ -89,10 +117,10 @@ public class PlayerEditSet
   // --------------------------------------------------------------------------
   /**
    * Return the number of edits stored.
-   * 
+   *
    * @return the number of edits stored.
    */
-  int getBlockEditCount()
+  public synchronized int getBlockEditCount()
   {
     return _edits.size();
   }
@@ -101,7 +129,7 @@ public class PlayerEditSet
   /**
    * Set the visibility of this player's edits in the dimension to which this
    * PlayerEditSet applies.
-   * 
+   *
    * @param visible if true, edits are visible.
    */
   public void setVisible(boolean visible)
@@ -113,7 +141,7 @@ public class PlayerEditSet
   /**
    * Return the visibility of this player's edits in the dimension to which this
    * PlayerEditSet applies.
-   * 
+   *
    * @return the visibility of this player's edits in the dimension to which
    *         this PlayerEditSet applies.
    */
@@ -126,11 +154,11 @@ public class PlayerEditSet
   /**
    * Draw wireframe outlines of all blocks.
    */
-  public void drawOutlines()
+  public synchronized void drawOutlines()
   {
     if (isVisible())
     {
-      if (Controller.instance.getDisplaySettings().isOutlineShown())
+      if (Controller.instance.getDisplaySettings().areOutlineShown())
       {
         for (BlockEdit edit : _edits)
         {
@@ -143,10 +171,10 @@ public class PlayerEditSet
   // --------------------------------------------------------------------------
   /**
    * Draw direction vectors indicating motion of the miner.
-   * 
+   *
    * @param colour the colour to draw the vectors.
    */
-  public void drawVectors(ARGB colour)
+  public synchronized void drawVectors(ARGB colour)
   {
     DisplaySettings settings = Controller.instance.getDisplaySettings();
     if (settings.areVectorsShown() && isVisible() && !_edits.isEmpty())
@@ -203,16 +231,12 @@ public class PlayerEditSet
 
               // Position of the tip and tail of the arrow, sitting in the
               // middle of the vector.
-              Vec3 tip = new Vec3(
-                pPos.xCoord * (0.5 - arrowScale) + nPos.xCoord
-                  * (0.5 + arrowScale), pPos.yCoord * (0.5 - arrowScale)
-                                        + nPos.yCoord * (0.5 + arrowScale),
-                pPos.zCoord * (0.5 - arrowScale) + nPos.zCoord
-                  * (0.5 + arrowScale));
-              Vec3 tail = new Vec3(
-                pPos.xCoord * (0.5 + arrowScale) + nPos.xCoord * (0.5 - arrowScale),
-                pPos.yCoord * (0.5 + arrowScale) + nPos.yCoord * (0.5 - arrowScale),
-                pPos.zCoord * (0.5 + arrowScale) + nPos.zCoord * (0.5 - arrowScale));
+              Vec3 tip = new Vec3(pPos.xCoord * (0.5 - arrowScale) + nPos.xCoord * (0.5 + arrowScale),
+                                  pPos.yCoord * (0.5 - arrowScale) + nPos.yCoord * (0.5 + arrowScale),
+                                  pPos.zCoord * (0.5 - arrowScale) + nPos.zCoord * (0.5 + arrowScale));
+              Vec3 tail = new Vec3(pPos.xCoord * (0.5 + arrowScale) + nPos.xCoord * (0.5 - arrowScale),
+                                   pPos.yCoord * (0.5 + arrowScale) + nPos.yCoord * (0.5 - arrowScale),
+                                   pPos.zCoord * (0.5 + arrowScale) + nPos.zCoord * (0.5 - arrowScale));
 
               // Fin axes, perpendicular to vector. Scale by vector length.
               // If the vector is colinear with the Y axis, use the X axis for
@@ -229,10 +253,12 @@ public class PlayerEditSet
 
               Vec3 fin2 = fin1.crossProduct(diff).normalize();
 
-              Vec3 draw1 = new Vec3(fin1.xCoord * arrowScale * length, fin1.yCoord * arrowScale * length, fin1.zCoord
-                                                                                                          * arrowScale * length);
-              Vec3 draw2 = new Vec3(fin2.xCoord * arrowScale * length, fin2.yCoord * arrowScale * length, fin2.zCoord
-                                                                                                          * arrowScale * length);
+              Vec3 draw1 = new Vec3(fin1.xCoord * arrowScale * length,
+                                    fin1.yCoord * arrowScale * length,
+                                    fin1.zCoord * arrowScale * length);
+              Vec3 draw2 = new Vec3(fin2.xCoord * arrowScale * length,
+                                    fin2.yCoord * arrowScale * length,
+                                    fin2.zCoord * arrowScale * length);
 
               // Draw four fins.
               wr.addVertex(tip.xCoord, tip.yCoord, tip.zCoord);
@@ -255,11 +281,11 @@ public class PlayerEditSet
   // --------------------------------------------------------------------------
   /**
    * Write the edits for this player to the specified PrintWriter.
-   * 
+   *
    * @param writer the PrintWriter.
    * @return the number of edits saved.
    */
-  public int save(PrintWriter writer)
+  public synchronized int save(PrintWriter writer)
   {
     Calendar calendar = Calendar.getInstance();
     int editCount = 0;
@@ -274,8 +300,8 @@ public class PlayerEditSet
       int second = calendar.get(Calendar.SECOND);
       char action = edit.creation ? 'c' : 'd';
       writer.format("%4d-%02d-%02d|%02d:%02d:%02d|%s|%c|%d|%d|%d|%d|%d\n",
-        year, month, day, hour, minute, second, edit.player, action,
-        edit.type.getId(), edit.type.getData(), edit.x, edit.y, edit.z);
+                    year, month, day, hour, minute, second, edit.player, action,
+                    edit.type.getId(), edit.type.getData(), edit.x, edit.y, edit.z);
       ++editCount;
     } // for
     return editCount;
@@ -291,8 +317,7 @@ public class PlayerEditSet
    * A set of BlockEdit instances, ordered from oldest (lowest time value) to
    * most recent.
    */
-  protected TreeSet<BlockEdit>  _edits                 = new TreeSet<BlockEdit>(
-                                                         new BlockEditComparator());
+  protected TreeSet<BlockEdit>  _edits                 = new TreeSet<BlockEdit>(new BlockEditComparator());
 
   /**
    * True if this player's edits are visible.

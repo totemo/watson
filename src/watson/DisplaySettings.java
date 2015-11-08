@@ -80,15 +80,11 @@ public class DisplaySettings
   /**
    * Return true if block outines should be drawn.
    *
-   * This method takes into account the last calls to both setOutlineShown() and
-   * setDisplayed(). It will return false if outlines are disabled or if the
-   * overall Watson display is turned off.
-   *
    * @return true if block outines should be drawn.
    */
-  public boolean isOutlineShown()
+  public boolean areOutlineShown()
   {
-    return _displayed && _outlineShown;
+    return _outlineShown;
   }
 
   // --------------------------------------------------------------------------
@@ -112,7 +108,7 @@ public class DisplaySettings
    */
   public boolean areAnnotationsShown()
   {
-    return _displayed && _annotationsShown;
+    return _annotationsShown;
   }
 
   // --------------------------------------------------------------------------
@@ -135,7 +131,32 @@ public class DisplaySettings
    */
   public boolean areLabelsShown()
   {
-    return _displayed && _labelsShown;
+    return _labelsShown;
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Turn on or off highlighting of the currently selected edit or position.
+   *
+   * @param selectionShown if true, the selection is highlighted.
+   */
+  public void setSelectionShown(boolean selectionShown)
+  {
+    _selectionShown = selectionShown;
+    Chat.localOutput("Current selection display " + (selectionShown ? "enabled." : "disabled."));
+  }
+
+  // --------------------------------------------------------------------------
+  /**
+   * Return true if the current selection should be drawn.
+   *
+   * The selection is either a single edit, or a position.
+   *
+   * @return true if the current selection should be drawn.
+   */
+  public boolean isSelectionShown()
+  {
+    return _selectionShown;
   }
 
   // --------------------------------------------------------------------------
@@ -155,15 +176,11 @@ public class DisplaySettings
   /**
    * Return true if block outines should be drawn.
    *
-   * This method takes into account the last calls to both setOutlineShown() and
-   * setDisplayed(). It will return false if outlines are disabled or if the
-   * overall Watson display is turned off.
-   *
    * @return true if block outines should be drawn.
    */
   public boolean areVectorsShown()
   {
-    return _displayed && Configuration.instance.getVectorsShown();
+    return Configuration.instance.getVectorsShown();
   }
 
   // --------------------------------------------------------------------------
@@ -272,6 +289,11 @@ public class DisplaySettings
    * True if ore deposit labels should be drawn.
    */
   protected boolean _labelsShown        = true;
+
+  /**
+   * True if the current selection should be drawn.
+   */
+  protected boolean _selectionShown     = true;
 
   /**
    * If true, creation edits are linked by vectors.

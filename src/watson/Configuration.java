@@ -77,6 +77,27 @@ public class Configuration
                                                                                   MouseButton.MOUSE_RIGHT.getCode(),
                                                                                   "", true, false, false);
 
+  /**
+   * Key bind to move the cursor to next edit.
+   */
+  public final ModifiedKeyBinding   KEYBIND_CURSOR_NEXT  = new ModifiedKeyBinding("Cursor to next edit:",
+                                                                                  MouseButton.SCROLL_DOWN.getCode(),
+                                                                                  "", false, true, false);
+
+  /**
+   * Key bind to move the cursor to previous edit.
+   */
+  public final ModifiedKeyBinding   KEYBIND_CURSOR_PREV  = new ModifiedKeyBinding("Cursor to previous edit:",
+                                                                                  MouseButton.SCROLL_UP.getCode(),
+                                                                                  "", false, true, false);
+
+  /**
+   * Key bind to teleport to the cursor.
+   */
+  public final ModifiedKeyBinding   KEYBIND_TP_CURSOR    = new ModifiedKeyBinding("TP to cursor:",
+                                                                                  MouseButton.MOUSE_LEFT.getCode(),
+                                                                                  "", false, true, false);
+
   // --------------------------------------------------------------------------
   /**
    * Load the configuration file.
@@ -898,23 +919,28 @@ public class Configuration
    */
   private Configuration()
   {
+    // Can't add these by reflection because we need to guarantee ordering.
     _bindings.add(KEYBIND_INGAME);
     _bindings.add(KEYBIND_SCREENSHOT);
     _bindings.add(KEYBIND_TP_NEXT);
     _bindings.add(KEYBIND_TP_PREV);
     _bindings.add(KEYBIND_QUERY_BEFORE);
     _bindings.add(KEYBIND_QUERY_AFTER);
+    _bindings.add(KEYBIND_CURSOR_NEXT);
+    _bindings.add(KEYBIND_CURSOR_PREV);
+    _bindings.add(KEYBIND_TP_CURSOR);
   } // ctor
 
   // --------------------------------------------------------------------------
   /**
    * Return a map from the lowercase name of each keybinding's value in the
-   * configuration file to he corresponding ModifiedKeyBinding instance.
+   * configuration file to the corresponding ModifiedKeyBinding instance.
    *
    * The map entries are not guaranteed to be in any particular order.
    *
    * @return a map from the lowercase name of each keybinding's value in the
-   *         configuration file to he corresponding ModifiedKeyBinding instance.
+   *         configuration file to the corresponding ModifiedKeyBinding
+   *         instance.
    */
   private static HashMap<String, ModifiedKeyBinding> getKeyBindingsMap()
   {
