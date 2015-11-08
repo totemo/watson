@@ -82,7 +82,7 @@ public class DisplaySettings
    *
    * @return true if block outines should be drawn.
    */
-  public boolean areOutlineShown()
+  public boolean isOutlineShown()
   {
     return _outlineShown;
   }

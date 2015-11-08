@@ -200,7 +200,7 @@ public class WatsonCommand extends WatsonCommandBase
       if (args.length == 1)
       {
         // Toggle display.
-        display.setOutlineShown(!display.areOutlineShown());
+        display.setOutlineShown(!display.isOutlineShown());
         return;
       }
       else if (args.length == 2)

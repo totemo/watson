@@ -338,7 +338,7 @@ public class BlockEditSet
    */
   public synchronized void drawOutlines()
   {
-    if (Controller.instance.getDisplaySettings().areOutlineShown())
+    if (Controller.instance.getDisplaySettings().isOutlineShown())
     {
       for (PlayerEditSet editsForPlayer : _playerEdits.values())
       {

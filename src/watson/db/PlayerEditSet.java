@@ -158,7 +158,7 @@ public class PlayerEditSet
   {
     if (isVisible())
     {
-      if (Controller.instance.getDisplaySettings().areOutlineShown())
+      if (Controller.instance.getDisplaySettings().isOutlineShown())
       {
         for (BlockEdit edit : _edits)
         {
